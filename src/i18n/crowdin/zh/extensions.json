@@ -614,29 +614,29 @@
     "tota": {
       "activityOptions": {
         "title_zero": "未选择塔进行激活",
-        "title_one": "激活 1 个塔",
-        "title_other": "激活 {{count}} 个塔",
+        "title_one": "激活 1 座塔",
+        "title_other": "激活 {{count}} 座塔",
         "noTowersFound": "未找到塔",
-        "nearestMatches": "最近的{{count}}个中的{{limit}}场比赛",
+        "nearestMatches": "最近的{{count}}个中的{{limit}}个匹配",
         "matchingTowers_zero": "无匹配的塔",
-        "matchingTowers_one": "1 个匹配的塔",
-        "matchingTowers_other": "{{count}} 个匹配的塔",
+        "matchingTowers_one": "1 座匹配的塔",
+        "matchingTowers_other": "{{count}} 座匹配的塔",
         "searchForTowers": "搜索要激活的塔！",
         "noTowersNearby": "附近没有塔",
         "nearbyTowers": "附近的塔",
         "searchPlaceholder": "名称或参考…",
-        "unknownTower": "未知塔"
+        "unknownTower": "未知的塔"
       },
       "scoring": {
         "ref2refCount_zero": "没有 R2R",
         "ref2refCount_one": "1 个 R2R",
         "ref2refCount_other": "{{fmtCount}} 个 R2R",
         "huntedRefsCount_zero": "无猎取的塔",
-        "huntedRefsCount_one": "猎取了 1 个塔",
-        "huntedRefsCount_other": "猎取了 {{fmtCount}} 个塔",
+        "huntedRefsCount_one": "猎取了 1 座塔",
+        "huntedRefsCount_other": "猎取了 {{fmtCount}} 座塔",
         "activatorQSOsCount_zero": "无激活者 QSO",
         "activatorQSOsCount_one": "1 个激活者 QSO",
-        "activatorQSOsCount_other": "{{fmtCount}} 激活者 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} 个激活者 QSO",
         "ref2refQSOsCount_zero": "无 R2R QSO",
         "ref2refQSOsCount_one": "1 个 R2R QSO",
         "ref2refQSOsCount_other": "{{fmtCount}} 个 R2R QSO",
@@ -645,17 +645,17 @@
         "huntedQSOsCount_other": "猎取了 {{fmtCount}} 个 QSO",
         "operationTotals": "操作总数",
         "referencesActivatedCount_zero": "无激活的塔",
-        "referencesActivatedCount_one": "激活了 1 个塔",
-        "referencesActivatedCount_other": "激活了 {{fmtCount}} 个塔",
+        "referencesActivatedCount_one": "激活了 1 座塔",
+        "referencesActivatedCount_other": "激活了 {{fmtCount}} 座塔",
         "referencesMissedCount_zero": "无未完成的塔",
-        "referencesMissedCount_one": "1 个未完成的塔",
-        "referencesMissedCount_other": "{{fmtCount}} 个未完成的塔",
+        "referencesMissedCount_one": "1 座未完成的塔",
+        "referencesMissedCount_other": "{{fmtCount}} 座未完成的塔",
         "referencesHuntedCount_zero": "无猎取的塔",
-        "referencesHuntedCount_one": "猎取了 1 个塔",
+        "referencesHuntedCount_one": "猎取了 1 座塔",
         "referencesHuntedCount_other": "猎取了 {{fmtCount}} 个塔"
       },
       "loggingControl": {
-        "theirRefLabel": "他们的塔"
+        "theirRefLabel": "对方的塔"
       },
       "exampleRefName": "示例塔",
       "unknownRefName": "未知塔",
@@ -888,6 +888,9 @@
     },
     "shared": {
       "scoring": {
+        "dupesCount_zero": "无重复项",
+        "dupesCount_one": "1 个重复项",
+        "dupesCount_other": "{{fmtCount}} 个重复",
         "ref2refCount_zero": "无 Ref2Refs",
         "ref2refCount_one": "1 个 Ref2Ref",
         "ref2refCount_other": "{{fmtCount}} 个 Ref2Refs",

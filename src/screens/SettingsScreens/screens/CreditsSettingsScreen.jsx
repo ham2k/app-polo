@@ -161,8 +161,18 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             leftIcon="earth"
           />
           <H2kListItem
+            title={t('general.languages.pt', 'Portuguese (Portugal)')}
+            description={'CR7BTF Cesar (lead), PY2MP Eduardo'}
+            leftIcon="earth"
+          />
+          <H2kListItem
             title={t('general.languages.pt-BR', 'Portuguese (Brazil)')}
-            description={'PY2MP Eduardo (lead)'}
+            description={'PY2MP Eduardo (lead), CR7BTF Cesar'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.ca', 'Catalan')}
+            description={'EA3IPX David (lead)'}
             leftIcon="earth"
           />
           <H2kListItem
@@ -188,6 +198,11 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
           <H2kListItem
             title={t('general.languages.sk', 'Slovak')}
             description={'OM8ATE Matúš (lead), OM1PU Michal'}
+            leftIcon="earth"
+          />
+          <H2kListItem
+            title={t('general.languages.ro', 'Romanian')}
+            description={'YO3GND Richard, YO3GNU Andrei, YO3BEE Bogdan'}
             leftIcon="earth"
           />
           <H2kListItem

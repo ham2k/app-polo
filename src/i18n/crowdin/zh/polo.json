@@ -223,6 +223,10 @@
         "title": "同步设置",
         "description": "云同步和备份"
       },
+      "accountsSettings": {
+        "title": "账户及服务",
+        "description": "QRZ.com和其他服务"
+      },
       "appFeatures": {
         "title": "应用特性",
         "description": "管理 POTA, SOTA 等功能"
@@ -799,7 +803,7 @@
       "hideMostSecondaryControls-a11y": "隐藏大多数次要控制",
       "showAllSecondaryControls-a11y": "显示所有次要控制",
       "spotting": {
-        "selfSpottingAt": "在 {{freq}} 进行自我 Spot（点名）",
+        "selfSpottingAt": "在 {{freq}} 进行自我 Spot",
         "stopAutoRespotting": "停止自动重新 Spot",
         "setFrequencyFirst": "请先设置要 Spot 的频率",
         "reSpotEvery": "每 {{minutes}} 分钟重新 Spot",
@@ -822,14 +826,14 @@
       "manyNoLocation": "这些 QSO 中许多没有精确位置。\n\n您可能需要一个付费的 QRZ.com 帐户以进行位置查找。"
     },
     "opSpotsTab": {
-      "noSpots": "无Spot",
-      "spotsCount_zero": "无Spot",
-      "spotsCount_one": "1个Spot",
-      "spotsCount_other": "{{fmtCount}} 个Spot ",
+      "noSpots": "无电台信息",
+      "spotsCount_zero": "无电台信息",
+      "spotsCount_one": "1个电台信息",
+      "spotsCount_other": "{{fmtCount}} 个电台信息 ",
       "showingSpots": "显示 {{count}} / {{total}}",
-      "loadingSpots": "加载Spot …",
+      "loadingSpots": "加载电台信息 …",
       "sections": {
-        "specialSpots": "特殊Spot ",
+        "specialSpots": "特殊电台信息",
         "newMultipliers": "新倍数",
         "callsOfNote": "注意的呼号",
         "mostRecentSpots": "最新信号"

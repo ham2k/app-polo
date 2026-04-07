@@ -223,6 +223,10 @@
         "title": "Paramètres de synchronisation",
         "description": "Synchronisation et sauvegarde sur le cloud"
       },
+      "accountsSettings": {
+        "title": "Comptes et Services",
+        "description": "QRZ.com et d'autres services"
+      },
       "appFeatures": {
         "title": "Fonctionnalités de l'application",
         "description": "Gérer des fonctionnalités comme POTA, SOTA, etc."

@@ -1,0 +1,931 @@
+{
+  "screens": {
+    "start": {
+      "credits": "per KI2D i amics",
+      "Loading Extensions": "Carregant Extensions",
+      "Development Build": "Construcció de desenvolupament de registrador portàtil",
+      "messages": {
+        "Reticulating splines": "Reticulant estries",
+        "Tuning the antenna": "Sintonitzant l'antena",
+        "Checking the tubes": "Comprovant els tubs",
+        "Warming up the tubes": "Escalfant els tubs",
+        "Unfolding the map": "Desplegant el mapa",
+        "Charging the flux capacitor": "Carregant el condensador de flux",
+        "Purging the dilithium chamber": "Purgant la cambra de diliti",
+        "Activating the turbo encabulator": "Activant el turbo incabulador",
+        "Engaging the warp drive": "Entrant al motor de deformació"
+      }
+    },
+    "home": {
+      "title": "Registrador Portàtil",
+      "newOperation": "Nova operació",
+      "newOperation-a11y": "Nova operació",
+      "operationList-a11y": "Llista d'operacions",
+      "noOperations": "No hi ha operacions!",
+      "settings-a11y": "Configuració",
+      "quickCallLookupPlaceholder": "Cerca ràpida d’indicatius…",
+      "spots-a11y": "Anuncis"
+    },
+    "operation": {
+      "title": "Operació"
+    },
+    "operationDetails": {
+      "title": "Detalls de l'operació",
+      "operationTitle": "Títol",
+      "newOperation": "Nova operació",
+      "operationNotes": "Notes",
+      "anythingYouWantToWriteAboutThisOperation": "Qualsevol cosa que vulguis escriure sobre aquesta operació"
+    },
+    "operationStationInfo": {
+      "title": "Informació de l'estació i de l’operador",
+      "invalidCallsign": "Indicatiu invàlid: {{callsign}}",
+      "invalidCallsigns": "Indicatius invàlids: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` utilitzada fins ara.\n{{newStation}}` s'utilitzarà per a nous QSOs.",
+      "noStationUsed-md": "Cap indicatiu utilitzat fins ara.\n{{newStation}} s'utilitzarà per a nous QSOs.",
+      "updateStation-md_zero": "Actualitzar `{{newStation}}` amb zero QSOs existents",
+      "updateStation-md_one": "Actualitzar `{{newStation}}` amb un QSO existent",
+      "updateStation-md_other": "Actualitzar `{{newStation}}` amb {{count}} QSOs existents",
+      "multipleStationsUsed-md": "Aquesta activitat ja té QSOs utilitzant múltiples indicatius d'estacions:`{{stations}}`.\n\n`{{newStation}}` s'utilitzarà només per a nous QSOs.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` utilitzat fins ara.\n{{newOperator}}` s'utilitzarà per a nous QSOs.",
+      "noOperatorUsed-md": "Cap indicatiu utilitzat fins ara.\n{{newOperator}} s'utilitzarà per a nous QSOs.",
+      "updateOperator-md": "Actualitzar `{{newOperator}}` com a operador per a tots els QSOs",
+      "multipleOperatorsUsed-md": "Aquesta activitat ja té QSOs utilitzant múltiples indicatius d'operadors: `{{operators}}` \n\n`{{newOperator}}` s'utilitzarà només per a nous QSOs.",
+      "whatIsTheCallsignUsedOnTheAir": "Quin és l'indicatiu que es va utilitzar a l'aire?",
+      "stationCallsign": "Indicatiu d'estació",
+      "whoIsOperatingTheStation": "Qui està operant l'estació? (opcional)",
+      "operatorCallsign": "Indicatiu de l’operador",
+      "multiStationOperation": "Operació multiestació?",
+      "multiStationOperationYes": "Sí, som una entre moltes!",
+      "multiStationOperationNo": "No, només una estació normal",
+      "identifierForThisStation": "Identificador per aquesta estació (només números)"
+    },
+    "operationLocation": {
+      "title": "Ubicació de l'operació",
+      "selectedLocation": "Ubicació seleccionada",
+      "maidenheadGridSquareLocator": "Localitzador de graelles Maidenhead",
+      "suggestedLocations": "Ubicacions suggerides",
+      "deviceGps": "GPS del dispositiu",
+      "locating": "Localitzant…",
+      "gpsError": "Error de GPS",
+      "noGps": "SENSE GPS",
+      "stateOrProvince": "Estat o Província (opcional)",
+      "county": "País (opcional)"
+    },
+    "operationAddActivity": {
+      "title": "Afegir activitat",
+      "cantFindActivity": "No trobes l'activitat que estàs buscant?",
+      "thereAreMoreOptions": "Hi ha més opcions a Configuració > Característiques de l'aplicació"
+    },
+    "operationActivityOptions": {
+      "title": "Opcions d'activitats",
+      "removeActivity": "Elimina {{activity}} d'aquesta operació"
+    },
+    "operationData": {
+      "title": "Dades de l'operació",
+      "selectFromTheExportOptionsBelow": "Selecciona entre les opcions d'exportació a continuació",
+      "exportSingeFile": "Exportar un fitxer",
+      "exportSelectedFiles_zero": "Exportar 0 fitxers seleccionats",
+      "exportSelectedFiles_one": "Exportar 1 fitxer seleccionat",
+      "exportSelectedFiles_other": "Exportar {{count}} fitxers seleccionats",
+      "exportAllFiles": "Exportar tots els fitxers",
+      "exportQSOs": "Exportar QSOs",
+      "pendingToDoItems_zero": "No hi ha tasques pendents",
+      "pendingToDoItems_one": "1 tasca pendent",
+      "pendingToDoItems_other": "{{count}} tasques pendents",
+      "importQSOs": "Importar QSOs",
+      "addQSOsFromADIFFile": "Afegir QSOs del fitxer ADIF",
+      "ham2kLoFiSync": "Sincronització LoFi de Ham2K",
+      "operation": "Operació",
+      "exportSettings": "Configuració d'exportació",
+      "useCompactFileNames": "Utilitza noms de fitxer compactes",
+      "wavelogExport": "Exportació Wavelog",
+      "exportQSOsToWavelogDescription": "Enviar tots els QSOs d'aquesta operació a Wavelog",
+      "wavelogDialog": {
+        "title": "Exportar QSOs a Wavelog",
+        "status": "Exportar tots els QSOs d'aquesta operació a Wavelog.",
+        "exporting": "Exportant a Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "Esborrar operació?",
+        "description": "Estàs segur que vols esborrar aquesta operació?"
+      }
+    },
+    "callInfo": {
+      "title": "Informació de l'indicatiu",
+      "messages": {
+        "duplicate": "Duplicat",
+        "invalidBand": "Banda Invàlida",
+        "newBand": "Banda Nova",
+        "newMode": "Mode Nou",
+        "newRef": "Referència Nova",
+        "newMult": "Nou Multiplicador",
+        "newDay": "Dia Nou",
+        "maybeDupe": "Duplicat?",
+        "partialDupe": "Duplicat",
+        "potaActivation-newDay": "Nou Dia de POTA",
+        "potaActivation-newRef": "Parc Nou",
+        "sotaActivation-newDay": "Nou Dia de SOTA",
+        "sotaActivation-newRef": "Cim Nou",
+        "sotaActivation-duplicate": "Duplicat SOTA!",
+        "wwffActivation-duplicate": "Duplicat WWFF!",
+        "wwbotaActivation-newDay": "Nou Dia de WWBOTA",
+        "wwbotaActivation-newRef": "Búnquer Nou",
+        "motaActivation-newRef": "Molí Nou"
+      },
+      "history": {
+        "last7days": "{{count}} en els darrers 7 dies",
+        "today": "{{count}} avui",
+        "yesterday": "{{count}} ahir",
+        "qsos_zero": "0 QSOs",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSOs"
+      },
+      "thisOpCount_zero": "0 QSOs en aquesta operació",
+      "thisOpCount_one": "1 QSO en aquesta operació",
+      "thisOpCount_other": "{{count}} QSOs en aquesta operació",
+      "otherOpsCount_zero": "0 QSOs en altres operacions",
+      "otherOpsCount_one": "1 QSO en altres operacions",
+      "otherOpsCount_other": "{{count}} QSOs en altres operacions",
+      "andMoreCount_zero": "… i {{count}} més",
+      "andMoreCount_one": "… i {{count}} més",
+      "andMoreCount_other": "… i {{count}} més",
+      "showImage": "Mostrar Imatge",
+      "notes": "Apunts",
+      "potentialCall": "Possible indicatiu: {{call}}",
+      "withCall": "amb {{call}}"
+    },
+    "spots": {
+      "title": "Anuncis"
+    },
+    "editQSO": {
+      "title": "Editar QSO",
+      "sections": {
+        "qso": "Detalls del QSO",
+        "their": "La seva informació",
+        "our": "La nostra informació",
+        "more": "Més"
+      },
+      "fields": {
+        "time": "Hora",
+        "date": "Data",
+        "freq": "Freqüència",
+        "mode": "Mode",
+        "band": "Banda",
+        "power": "Potència",
+        "call": "Indicatiu de l'Estació",
+        "sent": "RST",
+        "exchange": "Intercanvi",
+        "name": "Nom",
+        "city": "Ciutat",
+        "state": "Estat/Província",
+        "county": "País",
+        "entity": "Entitat",
+        "cqZone": "Zona CQ",
+        "ituZone": "Zona ITU",
+        "arrlSection": "Secció ARRL",
+        "grid": "Graella",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "notes": "Apunts"
+      }
+    },
+    "opInfo": {
+      "title": "Informació de l'operació"
+    },
+    "settings": {
+      "title": "Configuració",
+      "sections": {
+        "settings": "Configuració",
+        "accounts": "Comptes",
+        "about": "Sobre Ham2K",
+        "help": "Necessites ajuda?"
+      },
+      "operatorCallsign": {
+        "title": "Indicatiu de l'operador",
+        "noCall": "Sense indicatiu",
+        "dialogTitle": "Indicatiu de l'operador",
+        "pleaseEnterCallsign": "Si us plau, introdueix un indicatiu!",
+        "callsignLabel": "Indicatiu de l'operador"
+      },
+      "generalSettings": {
+        "title": "Configuració general",
+        "description": "Mode fosc, fila de números, unitats i més"
+      },
+      "loggingSettings": {
+        "title": "Configuració de registre",
+        "description": "Personalitza l'experiència de registre"
+      },
+      "dataSettings": {
+        "title": "Configuració de dades",
+        "description": "Fitxers de dades, notes d'indicatius i més"
+      },
+      "syncSettings": {
+        "title": "Configuració de sincronització",
+        "description": "Sincronització i còpia de seguretat al núvol"
+      },
+      "accountsSettings": {
+        "title": "Comptes i Serveis",
+        "description": "QRZ.com i altres serveis"
+      },
+      "appFeatures": {
+        "title": "Funcions de l'aplicació",
+        "description": "Gestionar funcions com POTA, SOTA, etc."
+      },
+      "developerSettings": {
+        "title": "Configuració de desenvolupador",
+        "description": "Zona perillosa"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} és un Suport de Ham2K",
+        "couldBeASupporter": "{{callsign}} podria ser un Suport de Ham2K"
+      },
+      "versionSettings": {
+        "description": "Veure canvis recents"
+      },
+      "creditsSettings": {
+        "title": "Crèdits",
+        "description": "Sebastián Delmont KI2D & Team PoLo"
+      },
+      "noticesSettings": {
+        "title": "Avisos recents",
+        "description": "Missatges que podries haver-te perdut?"
+      },
+      "readTheFineManual": {
+        "title": "Llegeix el maleït manual",
+        "description": "Consulteu la documentació de PoLo"
+      },
+      "ham2KForums": {
+        "title": "Fòrums Ham2K",
+        "description": "Troba ajuda, envia comentaris i discuteix idees…"
+      },
+      "ham2KChat": {
+        "title": "Xat Ham2K",
+        "description": "El servidor de discord per a la nostra comunitat en línia"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Vídeos i transmissió en directe"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "Perquè mai tens massa fotos…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Segueix-nos per a notícies i actualitzacions"
+      },
+      "contactUs": {
+        "title": "Contacta amb nosaltres",
+        "description": "help@ham2k.com\n   (però prova els Fòrums o Xat primer!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Configuració general",
+      "theme": {
+        "title": "Tema",
+        "descriptionDark": "Sempre en mode fosc",
+        "descriptionLight": "Sempre en mode clar",
+        "descriptionDevice": "Igual que el tema del dispositiu",
+        "dialogTitle": "Tema"
+      },
+      "fontScale": {
+        "title": "Mida de la lletra",
+        "descriptionXS": "El més petit",
+        "descriptionSM": "Més petita",
+        "descriptionMD": "Normal",
+        "descriptionLG": "Més gran",
+        "descriptionXL": "El més gran",
+        "dialogTitle": "Mida de la lletra",
+        "dialogDescription": "Aquestes dimensions també estan afectades per les configuracions del dispositiu, com la pantalla i l'accessibilitat."
+      },
+      "language": {
+        "title": "Idioma: {{lang}}",
+        "description": "Canvia l'idioma de l'aplicació",
+        "dialogTitle": "Idioma",
+        "dialogDescription": "Canviar l'idioma",
+        "deviceDefault": "Utilitza la configuració del dispositiu ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Configuració de dispositiu) no suportat actualment."
+      },
+      "showNumbersRow": {
+        "title": "Mostra la fila de números",
+        "descriptionOn": "Botons ràpids per a números",
+        "descriptionOff": "No mostris la fila de números"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Punt a la filera de números",
+        "descriptionOn": "Inclou punt (i barra inclinada)",
+        "descriptionOff": "Només mostra els números"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Coma a la filera de números",
+        "descriptionOn": "Inclou una coma",
+        "descriptionOff": "Sense coma"
+      },
+      "vibrateNumbersRow": {
+        "title": "Activa la vibració a la fila de números",
+        "descriptionOn": "Vibració en prémer els números",
+        "descriptionOff": "Sense vibració en prémer els números"
+      },
+      "useMetricUnits": {
+        "title": "Utilitza unitats mètriques",
+        "descriptionOn": "Utilitza milles per a distàncies",
+        "descriptionOff": "Utilitza quilòmetres per a distàncies"
+      },
+      "keepDeviceAwake": {
+        "title": "Mantenir el dispositiu despert",
+        "descriptionOn": "Evita que el dispositiu bloquegi la pantalla",
+        "descriptionOff": "Permet el bloqueig regular de pantalla"
+      },
+      "useSplitViews": {
+        "title": "Utilitza vistes dividides",
+        "descriptionOn": "Utilitza vistes dividides quan la pantalla és prou gran",
+        "descriptionOff": "No utilitzis vistes dividides"
+      },
+      "useGrid8": {
+        "title": "Ubicació d'alta precisió",
+        "descriptionOn": "Utilitza quadrícules de 8 dígits",
+        "descriptionOff": "Utilitza quadrícules de 6 dígits"
+      },
+      "smartKeyboard": {
+        "title": "Característiques del teclat intel·ligent",
+        "descriptionOn": "Activa les característiques del teclat intel·ligent",
+        "descriptionOff": "Utilitza teclats més simples per raons de compatibilitat amb alguns dispositius"
+      },
+      "exportSettings": {
+        "title": "Configuració d'exportació",
+        "description": "Personalitza els noms d'arxius i altres configuracions"
+      },
+      "privacy": {
+        "title": "Privacitat"
+      },
+      "shareAppUsageData": {
+        "title": "Compartir dades d'ús de l'aplicació",
+        "descriptionOn": "Ajuda'ns a millorar l'aplicació compartint dades d'ús, errors i rendiment",
+        "descriptionOff": "Mantén privades les dades d'ús de l'aplicació.\nL'equip de Ham2K no podrà detectar errors ni altres incidències."
+      },
+      "shareOperationData": {
+        "title": "Comparteix dades d'operació",
+        "descriptionOn": "Comparteix algunes dades d'operació públicament i amb altres usuaris",
+        "descriptionOff": "Mantén privades les dades d'operació"
+      },
+      "privacyPolicy": {
+        "title": "Política de privacitat",
+        "description": "Llegeix la nostra Política de Privacitat"
+      },
+      "termsOfService": {
+        "title": "Condicions del servei",
+        "description": "Llegeix les nostres Condicions del Servei"
+      }
+    },
+    "loggingSettings": {
+      "title": "Configuració del registre",
+      "leftieMode": {
+        "title": "Mode esquerrà",
+        "descriptionOn": "Utilitza un disseny per a persones esquerranes",
+        "descriptionOff": "Utilitza un disseny per a persones dretanes"
+      },
+      "countryFlags": {
+        "title": "Banderes del país",
+        "descriptionNone": "No mostris cap bandera",
+        "descriptionAll": "Mostra les banderes de tots els contactes",
+        "descriptionDefault": "Mostra només per als contactes DX"
+      },
+      "showBearing": {
+        "title": "Mostra rumb",
+        "descriptionOn": "Mostra el rumb estimat a l'estació",
+        "descriptionOff": "No mostris informació de rumb"
+      },
+      "switchSignalReportOrder": {
+        "title": "Canvia l'ordre dels informes de senyal",
+        "descriptionOn": "Enviat primer, Rebut segon",
+        "descriptionOff": "Rebut primer, Enviat segon"
+      },
+      "jumpAfterRST": {
+        "title": "Salta al camp següent en introduir RST",
+        "descriptionOn": "Salta després d'introduir RST",
+        "descriptionOff": "No saltis automàticament"
+      },
+      "suggestDefaultOperator": {
+        "title": "Suggerir operador predeterminat",
+        "descriptionOn": "Estableix {{operatorCall}} com a operador en operacions on la trucada de l'estació és diferent",
+        "descriptionOff": "No suggereixis operador predeterminat independentment de la trucada de l'estació utilitzada"
+      },
+      "suggestTemplates": {
+        "title": "Utilitza plantilles d'operació",
+        "descriptionOn": "Suggerir plantilles per a noves operacions",
+        "descriptionOff": "No suggeriu plantilles"
+      },
+      "bandsModes": {
+        "title": "Bandes i Modes",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Extensions"
+      }
+    },
+    "featuresSettings": {
+      "title": "Característiques de l'aplicació",
+      "activatingExtension": "Activant l'extensió, això pot trigar un moment…",
+      "fewerOf": "Menys de {{category}}…",
+      "moreOf": "Més de {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Configuració de dades",
+      "offlineDataTitle": "Dades fora de línia",
+      "extensionsTitle": "Extensions",
+      "logDataTitle": "Dades del registre",
+      "importHistoryFromADIF": "Importar Historial des d'ADIF",
+      "importHistoryFromADIFDescription": "Utilitzat per a cerques fora de línia i estadístiques de QSO",
+      "clearADIFHistory": "Neteja l'historial ADIF",
+      "clearADIFHistoryDescription": "Elimina els registres importats d'ADIF",
+      "updatedRelative": "Actualitzat {{date}}",
+      "fetching-md": "### Recuperant **{{title}}**…",
+      "progress-md": "### Recuperant **{{title}}**\n\n{{progress}}",
+      "updated-md": "Actualitzat el {{date}}",
+      "version-md": "Versió: {{version}}",
+      "confirmClearHistory": {
+        "title": "Estàs segur?",
+        "description": "Això eliminarà tots els registres històrics anteriorment importats dels fitxers ADIF",
+        "recordsNotDeleted": "Els registres de les operacions no s'eliminaran"
+      },
+      "importingHistoricalADIF": "Important registres ADIF… Tingues paciència!",
+      "errorImportingHistoricalADIF": "Error en importar dades ADIF històriques",
+      "errorDeletingHistoricalRecords": "Error en eliminar registres històrics",
+      "recordsCount_zero": "Cap registre",
+      "recordsCount_one": "1 registre",
+      "recordsCount_other": "{{fmtCount}} registres"
+    },
+    "accountsSettings": {
+      "title": "Comptes i Serveis",
+      "description": "QRZ.com i altres serveis",
+      "accountsSection": "Credencials",
+      "servicesSection": "Serveis",
+      "accountsQRZ": {
+        "title": "QRZ (per consultar indicatius)",
+        "description": "Inici de sessió: {{login}}",
+        "noAccount": "Cap compte",
+        "errorEmail": "No facis servir el teu correu electrònic per iniciar sessió.",
+        "dialogTitle": "Compte QRZ.com",
+        "pleaseEnterDetails": "Si us plau, introdueix les dades del teu compte QRZ.com:",
+        "loginLabel": "Usuari (el teu indicatiu)",
+        "loginPlaceholder": "el teu usuari",
+        "passwordLabel": "Contrasenya",
+        "passwordPlaceholder": "la teva contrasenya",
+        "checkCredentials": "Comprova les credencials"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Configuracions de Wavelog",
+      "description": "Configura la connexió de l'API de Wavelog",
+      "noStationsFoundOrInvalidResponse": "No s'han trobat estacions o resposta invàlida",
+      "errorFetchingStations": "Error en obtenir estacions: {{message}}",
+      "fetchStations": "Obtenir estacions",
+      "selectStation": "Selecciona l'estació",
+      "selectedStation": "Estació seleccionada: {{station}}"
+    },
+    "syncSettings": {
+      "title": "Configuració de sincronització",
+      "description": "Ham2K LoFi ofereix un servei de sincronització fiable entre tots els teus dispositius i proporciona una còpia de seguretat de les teves dades d'operació al núvol.",
+      "activePlan": "Pla Actiu: {{plan}}",
+      "noActivePlan": "Cap Pla Actiu",
+      "syncService": "Servei de sincronització",
+      "syncService.enabled": "Activat",
+      "syncService.disabled": "Desactivat",
+      "deviceNotLinked": "Dispositiu no vinculat! ({{id}})",
+      "anonymousAccount": "Compte anònim (#{{id}})",
+      "enableSyncToLinkDevice": "Activa la sincronització per vincular aquest dispositiu",
+      "checkEmailInboxForConfirmation": "(comprova la safata d'entrada del teu correu electrònic per obtenir la confirmació)",
+      "accountNumber": "Compte #{{id}}",
+      "pendingEmailConfirmation": "(pendent de confirmació per correu electrònic)",
+      "tapToConfigure": "Toca per configurar",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (Desenvolupament)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (Oficial)",
+        "custom": "Personalitzat ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Aquest dispositiu va ser sincronitzat per última vegada amb un compte diferent (#{{id}}).\n\nPer continuar sincronitzant, cal decidir entre les següents opcions:",
+        "option1withEmail-md": "Opció #1: Reemplaça les dades d'aquest dispositiu amb les de l'usuari **{{email}}** del servidor.",
+        "option1noEmail-md": "Opció #1: Substitueix les dades d'aquest dispositiu amb les del nou compte al servidor.",
+        "option1button": "Tria l'Opció #1: substitueix per les dades del servidor",
+        "option2withEmail-md": "Opció #2: Combina les dades d'aquest dispositiu amb les de l'usuari **{{email}}** del servidor.",
+        "option2noEmail-md": "Opció #2: Combina les dades d'aquest dispositiu amb les del nou compte al servidor.",
+        "option2button": "Tria l'Opció #2: combina dades",
+        "option3-md": "Opció #3: Enllaça de nou amb el compte anterior, **{{email}}**.",
+        "option3button": "Tria l'Opció #3: compte anterior",
+        "buttonCancel": "No, Cancel·la",
+        "buttonProcees": "Sí, assumeixo el risc! Substitueix-ho tot!"
+      },
+      "combineDataAlert": {
+        "title": "Combinar dades locals?",
+        "text": "Estàs segur que vols combinar aquestes operacions i QSOs amb el nou compte?\n\nAixò combinarà les QSOs en aquest dispositiu amb les que ja es troben en el Servei de sincronització per al nou compte, i podria provocar accidentalment la barreja de registres no relacionats!\n\nAquesta operació no es pot desfer.",
+        "buttonCancel": "No, Cancel·la",
+        "buttonProcees": "Sí, assumeixo el risc! Combina-ho tot!"
+      },
+      "replaceDataAlert": {
+        "title": "Substituir dades locals?",
+        "text": "Estàs segur que vols substituir totes les dades d'aquest dispositiu amb les operacions i QSOs per al nou compte des del Servei de sincronització?\n\nL'aplicació es reiniciarà.\n\nSi tens dades no sincronitzades, ES PERDRAN.",
+        "buttonCancel": "No, Cancel·la",
+        "buttonProcees": "Sí, assumeixo el risc! Substitueix-ho tot!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Error en vincular-se de nou amb el compte anterior",
+        "text": "S'ha produït un error mentre es vinculava de nou amb el compte anterior.\n\n{{error}}\n\nSi us plau, torna-ho a intentar més tard.",
+        "buttonCancel": "D'acord"
+      },
+      "syncAccountDialog": {
+        "title": "Compte Ham2K LoFi",
+        "emailAddressLabel": "Adreça de correu electrònic",
+        "resendButton": "Reenviar",
+        "revertButton": "Reverteix",
+        "syncFirstButton": "Torna enrere i completa la sincronització primer",
+        "continueAnywayButton": "Sé el que faig! Continua de tota manera",
+        "potentialForDataLoss": "Potencial de pèrdua de dades!!!",
+        "potentialForDataLossDescription": "No has sincronitzat totes les dades d'aquest dispositiu.\n\nSi vincules aquest dispositiu a un nou compte, se't demanarà si vols substituir les seves dades per les del nou compte.\n\nEn aquest cas, potser no podràs recuperar cap activitat existent que encara no s'hagi sincronitzat.\n\nEt suggerim que completis primer la sincronització d'aquest dispositiu!"
+      },
+      "syncServiceDescription-md": "El servei bàsic és gratuït i et permet sincronitzar dades recents (fins a 7 dies) entre dos dispositius o aplicacions a velocitat limitada.\n\nEl servei complet requereix una subscripció de pagament i et permet sincronitzar totes les teves operacions entre un nombre raonable de dispositius o aplicacions a plena velocitat.\n\nMentre el servei LoFi estigui en PERÍODE DE PROVES durant els propers mesos, el servei continuarà sent gratuït. Després, els preus dependran del país i de la moneda, però no haurien de superar els 30 USD/any o el seu equivalent, i probablement seran inferiors.",
+      "thisDevice": "Aquest dispositiu",
+      "notAuthenticated": "No autenticat",
+      "lofiServer": "Servidor LoFi",
+      "otherDevices": "Altres Dispositius",
+      "devSettings": "Configuració per a Desenvolupadors",
+      "resetSyncStatus": "Restableix l'estat de sincronització",
+      "noDataStored": "Sense dades emmagatzemades",
+      "syncCountDescription": {
+        "operations": "Operacions: {{synced}} sincronitzades, {{pending}} pendents",
+        "qsos": "QSOs: {{synced}} sincronitzats, {{pending}} pendents"
+      },
+      "cloudCountDescription": {
+        "operations": "Operacions: {{total}} en total",
+        "operationsSyncable": "Operacions: {{total}} emmagatzemades, {{syncable}} per sincronitzar",
+        "qsos": "QSOs: {{total}} emmagatzemats",
+        "qsosSyncable": "QSOs: {{total}} emmagatzemats, {{syncable}} per sincronitzar"
+      }
+    },
+    "versionSettings": {
+      "title": "Informació de la Versió",
+      "recentChanges": "Canvis recents",
+      "coverPhoto": "Foto de portada: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Comprovant les correccions…",
+      "newMajorReleaseAvailable": "Nova versió principal disponible",
+      "patchAvailable": "Pegat de {{track}} disponible",
+      "checkForUpdates": "Comprova si hi ha actualitzacions de {{track}}",
+      "checkForUpdatesGeneric": "Comprova les actualitzacions",
+      "updateAvailable": "Actualització disponible",
+      "downloading": "Descarregant…",
+      "downloadingProgress": "Descarregant {{progress}}%",
+      "installing": "Instal·lant…",
+      "errorDownloadingUpdate": "Error en descarregar l'actualització",
+      "errorCheckingForUpdates": "Error en comprovar actualitzacions",
+      "noUpdatesAvailable": "Cap actualització disponible",
+      "versionDescription": "{{version}} - Versió Base {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Crèdits",
+      "createdBy": "Creat per {{callsign}}",
+      "openSource": "Ham2K PoLo és Codi Obert",
+      "checkOutCode": "Revisa el codi i contribueix a GitHub!",
+      "teamPoLo": "Equip PoLo",
+      "creator": "Creador i Desenvolupador Principal",
+      "developer": "Desenvolupador",
+      "leadSupport": "Suport i Documentació Principal",
+      "moreCodeAndDocsContributors": "Més col·laboradors…",
+      "contributorCode": "Contribuït per codi: {{contributions}}",
+      "contributorDocumentation": "Documentació",
+      "translations": "Traduccions",
+      "translationsService": "Traduccions gestionades amb Crowdin",
+      "translationsServiceDescription": "Les eines per gestionar el procés de traducció són generosament donades per CrowdIn"
+    },
+    "devModeSettings": {
+      "title": "Configuració del mode desenvolupador",
+      "wipeDatabase": {
+        "title": "Vols esborrar la Base de Dades?",
+        "description": "Estàs segur que vols eliminar totes les Operacions, QSOs i altres dades?",
+        "noCancel": "No, Cancel·la",
+        "yesWipeIt": "Sí, Esborra-ho!"
+      },
+      "import": {
+        "title": "Importar",
+        "importQSONFile": "Importa fitxer QSON"
+      },
+      "experiments": {
+        "title": "Experiments",
+        "enableWavelogExperiments": "Habilita experiments Wavelog"
+      },
+      "manageDatabase": {
+        "title": "Gestiona la Base de Dades",
+        "exportDatabase": "Exporta la Base de Dades",
+        "exportDatabaseDescription": "Exporta el fitxer actual de la base de dades",
+        "replaceDatabase": "Reemplaça la Base de Dades",
+        "replaceDatabaseDescription": "Importa un nou fitxer de base de dades i reemplaça totes les dades",
+        "wipeDatabase": "Esborra la Base de Dades",
+        "wipeDatabaseDescription": "Elimina totes les dades de la base de dades."
+      },
+      "internationalization": {
+        "title": "Internacionalització",
+        "crowdInPersonalTokenLabel": "Token Personal d'Accés a CrowdIn",
+        "crowdInPersonalTokenPlaceholder": "Obtingues un de la pàgina de configuració del compte de CrowdIn",
+        "refreshCrowdInTranslations": {
+          "title": "Renovant traduccions…",
+          "starting": "Si us plau, espera mentre refresquem les traduccions…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Renovació completada!",
+          "errorTitle": "Error en la renovació de traduccions",
+          "error": "Error en la renovació de traduccions de CrowdIn: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Descarregar Configuració Avançada",
+        "locationLabel": "Ubicació",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Informació del Sistema",
+        "shareWithDevelopmentTeam": "Comparteix amb l'Equip de Desenvolupament"
+      },
+      "updatePatches": {
+        "title": "Actualització de Pegats",
+        "selectTrackForPatches": "Selecciona Branca per als pegats",
+        "selectTrackForPatchesDescription": "Selecciona la branca per als pegats",
+        "checkingForUpdates": "Comprovant les actualitzacions…",
+        "checkForUpdates": "Comprova actualitzacions de {{track}}",
+        "updateAvailable": "Actualització disponible",
+        "updateAvailableForTrack": "Actualització de {{track}} disponible",
+        "downloading": "Descarregant…",
+        "downloadingProgress": "Descarregant {{progress}}%",
+        "installing": "Instal·lant…",
+        "errorDownloadingUpdate": "Error en descarregar l’actualització",
+        "errorCheckingForUpdates": "Error en comprovar les actualitzacions",
+        "noUpdatesAvailable": "No hi ha actualitzacions disponibles"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Bandes i modes",
+      "bands": {
+        "title": "Bandes",
+        "showCommonBands": "Mostra bandes habituals",
+        "showAllBands": "Mostra totes les bandes"
+      },
+      "modes": {
+        "title": "Modes",
+        "showMoreModes": "Mostra més modes",
+        "showEvenMoreModes": "Mostra encara més modes",
+        "showFewerModes": "Mostra menys modes"
+      }
+    },
+    "exportSettings": {
+      "title": "Exporta configuracions",
+      "exportTypes": "Tipus d'exportació",
+      "customTemplates": "Plantilles personalitzades",
+      "defaultTemplates": "Plantilles per defecte",
+      "customTemplatesDescription": "Utilitzar plantilles personalitzades per a l'exportació",
+      "defaultTemplatesDescription": "Utilitzar plantilles per defecte per a l'exportació",
+      "includePrivateData": "Inclou dades privades",
+      "fileNameTemplate": "Plantilla de nom de fitxer",
+      "titleTemplate": "Plantilla de títol",
+      "adifNotes": "Notes ADIF QSO",
+      "adifComments": "Comentaris ADIF QSO",
+      "adifQslMessage": "Missatge ADIF QSL",
+      "templateHelpTitle": "Ajuda de plantilles",
+      "includePrivateDataDescription": "Noms, notes, adreces, etc.",
+      "templateHelp-md": "Alguns elements de plantilla d'exemple…\n\n### Exportació del Registre\nAtributs pel registre que s'està exportant\n`{{log.station}}` → `{{call}}` Estació per aquesta exportació\n`{{log.ref}}` → `XX-1234` Referència per aquesta exportació\n`{{log.refName}}` → `Exemple Parc Nacional` Nom de la referència per aquesta exportació\n`{{log.refShortName}}` → `Exemple PN` Nom curt de la referència per aquesta exportació\n`{{log.handlerType}}` → `pota` Tipus de gestor per aquesta exportació\n`{{log.handlerName}}` → `Parcs Sobre l'Aire` Nom del gestor per aquesta exportació\n`{{log.handlerShortName}}` → `POTA` Nom curt del gestor per aquesta exportació\n\n### Indicatius d'Operació\n`{{op.station}}` → `{{call}}` Primera estació per l'operació\n`{{op.operator}}` → `{{call}}` Operador per l'operació\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Totes les estacions per l'operació\n`{{op.otherStations}}` → `{{otherCalls}}` Altres estacions per l'operació\n\n### Data d'Operació\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Altres Detalls d'Operació\n`{{op.title}}` → `a XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `La Meva Operació Especial`\n`{{op.userNotes}}` → `Vàrem sortir aviat al matí…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Quadre per aquesta operació\n\n### Informació QSO\n`{{qso.notes}}` → `Àudio terrible!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` L'informe de senyal que van enviar\n`{{qso.our.sent}}` → `55` L'informe de senyal que vam enviar\n`{{qso.their.grid}}` → `FF99` El quadre que van reportar\n`{{qso.refs}}` → Una llista de totes les referències per al QSO (inclou tant les referecies d'Operació com les Referencies únicament del QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "Defectes",
+        "description": "Configuracions base per a totes les exportacions",
+        "fileNameNormal": "Nom d'arxiu per a activitats de referència (Normal)",
+        "fileNameCompact": "Nom d'arxiu per a activitats de referència (Compacte)",
+        "titleReferenceActivities": "Títol per a activitats de referència",
+        "fileNameOtherActivitiesNormal": "Nom d'arxiu per a altres activitats (Normal)",
+        "fileNameOtherActivitiesCompact": "Nom d'arxiu per a altres activitats (Compacte)",
+        "titleOtherActivities": "Títol per a altres activitats",
+        "adifNotes": "Notes ADIF QSO",
+        "adifComments": "Comentaris ADIF QSO",
+        "adifQSLMessage": "Missatge ADIF QSL"
+      }
+    },
+    "noticesSettings": {
+      "title": "Avisos recents",
+      "undated": "Sense data",
+      "noRecentNotices": "Sense avisos recents"
+    },
+    "extensionSettings": {
+      "title": "Extensió"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Separador de panells",
+      "qsosTab": "QSOs",
+      "qsosTab-a11y": "Pestanya de QSOs",
+      "infoTab": "Info",
+      "infoTab-a11y": "Pestanya d'informació",
+      "operationInfo-a11y": "Informació d'operació",
+      "spotsTab": "Observacions",
+      "spotsTab-a11y": "Pestanya d'observacions",
+      "mapTab": "Mapa",
+      "mapTab-a11y": "Pestanya de mapa",
+      "settingsTab": "Operació",
+      "settingsCompactTab": "Oper.",
+      "settingsTab-a11y": "Pestanya de configuració d'operacions",
+      "menu": {
+        "loggingSettings": "Configuració del Registre",
+        "rstFields": "Camps RST",
+        "stateField": "Camp d'estat",
+        "gridField": "Camp de quadrícula",
+        "showDeletedQSOs": "Mostra QSOs eliminats",
+        "numbersRow": "Fila de números",
+        "actions": "Accions",
+        "lookupAllQSOs": "Cerca tots els QSOs",
+        "confirmSpots": "Confirma Anuncis"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Ni un sol QSO",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSOs",
+      "qsosCompactTabCount_zero": "No Qs",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Qs",
+      "noQSOsYet": "Encara no hi ha QSOs!",
+      "currentlySetTo": "Actualment configurat a",
+      "missingInfoError": {
+        "message": "ERROR: Si us plau, introduïu **{{errors}}** per a una operació vàlida",
+        "errors": {
+          "band": "banda",
+          "callsign": "indicatiu"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Desfer",
+        "erase-a11y": "Esborrar",
+        "delete-a11y": "Eliminar",
+        "addQSO-a11y": "Afegir QSO",
+        "saveQSO-a11y": "Guardar QSO"
+      },
+      "deletedQSO": "QSO eliminat",
+      "qsoWillBeDeleted": "El QSO serà eliminat!",
+      "noQSOsBy-md": "Cap QSO de {{callsign}} encara… Som-hi, sortim a l’aire!",
+      "noQSOsYet-md": "Cap QSO encara… Som-hi, sortim a l’aire!",
+      "qsoCount_zero": "No hi ha QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "qsosInTime": "{{countText}} en {{timeText}}",
+      "last10QSOs": "{{rate}} Q/h per als últims 10",
+      "last100QSOs": "{{rate}} Q/h per als últims 100",
+      "timeSinceLast": "{{time}} des de l'últim",
+      "moreLabel": "Més",
+      "theirCallLabel": "El seu indicatiu",
+      "ourSentLabel": "Enviat",
+      "theirSentLabel": "Rebut",
+      "stateLabel": "Estat",
+      "gridLabel": "Graella",
+      "timeLabel": "Hora",
+      "dateLabel": "Data",
+      "timeControls-a11y": "Controls del Temps",
+      "powerLabel": "Potència",
+      "powerControls-a11y": "Controls de Potència",
+      "modeLabel": "Mode",
+      "bandLabel": "Banda",
+      "frequencyLabel": "Freqüència",
+      "bandMissing": "Banda???",
+      "radioControls-a11y": "Controls de Ràdio {{parts}}",
+      "notesLabel": "Apunts",
+      "notesLabel-a11y": "Apunts",
+      "activeControlsLabel": "Controls Actius",
+      "activeControlsLabel-a11y": "Controls Actius",
+      "selectToRemoveActiveControls": "selecciona per eliminar-los",
+      "selectToRemoveActiveControls-a11y": "selecciona per eliminar-los",
+      "moreControlsLabel": "Més Controls",
+      "moreControlsLabel-a11y": "Més Controls",
+      "selectToAddMoreControls": "selecciona per afegir-los",
+      "selectToAddMoreControls-a11y": "selecciona per afegir-los",
+      "showSecondaryControlSettings-a11y": "Mostra la Configuració del Control Secundari",
+      "hideMostSecondaryControls-a11y": "Amaga la majoria de controls secundaris",
+      "showAllSecondaryControls-a11y": "Mostra tots els controls secundaris",
+      "spotting": {
+        "selfSpottingAt": "Autoanotant-se a {{freq}}",
+        "stopAutoRespotting": "Atura l'auto-anotació",
+        "setFrequencyFirst": "Primer selecciona una freqüència per anotar.",
+        "reSpotEvery": "Reanotar cada {{minutes}} min",
+        "reSpotAt": "Reanotar a {{freq}}",
+        "selfSpottedAt": "Auto-anotat a {{time}}",
+        "spotAt": "Anotar {{call}} a {{freq}}",
+        "tooLateToSpot": "Massa tard per anotar {{call}}",
+        "nothingToSpot": "Res a anotar",
+        "selfSpottingLabel": "Autoanotant-se",
+        "selfSpottingControls-a11y": "Controls d'Autoanotació",
+        "spottingLabel": "Anotant-se",
+        "spottingControls-a11y": "Controls d'Anotació",
+        "autoRespottingLabel": "Auto-respotting",
+        "autoRespottingControls-a11y": "Controls d'Auto-respotting",
+        "commentsLabel": "Comentaris"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "No hi ha línies?\nCal establir la vostra ubicació primer.\n\nToca aquí per fer-ho.",
+      "manyNoLocation": "Molts d'aquests QSOs no tenen una ubicació precisa.\n\nPotser necessiteu un compte de pagament en QRZ.com per a les consultes d'ubicació."
+    },
+    "opSpotsTab": {
+      "noSpots": "Sense observacions",
+      "spotsCount_zero": "Sense observacions",
+      "spotsCount_one": "1 Observació",
+      "spotsCount_other": "{{fmtCount}} Observacions",
+      "showingSpots": "Mostrant {{count}} de {{total}}",
+      "loadingSpots": "Carregant Clots…",
+      "sections": {
+        "specialSpots": "Observacions especials",
+        "newMultipliers": "Nous multiplicadors",
+        "callsOfNote": "Trucades importants",
+        "mostRecentSpots": "Observacions més recents"
+      },
+      "allBands": "Tots els bans",
+      "auto": "Auto",
+      "allModes": "Tots els modes",
+      "filters": "Filtres",
+      "filtersBand": "Ban",
+      "filtersAllBands": "Tots els bans",
+      "filtersBandAutomatic": "Automàtic (Actualment {{band}})",
+      "filtersMode": "Mode",
+      "filtersAllModes": "Tots els modes",
+      "filtersModeAutomatic": "Automàtic (Actualment {{mode}})",
+      "filtersMaximumAge": "Edat màxima",
+      "filtersAnyAge": "Qualsevol edat",
+      "filtersAge10Minutes": "10 minuts",
+      "filtersAge20Minutes": "20 minuts",
+      "filtersAge30Minutes": "30 minuts",
+      "filtersAge45Minutes": "45 minuts",
+      "filtersAge60Minutes": "60 minuts",
+      "filtersSorting": "Ordenació",
+      "filtersSortByTime": "Per hora de l'observació",
+      "filtersSortByFrequency": "Per freqüència",
+      "filtersGroupSpecialSpots": "Agrupar observacions especials primer",
+      "filtersGroupCallsWithNotes": "Agrupar crides amb notes",
+      "filtersSpotSources": "Fonts d'observacions",
+      "filtersFilterByContinent": "Filtra per continent",
+      "modeLabel": {
+        "CW": "Telegrafia (C.W.)",
+        "PHONE": "Telèfon",
+        "DIGITAL": "Digital",
+        "DATA": "Digital",
+        "phoneOrCW": "Telèfon o telegrafia (C.W.)"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Indicatiu invàlid {{callsign}}",
+      "invalidCallsigns": "Indicatius invàlids {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (operat per {{operator}})",
+      "noStationCallsignDefined": "NO HI HA CAP IDENTIFICADOR D'ESTACIÓ DEFINIT",
+      "showMoreTemplates": "Mostra Més Plantilles",
+      "templatesAvailable_zero": "No hi ha plantilles disponibles",
+      "templatesAvailable_one": "1 plantilla disponible",
+      "templatesAvailable_other": "{{count}} plantilles disponibles",
+      "stationAndOperatorTitle": "Estació & Operador",
+      "locationTitle": "Ubicació",
+      "gridDescription-md": "Quadrícula `{{grid}}`",
+      "stateDescription-md": "Estat: `{{state}}`",
+      "countyDescription-md": "Comtat: `{{county}}`",
+      "locationDescriptionNone-md": "No hi ha ubicació establerta",
+      "operationDetailsTitle": "Detalls de l'Operació",
+      "operationDetailsDescription": "Afegeix notes per a aquesta operació",
+      "addTitleOrNotesForOperation": "Afegeix un títol o notes per a aquesta operació",
+      "activitiesTitle": "Activitats",
+      "addActivityTitle": "Afegeix Activitat",
+      "addActivityDescription": "POTA, SOTA, Dia del Camp i més!",
+      "addActivityDescription-noFeatures": "Primer activa algunes funcionalitats d'activitat a la pantalla de configuració principal",
+      "operationDataTitle": "Dades de l'Operació",
+      "manageOperationLogsTitle": "Gestiona Registres d'Operació",
+      "manageOperationLogsDescription": "Exporta, importa i gestiona les dades",
+      "useAsTemplateTitle": "Utilitza com a plantilla",
+      "useAsTemplateDescription": "Inicia una nova operació amb configuracions similars",
+      "dangerZoneTitle": "La Zona de Perill",
+      "undeleteOperationTitle": "Recuperar l'Operació",
+      "deleteOperationTitle": "Eliminar l'Operació"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Estadístiques de l'Operació",
+      "operationTotalsTitle-md": "Totals de l'Operació:",
+      "qsosInTime_zero": "Cap QSO",
+      "qsosInTime_one": "1 QSO en {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSOs en {{time}}",
+      "qsoCount_zero": "No hi ha QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "timeSinceLast": "{{time}} des de l'últim QSO",
+      "last10QSOs": "{{rate}} Q/h per als últims 10",
+      "last100QSOs": "{{rate}} Q/h per als últims 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Error important QSON",
+      "invalidName": "Nom invàlid",
+      "invalidNameDescription": "El nom del fitxer ha d'acabar amb .qson o .json",
+      "unknownError": "Error desconegut"
+    },
+    "importADIF": {
+      "error": "Error important ADIF a l'Operació",
+      "historicalImportError": "Error important ADIF històric",
+      "unknownError": "Error desconegut"
+    }
+  }
+}

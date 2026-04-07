@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -9,7 +9,6 @@ import i18n from 'i18next'
 import { getLocales, findBestLanguageTag } from 'react-native-localize'
 import { initReactI18next } from 'react-i18next'
 import Config from 'react-native-config'
-import { Alert } from 'react-native'
 
 import GLOBAL from '../GLOBAL'
 
@@ -17,9 +16,9 @@ import { setGlobalDialog } from '../store/ui'
 
 import packageJson from '../../package.json'
 
-const BUNDLED_LANGUAGES = ['en', 'es', 'ja', 'de', 'fr', 'pt-BR', 'zh', 'nl', 'sk', 'nb', 'cs', 'tr']
+const BUNDLED_LANGUAGES = ['en', 'es', 'ja', 'de', 'fr', 'pt', 'pt-BR', 'zh', 'ca', 'nl', 'sk', 'nb', 'cs', 'tr', 'ro']
 
-function readBundledJSON(language, namespace) {
+function readBundledJSON (language, namespace) {
   // Using `require` allows us to only load one language at a time
   // yet still include the files in the build, which allows OTA updates.
   // But `require` in native apps requires explicit paths; it cannot use variable interpolation.
@@ -47,6 +46,12 @@ function readBundledJSON(language, namespace) {
         ...require('./resources/cw/general.json'),
         ...require('./resources/cw/polo.json'),
         ...require('./resources/cw/extensions.json')
+      }
+    case 'ca/translation':
+      return {
+        ...require('./crowdin/ca/general.json'),
+        ...require('./crowdin/ca/polo.json'),
+        ...require('./crowdin/ca/extensions.json')
       }
     case 'cs/translation':
       return {
@@ -96,11 +101,23 @@ function readBundledJSON(language, namespace) {
         ...require('./crowdin/nb/polo.json'),
         ...require('./crowdin/nb/extensions.json')
       }
+    case 'pt/translation':
+      return {
+        ...require('./crowdin/pt/general.json'),
+        ...require('./crowdin/pt/polo.json'),
+        ...require('./crowdin/pt/extensions.json')
+      }
     case 'pt-BR/translation':
       return {
         ...require('./crowdin/pt-BR/general.json'),
         ...require('./crowdin/pt-BR/polo.json'),
         ...require('./crowdin/pt-BR/extensions.json')
+      }
+    case 'ro/translation':
+      return {
+        ...require('./crowdin/ro/general.json'),
+        ...require('./crowdin/ro/polo.json'),
+        ...require('./crowdin/ro/extensions.json')
       }
     case 'sk/translation':
       return {
@@ -142,7 +159,6 @@ export const preferredLanguage = () => {
 }
 
 export const bestLanguageMatch = () => {
-  const languages = [...supportedLanguages(), 'no']
   const bestMatch = findBestLanguageTag(supportedLanguages())
 
   if (bestMatch?.languageTag === 'no') {
@@ -161,7 +177,7 @@ const NativeLanguageDetector = {
   async: false,
   detect: () => {
     return bestLanguageMatch() || 'en'
-  },
+  }
 }
 
 const I18N_EXTRA_INFO = {
@@ -180,7 +196,7 @@ export const initializeI18Next = (language) => {
       nonExplicitSupportedLngs: true,
       interpolation: {
         escapeValue: false
-      },
+      }
     })
 }
 
@@ -219,7 +235,7 @@ const CROWDIN_NAMESPACES = ['general', 'polo', 'extensions']
 const CROWDIN_LANGUAGE_OVERRIDES = {
   'pt-BR': 'pt-BR',
   'en-PL': 'en-PL',
-  'en-PT': 'en-PT',
+  'en-PT': 'en-PT'
 }
 export const refreshCrowdInTranslations = async ({ all = true, i18n, settings, dispatch, token }) => {
   try {
@@ -263,15 +279,15 @@ export const refreshCrowdInTranslations = async ({ all = true, i18n, settings, d
         if (CROWDIN_NAMESPACES.includes(file.namespace)) {
           const fileResponse = await crowdinApiFetch(
             `projects/${Config.CROWDIN_PROJECT_ID}/translations/builds/files/${file.id}`, {
-            token,
-            method: 'POST',
-            body: {
-              targetLanguageId: language.id,
-              exportApprovedOnly: false,
-              skipUntranslatedStrings: false,
-              skipUntranslatedFiles: false,
-            }
-          })
+              token,
+              method: 'POST',
+              body: {
+                targetLanguageId: language.id,
+                exportApprovedOnly: false,
+                skipUntranslatedStrings: false,
+                skipUntranslatedFiles: false
+              }
+            })
           const downloadUrl = fileResponse.data.url
           const downloadResponse = await fetch(downloadUrl)
           const json = await downloadResponse.json()

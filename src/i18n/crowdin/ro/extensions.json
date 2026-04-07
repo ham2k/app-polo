@@ -1,0 +1,922 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Nicio bandă",
+      "bandsCount_one": "1 Bandă",
+      "bandsCount_other": "{{count}} Benzi",
+      "modesCount_zero": "Niciun mod",
+      "modesCount_one": "1 Mod",
+      "modesCount_other": "{{count}} Moduri",
+      "total": "Total {{count}}"
+    },
+    "bca": {
+      "name": "Castele și Fortărețe din Belgia",
+      "shortName": "BCA",
+      "exportName": "Activare BCA",
+      "activityOptions": {
+        "title_zero": "Niciun castel selectat pentru activare",
+        "title_one": "Activați 1 castel",
+        "title_other": "Activați {{count}} castele",
+        "noCastlesFound": "Nu au fost găsite castele",
+        "nearestMatches": "Cele mai apropiate {{limit}} dintre {{count}} potriviri",
+        "matchingCastles_zero": "Niciun castel potrivit",
+        "matchingCastles_one": "1 castel potrivit",
+        "matchingCastles_other": "{{count}} castele potrivite",
+        "searchForCastles": "Caută câteva castele pentru a activa!",
+        "noCastlesNearby": "Niciun castel în apropiere",
+        "nearbyCastles": "Castele în apropiere",
+        "searchPlaceholder": "Nume sau referință…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Niciun castel vânat",
+        "huntedRefsCount_one": "1 castel vânat",
+        "huntedRefsCount_other": "{{fmtCount}} castele vânate",
+        "activatorQSOsCount_zero": "Nicio activare QSO",
+        "activatorQSOsCount_one": "1 QSO activat",
+        "activatorQSOsCount_other": "{{fmtCount}} QSO-uri activate",
+        "huntedQSOsCount_zero": "Niciun QSO vânat",
+        "huntedQSOsCount_one": "1 QSO vânat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO-uri vânate",
+        "operationTotals": "Total operațiuni",
+        "referencesActivatedCount_zero": "Niciun castel activat",
+        "referencesActivatedCount_one": "1 castel activat",
+        "referencesActivatedCount_other": "{{fmtCount}} castele activate",
+        "referencesMissedCount_zero": "Nu există castele incomplete",
+        "referencesMissedCount_one": "1 castel incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} castele incomplete",
+        "referencesHuntedCount_zero": "Niciun castel vânat",
+        "referencesHuntedCount_one": "1 castel vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} castele vânate"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Indicatorul lor BCA"
+      }
+    },
+    "blha": {
+      "name": "Faruri și Nave Far din Belgia",
+      "shortName": "BLHA",
+      "exportName": "Activare BLHA",
+      "activityOptions": {
+        "title_zero": "Niciun far selectat pentru activare",
+        "title_one": "Activați 1 far",
+        "title_other": "Activați {{count}} faruri",
+        "noLighthousesFound": "Nu au fost găsite faruri",
+        "nearestMatches": "Cele mai apropiate {{limit}} dintre {{count}} rezultate",
+        "matchingLighthouses_zero": "Niciun far potrivit",
+        "matchingLighthouses_one": "1 far găsit",
+        "matchingLighthouses_other": "{{count}} faruri găsite",
+        "searchForLighthouses": "Caută câteva faruri pentru a le activa!",
+        "noLighthousesNearby": "Niciun far în apropiere",
+        "nearbyLighthouses": "Faruri în apropiere",
+        "searchPlaceholder": "Nume sau referință…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Niciun far vânat",
+        "huntedRefsCount_one": "1 far vânat",
+        "huntedRefsCount_other": "{{fmtCount}} faruri vânate",
+        "activatorQSOsCount_zero": "Nicio activare QSO",
+        "activatorQSOsCount_one": "1 QSO activat",
+        "activatorQSOsCount_other": "{{fmtCount}} QSO-uri activate",
+        "huntedQSOsCount_zero": "Niciun QSO vânat",
+        "huntedQSOsCount_one": "1 QSO vânat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO-uri vânate",
+        "operationTotals": "Total operaţiuni",
+        "referencesActivatedCount_zero": "Nici un far activat",
+        "referencesActivatedCount_one": "1 far activat",
+        "referencesActivatedCount_other": "{{fmtCount}} faruri activate",
+        "referencesMissedCount_zero": "Nu există faruri incomplete",
+        "referencesMissedCount_one": "1 far incomplet",
+        "referencesMissedCount_other": "{{fmtCount}}  Faruri",
+        "referencesHuntedCount_zero": "Nici un far vânat",
+        "referencesHuntedCount_one": "1 far vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} Faruri vânate"
+      }
+    },
+    "call-notes": {
+      "name": "Note de Indicativ",
+      "description-md_zero": "Nicio notă încărcată.",
+      "description-md_one": "{{fmtCount}} {{type}} încărcate.",
+      "description-md_other": "{{fmtCount}} {{type}} Încărcate",
+      "builtIn": "Notițe integrate",
+      "userDefined": "Notițe utilizator",
+      "failedToLoad": "Încărcare eșuată!",
+      "notesFile": "Fișier cu notițe despre indicativ",
+      "nameLabel": "Nume",
+      "namePlaceholder": "Nume pentru Fișierul tău de Note Indicativ",
+      "locationLabel": "Locație",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Integrat",
+      "customTitle": "Personalizat",
+      "addFile": "Adaugă un fișier nou",
+      "aboutTitle": "Despre Notițe Indicative",
+      "names": {
+        "ham2k-hams-of-note": "Radioamatori notabili Ham2K"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Un eșantion veritabil despre cine este cine și cine nu este în lumea radio"
+      },
+      "help-md": "Notele de indicativ sunt stocate în fișiere text simple, un indicativ pe linie urmat de informații pe care dorești să le afișezi pe ecranul de logare. Poți folosi fișierele integrate sau să adaugi propriile tale.\n\nFurnizează un link direct către un fișier text simplu, sau un \"link de partajare\" de la un serviciu precum:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nLiniile din acel fișier ar trebui să arate astfel și pot suporta formatări de bază markdown:\n\n```nK2HRC 🎉 Clubul Radio Ham2K!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Regalitate_\nDAN WD4DAN,WD4JMM\n```\n\nDacă intrarea începe cu un emoji, acesta va fi utilizat în locul ⭐ implicit.\n\nIntrările pot fi folosite pentru \"extinderea indicativului\" dacă tastezi mai întâi `..` sau `//` în câmpul indicativului, cum ar fi `//DAN` în exemplul de mai sus."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Nicio provincie canadiană",
+      "provincesCount_one": "1 Provincie canadiană",
+      "provincesCount_other": "{{count}} Provincii canadiene"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Setări",
+        "year": "An",
+        "testMode-md": "Din moment ce evenimentul din acest an nu a început încă, poți să îți testezi operațiunea cu QSO-uri din ultimele șapte zile.",
+        "note-md": "NOTĂ: PoLo va raporta rezultatele tale folosind toate QSO-urile din intervalul de date, inclusiv alte operațiuni prezente pe acest dispozitiv.",
+        "info-md": "Evenimentul Special 13 Colonii are loc în fiecare an de la ora 9am ET 1 iulie până la miezul nopții ET 7 iulie."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Actualizare informații vreme…",
+      "errorFetchingWeather": "Eroare actualizare informații vreme",
+      "fetchingSolarWeather": "Actualizare informații vreme în spațiu…",
+      "errorFetchingSolarWeather": "Eroare actualizare vremea în spațiu",
+      "addNote": "Adăugați o notiță: \"{{note}}\"…",
+      "addNotePrompt": "Adăugați o notiță? continuați să tastați…",
+      "addNoteConfirm": "Notiță adăugată!",
+      "addTodo": "Adăugați o sarcină de făcut: \"{{note}}\"…",
+      "addTodoPrompt": "Adăugați un element de făcut? continuați să tastați…",
+      "addTodoConfirm": "Sarcină de făcut adăugată!",
+      "sendChat": "Trimite chat: \"{{note}}'…",
+      "sendChatPrompt": "Trimiteți un mesaj de chat? continuați să tastați…",
+      "sendChatConfirm": "Mesaj de chat trimis!"
+    },
+    "commands-debug": {
+      "syncall": "Ștergeți toate operațiunile și resetați starea sincronizată?",
+      "syncallConfirm": "Ştergerea datelor şi resincronizare totala…",
+      "syncup": "Retrimiteți datele locale pentru a sincroniza serviciul?",
+      "syncupConfirm": "Retrimitere…",
+      "wipedb": "Ștergeți întreaga bază de date (dar păstrați setările) ?",
+      "wipedbConfirm": "Ştergere bază de date…",
+      "factory": "Ștergeți toate datele și setările ?",
+      "factoryConfirm": "Resetare la setările din fabrică în derulare...",
+      "switchLanguage": "Schimbați limba în `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Limba `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Se comută la `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Activați modul dezvoltator?",
+      "activateConfirm": "Modul dezvoltator activat!",
+      "deactivate": "Dezactivați modul dezvoltator?",
+      "deactivateConfirm": "Modul dezvoltator dezactivat!",
+      "on": "Modul Dezvoltator: Pornit!!!",
+      "off": "Modul Dezvoltator: Oprit"
+    },
+    "commands-misc": {
+      "rtfm": "Citiți manualul detaliat?",
+      "rtfmConfirm": "Deschide manualul detaliat",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Nu vă puteti auto-spota fără o frecvență",
+        "selfSpotWithComments": "Vă auto-spotați cu \"{{comments}}\"?",
+        "selfSpotPrompt": "Auto-spotare?",
+        "selfSpottingWithComments": "Auto-spotare la {{freq}} cu \"{{comments}}\"",
+        "selfSpotting": "Auto-spotare la {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Începi operațiunea?",
+      "startConfirm": "Operațiune începută!",
+      "break": "Adăugați o pauză?",
+      "breakConfirm": "Pauza de operațiune adăugată!",
+      "stop": "Opriți operațiunea?",
+      "stopConfirm": "Operațiunea a fost oprită!"
+    },
+    "commands-operator": {
+      "change": "Schimbați operatorul cu {{operator}}?",
+      "changeConfirm": "Operator setat pe {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Treceți în banda de {{band}}?",
+      "bandConfirm": "Banda setată pe {{band}}",
+      "frequency": "Schimbați frecvența la {{freq}} MHz?",
+      "frequencyConfirm": "Frecvența setată la {{freq}} MHz",
+      "frequencyAndMode": "Schimbați frecvența la {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Frecvența setată la {{freq}} MHz ({{mode}})",
+      "power": "Schimbați puterea la {{power}}W?",
+      "powerConfirm": "Puterea setată la {{power}}W",
+      "mode": "Schimbați modul în {{mode}}?",
+      "modeConfirm": "Modul setat pe {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Setați {{name}}?",
+      "setChange": "Schimbați {{label}} la {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} setat pe {{value}}",
+      "setNotChanged": "Neschimbat"
+    },
+    "commands-time": {
+      "setTime": "Setați timpul la {{time}}?",
+      "setDate": "Setați data la {{date}}?",
+      "timeSet": "Timpul setat la {{time}}",
+      "dateSet": "Data setată la {{date}}",
+      "changeTimeByHours": "Schimbare timp cu {{delta}} ore?",
+      "changeTimeByMinutes": "Schimbare timp cu {{delta}} minute?",
+      "changeTimeBySeconds": "Schimbare timp cu {{delta}} secunde?",
+      "changeTimeByDays": "Schimbare timp cu {{delta}} zile?",
+      "changeTimeByWeeks": "Schimbare timp cu {{delta}} săptămâni?",
+      "changeTimeToNow": "Schimbare timp la acum?",
+      "changeTimeToToday": "Schimbare timp la astăzi?",
+      "changeTimeToYesterday": "Schimbare timp la ieri?",
+      "timeSetToNow": "Timp setat la acum",
+      "timeSetToToday": "Timp setat la astăzi",
+      "timeSetToYesterday": "Timp setat la ieri"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Nicio referință selectată pentru activare",
+        "title_one": "Activarea 1 referință",
+        "title_other": "Activarea {{count}} referințe",
+        "addMoreReferences": "Adaugă mai multe referințe",
+        "addReference": "Adaugă o referință",
+        "activityLabel": "Activitate - MY_SIG în ADIF (Opțional)",
+        "activityPlaceholder": "de ex. COTA...",
+        "referenceLabel": "Referință - MY_SIG_INFO în ADIF",
+        "referencePlaceholder": "de ex. XY-1234...",
+        "nameLabel": "Nume (Opțional)",
+        "namePlaceholder": "de ex. Castelul XYZ...",
+        "addButton": "Adaugă {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ref. lor"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Suprascrie titlurile fișierelor de date specifice aici",
+        "pota-all-parks": "POTA: Toate Parcurile",
+        "sota-all-summits": "SOTA: Toate Vârfurile"
+      },
+      "loading": {
+        "progress": "Încărcat `{{processedLines}}` referințe.\n\n`{{percent}}` • {{secondsLeft}} secunde rămase.",
+        "downloadingRawData": "Descărcare date brute…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Nicio entitate DXCC",
+      "entitiesCount_one": "1 Entitate DXCC",
+      "entitiesCount_other": "{{count}} Entități DXCC"
+    },
+    "eca": {
+      "name": "(ECA) Premiile Castelelor Engleze",
+      "shortName": "ECA",
+      "exportName": "Activare ECA",
+      "activityOptions": {
+        "title_zero": "Niciun castel selectat pentru activare",
+        "title_one": "Activarea 1 castel",
+        "title_other": "Activarea {{count}} castele",
+        "noCastlesFound": "Nu au fost găsite castele",
+        "nearestMatches": "Cele mai apropiate {{limit}} dintre {{count}} potriviri",
+        "matchingCastles_zero": "Niciun castel potrivit",
+        "matchingCastles_one": "1 castel potrivit",
+        "matchingCastles_other": "{{count}} castele potrivite",
+        "searchForCastles": "Caută câteva castele pentru a activa!",
+        "noCastlesNearby": "Niciun castel în apropiere",
+        "nearbyCastles": "Castele în apropiere",
+        "searchPlaceholder": "Nume sau referință…"
+      }
+    },
+    "ela": {
+      "name": "Premiul Farurilor Engleze",
+      "shortName": "ELA",
+      "exportName": "Activare ELA",
+      "activityOptions": {
+        "title_zero": "Niciun far selectat pentru activare",
+        "title_one": "Activarea 1 far",
+        "title_other": "Activarea {{count}} faruri",
+        "noLighthousesFound": "Nu au fost găsite faruri",
+        "nearestMatches": "Cele mai apropiate {{limit}} dintre {{count}} potriviri",
+        "matchingLighthouses_zero": "Niciun far potrivit",
+        "matchingLighthouses_one": "1 far potrivit",
+        "matchingLighthouses_other": "{{count}} faruri potrivite",
+        "searchForLighthouses": "Caută câteva faruri pentru a activa!",
+        "noLighthousesNearby": "Niciun far în apropiere",
+        "nearbyLighthouses": "Faruri în apropiere",
+        "searchPlaceholder": "Nume sau referință…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Informații de Schimb",
+        "classLabel": "Clasa",
+        "locationLabel": "Locație",
+        "additionalInformation": "Informații Suplimentare",
+        "highestTransmitterPowerLabel": "Cea Mai Mare Putere a Transmițătorului",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W sau mai puțin",
+        "qroOption": "QRO: 100W sau mai puțin",
+        "moreThan100WOption": "Mai mult de 100W",
+        "powerSourceLabel": "Sursă de Putere",
+        "powerSourcePlaceholder": "Selectează o sursă de putere",
+        "batteriesOption": "Baterii, Solar, Vânt",
+        "commercialPowerOption": "Putere Comercială, Generator",
+        "information-md": "Clasa pentru ARRL Field Day este, de exemplu `2A`:\n\n  - `1`, `2`, `3`… pentru numărul de transmisii.\n  - `A` pentru Stație Portabilă de Grup (3 sau mai mulți)\n  - `B` pentru Stație Portabilă pentru una sau două persoane\n  - `C` pentru Stație Mobilă\n  - `D` pentru Stație Rezidențială\n  - `E` pentru Stație Rezidențială cu Energie de Urgență\n  - `F` pentru Centrul de Operațiuni de Urgență\n\nLocația este Secțiunea ARRL, Secțiunea RAC, `MX` pentru Mexic, sau `DX` pentru altundeva.\n\nMai multe informații în **[regulile oficiale](https://www.arrl.org/field-day-rules)**."
+      }
+    },
+    "gma": {
+      "name": "Activitate Montană Globală",
+      "shortName": "GMA",
+      "exportName": "Activare GMA",
+      "activityOptions": {
+        "title_zero": "Niciun vârf selectat pentru activare",
+        "title_one": "Activarea 1 vârf",
+        "title_other": "Activarea {{count}} vârfuri",
+        "noSummitsFound": "Nu au fost găsite vârfuri",
+        "nearestMatches": "Cele mai apropiate {{limit}} dintre {{count}} potriviri",
+        "matchingSummits_zero": "Niciun vârf potrivit",
+        "matchingSummits_one": "1 vârf potrivit",
+        "matchingSummits_other": "{{count}} vârfuri potrivite",
+        "searchForSummits": "Caută câteva vârfuri pentru a activa!",
+        "noSummitsNearby": "Niciun vârf în apropiere",
+        "nearbySummits": "Vârfuri în apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownSummit": "Vârf necunoscut"
+      }
+    },
+    "llota": {
+      "name": "LLOTA: Lacuri și Lagune în Aer",
+      "shortName": "LLOTA",
+      "exportName": "Activare LLOTA",
+      "activityOptions": {
+        "title_zero": "Niciun lac selectat pentru activare",
+        "title_one": "Activare 1 lac",
+        "title_other": "Activare {{count}} lacuri",
+        "noLakesFound": "Nu au fost găsite lacuri",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} potriviri",
+        "matchingRefs_zero": "Nu au fost găsite lacuri asemănătoare",
+        "matchingRefs_one": "1 lac găsit similar",
+        "matchingRefs_other": "{{count}} lacuri găsite similare",
+        "searchForRefs": "Căutați câteva lacuri pentru a activa!",
+        "noRefsNearby": "Nu sunt lacuri în apropiere",
+        "nearbyRefs": "Lacuri din apropiere",
+        "searchPlaceholder": "Nume sau referință…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Fără L2L-uri",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L-uri",
+        "huntedRefsCount_zero": "Fără lacuri vânate",
+        "huntedRefsCount_one": "1 lac vânat",
+        "huntedRefsCount_other": "{{fmtCount}} lacuri vânate",
+        "activatorQSOsCount_zero": "Nicio activare QSO",
+        "activatorQSOsCount_one": "1 QSO ca activator",
+        "activatorQSOsCount_other": "{{fmtCount}} QSO-uri ca activator",
+        "ref2refQSOsCount_zero": "Fără QSO-uri L2L",
+        "ref2refQSOsCount_one": "1 QSO L2L",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSO-uri L2L",
+        "huntedQSOsCount_zero": "Fără QSO-uri ca vânător",
+        "huntedQSOsCount_one": "1 QSO ca vânător",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO-uri ca vânător",
+        "operationTotals": "Total operațiuni",
+        "referencesActivatedCount_zero": "Fără lacuri activate",
+        "referencesActivatedCount_one": "1 lac activat",
+        "referencesActivatedCount_other": "{{fmtCount}} lacuri activate",
+        "referencesMissedCount_zero": "Nu sunt lacuri incomplete",
+        "referencesMissedCount_one": "1 lac incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} lacuri incomplete",
+        "referencesHuntedCount_zero": "Fără lacuri vânate",
+        "referencesHuntedCount_one": "1 lac vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} lacuri vânate"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Eroare la postarea spotului LLOTA",
+        "serverResponse": "Serverul a răspuns cu eroarea {{status}}: {{body}}"
+      },
+      "exampleRefName": "Lacul Exemplu",
+      "unknownRefName": "Lac necunoscut",
+      "noRefsNearby": "Nu sunt lacuri în apropiere!"
+    },
+    "mota": {
+      "name": "Morile pe Aer",
+      "shortName": "MOTA",
+      "exportName": "Activare MOTA",
+      "activityOptions": {
+        "title_zero": "Nicio moară selectată pentru activare",
+        "title_one": "Activarea 1 moară",
+        "title_other": "Activarea {{count}} mori",
+        "noMillsFound": "Nu au fost găsite mori",
+        "nearestMatches": "Cele mai apropiate {{limit}} dintre {{count}} potriviri",
+        "matchingMills_zero": "Nicio moară potrivită",
+        "matchingMills_one": "1 moară potrivită",
+        "matchingMills_other": "{{count}} mori potrivite",
+        "searchForMills": "Caută câteva mori pentru a activa!",
+        "noMillsNearby": "Nicio moară în apropiere",
+        "nearbyMills": "Mori în apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownMill": "Moară necunoscută"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParcurișiVârfuri Identificare",
+      "description": "Folosit mai ales în VK și ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (Identificare VK/ZL)",
+        "dialogTitle": "Cont ParksnPeaks",
+        "description": "Nume utilizator: {{username}}",
+        "noAccount": "Fără cont",
+        "pleaseEnterDetails": "Te rog introduceți detaliile pentru contul tău ParksnPeaks:"
+      },
+      "usernameLabel": "Nume utilizator (nu indicativ)",
+      "usernamePlaceholder": "numele de utilizator al contului tău",
+      "apiKeyLabel": "Cheia API (nu parola)",
+      "apiKeyPlaceholder": "cheia ta API"
+    },
+    "pga": {
+      "name": "Premiul Gmina Poloneze",
+      "shortName": "PGA",
+      "exportName": "Activare PGA",
+      "activityOptions": {
+        "title_zero": "Niciun gmina selectat pentru activare",
+        "title_one": "Activarea 1 gmina",
+        "title_other": "Activarea {{count}} gminas",
+        "noGminasFound": "Nu au fost găsite gminas",
+        "nearestMatches": "Cele mai apropiate {{limit}} dintre {{count}} potriviri",
+        "matchingGminas_zero": "Nicio gmina potrivită",
+        "matchingGminas_one": "1 gmina potrivită",
+        "matchingGminas_other": "{{count}} gminas potrivite",
+        "searchForGminas": "Caută câteva gminas pentru a activa!",
+        "noGminasNearby": "Nicio gmina în apropiere",
+        "nearbyGminas": "Gminas în apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownGmina": "Gmina necunoscută"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parcuri în eter",
+      "shortName": "POTA",
+      "exportName": "Activare POTA",
+      "activityOptions": {
+        "title_zero": "Niciun parc selectat pentru activare",
+        "title_one": "Activați 1 parc",
+        "title_other": "Activați {{count}} parcuri",
+        "noParksFound": "Nu au fost găsite parcuri",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} rezultate",
+        "matchingParks_zero": "Nu au fost găsite parcuri",
+        "matchingParks_one": "1 parc găsit",
+        "matchingParks_other": "{{count}} parcuri găsite",
+        "searchForParks": "Căutați câteva parcuri pentru a activa!",
+        "noParksNearby": "Nu sunt parcuri în apropiere",
+        "nearbyParks": "Parcuri din apropiere",
+        "searchPlaceholder": "Nume sau referință…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Fără P2Ps",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Fără parcuri vânate",
+        "huntedRefsCount_one": "1 parc vânat",
+        "huntedRefsCount_other": "{{fmtCount}} parcuri vânate",
+        "activatorQSOsCount_zero": "Fără QSOuri ca activator",
+        "activatorQSOsCount_one": "1 QSO ca activator",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOuri ca activator",
+        "ref2refQSOsCount_zero": "Fără QSOuri P2P",
+        "ref2refQSOsCount_one": "1 QSO P2P",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOuri P2P",
+        "huntedQSOsCount_zero": "Fără QSOuri ca vânător",
+        "huntedQSOsCount_one": "1 QSO ca vânător",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOuri ca vânător",
+        "operationTotals": "Total operaţiuni",
+        "referencesActivatedCount_zero": "Fără parcuri activate",
+        "referencesActivatedCount_one": "1 parc activat",
+        "referencesActivatedCount_other": "{{fmtCount}} parcuri activate",
+        "referencesMissedCount_zero": "Nu sunt parcuri incomplete",
+        "referencesMissedCount_one": "1 parc incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} parcuri incomplete",
+        "referencesHuntedCount_zero": "Fără parcuri vânate",
+        "referencesHuntedCount_one": "1 parc vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} parcuri vânate"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor POTA"
+      },
+      "postSpotAPI": {
+        "error": "Eroare la postarea spotului POTA",
+        "serverResponse": "Serverul a răspuns cu eroare {{status}}: {{body}}"
+      },
+      "exampleRefName": "Parcul Național Exemplu",
+      "unknownRefName": "Parc Necunoscut",
+      "noRefsNearby": "Nu sunt parcuri în apropiere!"
+    },
+    "siota": {
+      "name": "Silozuri în aer",
+      "shortName": "SIOTA",
+      "exportName": "Activare SIOTA",
+      "account": {
+        "title": "Parcuri pe Picoare (monitorizare SiOTA)",
+        "dialogTitle": "Cont ParksnPeaks",
+        "description": "Nume utilizator: {{username}}",
+        "noAccount": "Niciun cont",
+        "pleaseEnterDetails": "Vă rugăm să introduceți detaliile contului dumneavoastră ParksnPeaks:",
+        "usernameLabel": "Nume utilizator (nu indicativ de apel)",
+        "usernamePlaceholder": "numele de utilizator al contului dumneavoastră",
+        "apiKeyLabel": "Cheie API (nu parola)",
+        "apiKeyPlaceholder": "cheia dumneavoastră API"
+      },
+      "activityOptions": {
+        "title_zero": "Niciun siloz selectat pentru activare",
+        "title_one": "Activare 1 siloz",
+        "title_other": "Activare {{count}} silozuri",
+        "noSilosFound": "Nu au fost găsite silozuri",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} potriviri",
+        "matchingSilos_zero": "Nu există silozuri corespunzătoare",
+        "matchingSilos_one": "1 siloz corespunzător",
+        "matchingSilos_other": "{{count}} silozuri corespunzătoare",
+        "searchForSilos": "Căutați câteva silozuri pentru a activa!",
+        "noSilosNearby": "Nu sunt silozuri în apropiere",
+        "nearbySilos": "Silozuri din apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownSilo": "Siloz necunoscut"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor Silo"
+      },
+      "postSpotAPI": {
+        "error": "Eroare la postarea spotului SiOTA",
+        "serverResponse": "Serverul a răspuns cu eroare {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (pentru autodepistare SOTAWatch)",
+        "dialogTitle": "Cont SOTA",
+        "description": "Autentificat ca {{callsign}}",
+        "noAccount": "Niciun cont",
+        "error": "Eroare la obținerea detaliilor contului",
+        "connect": "Conectează-ți contul SOTA"
+      },
+      "notLoggedInAlertTitle": "Avertisment",
+      "notLoggedInAlertText": "Nu ești conectat la SOTAWatch pentru auto-regăsire. Te rog să accesezi setările PoLo",
+      "activityOptions": {
+        "title_zero": "Niciun summit selectat pentru activare",
+        "title_one": "Activare 1 summit",
+        "title_other": "Activare {{count}} summit-uri",
+        "noSummitsFound": "Nu au fost găsite vârfuri",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} rezultate",
+        "matchingSummits_zero": "Nu există vârfuri corespunzătoare",
+        "matchingSummits_one": "1 vârf găsit",
+        "matchingSummits_other": "{{count}} vârfuri găsit",
+        "searchForSummits": "Căutați câteva vârfuri pentru a le activa!",
+        "noSummitsNearby": "Nu sunt summituri în apropiere",
+        "nearbySummits": "Summituri din apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownSummit": "Vârf necunoscut"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Fără S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Fără vârfuri vânate",
+        "huntedRefsCount_one": "1 vârf vânat",
+        "huntedRefsCount_other": "{{fmtCount}} vârfuri vânate",
+        "activatorQSOsCount_zero": "Nu sunt QSO-uri activator",
+        "activatorQSOsCount_one": "1 QSO activator",
+        "activatorQSOsCount_other": "{{fmtCount}} QSO-uri activator",
+        "ref2refQSOsCount_zero": "Fără QSO-uri S2S",
+        "ref2refQSOsCount_one": "1 QSO S2S",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSO-uri S2S",
+        "huntedQSOsCount_zero": "Fără QSO-uri vânate",
+        "huntedQSOsCount_one": "1 QSO vânat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO-uri vânate",
+        "operationTotals": "Total operaţiuni",
+        "referencesActivatedCount_zero": "Fără vârfuri activate",
+        "referencesActivatedCount_one": "1 vârf activat",
+        "referencesActivatedCount_other": "{{fmtCount}} vârfuri activate",
+        "referencesMissedCount_zero": "Nu sunt vârfuri incomplete",
+        "referencesMissedCount_one": "1 vârf incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} vârfuri incomplete",
+        "referencesHuntedCount_zero": "Fără vârfuri vânate",
+        "referencesHuntedCount_one": "1 vârf vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} vârfuri vânate"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Eroare la postarea spotului SOTA",
+        "serverResponse": "Serverul a răspuns cu status {{status}} {{message}}",
+        "sotaAccountLoggedOut": "Contul SOTA a fost deconectat. Vă rugăm să vă conectați din nou în setările PoLo"
+      },
+      "exampleRefName": "Vârf Exemplu",
+      "unknownRefName": "Vârf Necunoscut",
+      "noRefsNearby": "Nu sunt vârfuri în apropiere!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "Nicio turn activat pentru activare",
+        "title_one": "Activarea 1 turn",
+        "title_other": "Activarea {{count}} turnuri",
+        "noTowersFound": "Nu au fost găsite turnuri",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} rezultate",
+        "matchingTowers_zero": "Nu sunt turnuri potrivite",
+        "matchingTowers_one": "1 turn potrivit",
+        "matchingTowers_other": "{{count}} turnuri potrivite",
+        "searchForTowers": "Căutați câteva turnuri pentru a activa!",
+        "noTowersNearby": "Nu sunt turnuri în apropiere",
+        "nearbyTowers": "Turnuri din apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownTower": "Turn necunoscut"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Fără R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Fără turnuri vânate",
+        "huntedRefsCount_one": "1 turn vânat",
+        "huntedRefsCount_other": "{{fmtCount}} turnuri vânate",
+        "activatorQSOsCount_zero": "Nicio activare QSO",
+        "activatorQSOsCount_one": "1 QSO ca activator",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOuri ca activator",
+        "ref2refQSOsCount_zero": "Fără QSOuri R2R",
+        "ref2refQSOsCount_one": "1 QSO R2R",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOuri R2R",
+        "huntedQSOsCount_zero": "Fără QSOuri ca vânător",
+        "huntedQSOsCount_one": "1 QSO ca vânător",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOuri ca vânător",
+        "operationTotals": "Total operațiuni",
+        "referencesActivatedCount_zero": "Fără turnuri activate",
+        "referencesActivatedCount_one": "1 turn activat",
+        "referencesActivatedCount_other": "{{fmtCount}} turnuri activate",
+        "referencesMissedCount_zero": "Nu sunt turnuri incomplete",
+        "referencesMissedCount_one": "1 turn incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} turnuri incomplete",
+        "referencesHuntedCount_zero": "Fără turnuri vânate",
+        "referencesHuntedCount_one": "1 turn vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} turnuri vânate"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Turnul lor"
+      },
+      "exampleRefName": "Exemplu Turn",
+      "unknownRefName": "Turn Necunoscut",
+      "noRefsNearby": "Nu sunt turnuri în apropiere!",
+      "postSpotAPI": {
+        "error": "Eroare la postarea locului TOTA",
+        "serverResponse": "Serverul a răspuns cu statusul {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Niciun stat american",
+      "statesCount_one": "1 Stat american",
+      "statesCount_other": "{{count}} State americane"
+    },
+    "wab": {
+      "name": "Worked All Britain/Irlanda",
+      "description": "Adaugă Pătrat WAB/WAI la operațiune",
+      "workedAllBritainSquare": "Pătrat Worked All Britain",
+      "workedAllIrelandSquare": "Pătrat Worked All Ireland",
+      "enterSquare": "Introduceți Pătrat",
+      "placeholderBritain": "de exemplu, SU14",
+      "placeholderIreland": "de exemplu, N93",
+      "currentSquare": "Pătrat curent:",
+      "noSquareSet": "Niciun pătrat setat"
+    },
+    "wca": {
+      "name": "Premiile Castelelor Lumii",
+      "shortName": "PCL",
+      "exportName": "Activare PCL",
+      "activityOptions": {
+        "title_zero": "Niciun castel selectat pentru activare",
+        "title_one": "Activare 1 castel",
+        "title_other": "Activare {{count}} castele",
+        "noCastlesFound": "Nu au fost găsite castele",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} rezultate",
+        "matchingCastles_zero": "Niciun castel potrivit",
+        "matchingCastles_one": "1 castel potrivit",
+        "matchingCastles_other": "{{count}} castele potrivite",
+        "searchForCastles": "Caută câteva castele pentru a activa!",
+        "noCastlesNearby": "Niciun castel în apropiere",
+        "nearbyCastles": "Castele în apropiere",
+        "searchPlaceholder": "Nume sau referință…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Niciun castel vânat",
+        "huntedRefsCount_one": "1 castel vânat",
+        "huntedRefsCount_other": "{{fmtCount}} castele vânate",
+        "activatorQSOsCount_zero": "Fără QSOuri ca activator",
+        "activatorQSOsCount_one": "1 QSO ca activator",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOuri ca activator",
+        "huntedQSOsCount_zero": "Fără QSOuri ca vânător",
+        "huntedQSOsCount_one": "1 QSO ca vânător",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOuri ca vânător",
+        "operationTotals": "Total operațiuni",
+        "referencesActivatedCount_zero": "Niciun castel activat",
+        "referencesActivatedCount_one": "1 castel activat",
+        "referencesActivatedCount_other": "{{fmtCount}} castele activate",
+        "referencesMissedCount_zero": "Nu există castele incomplete",
+        "referencesMissedCount_one": "1 castel incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} castele incomplete",
+        "referencesHuntedCount_zero": "Niciun castel vânat",
+        "referencesHuntedCount_one": "1 castel vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} castele vânate"
+      },
+      "exampleRefName": "Exemplu de Castel",
+      "unknownRefName": "Castel Necunoscut",
+      "noRefsNearby": "Niciun castel în apropiere!"
+    },
+    "wfd": {
+      "name": "Ziua de Iarnă pe Câmp",
+      "shortName": "ZID",
+      "exportName": "Activarea ZID",
+      "activityOptions": {
+        "exchangeInformation": "Schimb informații",
+        "classLabel": "Clasă",
+        "locationLabel": "Locație",
+        "objectives_zero": "Niciun obiectiv atins",
+        "objectives_one": "1 obiectiv atins, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} obiective atinse, OM ×{{multiplier}}",
+        "objectivesTitle": "Obiective: {{count}} atinse, OM ×{{multiplier}}",
+        "objectivesDescription": "Nu uitați să raportați și aceste obiective la trimiterea jurnalului dumneavoastră!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Energie alternativă",
+        "awayFromHome": "Operare departe de casă",
+        "fmSatelliteContact": "Contact Satelit FM",
+        "ssbSatelliteContact": "Contact Satelit SSB sau CW",
+        "winlinkEmails": "E-mailuri Winlink",
+        "specialBulletin": "Buletin Special",
+        "sixBands": "Șase Benzi",
+        "twelveBands": "Douăsprezece Benzi",
+        "multipleModes": "Moduri Multiple",
+        "qrpOperation": "Operare QRP",
+        "sixContinuousHours": "Șase Ore Continue"
+      },
+      "objectiveDescription": {
+        "altPower": "Operați 100% pe putere alternativă, cum ar fi baterii, solar, vânt, etc.",
+        "awayFromHome": "Configurați stația dumneavoastră de teren la cel puțin ½ milă de casă.",
+        "fmSatelliteContact": "Faceți cel puțin 1 contact satelit FM în perioada de operare.",
+        "ssbSatelliteContact": "Faceți cel puțin un contact folosind SSB sau CW.",
+        "winlinkEmails": "Trimiteți ȘI primiți cel puțin un e-mail folosind Winlink pe RF.",
+        "specialBulletin": "Copiați cu precizie mesajul Buletinului Special al Zii Câmpului de Iarnă și trimiteți copia dumneavoastră odată cu jurnalul.",
+        "sixBands": "Realizați cel puțin trei contacte pe fiecare din cel puțin șase benzi diferite.",
+        "twelveBands": "Realizați cel puțin trei contacte pe fiecare din cel puțin douăsprezece benzi diferite.",
+        "multipleModes": "Utilizați moduri multiple în perioada de operare.",
+        "qrpOperation": "Operați la niveluri de putere QRP (10W sau mai puțin pe Telefon, 5W sau mai puțin pe CW sau Digital).",
+        "sixContinuousHours": "Operați pentru cel puțin șase ore continue în perioada de operare."
+      },
+      "information-md": "Clasa pentru Winter Field Day este, de exemplu `2M`:\n\n  - `1`, `2`, `3`… pentru numărul de transmisii.\n  - `H` pentru Stație Rezidențială\n  - `I` pentru Interioare\n  - `O` pentru Exterioare\n  - `M` pentru Stație Mobilă sau Stație Staționară Mobilă\n\nLocația este Secțiunea ARRL, Secțiunea RAC, `MX` pentru Mexic, sau `DX` pentru altundeva.\n\nMai multe informații în **[regulile oficiale](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Premii Bunker Mondiale",
+      "shortName": "WWBOTA",
+      "exportName": "Activare WWBOTA",
+      "activityOptions": {
+        "title_zero": "Nu au fost selectate bunkeruri pentru activare",
+        "title_one": "Activare 1 bunker",
+        "title_other": "Activare {{count}} bunkeruri",
+        "noBunkersFound": "Nu au fost găsite bunkeruri",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} potriviri",
+        "matchingBunkers_zero": "Nu există bunkeruri corespunzătoare",
+        "matchingBunkers_one": "1 bunker corespunzător",
+        "matchingBunkers_other": "{{count}} bunkeruri corespunzătoare",
+        "searchForBunkers": "Căutați câteva bunkeruri pentru a activa!",
+        "noBunkersNearby": "Nu sunt bunkeruri în apropiere",
+        "nearbyBunkers": "Bunkeruri din apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownBunker": "Bunker necunoscut"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Eroare la postarea spotului WWBOTA",
+        "serverResponse": "Serverul a răspuns cu status {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Flora și Fauna Mondială",
+      "shortName": "WWFF",
+      "exportName": "Activare WWFF",
+      "activityOptions": {
+        "title_zero": "Nu au fost selectate parcuri pentru activare",
+        "title_one": "Activare 1 parc",
+        "title_other": "Activare {{count}} parcuri",
+        "noParksFound": "Nu au fost găsite parcuri",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} potriviri",
+        "matchingParks_zero": "Nu există parcuri corespunzătoare",
+        "matchingParks_one": "1 parc corespunzător",
+        "matchingParks_other": "{{count}} parcuri corespunzătoare",
+        "searchForParks": "Căutați câteva parcuri pentru a activa!",
+        "noParksNearby": "Nu sunt parcuri în apropiere",
+        "nearbyParks": "Parcuri din apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownPark": "Parc necunoscut"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Fără P2P-uri",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Fără parcuri vânate",
+        "huntedRefsCount_one": "1 parc vânat",
+        "huntedRefsCount_other": "{{fmtCount}} parcuri vânate",
+        "activatorQSOsCount_zero": "Nu sunt QSO-uri activator",
+        "activatorQSOsCount_one": "1 QSO activator",
+        "activatorQSOsCount_other": "{{fmtCount}} QSO-uri activator",
+        "ref2refQSOsCount_zero": "Fără QSO-uri P2P",
+        "ref2refQSOsCount_one": "1 QSO P2P",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSO-uri P2P",
+        "huntedQSOsCount_zero": "Fără QSO-uri vânate",
+        "huntedQSOsCount_one": "1 QSO vânat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO-uri vânate",
+        "operationTotals": "Total operaţiuni",
+        "referencesActivatedCount_zero": "Fără parcuri activate",
+        "referencesActivatedCount_one": "1 parc activat",
+        "referencesActivatedCount_other": "{{fmtCount}} parcuri activate",
+        "referencesMissedCount_zero": "Nu sunt parcuri incomplete",
+        "referencesMissedCount_one": "1 parc incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} parcuri incomplete",
+        "referencesHuntedCount_zero": "Fără parcuri vânate",
+        "referencesHuntedCount_one": "1 parc vânat",
+        "referencesHuntedCount_other": "{{fmtCount}} parcuri vânate"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor WWFF"
+      },
+      "exampleRefName": "Parc Exemplu",
+      "unknownRefName": "Parc necunoscut",
+      "noRefsNearby": "Nu sunt parcuri în apropiere!",
+      "postSpotAPI": {
+        "error": "Eroare la postarea spotului WWFF",
+        "serverResponse": "Serverul a răspuns cu status {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (monitorizare ZLOTA)",
+        "dialogTitle": "Cont ZLOTA",
+        "description": "Indicativ: {{callsign}}",
+        "noAccount": "Niciun cont",
+        "pleaseEnterDetails": "Vă rugăm să introduceți detaliile contului dumneavoastră ZLOTA:",
+        "callsignLabel": "Indicativ de apel",
+        "callsignPlaceholder": "indicativul de apel al contului dumneavoastră",
+        "pinLabel": "PIN (nu parola)",
+        "pinPlaceholder": "PIN-ul dumneavoastră"
+      },
+      "activityOptions": {
+        "title_zero": "Nu au fost selectate referințe pentru activare",
+        "title_one": "Activare 1 referință",
+        "title_other": "Activare {{count}} referințe",
+        "noReferencesFound": "Nu au fost găsite referințe",
+        "nearestMatches": "Cele mai apropiate {{limit}} din {{count}} potriviri",
+        "matchingReferences_zero": "Nu există referințe corespunzătoare",
+        "matchingReferences_one": "1 referință corespunzătoare",
+        "matchingReferences_other": "{{count}} referințe corespunzătoare",
+        "searchForReferences": "Căutați câteva referințe pentru a activa!",
+        "noReferencesNearby": "Nu sunt referințe în apropiere",
+        "nearbyReferences": "Referințe din apropiere",
+        "searchPlaceholder": "Nume sau referință…",
+        "unknownReference": "Referință necunoscută"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Referința lor"
+      },
+      "postSpotAPI": {
+        "error": "Eroare la postarea spotului ZLOTA",
+        "serverResponse": "Serverul a răspuns cu status {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "Fără duplicate",
+        "dupesCount_one": "1 duplicat",
+        "dupesCount_other": "{{fmtCount}} Duplicate",
+        "ref2refCount_zero": "Fără Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Fără referințe vânate",
+        "huntedRefsCount_one": "1 referință vânată",
+        "huntedRefsCount_other": "{{fmtCount}} referințe vânate",
+        "activatorQSOsCount_zero": "Fără QSO-uri activator",
+        "activatorQSOsCount_one": "1 QSO activator",
+        "activatorQSOsCount_other": "{{fmtCount}} QSO-uri activator",
+        "ref2refQSOsCount_zero": "Fără QSO-uri Ref2Ref",
+        "ref2refQSOsCount_one": "1 QSO Ref2Ref",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSO-uri Ref2Ref",
+        "huntedQSOsCount_zero": "Fără QSO-uri vânate",
+        "huntedQSOsCount_one": "1 QSO vânat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO-uri vânate",
+        "operationTotals": "Sumar operațiuni",
+        "referencesActivatedCount_zero": "Fără referințe activate",
+        "referencesActivatedCount_one": "1 referință activată",
+        "referencesActivatedCount_other": "{{fmtCount}} referințe activate",
+        "referencesMissedCount_zero": "Fără referințe incomplete",
+        "referencesMissedCount_one": "1 referință incompletă",
+        "referencesMissedCount_other": "{{fmtCount}} referințe incomplete",
+        "referencesHuntedCount_zero": "Fără referințe vânate",
+        "referencesHuntedCount_one": "1 referință vânată",
+        "referencesHuntedCount_other": "{{fmtCount}} referințe vânate"
+      }
+    }
+  }
+}

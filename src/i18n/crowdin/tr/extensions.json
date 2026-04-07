@@ -888,6 +888,9 @@
     },
     "shared": {
       "scoring": {
+        "dupesCount_zero": "Tekrar QSO yok",
+        "dupesCount_one": "1 tekrar eden QSO",
+        "dupesCount_other": "Tekrar",
         "ref2refCount_zero": "Hiç Ref2Refs yok",
         "ref2refCount_one": "1 Ref2Ref",
         "ref2refCount_other": "{{fmtCount}} Ref2Refs",

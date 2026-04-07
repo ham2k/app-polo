@@ -223,6 +223,10 @@
         "title": "Nastavenia synchronizácie",
         "description": "Synchronizácia a záloha v cloude"
       },
+      "accountsSettings": {
+        "title": "Účty a služby",
+        "description": "QRZ.com a iné služby"
+      },
       "appFeatures": {
         "title": "Funkcie aplikácie",
         "description": "Spravovať funkcie ako POTA, SOTA atď."

@@ -163,7 +163,7 @@
         "qso": "Detaily QSO",
         "their": "Info protistanice",
         "our": "Moje info",
-        "more": "Více"
+        "more": "Více "
       },
       "fields": {
         "time": "Čas",
@@ -175,7 +175,7 @@
         "call": "Značka stanice",
         "sent": "RST",
         "exchange": "Výměna",
-        "name": "Název",
+        "name": "Jméno",
         "city": "Město",
         "state": "Stát/Provincie",
         "county": "Okres",
@@ -222,6 +222,10 @@
       "syncSettings": {
         "title": "Nastavení synchronizace",
         "description": "Synchronizace a záloha v cloudu"
+      },
+      "accountsSettings": {
+        "title": "Účty a služby",
+        "description": "QRZ.com a další služby"
       },
       "appFeatures": {
         "title": "Funkce aplikace",
@@ -791,8 +795,8 @@
       "activeControlsLabel-a11y": "Aktivní položky",
       "selectToRemoveActiveControls": "vyber k odstranění",
       "selectToRemoveActiveControls-a11y": "vyber k odstranění",
-      "moreControlsLabel": "Více řízení",
-      "moreControlsLabel-a11y": "Více řízení",
+      "moreControlsLabel": "Více polož.",
+      "moreControlsLabel-a11y": "Více pol.",
       "selectToAddMoreControls": "vyber pro přidání",
       "selectToAddMoreControls-a11y": "vyber pro přidání",
       "showSecondaryControlSettings-a11y": "Zobrazit sekundární nastavení řízení",
@@ -818,7 +822,7 @@
       }
     },
     "opMapTab": {
-      "noLocation": "Žádné linky?\nNejprve musíš nastavit svou polohu.\n\nKlikni sem pro nastavení.",
+      "noLocation": "Žádné spojnice?\nNejprve musíš nastavit svou polohu.\n\nKlikni sem pro nastavení.",
       "manyNoLocation": "Mnoho z těchto QSO nemá přesnou lokaci.\n\nMožná budeš potřebovat placený účet QRZ.com pro vyhledávání polohy."
     },
     "opSpotsTab": {

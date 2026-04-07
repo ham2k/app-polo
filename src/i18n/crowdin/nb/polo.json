@@ -223,6 +223,10 @@
         "title": "Synkroniseringsinnstillinger",
         "description": "Sky-synkronisering og sikkerhetskopi"
       },
+      "accountsSettings": {
+        "title": "Kontoer og Tjenester",
+        "description": "QRZ.com og andre tjenester"
+      },
       "appFeatures": {
         "title": "Appfunksjoner",
         "description": "Administrer funksjoner som POTA, SOTA, osv."

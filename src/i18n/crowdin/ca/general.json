@@ -1,0 +1,360 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Anglès - English",
+        "ar": "Àrab - العربية",
+        "ast": "Asturià - Asturianu",
+        "bn": "Bengalí - বাংলা",
+        "ca": "Català",
+        "cs": "Txec - Čeština",
+        "cy": "Gal·lès - Cymraeg",
+        "da": "Danès - Dansk",
+        "de": "Alemany - Deutsch",
+        "en-PL": "Pig Latin",
+        "en-PT": "Pirata",
+        "eo": "Esperanto - Esperanto",
+        "es": "Espanyol - Español",
+        "et": "Estonià - Eesti",
+        "eu": "Basc - Euskara",
+        "fi": "Finès - Suomi",
+        "fr": "Francès - Français",
+        "ga": "Irlandès - Gaeilge",
+        "gl": "Gallec - Galego",
+        "hi": "Hindi - हिंदी",
+        "id": "Indonesi - Bahasa Indonesia",
+        "it": "Italià - Italiano",
+        "ja": "Japonès - 日本語",
+        "ko": "Coreà - 한국어",
+        "lt": "Lituà - Lietuvių",
+        "lv": "Letó - Latvijas",
+        "ms": "Malai - Bahasa Melayu",
+        "nb": "Noruec Bokmål - Norsk bokmål",
+        "nl": "Neerlandès - Nederlands",
+        "nn": "Noruec Nynorsk - Nynorsk",
+        "pl": "Polonès - Polski",
+        "pt-BR": "Portuguès (Brasil) - Português (Brasil)",
+        "pt-PT": "Portuguès (Portugal) - Português (Portugal)",
+        "pt": "Portuguès - Português",
+        "ro": "Romanès - Română",
+        "ru": "Rus - Русский",
+        "sk": "Eslovac - Slovenčina",
+        "sv": "Suec - Svenska",
+        "th": "Tailandès - ภาษาไทย",
+        "tl": "Tagalog - Wikang Filipino",
+        "tlh": "Klingon - ᏣᎳᎩ",
+        "tr": "Turc - Türkçe",
+        "uk": "Ucraïnès - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnamita - Tiếng Việt",
+        "zh": "Xinès - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "Operació",
+      "generalOperation": "Operació General"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " i "
+      },
+      "time": {
+        "tomorrow": "Demà",
+        "today": "Avui",
+        "yesterday": "Ahir",
+        "ago": "fa {{time}}",
+        "fromNow": "d'aquí a {{time}}",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}h",
+        "shortHoursAndMinutes": "{{h}}h {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}h",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{day}} {{monthAbbr}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{day}}-{{month}}-{{year}}",
+        "nice": "{{dayOrd}} {{monthName}}, {{year}}",
+        "full": "{{weekday}} {{dayOrd}} {{monthName}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{day}} {{monthAbbr}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{dayOrd}} {{monthName}}",
+        "varOver9Months": "{{time}} {{dayOrd}} {{monthName}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{day}} {{monthAbbr}}",
+        "varShortOver9Months": "{{time}} {{day}} {{monthAbbr}} {{year}}",
+        "ymd": "{{day}}-{{month}}-{{year}} {{time}}",
+        "nice": "{{time}} {{dayOrd}} {{monthName}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{dayOrd}} {{monthName}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{day}} {{monthAbbr}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Gener",
+        "2": "Febrer",
+        "3": "Març",
+        "4": "Abril",
+        "5": "Maig",
+        "6": "Juny",
+        "7": "Juliol",
+        "8": "Agost",
+        "9": "Setembre",
+        "10": "Octubre",
+        "11": "Novembre",
+        "12": "Desembre"
+      },
+      "monthAbbr": {
+        "1": "Gen.",
+        "2": "Febr.",
+        "3": "Març",
+        "4": "Abr.",
+        "5": "Maig",
+        "6": "Juny",
+        "7": "Jul.",
+        "8": "Ag.",
+        "9": "Set.",
+        "10": "Oct.",
+        "11": "Nov.",
+        "12": "Des."
+      },
+      "weekday": {
+        "1": "Dilluns",
+        "2": "Dimarts",
+        "3": "Dimecres",
+        "4": "Dijous",
+        "5": "Divendres",
+        "6": "Dissabte",
+        "7": "Diumenge"
+      },
+      "weekdayAbbr": {
+        "1": "Dl.",
+        "2": "Dt.",
+        "3": "Dc.",
+        "4": "Dj.",
+        "5": "Dv.",
+        "6": "Ds.",
+        "7": "Dg."
+      },
+      "ordinalDay": {
+        "1": "1r/1a",
+        "2": "2n/2a",
+        "3": "3r/3a",
+        "4": "4t/4a",
+        "5": "5è/5a",
+        "6": "6è/6a",
+        "7": "7è/7a",
+        "8": "8è/8a",
+        "9": "9è/9a",
+        "10": "10è/10a",
+        "11": "11è/11a",
+        "12": "12è/12a",
+        "13": "13è/13a",
+        "14": "14è/14a",
+        "15": "15è/15a",
+        "16": "16è/16a",
+        "17": "17è/17a",
+        "18": "18è/18a",
+        "19": "19è/19a",
+        "20": "20è/20a",
+        "21": "21è/21a",
+        "22": "22è/22a",
+        "23": "23è/23a",
+        "24": "24è/24a",
+        "25": "25è/25a",
+        "26": "26è/26a",
+        "27": "27è/27a",
+        "28": "28è/28a",
+        "29": "29è/29a",
+        "30": "30è/30a",
+        "31": "31è/31a"
+      },
+      "distance": {
+        "away": "a {{distance}}"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancel·la",
+      "ok": "D'acord",
+      "close": "Tanca",
+      "login": "Inicia sessió",
+      "logout": "Tanca sessió",
+      "delete": "Esborra",
+      "refresh": "Refresca",
+      "done": "Fet",
+      "accept": "Accepta",
+      "accept-a11y": "Desar Canvis",
+      "revert": "Desfer",
+      "revert-a11y": "Desfer Canvis",
+      "save": "Desa",
+      "export": "Exporta"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "actualització {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Comprovant si hi ha actualitzacions…",
+        "stable": "Comprovant si hi ha actualitzacions estables…",
+        "unstable": "Comprovant si hi ha actualitzacions inestables…",
+        "bleedingEdge": "Comprovant si hi ha actualitzacions experimentals…"
+      },
+      "tracksPlural": {
+        "stable": "Estable",
+        "unstable": "Inestable",
+        "bleedingEdge": "Experimental",
+        "Production": "Estable",
+        "Staging": "Inestable",
+        "Development": "Experimental"
+      },
+      "trackSingular": {
+        "stable": "Estable",
+        "unstable": "Inestable",
+        "bleedingEdge": "Experimental",
+        "Production": "Estable",
+        "Staging": "Inestable",
+        "Development": "Experimental"
+      },
+      "versionIsAvailable-md": "L'actualització a {{versionName}} està disponible.",
+      "updateNow": "Actualitza Ara",
+      "newVersionAvailable-md": "Una nova versió de PoLo està disponible!"
+    },
+    "dataFiles": {
+      "loading": "Carregant {{name}}",
+      "downloading": "Descarregant {{name}}",
+      "dataHasToBeDownloaded-md": "Les dades per a **{{name}}** s'han de descarregar.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Les dades per a **{{name}}** no s'han actualitzat en un temps.",
+      "downloadNow": "Descarrega ara",
+      "refreshNow": "Refresca Ara"
+    },
+    "notices": {
+      "action": {
+        "ok": "D'acord!",
+        "__comment__": "Sobreescriu les accions de notificació específiques aquí"
+      },
+      "title": {
+        "__comment__": "Sobreescriu els títols de notificació específics aquí"
+      },
+      "text": {
+        "__comment__": "Sobreescriu els textos de notificació específics aquí"
+      },
+      "dialogTitle": {
+        "__comment__": "Sobreescriu els títols de diàleg específics aquí"
+      },
+      "dialogText": {
+        "__comment__": "Sobreescriu els textos de diàleg específics aquí"
+      },
+      "dataFiles": {
+        "fetching": "Recuperant {{title}}…",
+        "progress": "Recuperant {{title}}\n\n{{progress}}",
+        "done": "Descarrega completada de {{title}}",
+        "error": "Error en la descarrega de {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Text",
+        "csv": "Valors Separats per Coma",
+        "tsv": "Valors Separats per Tabulador",
+        "other": "Dades"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Funcionalitats Principals",
+        "locationBased": "Activitats Basades en Ubicació",
+        "contestsAndFieldOps": "Concursos i Operacions de Camp",
+        "lookup": "Consulta de Dades",
+        "devmode": "Mode de desenvolupador",
+        "other": "Altres característiques"
+      }
+    },
+    "continents": {
+      "AF": "Àfrica",
+      "AS": "Àsia",
+      "EU": "Europa",
+      "NA": "Amèrica del Nord",
+      "SA": "Amèrica del Sud",
+      "OC": "Oceania"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Banda Lateral Única",
+        "USB": "USB",
+        "USB-a11y": "Banda Lateral Superior",
+        "LSB": "LSB",
+        "LSB-a11y": "Banda Lateral Inferior",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Altres",
+        "other-a11y": "Altres Modes"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metres",
+        "80m-a11y": "80 Metres",
+        "60m-a11y": "60 Metres",
+        "40m-a11y": "40 Metres",
+        "30m-a11y": "30 Metres",
+        "20m-a11y": "20 Metres",
+        "17m-a11y": "17 Metres",
+        "15m-a11y": "15 Metres",
+        "12m-a11y": "12 Metres",
+        "11m-a11y": "11 Metres",
+        "10m-a11y": "10 Metres",
+        "6m-a11y": "6 Metres",
+        "2m-a11y": "2 Metres",
+        "70cm-a11y": "70 Centímetres",
+        "23cm-a11y": "23 Centímetres",
+        "13cm-a11y": "13 Centímetres",
+        "9cm-a11y": "9 Centímetres",
+        "6cm-a11y": "6 Centímetres",
+        "3cm-a11y": "3 Centímetres",
+        "1-25cm-a11y": "1.25 Centímetres",
+        "6mm-a11y": "6 Mil·límetres",
+        "4mm-a11y": "4 Mil·límetres",
+        "2-5mm-a11y": "2.5 Mil·límetres",
+        "2mm-a11y": "2 Mil·límetres",
+        "1mm-a11y": "1 Mil·límetres",
+        "submm-a11y": "Submil·límetre",
+        "other": "Altres",
+        "other-a11y": "Una altra banda"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

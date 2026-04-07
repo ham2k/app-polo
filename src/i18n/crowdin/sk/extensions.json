@@ -147,7 +147,7 @@
       "sendChatConfirm": "Správa odoslaná!"
     },
     "commands-debug": {
-      "syncall": "Vymazať všetky operácie a resetovať stav synchronizácie?",
+      "syncall": "Vymazať všetky operácie a vynulovať stav synchronizácie?",
       "syncallConfirm": "Vymazanie údajov a opätovná synchronizácia všetkého…",
       "syncup": "Znova poslať lokálne údaje do synchronizačnej služby?",
       "syncupConfirm": "Znovu sa posiela…",
@@ -157,7 +157,7 @@
       "factoryConfirm": "Prebieha obnovenie továrenských nastavení…",
       "switchLanguage": "Zmeniť jazyk na `{{lang}}` {{name}}?",
       "switchLanguagePrompt": "Jazyk `{{lang}}` {{name}}",
-      "switchLanguageConfirm": "Prebieha prechod na `{{lang}}` {{name}}…"
+      "switchLanguageConfirm": "Zmena na `{{lang}}` {{name}}…"
     },
     "commands-devmode": {
       "activate": "Aktivovať režim vývojára?",
@@ -179,12 +179,12 @@
       }
     },
     "commands-operation": {
-      "start": "Spustiť operáciu?",
-      "startConfirm": "Operácia začala!",
+      "start": "Spustiť prevádzku?",
+      "startConfirm": "Prevádzka začala!",
       "break": "Pridať si pauzu?",
-      "breakConfirm": "Prestávka operácie pridaná!",
+      "breakConfirm": "Pridaná prestávka v prevádzke!",
       "stop": "Ukončiť operáciu?",
-      "stopConfirm": "Operácia ukončená!"
+      "stopConfirm": "Prevádzka ukončená!"
     },
     "commands-operator": {
       "change": "Zmeniť operátora na {{operator}}?",
@@ -194,7 +194,7 @@
       "band": "Zmeniť pásmo na {{band}}?",
       "bandConfirm": "Pásmo nastavené na {{band}}",
       "frequency": "Zmeniť frekvenciu na {{freq}} MHz?",
-      "frequencyConfirm": "Frekvencia nastavená na {{freq}} MHz",
+      "frequencyConfirm": "Frekvencia zmenená na {{freq}} MHz",
       "frequencyAndMode": "Zmeniť frekvenciu na {{freq}} MHz ({{mode}})?",
       "frequencyAndModeConfirm": "Frekvencia nastavená na {{freq}} MHz ({{mode}})",
       "power": "Zmeniť výkon na {{power}}W?",
@@ -228,14 +228,14 @@
     },
     "custom": {
       "activityOptions": {
-        "title_zero": "Žiadne referencie neboli vybrané na aktiváciu",
+        "title_zero": "Neboli žiadne referencie vybrané na aktiváciu",
         "title_one": "Aktivácia 1 referencie",
         "title_other": "Aktivácia {{count}} referencií",
-        "addMoreReferences": "Pridať viac odkazov",
+        "addMoreReferences": "Pridať ďalšie referencie",
         "addReference": "Pridať odkaz",
         "activityLabel": "Aktivita - MY_SIG v ADIF (nepovinné)",
         "activityPlaceholder": "napr. COTA…",
-        "referenceLabel": "Referencie - MY_SIG_INFO v ADIF",
+        "referenceLabel": "Referencia - MY_SIG_INFO v ADIF",
         "referencePlaceholder": "napr. XY-1234…",
         "nameLabel": "Meno (nepovinné)",
         "namePlaceholder": "napr. XYZ hrad…",
@@ -247,7 +247,7 @@
     },
     "dataFiles": {
       "title": {
-        "__comment__": "Tu prepíšte špecifické názvy súborov dát",
+        "__comment__": "Tu prepíšte špecifické názvy dátových súborov",
         "pota-all-parks": "POTA: Všetky parky",
         "sota-all-summits": "SOTA: Všetky vrcholy"
       },
@@ -262,7 +262,7 @@
       "entitiesCount_other": "{{count}} DXCC entít"
     },
     "eca": {
-      "name": "Ocenenia anglických hradov",
+      "name": "English Castles Awards",
       "shortName": "ECA",
       "exportName": "Aktivácia ECA",
       "activityOptions": {
@@ -281,7 +281,7 @@
       }
     },
     "ela": {
-      "name": "Ocenenia anglických majákov",
+      "name": "English Lighthouse Awards",
       "shortName": "ELA",
       "exportName": "Aktivácia ELA",
       "activityOptions": {
@@ -318,7 +318,7 @@
       }
     },
     "gma": {
-      "name": "Globálna horská aktivita",
+      "name": "Global Mountain Activity",
       "shortName": "GMA",
       "exportName": "Aktivácia GMA",
       "activityOptions": {
@@ -386,7 +386,7 @@
         "theirRefLabel": "Ich LLOTA"
       },
       "postSpotAPI": {
-        "error": "Chyba pri odosielaní spotu LLOTA",
+        "error": "Chyba pri odosielaní LLOTA spotu",
         "serverResponse": "Server odpovedal s chybou {{status}}: {{body}}"
       },
       "exampleRefName": "Príklad jazera",
@@ -417,14 +417,14 @@
       }
     },
     "parksnpeaks": {
-      "name": "ParksnPeaks Spottingu",
+      "name": "ParksnPeaks spoty",
       "description": "Používa sa hlavne vo VK a ZL",
       "shortName": "PnP",
       "account": {
         "title": "ParksnPeaks (VK/ZL spottingu)",
         "dialogTitle": "Účet ParksnPeaks",
         "description": "Používateľské meno: {{username}}",
-        "noAccount": "Bez účtu",
+        "noAccount": "Žiadny účet",
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ParksnPeaks:"
       },
       "usernameLabel": "Používateľské meno (nie volací znak)",
@@ -888,6 +888,9 @@
     },
     "shared": {
       "scoring": {
+        "dupesCount_zero": "Žiadne duplicity",
+        "dupesCount_one": "1 duplicita",
+        "dupesCount_other": "{{fmtCount}} duplicít",
         "ref2refCount_zero": "Žiadne Ref2Refs",
         "ref2refCount_one": "1 Ref2Ref",
         "ref2refCount_other": "{{fmtCount}} Ref2Refs",

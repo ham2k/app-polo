@@ -223,6 +223,10 @@
         "title": "Synchronisatie Instellingen",
         "description": "Cloud synchronisatie en backup"
       },
+      "accountsSettings": {
+        "title": "Accounts en Diensten",
+        "description": "QRZ.com en andere services"
+      },
       "appFeatures": {
         "title": "App Functies",
         "description": "Beheer functies zoals POTA, SOTA, enz"

@@ -888,6 +888,9 @@
     },
     "shared": {
       "scoring": {
+        "dupesCount_zero": "Žádná duplicita",
+        "dupesCount_one": "1 duplicita",
+        "dupesCount_other": "{{fmtCount}} duplicit",
         "ref2refCount_zero": "Žádné Ref2Ref",
         "ref2refCount_one": "1 Ref2Ref",
         "ref2refCount_other": "{{fmtCount}} Ref2Ref",

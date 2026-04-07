@@ -223,6 +223,10 @@
         "title": "Configuración de sincronización",
         "description": "Sincronización y respaldo en la nube"
       },
+      "accountsSettings": {
+        "title": "Cuentas y Servicios",
+        "description": "QRZ.com y otros servicios"
+      },
       "appFeatures": {
         "title": "Extensiones de la Aplicación",
         "description": "Opciones como POTA, SOTA, etc"

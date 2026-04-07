@@ -223,6 +223,10 @@
         "title": "Sync Settings",
         "description": "Cloud sync and backup"
       },
+      "accountsSettings": {
+        "title": "Accounts & Services",
+        "description": "QRZ.com and other services"
+      },
       "appFeatures": {
         "title": "App Features",
         "description": "Manage features like POTA, SOTA, etc"

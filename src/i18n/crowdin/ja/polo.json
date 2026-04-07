@@ -223,6 +223,10 @@
         "title": "同期設定",
         "description": "クラウド同期とバックアップ"
       },
+      "accountsSettings": {
+        "title": "アカウントとサービス",
+        "description": "QRZ.comと他のサービス"
+      },
       "appFeatures": {
         "title": "アプリ機能",
         "description": "POTA, SOTA, などの機能を管理します"

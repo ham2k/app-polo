@@ -1,0 +1,931 @@
+{
+  "screens": {
+    "start": {
+      "credits": "de către KI2D și prietenii",
+      "Loading Extensions": "Încărcarea Extensiilor",
+      "Development Build": "Versiune de Dezvoltare Logger Portabil",
+      "messages": {
+        "Reticulating splines": "Reticulând spline-urile",
+        "Tuning the antenna": "Reglarea antenei",
+        "Checking the tubes": "Verificarea tuburilor",
+        "Warming up the tubes": "Încălzirea tuburilor",
+        "Unfolding the map": "Desfășurarea hărții",
+        "Charging the flux capacitor": "Încărcarea condensatorului de flux",
+        "Purging the dilithium chamber": "Purjarea camerei de dilithiu",
+        "Activating the turbo encabulator": "Activarea turbo cablatorului",
+        "Engaging the warp drive": "Activarea propulsorului warp"
+      }
+    },
+    "home": {
+      "title": "Jurnal Portabil",
+      "newOperation": "Nouă Operațiune",
+      "newOperation-a11y": "Nouă Operațiune",
+      "operationList-a11y": "Listă de Operațiuni",
+      "noOperations": "Nicio Operațiune!",
+      "settings-a11y": "Setări",
+      "quickCallLookupPlaceholder": "Căutare Rapida a Apelului…",
+      "spots-a11y": "Locații"
+    },
+    "operation": {
+      "title": "Operațiune"
+    },
+    "operationDetails": {
+      "title": "Detalii Operațiune",
+      "operationTitle": "Titlu",
+      "newOperation": "Nouă Operațiune",
+      "operationNotes": "Note",
+      "anythingYouWantToWriteAboutThisOperation": "Orice doriți să scrieți despre această operațiune"
+    },
+    "operationStationInfo": {
+      "title": "Informații despre Stație & Operator",
+      "invalidCallsign": "Indicatoare invalide: {{callsign}}",
+      "invalidCallsigns": "Indicatoare invalide: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` utilizată până acum. `{{newStation}}` va fi folosită pentru noile QSO-uri.",
+      "noStationUsed-md": "Niciun apel folosit până acum. `{{newStation}}` va fi folosită pentru noile QSO-uri.",
+      "updateStation-md_zero": "Actualizare `{{newStation}}` pentru zero QSO-uri existente",
+      "updateStation-md_one": "Actualizare `{{newStation}}` pentru un QSO existent",
+      "updateStation-md_other": "Actualizare `{{newStation}}` pentru {{count}} QSO-uri existente",
+      "multipleStationsUsed-md": "Această activitate are deja QSO-uri folosind apeluri multiple de stație: `{{stations}}`. `{{newStation}}` va fi folosită doar pentru noile QSO-uri.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` utilizat până acum. `{{newOperator}}` va fi folosit pentru noile QSO-uri.",
+      "noOperatorUsed-md": "Niciun apel folosit până acum. `{{newOperator}}` va fi folosit pentru noile QSO-uri.",
+      "updateOperator-md": "Actualizare `{{newOperator}}` ca operator pentru toate QSO-urile",
+      "multipleOperatorsUsed-md": "Această activitate are deja QSO-uri folosind apeluri multiple de operator: `{{operators}}`. `{{newOperator}}` va fi folosit doar pentru noile QSO-uri.",
+      "whatIsTheCallsignUsedOnTheAir": "Care este indicativul utilizat în aer?",
+      "stationCallsign": "Indicativul Stației",
+      "whoIsOperatingTheStation": "Cine operează stația? (opțional)",
+      "operatorCallsign": "Indicativul Operatorului",
+      "multiStationOperation": "Operațiune multi-stație?",
+      "multiStationOperationYes": "Da, suntem una dintre multe!",
+      "multiStationOperationNo": "Nu, doar o stație obișnuită",
+      "identifierForThisStation": "Identificator pentru această stație (numai cifre)"
+    },
+    "operationLocation": {
+      "title": "Locație Operațiune",
+      "selectedLocation": "Locație selectată",
+      "maidenheadGridSquareLocator": "Localizator al Grilei Maidenhead",
+      "suggestedLocations": "Locații sugerate",
+      "deviceGps": "GPS al dispozitivului",
+      "locating": "Localizare…",
+      "gpsError": "Eroare GPS",
+      "noGps": "FĂRĂ GPS",
+      "stateOrProvince": "Stat sau Provincie (opțional)",
+      "county": "Județ (opțional)"
+    },
+    "operationAddActivity": {
+      "title": "Adaugă Activitate",
+      "cantFindActivity": "Nu găsești activitatea pe care o cauți?",
+      "thereAreMoreOptions": "Sunt mai multe opțiuni în Setări > Caracteristici ale aplicației"
+    },
+    "operationActivityOptions": {
+      "title": "Opțiuni Activitate",
+      "removeActivity": "Elimină {{activity}} din această operațiune"
+    },
+    "operationData": {
+      "title": "Date Operațiune",
+      "selectFromTheExportOptionsBelow": "Selectează din opțiunile de export de mai jos",
+      "exportSingeFile": "Exportă un fișier",
+      "exportSelectedFiles_zero": "Exportă 0 fișiere selectate",
+      "exportSelectedFiles_one": "Exportă 1 fișier selectat",
+      "exportSelectedFiles_other": "Exportă {{count}} fișiere selectate",
+      "exportAllFiles": "Exportă toate fișierele",
+      "exportQSOs": "Exportă QSO-uri",
+      "pendingToDoItems_zero": "Niciun articol de făcut în așteptare",
+      "pendingToDoItems_one": "1 articol de făcut în așteptare",
+      "pendingToDoItems_other": "{{count}} articole de făcut în așteptare",
+      "importQSOs": "Importă QSO-uri",
+      "addQSOsFromADIFFile": "Adaugă QSO-uri din fișierul ADIF",
+      "ham2kLoFiSync": "Sincronizare Ham2K LoFi",
+      "operation": "Operațiune",
+      "exportSettings": "Setări Export",
+      "useCompactFileNames": "Folosește nume de fișiere compacte",
+      "wavelogExport": "Export Wavelog",
+      "exportQSOsToWavelogDescription": "Trimite toate QSO-urile pentru această operațiune la Wavelog",
+      "wavelogDialog": {
+        "title": "Exportă QSO-uri către Wavelog",
+        "status": "Exportă toate QSO-urile pentru această operațiune la Wavelog.",
+        "exporting": "Se exportă către Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "Ștergeți operațiunea?",
+        "description": "Sunteţi sigur că doriţi să ştergeţi această operaţiune?"
+      }
+    },
+    "callInfo": {
+      "title": "Informații Indicativ",
+      "messages": {
+        "duplicate": "Duplicat",
+        "invalidBand": "Bandă Invalidă",
+        "newBand": "Bandă Nouă",
+        "newMode": "Mod Nou",
+        "newRef": "Referință Nouă",
+        "newMult": "Nou Mult",
+        "newDay": "Zi Nouă",
+        "maybeDupe": "Duplicat?",
+        "partialDupe": "Duplicat",
+        "potaActivation-newDay": "Zi Nouă POTA",
+        "potaActivation-newRef": "Parc Nou",
+        "sotaActivation-newDay": "Zi Nouă SOTA",
+        "sotaActivation-newRef": "Vârf Nou",
+        "sotaActivation-duplicate": "Duplicat SOTA!",
+        "wwffActivation-duplicate": "Duplicat WWFF!",
+        "wwbotaActivation-newDay": "Zi Nouă WWBOTA",
+        "wwbotaActivation-newRef": "Buncăr Nou",
+        "motaActivation-newRef": "Moară Nouă"
+      },
+      "history": {
+        "last7days": "{{count}} în ultimele 7 zile",
+        "today": "{{count}} astăzi",
+        "yesterday": "{{count}} ieri",
+        "qsos_zero": "0 QSO-uri",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSO-uri"
+      },
+      "thisOpCount_zero": "0 QSO-uri în această operațiune",
+      "thisOpCount_one": "1 QSO în această operațiune",
+      "thisOpCount_other": "{{count}} QSO-uri în această operațiune",
+      "otherOpsCount_zero": "0 QSO-uri în alte operațiuni",
+      "otherOpsCount_one": "1 QSO în alte operațiuni",
+      "otherOpsCount_other": "{{count}} QSO-uri în alte operațiuni",
+      "andMoreCount_zero": "…și încă {{count}}",
+      "andMoreCount_one": "…și încă {{count}}",
+      "andMoreCount_other": "… și {{count}} mai multe",
+      "showImage": "Arată Imaginea",
+      "notes": "Notițe",
+      "potentialCall": "Indicativ Potențial: {{call}}",
+      "withCall": "cu {{call}}"
+    },
+    "spots": {
+      "title": "Spoturi"
+    },
+    "editQSO": {
+      "title": "Editează QSO",
+      "sections": {
+        "qso": "Detalii QSO",
+        "their": "Informațiile interlocutorului",
+        "our": "Informațiile noastre",
+        "more": "Mai multe"
+      },
+      "fields": {
+        "time": "Ora",
+        "date": "Dată",
+        "freq": "Frecvență",
+        "mode": "Mod",
+        "band": "Bandă",
+        "power": "Putere",
+        "call": "Indicativ stație",
+        "sent": "RST",
+        "exchange": "Schimb",
+        "name": "Nume",
+        "city": "Oraș",
+        "state": "Stare/Provincia",
+        "county": "Județ",
+        "entity": "Entitate",
+        "cqZone": "Zona CQ",
+        "ituZone": "Zona ITU",
+        "arrlSection": "Secțiune ARRL",
+        "grid": "Carou",
+        "latitude": "Latitudine",
+        "longitude": "Longitudine",
+        "notes": "Notițe"
+      }
+    },
+    "opInfo": {
+      "title": "Informații Operațiune"
+    },
+    "settings": {
+      "title": "Setări",
+      "sections": {
+        "settings": "Setări",
+        "accounts": "Conturi",
+        "about": "Despre Ham2K",
+        "help": "Ai nevoie de ajutor?"
+      },
+      "operatorCallsign": {
+        "title": "Indicativul Operatorului",
+        "noCall": "Fără indicativ",
+        "dialogTitle": "Indicativul Operatorului",
+        "pleaseEnterCallsign": "Te rugăm introdu un indicativ!",
+        "callsignLabel": "Indicativul Operatorului"
+      },
+      "generalSettings": {
+        "title": "Setări Generale",
+        "description": "Mod întunecat, rând de numere, unități și altele"
+      },
+      "loggingSettings": {
+        "title": "Setări De Înregistrare",
+        "description": "Personalizează experiența de logare"
+      },
+      "dataSettings": {
+        "title": "Setări Date",
+        "description": "Fișiere de date, note pe indicativ și altele"
+      },
+      "syncSettings": {
+        "title": "Setări De Sincronizare",
+        "description": "Sincronizare și backup în cloud"
+      },
+      "accountsSettings": {
+        "title": "Conturi și Servicii",
+        "description": "QRZ.com și alte servicii"
+      },
+      "appFeatures": {
+        "title": "Caracteristicile aplicației",
+        "description": "Gestionează caracteristici precum POTA, SOTA, etc."
+      },
+      "developerSettings": {
+        "title": "Setări programator",
+        "description": "Setări periculoase (Here be dragons)"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} sponsorizează Ham2K",
+        "couldBeASupporter": "{{callsign}} ar putea fi sponsor Ham2K"
+      },
+      "versionSettings": {
+        "description": "Vedeți modificările recente"
+      },
+      "creditsSettings": {
+        "title": "Credite",
+        "description": "Sebastián Delmont KI2D și Echipa PoLo"
+      },
+      "noticesSettings": {
+        "title": "Notificări Recente",
+        "description": "Mesaje pe care s-ar putea să le fi ratat?"
+      },
+      "readTheFineManual": {
+        "title": "Citește Manualul Detaliat",
+        "description": "Răsfoiește documentația pentru PoLo"
+      },
+      "ham2KForums": {
+        "title": "Forumurile Ham2K",
+        "description": "Găsiți ajutor, oferiți feedback, discutați idei…"
+      },
+      "ham2KChat": {
+        "title": "Chat Ham2K",
+        "description": "Serverul discord pentru comunitatea noastră online"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Videoclipuri și Transmisii Live"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "Pentru că nu poți avea prea multe fotografii…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Urmărește-ne pentru noutăți și actualizări"
+      },
+      "contactUs": {
+        "title": "Contactează-ne",
+        "description": "help@ham2k.com (dar încearcă mai întâi Forumurile sau Chat-ul!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Setări Generale",
+      "theme": {
+        "title": "Temă",
+        "descriptionDark": "Întotdeauna în Mod Întunecat",
+        "descriptionLight": "Întotdeauna în Mod Luminos",
+        "descriptionDevice": "La fel ca tema dispozitivului",
+        "dialogTitle": "Temă"
+      },
+      "fontScale": {
+        "title": "Scară Fonturi",
+        "descriptionXS": "Cele mai mici",
+        "descriptionSM": "Mai mici",
+        "descriptionMD": "Normale",
+        "descriptionLG": "Mai mari",
+        "descriptionXL": "Cele mai mari",
+        "dialogTitle": "Scară Fonturi",
+        "dialogDescription": "Aceste dimensiuni sunt, de asemenea, afectate de setările dispozitivului, cum ar fi Afișaj și Accesibilitate."
+      },
+      "language": {
+        "title": "Limbă: {{lang}}",
+        "description": "Schimbă limba aplicației",
+        "dialogTitle": "Limbă",
+        "dialogDescription": "Schimbă limba",
+        "deviceDefault": "Folosește setările dispozitivului ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Setările Dispozitivului) nu este în prezent suportată."
+      },
+      "showNumbersRow": {
+        "title": "Afișează rândul de numere",
+        "descriptionOn": "Butoane rapide pentru numere",
+        "descriptionOff": "Nu afișa rândul de numere"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Perioada în rândul de numere",
+        "descriptionOn": "Include perioadă (și bară)",
+        "descriptionOff": "Afișează doar numerele"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Virgulă în rândul de numere",
+        "descriptionOn": "Include o taste virgulă",
+        "descriptionOff": "Fără taste virgulă"
+      },
+      "vibrateNumbersRow": {
+        "title": "Utilizează vibrarea în rândul de numere",
+        "descriptionOn": "Vibrează când apăsați numerele",
+        "descriptionOff": "Nu vibrează când apăsați numerele"
+      },
+      "useMetricUnits": {
+        "title": "Folosește unități de măsură metrice",
+        "descriptionOn": "Folosește Mile pentru distanțe",
+        "descriptionOff": "Folosește Kilometri pentru distanțe"
+      },
+      "keepDeviceAwake": {
+        "title": "Păstrează dispozitivul treaz",
+        "descriptionOn": "Evită blocarea ecranului dispozitivului",
+        "descriptionOff": "Permite blocarea normală a ecranului"
+      },
+      "useSplitViews": {
+        "title": "Utilizează Vizualizări Multiple",
+        "descriptionOn": "Utilizează Vizualizări Multiple când ecranul este suficient de mare",
+        "descriptionOff": "Nu folosi vizualizări multiple"
+      },
+      "useGrid8": {
+        "title": "Locație de înaltă precizie",
+        "descriptionOn": "Folosește grile de opt cifre",
+        "descriptionOff": "Folosește grile de șase cifre"
+      },
+      "smartKeyboard": {
+        "title": "Funcții de tastatură inteligentă",
+        "descriptionOn": "Activează funcțiile inteligente ale tastaturii",
+        "descriptionOff": "Folosește tastaturi simple pentru compatibilitate cu anumite dispozitive"
+      },
+      "exportSettings": {
+        "title": "Setări Export",
+        "description": "Personalizează nume de fișiere și alte setări"
+      },
+      "privacy": {
+        "title": "Confidențialitate"
+      },
+      "shareAppUsageData": {
+        "title": "Partajează datele de utilizare a aplicației",
+        "descriptionOn": "Ajutați-ne să îmbunătățim aplicația oferind date despre utilizare, erori și performanță",
+        "descriptionOff": "Păstrați datele de utilizare ale aplicației private.\nEchipa Ham2K nu va putea detecta erori sau alte probleme."
+      },
+      "shareOperationData": {
+        "title": "Partajați date despre operațiuni",
+        "descriptionOn": "Partajați public unele date despre operațiuni și cu alți utilizatori",
+        "descriptionOff": "Păstrați datele despre operațiuni private"
+      },
+      "privacyPolicy": {
+        "title": "Politica de Confidențialitate",
+        "description": "Citiți Politica noastră de Confidențialitate"
+      },
+      "termsOfService": {
+        "title": "Termeni și Condiții",
+        "description": "Citiți Termenii și Condițiile noastre"
+      }
+    },
+    "loggingSettings": {
+      "title": "Setări de logare",
+      "leftieMode": {
+        "title": "Mod pentru stângaci",
+        "descriptionOn": "Alegeți aspect pentru utilizatorii stângaci",
+        "descriptionOff": "Utilizați layout-ul pentru utilizatorii dreptaci"
+      },
+      "countryFlags": {
+        "title": "Steaguri Țări",
+        "descriptionNone": "Nu afișați steaguri",
+        "descriptionAll": "Afișați steagurile pentru toți contactele",
+        "descriptionDefault": "Afișați doar pentru contactele DX"
+      },
+      "showBearing": {
+        "title": "Afișați Azimutul",
+        "descriptionOn": "Afișați azimutul estimat către stație",
+        "descriptionOff": "Nu afișați informații despre azimut"
+      },
+      "switchSignalReportOrder": {
+        "title": "Schimbați ordinea rapoartelor semnalului",
+        "descriptionOn": "Întâi raportul trimis, apoi cel primit",
+        "descriptionOff": "Întâi raportul primit, apoi cel trimis"
+      },
+      "jumpAfterRST": {
+        "title": "Treceți la următorul câmp la completarea RST",
+        "descriptionOn": "Treceți după ce RST este introdus",
+        "descriptionOff": "Nu săriți automat"
+      },
+      "suggestDefaultOperator": {
+        "title": "Sugerați operatorul implicit",
+        "descriptionOn": "Setați {{operatorCall}} ca operator în operațiuni unde apelul stației este diferit",
+        "descriptionOff": "Nu sugerați operatorul implicit indiferent de apelul stației folosit"
+      },
+      "suggestTemplates": {
+        "title": "Folosește șabloane pentru operațiuni",
+        "descriptionOn": "Sugerează șabloane pentru operațiuni noi",
+        "descriptionOff": "Nu sugera șabloane"
+      },
+      "bandsModes": {
+        "title": "Benzi și Moduri",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Extensii"
+      }
+    },
+    "featuresSettings": {
+      "title": "Funcționalități Aplicație",
+      "activatingExtension": "Activarea extensiei, aceasta poate dura un moment…",
+      "fewerOf": "Mai puține {{category}}…",
+      "moreOf": "Mai multe {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Setări de Date",
+      "offlineDataTitle": "Date Offline",
+      "extensionsTitle": "Extensii",
+      "logDataTitle": "Date de Jurnal",
+      "importHistoryFromADIF": "Importă Istoricul din ADIF",
+      "importHistoryFromADIFDescription": "Utilizat pentru consultări offline și statistici QSO",
+      "clearADIFHistory": "Șterge Istoricul ADIF",
+      "clearADIFHistoryDescription": "Ștergeți înregistrările importate din ADIF",
+      "updatedRelative": "Actualizat {{date}}",
+      "fetching-md": "### Se încarcă **{{title}}**…",
+      "progress-md": "### Se încarcă **{{title}}**\n\n{{progress}}",
+      "updated-md": "Actualizat la {{date}}",
+      "version-md": "Versiune: {{version}}",
+      "confirmClearHistory": {
+        "title": "Ești sigur?",
+        "description": "Aceasta va șterge toate înregistrările istorice importate anterior din fișiere ADIF",
+        "recordsNotDeleted": "Înregistrările din operațiuni nu vor fi șterse"
+      },
+      "importingHistoricalADIF": "Se importă înregistrările ADIF… Vă rugăm să aveți răbdare!",
+      "errorImportingHistoricalADIF": "Eroare la importul istoricului ADIF",
+      "errorDeletingHistoricalRecords": "Eroare la ștergerea înregistrărilor istorice",
+      "recordsCount_zero": "Nici o înregistrare",
+      "recordsCount_one": "1 înregistrare",
+      "recordsCount_other": "{{fmtCount}} înregistrări"
+    },
+    "accountsSettings": {
+      "title": "Conturi și Servicii",
+      "description": "QRZ.com și alte servicii",
+      "accountsSection": "Acreditive",
+      "servicesSection": "Servicii",
+      "accountsQRZ": {
+        "title": "QRZ (pentru căutări indicativ)",
+        "description": "Autentificare: {{login}}",
+        "noAccount": "Fără cont",
+        "errorEmail": "Nu folosiți emailul pentru autentificare.",
+        "dialogTitle": "Cont QRZ.com",
+        "pleaseEnterDetails": "Te rog introdu detaliile pentru contul tău QRZ.com:",
+        "loginLabel": "Autentificare (indicativul dvs)",
+        "loginPlaceholder": "Utilizator",
+        "passwordLabel": "Parolă",
+        "passwordPlaceholder": "parola dvs",
+        "checkCredentials": "Verificați Datele De Acces"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Setări Wavelog",
+      "description": "Configurați conexiunea API Wavelog",
+      "noStationsFoundOrInvalidResponse": "Nu s-au găsit stații sau răspuns invalid",
+      "errorFetchingStations": "Eroare la preluarea stațiilor: {{message}}",
+      "fetchStations": "Preia Stații",
+      "selectStation": "Selectează Stația",
+      "selectedStation": "Stația selectată: {{station}}"
+    },
+    "syncSettings": {
+      "title": "Setări de Sincronizare",
+      "description": "Ham2K LoFi oferă un serviciu de sincronizare fiabil între toate dispozitivele dvs și asigură un backup în cloud pentru operațiunile dvs.",
+      "activePlan": "Plan Activ: {{plan}}",
+      "noActivePlan": "Niciun Plan Activ",
+      "syncService": "Serviciu de Sincronizare",
+      "syncService.enabled": "Activat",
+      "syncService.disabled": "Dezactivat",
+      "deviceNotLinked": "Dispozitiv neconectat! ({{id}})",
+      "anonymousAccount": "Cont Anonim (#{{id}})",
+      "enableSyncToLinkDevice": "Activați sincronizarea pentru a conecta acest dispozitiv",
+      "checkEmailInboxForConfirmation": "(verificați inbox-ul email-ului pentru confirmare)",
+      "accountNumber": "Contul #{{id}}",
+      "pendingEmailConfirmation": "(confirmare email în așteptare)",
+      "tapToConfigure": "Apăsați pentru configurare",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (Dezvoltare)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (Oficial)",
+        "custom": "Personalizat ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Acest dispozitiv a fost sincronizat ultima dată cu un cont diferit (#{{id}}).\n\nPentru a continua sincronizarea, trebuie să alegeți între următoarele opțiuni:",
+        "option1withEmail-md": "Opțiunea #1: Înlocuiți datele de pe dispozitivul acesta cu cele din contul **{{email}}** de pe server.",
+        "option1noEmail-md": "Opțiunea #1: Înlocuiți datele de pe acest dispozitiv cu cele de la noul cont de pe server.",
+        "option1button": "Alegeți #1: înlocuiți cu datele de pe server",
+        "option2withEmail-md": "Opțiunea #2: Combinați datele de pe dispozitivul acesta cu cele din contul **{{email}}** de pe server.",
+        "option2noEmail-md": "Opțiunea #2: Combinați datele de pe acest dispozitiv cu cele de la noul cont de pe server.",
+        "option2button": "Alegeți #2: combinați datele",
+        "option3-md": "Opțiunea #3: Conectați-vă înapoi cu contul anterior, **{{email}}**.",
+        "option3button": "Alegeți #3: contul anterior",
+        "buttonCancel": "Nu, Anulează",
+        "buttonProcees": "Da, îmi asum riscul! Înlocuiți Totul!"
+      },
+      "combineDataAlert": {
+        "title": "Combină datele locale?",
+        "text": "Ești sigur că vrei să combini aceste operațiuni și QSO-uri cu noul cont?\n\nAcest lucru va combina QSO-urile de pe acest dispozitiv cu ceea ce există deja în Serviciul de Sincronizare pentru noul cont și poate rezulta din greșeală în amestecarea jurnalelor neconexe!\n\nAceastă operațiune nu poate fi anulată.",
+        "buttonCancel": "Nu, Anulează",
+        "buttonProcees": "Da, îmi asum riscul! Combină-le!"
+      },
+      "replaceDataAlert": {
+        "title": "Înlocuiți Datele Locale?",
+        "text": "Ești sigur că vrei să înlocuiești toate datele de pe acest dispozitiv cu operațiunile și QSO-urile pentru noul cont de la Serviciul de Sincronizare?\n\nAplicația va reporni.\n\nDacă aveți date nesincronizate, ACESTEA VOR FI PIERDUTE.",
+        "buttonCancel": "Nu, Anulează",
+        "buttonProcees": "Da, îmi asum riscul! Înlocuiți Totul!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Eroare la Refacerea Legăturii cu Contul Anterior",
+        "text": "A apărut o eroare în timp ce încercam să reluăm legătura cu contul anterior.\n\n{{error}}\n\nVă rugăm să încercați din nou mai târziu.",
+        "buttonCancel": "OK"
+      },
+      "syncAccountDialog": {
+        "title": "Cont LoFi Ham2K",
+        "emailAddressLabel": "Adresă de Email",
+        "resendButton": "Retrimite",
+        "revertButton": "Anulează",
+        "syncFirstButton": "Întoarce-te și finalizează sincronizarea mai întâi",
+        "continueAnywayButton": "Știu ce fac! Continuă oricum",
+        "potentialForDataLoss": "Risc de pierdere a datelor!!!",
+        "potentialForDataLossDescription": "Nu ați sincronizat toate datele de pe acest dispozitiv.\n\nDacă asociați acest dispozitiv cu un nou cont, vi se va cere dacă doriți să înlocuiți datele sale cu cele din noul cont.\n\nÎn acest caz, s-ar putea să nu puteți recupera nicio activitate existentă care nu a fost încă sincronizată.\n\nVă sugerăm să finalizați mai întâi sincronizarea acestui dispozitiv!"
+      },
+      "syncServiceDescription-md": "Serviciul de bază este gratuit și vă permite să sincronizați datele recente (până la 7 zile) între două dispozitive sau aplicații la viteză limitată.\n\nServiciul complet necesită un abonament plătit și include toate operațiunile voastre sincronizate între un număr rezonabil de dispozitive sau aplicații la viteză maximă.\n\nÎn timp ce serviciul LoFi este în PERIOADA DE TESTARE pentru următoarele câteva luni, serviciul va rămâne gratuit. După aceea, prețurile vor depinde de țară și monedă, dar nu ar trebui să depășească 30 dolari americani/an sau echivalent, probabil mai puțin.",
+      "thisDevice": "Acest Dispozitiv",
+      "notAuthenticated": "Neautentificat",
+      "lofiServer": "Server LoFi",
+      "otherDevices": "Alte Dispozitive",
+      "devSettings": "Setări pentru Dezvoltatori",
+      "resetSyncStatus": "Resetați Statusul Sincronizării",
+      "noDataStored": "Niciun date stocate",
+      "syncCountDescription": {
+        "operations": "Operațiuni: {{synced}} sincronizate, {{pending}} în așteptare",
+        "qsos": "QSOs: {{synced}} sincronizate, {{pending}} în așteptare"
+      },
+      "cloudCountDescription": {
+        "operations": "Operațiuni: {{total}} totale",
+        "operationsSyncable": "Operațiuni: {{total}} stocate, {{syncable}} sincronizabile",
+        "qsos": "QSOs: {{total}} stocate",
+        "qsosSyncable": "QSOs: {{total}} stocate, {{syncable}} sincronizabile"
+      }
+    },
+    "versionSettings": {
+      "title": "Informații Versiune",
+      "recentChanges": "Modificări Recente",
+      "coverPhoto": "Fotografie de Copertă: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Se verifică actualizările…",
+      "newMajorReleaseAvailable": "Noua versiune majoră disponibilă",
+      "patchAvailable": "Patch {{track}} disponibil",
+      "checkForUpdates": "Verificați actualizările pentru {{track}}",
+      "checkForUpdatesGeneric": "Verificați actualizările",
+      "updateAvailable": "Actualizare disponibilă",
+      "downloading": "Se descarcă…",
+      "downloadingProgress": "Se descarcă {{progress}}%",
+      "installing": "Se instalează…",
+      "errorDownloadingUpdate": "Eroare la descărcarea actualizării",
+      "errorCheckingForUpdates": "Eroare la verificarea actualizărilor",
+      "noUpdatesAvailable": "Nici o actualizare disponibilă",
+      "versionDescription": "{{version}} - Compilație de Bază {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Recunoștințe",
+      "createdBy": "Creat de {{callsign}}",
+      "openSource": "Ham2K PoLo este Open Source",
+      "checkOutCode": "Consultați codul și contribuiți pe GitHub!",
+      "teamPoLo": "Echipa PoLo",
+      "creator": "Creator și Dezvoltator Principal",
+      "developer": "Dezvoltator",
+      "leadSupport": "Suport principal și Documentație",
+      "moreCodeAndDocsContributors": "Mai mulți colaboratori...",
+      "contributorCode": "Contribuitor Cod: {{contributions}}",
+      "contributorDocumentation": "Documentație",
+      "translations": "Traduceri",
+      "translationsService": "Instrumente de traducere de către CrowdIn",
+      "translationsServiceDescription": "Instrumentele de gestionare a procesului de traducere sunt donate generos de CrowdIn"
+    },
+    "devModeSettings": {
+      "title": "Setări pentru Mod Dezvoltator",
+      "wipeDatabase": {
+        "title": "Ștergeți Baza de Date?",
+        "description": "Ești sigur că vrei să ștergi toate Operațiunile, QSO-urile și alte date?",
+        "noCancel": "Nu, Anulează",
+        "yesWipeIt": "Da, Șterge!"
+      },
+      "import": {
+        "title": "Import",
+        "importQSONFile": "Importă fișier QSON"
+      },
+      "experiments": {
+        "title": "Experimente",
+        "enableWavelogExperiments": "Activează Experimentele Wavelog"
+      },
+      "manageDatabase": {
+        "title": "Gestionați Baza de Date",
+        "exportDatabase": "Exportați Baza de Date",
+        "exportDatabaseDescription": "Exportați fișierul actual al bazei de date",
+        "replaceDatabase": "Înlocuiți Baza de Date",
+        "replaceDatabaseDescription": "Importați o bază de date nouă și înlocuiți tot",
+        "wipeDatabase": "Ștergeți Baza de Date",
+        "wipeDatabaseDescription": "Ștergeți toate datele din baza de date."
+      },
+      "internationalization": {
+        "title": "Internaționalizare",
+        "crowdInPersonalTokenLabel": "Token Personal de Acces CrowdIn",
+        "crowdInPersonalTokenPlaceholder": "Obține unul de la pagina de setări ale contului CrowdIn",
+        "refreshCrowdInTranslations": {
+          "title": "Reîmprospătare traduceri...",
+          "starting": "Vă rugăm așteptați în timp ce actualizăm traducerile…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Actualizare completă!",
+          "errorTitle": "Eroare la actualizarea traducerilor",
+          "error": "Eroare la actualizarea traducerilor CrowdIn: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Descărcați Setări Avansate",
+        "locationLabel": "Locație",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Informații Sistem",
+        "shareWithDevelopmentTeam": "Distribuiți către echipa de programatori"
+      },
+      "updatePatches": {
+        "title": "Actualizați Patchurile",
+        "selectTrackForPatches": "Selectați Track pentru Patch-uri",
+        "selectTrackForPatchesDescription": "Selectați track-ul pentru patch-uri",
+        "checkingForUpdates": "Se caută actualizări…",
+        "checkForUpdates": "Verificați actualizările pentru {{track}}",
+        "updateAvailable": "Actualizare disponibilă",
+        "updateAvailableForTrack": "Actualizare {{track}} disponibilă",
+        "downloading": "Se descarcă…",
+        "downloadingProgress": "Se descarcă {{progress}}%",
+        "installing": "Se instalează…",
+        "errorDownloadingUpdate": "Eroare la descărcarea actualizării",
+        "errorCheckingForUpdates": "Eroare la verificarea actualizărilor",
+        "noUpdatesAvailable": "Nici o actualizare disponibilă"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Benzi și Moduri",
+      "bands": {
+        "title": "Benzi",
+        "showCommonBands": "Afișați benzile comune",
+        "showAllBands": "Afișați toate benzile"
+      },
+      "modes": {
+        "title": "Moduri",
+        "showMoreModes": "Mai multe moduri",
+        "showEvenMoreModes": "Și mai multe moduri",
+        "showFewerModes": "Mai puține moduri"
+      }
+    },
+    "exportSettings": {
+      "title": "Setări de Export",
+      "exportTypes": "Tipuri de Export",
+      "customTemplates": "Șabloane personalizate",
+      "defaultTemplates": "Șabloane implicite",
+      "customTemplatesDescription": "Folosește șabloane personalizate pentru export",
+      "defaultTemplatesDescription": "Folosește șabloane implicite pentru export",
+      "includePrivateData": "Include date private",
+      "fileNameTemplate": "Șablon nume fișier",
+      "titleTemplate": "Șablon titlu",
+      "adifNotes": "Notițe ADIF QSO",
+      "adifComments": "Comentarii ADIF QSO",
+      "adifQslMessage": "Mesaj QSL în ADIF",
+      "templateHelpTitle": "Ajutor Șabloane",
+      "includePrivateDataDescription": "Nume, note, adrese, etc.",
+      "templateHelp-md": "\u0006[Elemente de șablon exemplu...](#)\n\n### Exportare jurnal\nAtribute pentru jurnalul care se exportă\n`{{log.station}}` → `{{call}}` Stația pentru acest export\n`{{log.ref}}` → `XX-1234` Referință pentru acest export\n`{{log.refName}}` → `Parcul Național Exemplu` Numele referinței pentru acest export\n`{{log.refShortName}}` → `PN Exemplu` Nume scurt de referință pentru acest export\n`{{log.handlerType}}` → `pota` Tip handler pentru acest export\n`{{log.handlerName}}` → `Parcuri On The Air` Nume handler pentru acest export\n`{{log.handlerShortName}}` → `POTA` Nume scurt handler pentru acest export\n\n### Indicative operațiune\n`{{op.station}}` → `{{call}}` Prima stație pentru operațiune\n`{{op.operator}}` → `{{call}}` Operatorul pentru operațiune\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Toate stațiile pentru operațiune\n`{{op.otherStations}}` → `{{otherCalls}}` Alte stații pentru operațiune\n\n### Data operațiunei\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Alte Detalii Operaționale\n`{{op.title}}` → `la XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Operațiunea Mea Specială`\n`{{op.userNotes}}` → `Am plecat dimineața devreme...`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grila pentru această operațiune\n\n### Informații QSO\n`{{qso.notes}}` → `Audio îngrozitor!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Raportul de semnal primit de la ei\n`{{qso.our.sent}}` → `55` Raportul de semnal trimis de noi\n`{{qso.their.grid}}` → `FF99` Grila raportată de ei\n`{{qso.refs}}` → O listă cu toate referințele pentru QSO (includere referințe operaționale și doar QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "Setări implicite",
+        "description": "Setări de bază pentru toate exporturile",
+        "fileNameNormal": "Numele fișierului pentru Activități de Referință (Normal)",
+        "fileNameCompact": "Numele fișierului pentru Activități de Referință (Compact)",
+        "titleReferenceActivities": "Titlul pentru Activități de Referință",
+        "fileNameOtherActivitiesNormal": "Numele fișierului pentru Alte Activități (Normal)",
+        "fileNameOtherActivitiesCompact": "Numele fișierului pentru Alte Activități (Compact)",
+        "titleOtherActivities": "Titlul pentru Alte Activități",
+        "adifNotes": "Notițe ADIF QSO",
+        "adifComments": "Comentarii ADIF QSO",
+        "adifQSLMessage": "Mesaj ADIF QSL"
+      }
+    },
+    "noticesSettings": {
+      "title": "Notificări Recente",
+      "undated": "Nedatat",
+      "noRecentNotices": "Nicio notificare recentă"
+    },
+    "extensionSettings": {
+      "title": "Extensie"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Separator Panou",
+      "qsosTab": "QSOuri",
+      "qsosTab-a11y": "Τabul de QSOs",
+      "infoTab": "Info",
+      "infoTab-a11y": "Tab Info",
+      "operationInfo-a11y": "Info Operațiune",
+      "spotsTab": "Spoturi",
+      "spotsTab-a11y": "Tab Spoturi",
+      "mapTab": "Hartă",
+      "mapTab-a11y": "Tab Hartă",
+      "settingsTab": "Operațiune",
+      "settingsCompactTab": "Oper.",
+      "settingsTab-a11y": "Tab Setări Operațiune",
+      "menu": {
+        "loggingSettings": "Setări de Jurnalizare",
+        "rstFields": "Câmpuri RST",
+        "stateField": "Câmp Stat",
+        "gridField": "Câmpul grilă",
+        "showDeletedQSOs": "Afișează QSOuri șterse",
+        "numbersRow": "Rând Numere",
+        "actions": "Acțiuni",
+        "lookupAllQSOs": "Căutare în toate QSOurile",
+        "confirmSpots": "Confirmă Spoturile"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Niciun QSO",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSO-uri",
+      "qsosCompactTabCount_zero": "Nicio Q",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Q-uri",
+      "noQSOsYet": "Niciun QSO încă!",
+      "currentlySetTo": "Setat momentan la",
+      "missingInfoError": {
+        "message": "EROARE: Vă rugăm să introduceți **{{errors}}** pentru o operațiune validă",
+        "errors": {
+          "band": "bandă",
+          "callsign": "indicativ"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Undo",
+        "erase-a11y": "Ștergeți",
+        "delete-a11y": "Eliminați",
+        "addQSO-a11y": "Adăugați QSO",
+        "saveQSO-a11y": "Salvează QSO"
+      },
+      "deletedQSO": "QSOul a fost șters",
+      "qsoWillBeDeleted": "QSOul va fi șters!",
+      "noQSOsBy-md": "Niciun QSO de către {{callsign}} încă… Hai să operăm!",
+      "noQSOsYet-md": "Niciun QSO încă… Hai să operăm!",
+      "qsoCount_zero": "Niciun QSO",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO-uri",
+      "qsosInTime": "{{countText}} în {{timeText}}",
+      "last10QSOs": "{{rate}} Q/h pentru ultimele 10",
+      "last100QSOs": "{{rate}} Q/h pentru ultimele 100",
+      "timeSinceLast": "{{time}} de la ultimul",
+      "moreLabel": "Mai multe",
+      "theirCallLabel": "Interlocutor",
+      "ourSentLabel": "Trimis",
+      "theirSentLabel": "Primit",
+      "stateLabel": "Stat",
+      "gridLabel": "Carou",
+      "timeLabel": "Ora",
+      "dateLabel": "Dată",
+      "timeControls-a11y": "Setări oră",
+      "powerLabel": "Putere",
+      "powerControls-a11y": "Setări putere",
+      "modeLabel": "Mod",
+      "bandLabel": "Bandă",
+      "frequencyLabel": "Frecvență",
+      "bandMissing": "Bandă???",
+      "radioControls-a11y": "Controale Radio {{parts}}",
+      "notesLabel": "Notițe",
+      "notesLabel-a11y": "Notițe",
+      "activeControlsLabel": "Controale Active",
+      "activeControlsLabel-a11y": "Controale Active",
+      "selectToRemoveActiveControls": "selectați pentru a le elimina",
+      "selectToRemoveActiveControls-a11y": "selectați pentru a le elimina",
+      "moreControlsLabel": "Mai Multe Controale",
+      "moreControlsLabel-a11y": "Mai Multe Controale",
+      "selectToAddMoreControls": "selectați pentru a le adăuga",
+      "selectToAddMoreControls-a11y": "selectați pentru a le adăuga",
+      "showSecondaryControlSettings-a11y": "Afișați Setările de Control Secundar",
+      "hideMostSecondaryControls-a11y": "Ascundeți majoritatea controalelor secundare",
+      "showAllSecondaryControls-a11y": "Afișați toate controalele secundare",
+      "spotting": {
+        "selfSpottingAt": "Auto-spotare la {{freq}}",
+        "stopAutoRespotting": "Opriți auto-respotarea",
+        "setFrequencyFirst": "Mai întâi setați o frecvență pentru spotare.",
+        "reSpotEvery": "Respotare la fiecare {{minutes}} min",
+        "reSpotAt": "Respotare la {{freq}}",
+        "selfSpottedAt": "Spotat la {{time}}",
+        "spotAt": "Spot {{call}} la {{freq}}",
+        "tooLateToSpot": "Prea târziu pentru a spota {{call}}",
+        "nothingToSpot": "Nimic de spotat",
+        "selfSpottingLabel": "Auto-spotare",
+        "selfSpottingControls-a11y": "Setări de auto-spotare",
+        "spottingLabel": "Spotare",
+        "spottingControls-a11y": "Setări de Spotare",
+        "autoRespottingLabel": "Auto-respotare",
+        "autoRespottingControls-a11y": "Setări de Auto-respotare",
+        "commentsLabel": "Comentarii"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Nicio linie?\nTrebuie să setăm locația dvs. mai întâi.\n\nApăsați aici pentru a face asta.",
+      "manyNoLocation": "Multe dintre aceste QSO-uri nu au locație precisă.\n\nEste posibil să aveți nevoie de un cont plătit la QRZ.com pentru căutarea locațiilor."
+    },
+    "opSpotsTab": {
+      "noSpots": "Niciun Spot",
+      "spotsCount_zero": "Niciun Spot",
+      "spotsCount_one": "1 Spot",
+      "spotsCount_other": "{{fmtCount}} Spoturi",
+      "showingSpots": "Afișând {{count}} din {{total}}",
+      "loadingSpots": "Se încarcă spoturi…",
+      "sections": {
+        "specialSpots": "Spoturi speciale",
+        "newMultipliers": "Multiplicatori Noi",
+        "callsOfNote": "Indicative Notabile",
+        "mostRecentSpots": "Spoturi recente"
+      },
+      "allBands": "Toate Benzile",
+      "auto": "Automat",
+      "allModes": "Toate modurile",
+      "filters": "Filtre",
+      "filtersBand": "Bandă",
+      "filtersAllBands": "Toate Benzile",
+      "filtersBandAutomatic": "Automat (acum {{band}})",
+      "filtersMode": "Mod",
+      "filtersAllModes": "Toate Modurile",
+      "filtersModeAutomatic": "Automat (acum {{mode}})",
+      "filtersMaximumAge": "Vechime maximă",
+      "filtersAnyAge": "Orice vechime",
+      "filtersAge10Minutes": "10 minute",
+      "filtersAge20Minutes": "20 minute",
+      "filtersAge30Minutes": "30 minute",
+      "filtersAge45Minutes": "45 minute",
+      "filtersAge60Minutes": "60 minute",
+      "filtersSorting": "Sortare",
+      "filtersSortByTime": "După ora spotului",
+      "filtersSortByFrequency": "După frecvență",
+      "filtersGroupSpecialSpots": "Grupează întâi spoturi speciale",
+      "filtersGroupCallsWithNotes": "Grupare întâi indicative cu notițe",
+      "filtersSpotSources": "Surse de Spoturi",
+      "filtersFilterByContinent": "Filtrați după Continent",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Fonie",
+        "DIGITAL": "Digital",
+        "DATA": "Digital",
+        "phoneOrCW": "Fonie sau CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Indicativ Invalid {{callsign}}",
+      "invalidCallsigns": "Indicative invalide {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (operat de {{operator}})",
+      "noStationCallsignDefined": "NU ESTE DEFINIT NICIUN INDICATIV DE STAȚIE",
+      "showMoreTemplates": "Mai Multe Șabloane",
+      "templatesAvailable_zero": "Niciun șablon disponibil",
+      "templatesAvailable_one": "1 șablon disponibil",
+      "templatesAvailable_other": "{{count}} șabloane disponibile",
+      "stationAndOperatorTitle": "Stație și Operator",
+      "locationTitle": "Locație",
+      "gridDescription-md": "Caroiaj `{{grid}}`",
+      "stateDescription-md": "Stare: `{{state}}`",
+      "countyDescription-md": "Județ: `{{county}}`",
+      "locationDescriptionNone-md": "Locație nesetată",
+      "operationDetailsTitle": "Detalii Operațiune",
+      "operationDetailsDescription": "Adăugați notițe pentru această operațiune",
+      "addTitleOrNotesForOperation": "Adăugați un titlu sau notițe pentru această operațiune",
+      "activitiesTitle": "Activități",
+      "addActivityTitle": "Adaugă Activitate",
+      "addActivityDescription": "POTA, SOTA, Field Day și altele!",
+      "addActivityDescription-noFeatures": "Mai întâi activați câteva funcții de activitate din ecranul principal de setări",
+      "operationDataTitle": "Date Operațiune",
+      "manageOperationLogsTitle": "Gestionați Log de Operațiune",
+      "manageOperationLogsDescription": "Exportați, importați și gestionați date",
+      "useAsTemplateTitle": "Folosește ca șablon",
+      "useAsTemplateDescription": "Începeți o nouă operațiune cu setări similare",
+      "dangerZoneTitle": "Zona de Pericol",
+      "undeleteOperationTitle": "Restaurează Operațiune",
+      "deleteOperationTitle": "Șterge Operațiune"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Statistici Operațiune",
+      "operationTotalsTitle-md": "Totalurile Operațiunii:",
+      "qsosInTime_zero": "Niciun QSO",
+      "qsosInTime_one": "1 QSO în {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSO-uri în {{time}}",
+      "qsoCount_zero": "Niciun QSO",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOuri",
+      "timeSinceLast": "{{time}} de la ultimul QSO",
+      "last10QSOs": "{{rate}} Q/h pentru ultimele 10",
+      "last100QSOs": "{{rate}} Q/h pentru ultimele 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Eroare la importul QSON",
+      "invalidName": "Nume incorect",
+      "invalidNameDescription": "Numele fișierului trebuie să se termine cu .qson sau .json",
+      "unknownError": "Eroare necunoscută"
+    },
+    "importADIF": {
+      "error": "Eroare la importul ADIF în Operațiune",
+      "historicalImportError": "Eroare la importul ADIF Istoric",
+      "unknownError": "Eroare necunoscută"
+    }
+  }
+}

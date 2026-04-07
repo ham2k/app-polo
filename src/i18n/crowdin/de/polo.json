@@ -223,6 +223,10 @@
         "title": "Sync-Einstellungen",
         "description": "Cloud-Sync und -Sicherung"
       },
+      "accountsSettings": {
+        "title": "Konten & Dienste",
+        "description": "QRZ.com und andere Dienste"
+      },
       "appFeatures": {
         "title": "App-Funktionen",
         "description": "Funktionen wie POTA, SOTA, usw. verwalten"
@@ -770,8 +774,8 @@
       "last100QSOs": "{{rate}} Q/h für die letzten 100",
       "timeSinceLast": "{{time}} seit dem letzten Mal",
       "moreLabel": "Mehr",
-      "theirCallLabel": "Dein Rufzeichen",
-      "ourSentLabel": "Gesendet",
+      "theirCallLabel": "Deren Rufzeichen",
+      "ourSentLabel": "Sent",
       "theirSentLabel": "Rcvd",
       "stateLabel": "Staat",
       "gridLabel": "Raster",

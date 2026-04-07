@@ -201,11 +201,11 @@
         "help": "Yardıma mı ihtiyacınız var?"
       },
       "operatorCallsign": {
-        "title": "Operatör Çağrı İzi",
+        "title": "Operatör Çağrı İşareti",
         "noCall": "Çağrı Yok",
-        "dialogTitle": "Operatör Çağrı İzi",
-        "pleaseEnterCallsign": "Lütfen bir çağrı izi girin!",
-        "callsignLabel": "Operatörün Çağrı İzi"
+        "dialogTitle": "Operatör Çağrı İşareti",
+        "pleaseEnterCallsign": "Lütfen bir çağrı işareti girin!",
+        "callsignLabel": "Operatörün Çağrı İşareti"
       },
       "generalSettings": {
         "title": "Genel Ayarlar",
@@ -222,6 +222,10 @@
       "syncSettings": {
         "title": "Senkronizasyon Ayarları",
         "description": "Bulut senkronizasyonu ve yedekleme"
+      },
+      "accountsSettings": {
+        "title": "Hesaplar ve Hizmetler",
+        "description": "QRZ.com ve diğer hizmetler"
       },
       "appFeatures": {
         "title": "Uygulama Özellikleri",
@@ -394,8 +398,8 @@
       },
       "switchSignalReportOrder": {
         "title": "Sinyal rapor sırasını değiştir",
-        "descriptionOn": "Önce gönderildi, sonra alındı",
-        "descriptionOff": "Önce alındı, sonra gönderildi"
+        "descriptionOn": "İletilen, Alınan",
+        "descriptionOff": "Alınan, İletilen"
       },
       "jumpAfterRST": {
         "title": "RST girişinde bir sonraki alana geç",
@@ -726,7 +730,7 @@
       "menu": {
         "loggingSettings": "Günlük Ayarları",
         "rstFields": "RST Alanları",
-        "stateField": "Durum Alanı",
+        "stateField": "Eyalet Alanı",
         "gridField": "Grid Alanı",
         "showDeletedQSOs": "Silinen QSOs Göster",
         "numbersRow": "Sayılar Satırı",
@@ -773,7 +777,7 @@
       "theirCallLabel": "Onların Çağrısı",
       "ourSentLabel": "Gönderildi",
       "theirSentLabel": "Alındı",
-      "stateLabel": "Durum",
+      "stateLabel": "Eyalet",
       "gridLabel": "Grid",
       "timeLabel": "Zaman",
       "dateLabel": "Tarih",

@@ -421,7 +421,7 @@
       "description": "Usado principalmente en VK y ZL",
       "shortName": "PnP",
       "account": {
-        "title": "ParksnPeaks (spotting VK/ZL)",
+        "title": "ParksnPeaks (Spotting en VK/ZL)",
         "dialogTitle": "Cuenta ParksnPeaks",
         "description": "Usuario: {{username}}",
         "noAccount": "Sin cuenta",
@@ -429,7 +429,7 @@
       },
       "usernameLabel": "Usuario (no indicativo)",
       "usernamePlaceholder": "tu usuario de ParksnPeaks",
-      "apiKeyLabel": "API Key (no contraseña)",
+      "apiKeyLabel": "API Key (no la contraseña)",
       "apiKeyPlaceholder": "Tu API Key"
     },
     "pga": {
@@ -888,6 +888,9 @@
     },
     "shared": {
       "scoring": {
+        "dupesCount_zero": "Sin duplicados",
+        "dupesCount_one": "1 duplicado",
+        "dupesCount_other": "{{fmtCount}} duplicados",
         "ref2refCount_zero": "Sin Ref2Ref",
         "ref2refCount_one": "1 Ref2Ref",
         "ref2refCount_other": "{{fmtCount}} Ref2Refs",

@@ -1,0 +1,922 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Cap Banda",
+      "bandsCount_one": "1 Banda",
+      "bandsCount_other": "{{count}} Bandes",
+      "modesCount_zero": "Cap Mode",
+      "modesCount_one": "1 Mode",
+      "modesCount_other": "{{count}} Modes",
+      "total": "Total {{count}}"
+    },
+    "bca": {
+      "name": "Castells i Fortaleses de Bèlgica",
+      "shortName": "BCA",
+      "exportName": "Activació BCA",
+      "activityOptions": {
+        "title_zero": "No s'ha seleccionat cap castell per activar",
+        "title_one": "Activant 1 castell",
+        "title_other": "Activant {{count}} castells",
+        "noCastlesFound": "No s'han trobat castells",
+        "nearestMatches": "{{limit}} de {{count}} coincidències més properes",
+        "matchingCastles_zero": "No hi ha castells coincidents",
+        "matchingCastles_one": "1 castell coincident",
+        "matchingCastles_other": "{{count}} castells coincidents",
+        "searchForCastles": "Busca alguns castells per activar!",
+        "noCastlesNearby": "No hi ha castells a prop",
+        "nearbyCastles": "Castells propers",
+        "searchPlaceholder": "Nom o referència…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "No s'han caçat castells",
+        "huntedRefsCount_one": "1 castell caçat",
+        "huntedRefsCount_other": "{{fmtCount}} castells caçats",
+        "activatorQSOsCount_zero": "Sense QSOs d'activador",
+        "activatorQSOsCount_one": "1 QSO d'activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activador",
+        "huntedQSOsCount_zero": "Sense QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals de l'Operació",
+        "referencesActivatedCount_zero": "No s'han activat castells",
+        "referencesActivatedCount_one": "1 castell activat",
+        "referencesActivatedCount_other": "{{fmtCount}} castells activats",
+        "referencesMissedCount_zero": "Sense castells incomplets",
+        "referencesMissedCount_one": "1 castell incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} castells incomplets",
+        "referencesHuntedCount_zero": "Sense castells caçats",
+        "referencesHuntedCount_one": "1 castell caçat",
+        "referencesHuntedCount_other": "{{fmtCount}} castells caçats"
+      },
+      "loggingControl": {
+        "theirRefLabel": "El seu BCA"
+      }
+    },
+    "blha": {
+      "name": "Fars i Vaixells de Bèlgica",
+      "shortName": "BLHA",
+      "exportName": "Activació BLHA",
+      "activityOptions": {
+        "title_zero": "No s'ha seleccionat cap far per activar",
+        "title_one": "Activant 1 far",
+        "title_other": "Activant {{count}} fars",
+        "noLighthousesFound": "No s'han trobat fars",
+        "nearestMatches": "{{limit}} de {{count}} coincidències més properes",
+        "matchingLighthouses_zero": "No hi ha fars coincidents",
+        "matchingLighthouses_one": "1 far coincident",
+        "matchingLighthouses_other": "{{count}} fars coincidents",
+        "searchForLighthouses": "Busca alguns fars per activar!",
+        "noLighthousesNearby": "No hi ha fars a prop",
+        "nearbyLighthouses": "Fars propers",
+        "searchPlaceholder": "Nom o referència…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "No s'han caçat fars",
+        "huntedRefsCount_one": "1 far caçat",
+        "huntedRefsCount_other": "{{fmtCount}} fars caçats",
+        "activatorQSOsCount_zero": "Sense QSOs d'activador",
+        "activatorQSOsCount_one": "1 QSO d'activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activador",
+        "huntedQSOsCount_zero": "Sense QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals de l'Operació",
+        "referencesActivatedCount_zero": "No s'han activat fars",
+        "referencesActivatedCount_one": "1 far activat",
+        "referencesActivatedCount_other": "{{fmtCount}} fars activats",
+        "referencesMissedCount_zero": "Sense fars incomplets",
+        "referencesMissedCount_one": "1 far incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} fars incomplets",
+        "referencesHuntedCount_zero": "No s'han caçat fars",
+        "referencesHuntedCount_one": "1 far caçat",
+        "referencesHuntedCount_other": "{{fmtCount}} fars caçats"
+      }
+    },
+    "call-notes": {
+      "name": "Anotacions de la crida",
+      "description-md_zero": "No hi ha anotacions carregades.",
+      "description-md_one": "{{fmtCount}} {{type}} carregat.",
+      "description-md_other": "{{fmtCount}} {{type}} carregats.",
+      "builtIn": "Notes integrades",
+      "userDefined": "Notes de l'usuari",
+      "failedToLoad": "No s'ha pogut carregar!",
+      "notesFile": "Arxiu d'anotacions de la crida",
+      "nameLabel": "Nom",
+      "namePlaceholder": "Nom per al teu arxiu d'anotacions de la crida",
+      "locationLabel": "Ubicació",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Integrat",
+      "customTitle": "Personalitzat",
+      "addFile": "Afegeix un nou arxiu",
+      "aboutTitle": "Sobre les Anotacions de la crida",
+      "names": {
+        "ham2k-hams-of-note": "Radioaficionats destacats de Ham2K"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Una mostra veritable de qui és qui i qui no ho és en el món de la ràdio"
+      },
+      "help-md": "Les notes d'Indicatiu es guarden en fitxers de text senzills, un indicatiu per línia seguit per la informació que voleu mostrar a la pantalla de registre. Podeu utilitzar els fitxers integrats o afegir els vostres.\n\nFaciliteu un enllaç directe a un fitxer de text pla, o un \"enllaç de compartició\" d'un servei com:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nLes línies en aquest fitxer ha de tenir aquest aspecte i poden admetre format bàsic de markdown:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nSi l'entrada comença amb un emoji, s'utilitzarà en lloc de la ⭐ per defecte.\n\nLes entrades es poden utilitzar per a \"expansió de l'indicatiu\" si primer escriviu `..` o ` //` en el camp d'indicatiu, com `//DAN` en l'exemple anterior."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Cap Província Canadenca",
+      "provincesCount_one": "1 Província Canadenca",
+      "provincesCount_other": "{{count}} Províncies Canadenques"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Configuració",
+        "year": "Any",
+        "testMode-md": "Com que l'esdeveniment d'aquest any encara no ha començat, pots provar la teva operació amb QSOs dels últims set dies.",
+        "note-md": "NOTA: PoLo informarà dels teus resultats utilitzant tots els QSOs dins del període de dates, inclosos altres operacions presents en aquest dispositiu.",
+        "info-md": "L'esdeveniment especial de les 13 Colònies es realitza cada any des de les 9 del matí ET l'1 de juliol fins a mitjanit ET el 7 de juliol"
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Recuperant el temps actual…",
+      "errorFetchingWeather": "Error en recuperar el temps",
+      "fetchingSolarWeather": "Recuperant el temps solar…",
+      "errorFetchingSolarWeather": "Error en recuperar el temps solar",
+      "addNote": "Afegir nota: ‘{{note}} ’…",
+      "addNotePrompt": "Afegir una nota? segueix escrivint…",
+      "addNoteConfirm": "Nota afegida!",
+      "addTodo": "Afegir tasca pendent: ‘{{note}}’…",
+      "addTodoPrompt": "Afegir un ítem pendent? segueix escrivint…",
+      "addTodoConfirm": "Tasca pendent afegida!",
+      "sendChat": "Enviar missatge: ‘{{note}}’…",
+      "sendChatPrompt": "Enviar un missatge? segueix escrivint…",
+      "sendChatConfirm": "Enviat!"
+    },
+    "commands-debug": {
+      "syncall": "Eliminar totes les operacions i restablir l'estat sincronitzat?",
+      "syncallConfirm": "Esborrant dades i resincronitzant…",
+      "syncup": "Reenviar dades locals al servei de sincronització?",
+      "syncupConfirm": "Reenviant…",
+      "wipedb": "Eliminar tota la base de dades (però mantenir la configuració)?",
+      "wipedbConfirm": "Esborrant base de dades…",
+      "factory": "Eliminar totes les dades i configuració?",
+      "factoryConfirm": "Restabliment de fàbrica en curs…",
+      "switchLanguage": "Canviar l'idioma a `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Idioma `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Canviant a `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Activar el mode desenvolupador?",
+      "activateConfirm": "Mode desenvolupador activat!",
+      "deactivate": "Desactivar el mode desenvolupador?",
+      "deactivateConfirm": "Mode desenvolupador desactivat!",
+      "on": "Mode Desenvolupador: ACTIVAT!!!",
+      "off": "Mode Desenvolupador: DESACTIVAT"
+    },
+    "commands-misc": {
+      "rtfm": "Llegir el manual detallat?",
+      "rtfmConfirm": "Obrint el manual detallat",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "No es pot autoanunciar sense freqüència",
+        "selfSpotWithComments": "Autoanunci amb ‘{{comments}}’?",
+        "selfSpotPrompt": "Autoanunci?",
+        "selfSpottingWithComments": "Autoanunciant-se a {{freq}} amb ‘{{comments}}’",
+        "selfSpotting": "Autoanunciant-se a {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Iniciar l'operació?",
+      "startConfirm": "Operació iniciada!",
+      "break": "Afegir una pausa?",
+      "breakConfirm": "Pausa d'operació afegida!",
+      "stop": "Aturar l'operació?",
+      "stopConfirm": "Operació aturada!"
+    },
+    "commands-operator": {
+      "change": "Canviar operador a {{operator}}?",
+      "changeConfirm": "Operador establert a {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Canviar banda a {{band}}?",
+      "bandConfirm": "Banda establerta a {{band}}",
+      "frequency": "Canviar la freqüència a {{freq}} MHz?",
+      "frequencyConfirm": "Freqüència establerta a {{freq}} MHz",
+      "frequencyAndMode": "Canviar freqüència a {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Freqüència establerta a {{freq}} MHz ({{mode}})",
+      "power": "Canviar potència a {{power}}W?",
+      "powerConfirm": "Potència establerta a {{power}}W",
+      "mode": "Canviar mode a {{mode}}?",
+      "modeConfirm": "Mode establert a {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Establint {{name}}?",
+      "setChange": "Canviar {{label}} a {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} establert a {{value}}",
+      "setNotChanged": "No canviat"
+    },
+    "commands-time": {
+      "setTime": "Establir l'hora a {{time}}?",
+      "setDate": "Establir la data a {{date}}?",
+      "timeSet": "Hora establerta a {{time}}",
+      "dateSet": "Data establerta a {{date}}",
+      "changeTimeByHours": "Canviar l'hora per {{delta}} hores?",
+      "changeTimeByMinutes": "Canviar l'hora per {{delta}} minuts?",
+      "changeTimeBySeconds": "Canviar l'hora per {{delta}} segons?",
+      "changeTimeByDays": "Canviar l'hora per {{delta}} dies?",
+      "changeTimeByWeeks": "Canviar l'hora per {{delta}} setmanes?",
+      "changeTimeToNow": "Canviar l'hora a ara?",
+      "changeTimeToToday": "Canviar l'hora a avui?",
+      "changeTimeToYesterday": "Canviar l'hora a ahir?",
+      "timeSetToNow": "Hora establerta a ara",
+      "timeSetToToday": "Hora establerta a avui",
+      "timeSetToYesterday": "Hora establerta a ahir"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "No s'han seleccionat referències per activar",
+        "title_one": "Activant 1 referència",
+        "title_other": "Activant {{count}} referències",
+        "addMoreReferences": "Afegeix més referències",
+        "addReference": "Afegeix una referència",
+        "activityLabel": "Activitat - MY_SIG en ADIF (Opcional)",
+        "activityPlaceholder": "i.e. COTA…",
+        "referenceLabel": "Referència - MY_SIG_INFO en ADIF",
+        "referencePlaceholder": "p.e. XY-1234…",
+        "nameLabel": "Nom (Opcional)",
+        "namePlaceholder": "p.e. Castell XYZ…",
+        "addButton": "Afegeix {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "La seva Ref"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Substitueix títols d'arxiu de dades específics aquí",
+        "pota-all-parks": "POTA: Tots els parcs",
+        "sota-all-summits": "SOTA: Tots els cims"
+      },
+      "loading": {
+        "progress": "S'han carregat `{{processedLines}}` referències.\n\n`{{percent}}` • {{secondsLeft}} segons restants.",
+        "downloadingRawData": "Descarregant dades en brut…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Cap Entitat DXCC",
+      "entitiesCount_one": "1 Entitat DXCC",
+      "entitiesCount_other": "{{count}} Entitats DXCC"
+    },
+    "eca": {
+      "name": "Premis de Castells Anglesos",
+      "shortName": "ECA",
+      "exportName": "Activació ECA",
+      "activityOptions": {
+        "title_zero": "No s'ha seleccionat cap castell per activar",
+        "title_one": "Activant 1 castell",
+        "title_other": "Activant {{count}} castells",
+        "noCastlesFound": "No s'han trobat castells",
+        "nearestMatches": "Els més propers {{limit}} de {{count}} coincidències",
+        "matchingCastles_zero": "No hi ha castells coincidents",
+        "matchingCastles_one": "1 castell coincident",
+        "matchingCastles_other": "{{count}} castells coincidents",
+        "searchForCastles": "Busca alguns castells per activar!",
+        "noCastlesNearby": "No hi ha castells a prop",
+        "nearbyCastles": "Castells a prop",
+        "searchPlaceholder": "Nom o referència…"
+      }
+    },
+    "ela": {
+      "name": "Premis de Fars Anglesos",
+      "shortName": "ELA",
+      "exportName": "Activació ELA",
+      "activityOptions": {
+        "title_zero": "No s'ha seleccionat cap far per activar",
+        "title_one": "Activant 1 far",
+        "title_other": "Activant {{count}} fars",
+        "noLighthousesFound": "No s'han trobat fars",
+        "nearestMatches": "Els més propers {{limit}} de {{count}} coincidències",
+        "matchingLighthouses_zero": "No hi ha fars coincidents",
+        "matchingLighthouses_one": "1 far coincident",
+        "matchingLighthouses_other": "{{count}} fars coincidents",
+        "searchForLighthouses": "Busca alguns fars per activar!",
+        "noLighthousesNearby": "No hi ha fars a prop",
+        "nearbyLighthouses": "Fars propers",
+        "searchPlaceholder": "Nom o referència…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Informació d'intercanvi",
+        "classLabel": "Classe",
+        "locationLabel": "Ubicació",
+        "additionalInformation": "Informació addicional",
+        "highestTransmitterPowerLabel": "Potència màxima del transmissor",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W o menys",
+        "qroOption": "QRO: 100W o menys",
+        "moreThan100WOption": "Més de 100W",
+        "powerSourceLabel": "Font de potència",
+        "powerSourcePlaceholder": "Selecciona una font de potència",
+        "batteriesOption": "Bateries, Solar, Vent",
+        "commercialPowerOption": "Potència comercial, Generador",
+        "information-md": "La classe per al Dia de Camp de ARRL és, per exemple, `2A`:\n\n  - `1`, `2`, `3`… per al nombre de transmisors.\n  - `A` per a Grup (3 o més) Estació Portàtil\n  - `B` per a Estació Portàtil d'una o dues persones\n  - `C` per a Estació Mòbil\n  - `D` per a Estació a Casa\n  - `E` per a Estació a Casa amb Energia d'Emergència\n  - `F` per a Centre d'Operacions d'Emergència\n\nLa ubicació és la Secció de l'ARRL, Secció RAC, `MX` per a Mèxic, o `DX` per a qualsevol altre lloc.\n\nMés informació a les **[regles oficials](https://www.arrl.org/field-day-rules)**."
+      }
+    },
+    "gma": {
+      "name": "Activitat de Muntanya Global",
+      "shortName": "GMA",
+      "exportName": "Activació GMA",
+      "activityOptions": {
+        "title_zero": "No s'han seleccionat cims per activar",
+        "title_one": "Activant 1 cim",
+        "title_other": "Activant {{count}} cims",
+        "noSummitsFound": "No s'han trobat cims",
+        "nearestMatches": "Els més propers {{limit}} de {{count}} coincidències",
+        "matchingSummits_zero": "No hi ha cims coincidents",
+        "matchingSummits_one": "1 cim coincident",
+        "matchingSummits_other": "{{count}} cims coincidents",
+        "searchForSummits": "Busca alguns cims per activar!",
+        "noSummitsNearby": "No hi ha cims a prop",
+        "nearbySummits": "Cims a prop",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownSummit": "Cim desconegut"
+      }
+    },
+    "llota": {
+      "name": "LLOTA: Llacs i Llacunes A l'Aire",
+      "shortName": "LLOTA",
+      "exportName": "Activació LLOTA",
+      "activityOptions": {
+        "title_zero": "No hi ha llacs seleccionats per activar",
+        "title_one": "Activant 1 llac",
+        "title_other": "Activant {{count}} llacs",
+        "noLakesFound": "No s'han trobat llacs",
+        "nearestMatches": "{{limit}} més propers de {{count}} coincidències",
+        "matchingRefs_zero": "No hi ha llacs coincidents",
+        "matchingRefs_one": "1 llac coincident",
+        "matchingRefs_other": "{{count}} llacs coincidents",
+        "searchForRefs": "Busca alguns llacs per activar!",
+        "noRefsNearby": "No hi ha llacs a prop",
+        "nearbyRefs": "Llacs propers",
+        "searchPlaceholder": "Nom o referència…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "No L2Ls",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ls",
+        "huntedRefsCount_zero": "No s'han caçat llacs",
+        "huntedRefsCount_one": "1 llac caçat",
+        "huntedRefsCount_other": "{{fmtCount}} llacs caçats",
+        "activatorQSOsCount_zero": "No QSO activadors",
+        "activatorQSOsCount_one": "1 QSO activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs activadors",
+        "ref2refQSOsCount_zero": "No L2L QSOs",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSOs",
+        "huntedQSOsCount_zero": "No QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals d'operació",
+        "referencesActivatedCount_zero": "No hi ha llacs activats",
+        "referencesActivatedCount_one": "1 llac activat",
+        "referencesActivatedCount_other": "{{fmtCount}} llacs activats",
+        "referencesMissedCount_zero": "No hi ha llacs incomplets",
+        "referencesMissedCount_one": "1 llac incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} llacs incomplets",
+        "referencesHuntedCount_zero": "No s'han capturat llacs",
+        "referencesHuntedCount_one": "1 llac capturat",
+        "referencesHuntedCount_other": "{{fmtCount}} llacs caçats"
+      },
+      "loggingControl": {
+        "theirRefLabel": "El seu LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Error en publicar l'anunci LLOTA",
+        "serverResponse": "El servidor ha respost amb error {{status}}: {{body}}"
+      },
+      "exampleRefName": "Llac Exemple",
+      "unknownRefName": "Llac Desconegut",
+      "noRefsNearby": "No hi ha llacs a prop!"
+    },
+    "mota": {
+      "name": "Molins a l'Aire",
+      "shortName": "MOTA",
+      "exportName": "Activació MOTA",
+      "activityOptions": {
+        "title_zero": "No s'han seleccionat molins per activar",
+        "title_one": "Activant 1 molí",
+        "title_other": "Activant {{count}} molins",
+        "noMillsFound": "No s'han trobat molins",
+        "nearestMatches": "Els més a prop {{limit}} de {{count}} coincidències",
+        "matchingMills_zero": "No hi ha molins coincidents",
+        "matchingMills_one": "1 molí coincident",
+        "matchingMills_other": "{{count}} molins coincidents",
+        "searchForMills": "Busca alguns molins per activar!",
+        "noMillsNearby": "No hi ha molins a prop",
+        "nearbyMills": "Molins a prop",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownMill": "Molí desconegut"
+      },
+      "loggingControl": {
+        "theirRefLabel": "El seu Molí"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Anuncis",
+      "description": "S'utilitza principalment en VK i ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (anuncis VK/ZL)",
+        "dialogTitle": "Compte de ParksnPeaks",
+        "description": "Nom d'usuari: {{username}}",
+        "noAccount": "Sense compte",
+        "pleaseEnterDetails": "Si us plau, introdueix les dades per al teu compte de ParksnPeaks:"
+      },
+      "usernameLabel": "Nom d'usuari (no indicatiu)",
+      "usernamePlaceholder": "el teu nom d'usuari del compte",
+      "apiKeyLabel": "Clau API (no contrasenya)",
+      "apiKeyPlaceholder": "la teva Clau API"
+    },
+    "pga": {
+      "name": "Polish Gmina Award",
+      "shortName": "PGA",
+      "exportName": "Activació PGA",
+      "activityOptions": {
+        "title_zero": "No s'han seleccionat gmines per activar",
+        "title_one": "Activant 1 gmina",
+        "title_other": "Activant {{count}} gmines",
+        "noGminasFound": "No s'han trobat gmines",
+        "nearestMatches": "Els més a prop {{limit}} de {{count}} coincidències",
+        "matchingGminas_zero": "No hi ha gmines coincidents",
+        "matchingGminas_one": "1 gmina coincident",
+        "matchingGminas_other": "{{count}} gmines coincidents",
+        "searchForGminas": "Busca algunes gmines per activar!",
+        "noGminasNearby": "No hi ha gmines a prop",
+        "nearbyGminas": "Gmines a prop",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownGmina": "Gmina desconegut"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parcs en l'Aire",
+      "shortName": "POTA",
+      "exportName": "Activació POTA",
+      "activityOptions": {
+        "title_zero": "No s'han seleccionat parcs per activar",
+        "title_one": "Activant 1 parc",
+        "title_other": "Activant {{count}} parcs",
+        "noParksFound": "No s'han trobat parcs",
+        "nearestMatches": "Els més a prop {{limit}} de {{count}} coincidències",
+        "matchingParks_zero": "No hi ha parcs coincidents",
+        "matchingParks_one": "1 parc coincident",
+        "matchingParks_other": "{{count}} parcs coincidents",
+        "searchForParks": "Busca alguns parcs per activar!",
+        "noParksNearby": "No hi ha parcs a prop",
+        "nearbyParks": "Parcs a prop",
+        "searchPlaceholder": "Nom o referència…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Sense P2Ps",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2Ps",
+        "huntedRefsCount_zero": "No s'han caçat parcs",
+        "huntedRefsCount_one": "1 parc caçat",
+        "huntedRefsCount_other": "{{fmtCount}} parcs caçats",
+        "activatorQSOsCount_zero": "Sense QSOs d'activador",
+        "activatorQSOsCount_one": "1 QSO d'activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activador",
+        "ref2refQSOsCount_zero": "Sense QSOs de P2P",
+        "ref2refQSOsCount_one": "1 QSO de P2P",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs de P2P",
+        "huntedQSOsCount_zero": "Sense QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals de l'Operació",
+        "referencesActivatedCount_zero": "No s'han activat parcs",
+        "referencesActivatedCount_one": "1 parc activat",
+        "referencesActivatedCount_other": "{{fmtCount}} parcs activats",
+        "referencesMissedCount_zero": "Sense parcs incomplets",
+        "referencesMissedCount_one": "1 parc incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} parcs incomplets",
+        "referencesHuntedCount_zero": "No s'han caçat parcs",
+        "referencesHuntedCount_one": "1 parc caçat",
+        "referencesHuntedCount_other": "{{fmtCount}} parcs caçats"
+      },
+      "loggingControl": {
+        "theirRefLabel": "El seu POTA"
+      },
+      "postSpotAPI": {
+        "error": "Error publicant l'anunci POTA",
+        "serverResponse": "El servidor va respondre amb error {{status}}: {{body}}"
+      },
+      "exampleRefName": "Exemple de Parc Nacional",
+      "unknownRefName": "Parc Desconegut",
+      "noRefsNearby": "No hi ha parcs propers!"
+    },
+    "siota": {
+      "name": "Sitges en l'Aire",
+      "shortName": "SIOTA",
+      "exportName": "Activació SIOTA",
+      "account": {
+        "title": "ParksnPeaks (anuncis SiOTA)",
+        "dialogTitle": "Compte ParksnPeaks",
+        "description": "Nom d'usuari: {{username}}",
+        "noAccount": "Cap compte",
+        "pleaseEnterDetails": "Introduïu els detalls del vostre compte ParksnPeaks:",
+        "usernameLabel": "Nom d'usuari (no indicatiu)",
+        "usernamePlaceholder": "el vostre nom d'usuari del compte",
+        "apiKeyLabel": "Clau API (no contrasenya)",
+        "apiKeyPlaceholder": "la vostra clau API"
+      },
+      "activityOptions": {
+        "title_zero": "Cap sitja seleccionada per a l'activació",
+        "title_one": "Activant 1 sitja",
+        "title_other": "Activant {{count}} sitges",
+        "noSilosFound": "No s'han trobat sitja",
+        "nearestMatches": "Els més propers {{limit}} de {{count}} coincidències",
+        "matchingSilos_zero": "Cap coincidència de sitges",
+        "matchingSilos_one": "1 coincidència de sitja",
+        "matchingSilos_other": "{{count}} coincidències de sitges",
+        "searchForSilos": "Cerca algunes sitges per activar!",
+        "noSilosNearby": "No hi ha sitges properes",
+        "nearbySilos": "Sitges properes",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownSilo": "Sitja desconeguda"
+      },
+      "loggingControl": {
+        "theirRefLabel": "La seva sitja"
+      },
+      "postSpotAPI": {
+        "error": "Error publicant l'anunci SiOTA",
+        "serverResponse": "El servidor va respondre amb error {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "account": {
+        "title": "SOTA (per l'autoanunci de SOTAWatch)",
+        "dialogTitle": "Compte SOTA",
+        "description": "Connectat com {{callsign}}",
+        "noAccount": "Cap compte",
+        "error": "Error en obtenir detalls del compte",
+        "connect": "Connecta el teu compte SOTA"
+      },
+      "notLoggedInAlertTitle": "Avís",
+      "notLoggedInAlertText": "No has iniciat la sessió a SOTAWatch per l'autoanunci. Si us plau, ves a les configuracions de PoLo",
+      "activityOptions": {
+        "title_zero": "Cap cim seleccionat per l'activació",
+        "title_one": "Activant 1 cim",
+        "title_other": "Activant {{count}} cim",
+        "noSummitsFound": "No s'han trobat cims",
+        "nearestMatches": "Els més a prop {{limit}} de {{count}} coincidències",
+        "matchingSummits_zero": "Cap coincidència de cim",
+        "matchingSummits_one": "1 coincidència de cim",
+        "matchingSummits_other": "{{count}} coincidències de cim",
+        "searchForSummits": "Cerca alguns cims per activar!",
+        "noSummitsNearby": "No hi ha cims propers",
+        "nearbySummits": "Cims propers",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownSummit": "Cim desconegut"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Sense S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "No s'han caçat cims",
+        "huntedRefsCount_one": "1 cim caçat",
+        "huntedRefsCount_other": "{{fmtCount}} cims caçats",
+        "activatorQSOsCount_zero": "Sense QSOs d'activador",
+        "activatorQSOsCount_one": "1 QSO d'activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activador",
+        "ref2refQSOsCount_zero": "Sense QSOs de S2S",
+        "ref2refQSOsCount_one": "1 QSO de S2S",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs de S2S",
+        "huntedQSOsCount_zero": "Sense QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals de l'Operació",
+        "referencesActivatedCount_zero": "No s'han activat cims",
+        "referencesActivatedCount_one": "1 cim activat",
+        "referencesActivatedCount_other": "{{fmtCount}} cims activats",
+        "referencesMissedCount_zero": "Sense cims incomplets",
+        "referencesMissedCount_one": "1 cim incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} cims incomplets",
+        "referencesHuntedCount_zero": "No s'han caçat cims",
+        "referencesHuntedCount_one": "1 cim caçat",
+        "referencesHuntedCount_other": "{{fmtCount}} cims caçats"
+      },
+      "loggingControl": {
+        "theirRefLabel": "El seu SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Error publicant SOTA spot",
+        "serverResponse": "El servidor va respondre amb estat {{status}} {{message}}",
+        "sotaAccountLoggedOut": "El compte SOTA ha tancat la sessió. Torneu a iniciar sessió a la configuració de PoLo"
+      },
+      "exampleRefName": "Exemple de Cim",
+      "unknownRefName": "Cim Desconegut",
+      "noRefsNearby": "No hi ha cims a prop!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "No s'han seleccionat torres per activar",
+        "title_one": "Activant 1 torre",
+        "title_other": "Activant {{count}} torres",
+        "noTowersFound": "No s'han trobat torres",
+        "nearestMatches": "Les més properes {{limit}} de {{count}} coincidències",
+        "matchingTowers_zero": "Cap torre coincident",
+        "matchingTowers_one": "1 torre coincident",
+        "matchingTowers_other": "{{count}} torres coincidents",
+        "searchForTowers": "Busca algunes torres per activar!",
+        "noTowersNearby": "No hi ha torres a prop",
+        "nearbyTowers": "Torres properes",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownTower": "Torre desconeguda"
+      },
+      "scoring": {
+        "ref2refCount_zero": "No hi ha R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "No hi ha torres caçades",
+        "huntedRefsCount_one": "1 torre caçada",
+        "huntedRefsCount_other": "{{fmtCount}} torres caçades",
+        "activatorQSOsCount_zero": "No hi ha QSOs d'activador",
+        "activatorQSOsCount_one": "1 QSO d'activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activador",
+        "ref2refQSOsCount_zero": "No hi ha QSOs R2R",
+        "ref2refQSOsCount_one": "1 QSO R2R",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs R2R",
+        "huntedQSOsCount_zero": "No hi ha QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals d'Operació",
+        "referencesActivatedCount_zero": "No s'han activat torres",
+        "referencesActivatedCount_one": "1 torre activada",
+        "referencesActivatedCount_other": "{{fmtCount}} torres activades",
+        "referencesMissedCount_zero": "No hi ha torres incompletes",
+        "referencesMissedCount_one": "1 torre incompleta",
+        "referencesMissedCount_other": "{{fmtCount}} torres incompletes",
+        "referencesHuntedCount_zero": "No hi ha torres caçades",
+        "referencesHuntedCount_one": "1 torre caçada",
+        "referencesHuntedCount_other": "{{fmtCount}} torres caçades"
+      },
+      "loggingControl": {
+        "theirRefLabel": "La seva Torre"
+      },
+      "exampleRefName": "Exemple de Torre",
+      "unknownRefName": "Torre Desconeguda",
+      "noRefsNearby": "No hi ha torres a prop!",
+      "postSpotAPI": {
+        "error": "Error publicant el lloc TOTA",
+        "serverResponse": "El servidor ha respost amb l'estat {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Cap Estat dels EUA",
+      "statesCount_one": "1 Estat dels EUA",
+      "statesCount_other": "{{count}} Estats dels EUA"
+    },
+    "wab": {
+      "name": "Worked All Britain/Ireland",
+      "description": "Afegiu graella WAB/WAI a l'operació",
+      "workedAllBritainSquare": "Graella treballada de All Britain Square",
+      "workedAllIrelandSquare": "Graella treballada de All Ireland",
+      "enterSquare": "Introdueix Graella",
+      "placeholderBritain": "p. ex. SU14",
+      "placeholderIreland": "p. ex. N93",
+      "currentSquare": "Graella actual:",
+      "noSquareSet": "No es defineix cap graella"
+    },
+    "wca": {
+      "name": "World Castles Awards",
+      "shortName": "WCA",
+      "exportName": "Activació WCA",
+      "activityOptions": {
+        "title_zero": "No s'han seleccionat castells per a l'activació",
+        "title_one": "Activant 1 castell",
+        "title_other": "Activant {{count}} castells",
+        "noCastlesFound": "No s'han trobat castells",
+        "nearestMatches": "{{limit}} més propers de {{count}} coincidències",
+        "matchingCastles_zero": "No hi ha castells coincidents",
+        "matchingCastles_one": "1 castell coincident",
+        "matchingCastles_other": "{{count}} castells coincidents",
+        "searchForCastles": "Cerca alguns castells per activar!",
+        "noCastlesNearby": "No hi ha castells a prop",
+        "nearbyCastles": "Castells a prop",
+        "searchPlaceholder": "Nom o referència…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "No s'han caçat castells",
+        "huntedRefsCount_one": "1 castell caçat",
+        "huntedRefsCount_other": "{{fmtCount}} castells caçats",
+        "activatorQSOsCount_zero": "No hi ha QSOs d'activador",
+        "activatorQSOsCount_one": "1 QSO d'activador",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs d'activador",
+        "huntedQSOsCount_zero": "No hi ha QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals de l'operació",
+        "referencesActivatedCount_zero": "No s'han activat castells",
+        "referencesActivatedCount_one": "1 castell activat",
+        "referencesActivatedCount_other": "{{fmtCount}} castells activats",
+        "referencesMissedCount_zero": "No hi ha castells incomplets",
+        "referencesMissedCount_one": "1 castell incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} castells incomplets",
+        "referencesHuntedCount_zero": "No s'han caçat castells",
+        "referencesHuntedCount_one": "1 castell caçat",
+        "referencesHuntedCount_other": "{{fmtCount}} castells caçats"
+      },
+      "exampleRefName": "Exemple de Castell",
+      "unknownRefName": "Castell Desconegut",
+      "noRefsNearby": "No hi ha castells a prop!"
+    },
+    "wfd": {
+      "name": "Dia de Winter Field",
+      "shortName": "DCH",
+      "exportName": "Activació DCH",
+      "activityOptions": {
+        "exchangeInformation": "Intercanvi d'Informació",
+        "classLabel": "Classe",
+        "locationLabel": "Ubicació",
+        "objectives_zero": "No s'han aconseguit objectius",
+        "objectives_one": "1 objectiu aconseguit, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} objectius aconseguits, OM ×{{multiplier}}",
+        "objectivesTitle": "Objectius: {{count}} aconseguits, OM ×{{multiplier}}",
+        "objectivesDescription": "Recordeu informar d'aquests objectius quan envieu el vostre registre!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Potència Alternativa",
+        "awayFromHome": "Operar lluny de casa",
+        "fmSatelliteContact": "Contacte amb Satèl·lit FM",
+        "ssbSatelliteContact": "Contacte amb Satèl·lit SSB o CW",
+        "winlinkEmails": "Correus electrònics Winlink",
+        "specialBulletin": "Butlletí Especial",
+        "sixBands": "Sis Bandes",
+        "twelveBands": "Dotze Bandes",
+        "multipleModes": "Diversos Modes",
+        "qrpOperation": "Operació QRP",
+        "sixContinuousHours": "Sis Hores Contínues"
+      },
+      "objectiveDescription": {
+        "altPower": "Operar 100% amb potència alternativa, com bateries, solar, vent, etc.",
+        "awayFromHome": "Instal·leu la vostra estació de camp almenys a 800 metres de casa.",
+        "fmSatelliteContact": "Feu almenys 1 contacte amb satèl·lit FM durant el període d'operació.",
+        "ssbSatelliteContact": "Feu almenys un contacte fent servir SSB o CW.",
+        "winlinkEmails": "Envieu I rebeu almenys un correu electrònic mitjançant Winlink a través de RF.",
+        "specialBulletin": "Copiar amb precisió el missatge especial del Butlletí DCH i enviar la vostra còpia amb la subjecció del registre.",
+        "sixBands": "Feu almenys tres contactes en cadascuna de com a mínim sis bandes diferents.",
+        "twelveBands": "Feu almenys tres contactes en cadascuna de com a mínim dotze bandes diferents.",
+        "multipleModes": "Utilitzeu diversos modes durant el període d'operació.",
+        "qrpOperation": "Operar amb nivells de potència QRP (10W o menys en FM, 5W o menys en CW o Digital).",
+        "sixContinuousHours": "Operar durant almenys sis hores contínues durant el període d'operació."
+      },
+      "information-md": "La classe per al Winter Field Day és, per exemple, `2M`:\n\n  - `1`, `2`, `3`… per al nombre de transmisors.\n  - `H` per a Estació a Casa\n  - `I` per a interiors\n  - `O` per a exteriors\n  - `M` per a Estació Mòbil o Mòbil Estacionària\n\nLa ubicació és la Secció de l'ARRL, Secció RAC, `MX` per a Mèxic, o `DX` per a qualsevol altre lloc.\n\nMés informació a les **[regles oficials](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: World Wide Bunker Awards",
+      "shortName": "WWBOTA",
+      "exportName": "Activació WWBOTA",
+      "activityOptions": {
+        "title_zero": "Cap búnquer seleccionat per a l'activació",
+        "title_one": "Activant 1 búnquer",
+        "title_other": "Activant {{count}} búnquers",
+        "noBunkersFound": "No s'han trobat búnquers",
+        "nearestMatches": "Els més propers {{limit}} de {{count}} coincidències",
+        "matchingBunkers_zero": "Cap coincidència de búnquers",
+        "matchingBunkers_one": "1 coincidència de búnquer",
+        "matchingBunkers_other": "{{count}} coincidències de búnquers",
+        "searchForBunkers": "Cerca alguns búnquers per activar!",
+        "noBunkersNearby": "No hi ha búnquers propers",
+        "nearbyBunkers": "Búnquers propers",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownBunker": "Búnquer desconegut"
+      },
+      "loggingControl": {
+        "theirRefLabel": "El seu Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Error publicant l'anunci WWBOTA",
+        "serverResponse": "El servidor va respondre amb estat {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: World Wide Flora & Fauna",
+      "shortName": "WWFF",
+      "exportName": "Activació WWFF",
+      "activityOptions": {
+        "title_zero": "Cap parc seleccionat per a l'activació",
+        "title_one": "Activant 1 parc",
+        "title_other": "Activant {{count}} parcs",
+        "noParksFound": "No s'han trobat parcs",
+        "nearestMatches": "Els més propers {{limit}} de {{count}} coincidències",
+        "matchingParks_zero": "Cap coincidència de parcs",
+        "matchingParks_one": "1 coincidència de parc",
+        "matchingParks_other": "{{count}} coincidències de parcs",
+        "searchForParks": "Cerca alguns parcs per activar!",
+        "noParksNearby": "No hi ha parcs a prop",
+        "nearbyParks": "Parcs a prop",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownPark": "Parc desconegut"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Sense P2Ps",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2Ps",
+        "huntedRefsCount_zero": "No s'han caçat parcs",
+        "huntedRefsCount_one": "1 parc caçat",
+        "huntedRefsCount_other": "{{fmtCount}} parcs caçats",
+        "activatorQSOsCount_zero": "Sense QSOs d'activador",
+        "activatorQSOsCount_one": "1 QSO d'activador",
+        "activatorQSOsCount_other": "{{fmtCount}} activadors QSOs",
+        "ref2refQSOsCount_zero": "Cap P2P QSOs",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Cap QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals d'operació",
+        "referencesActivatedCount_zero": "Cap parc activat",
+        "referencesActivatedCount_one": "1 parc activat",
+        "referencesActivatedCount_other": "{{fmtCount}} parcs activats",
+        "referencesMissedCount_zero": "Cap parc incomplet",
+        "referencesMissedCount_one": "1 parc incomplet",
+        "referencesMissedCount_other": "{{fmtCount}} parcs incomplets",
+        "referencesHuntedCount_zero": "Cap parc caçat",
+        "referencesHuntedCount_one": "1 parc caçat",
+        "referencesHuntedCount_other": "{{fmtCount}} parcs caçats"
+      },
+      "loggingControl": {
+        "theirRefLabel": "El seu WWFF"
+      },
+      "exampleRefName": "Parc d'exemple",
+      "unknownRefName": "Parc desconegut",
+      "noRefsNearby": "Cap parc a prop!",
+      "postSpotAPI": {
+        "error": "Error publicant WWFF spot",
+        "serverResponse": "El servidor va respondre amb estat {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "account": {
+        "title": "ZLOTA (senyalització ZLOTA)",
+        "dialogTitle": "Compte ZLOTA",
+        "description": "Indicatiu: {{callsign}}",
+        "noAccount": "Cap compte",
+        "pleaseEnterDetails": "Introduïu els detalls del vostre compte ZLOTA:",
+        "callsignLabel": "Indicatiu",
+        "callsignPlaceholder": "el vostre indicatiu de compte",
+        "pinLabel": "PIN (no contrasenya)",
+        "pinPlaceholder": "el vostre PIN"
+      },
+      "activityOptions": {
+        "title_zero": "Cap referència seleccionada per a l'activació",
+        "title_one": "Activant 1 referència",
+        "title_other": "Activant {{count}} referències",
+        "noReferencesFound": "No s'han trobat referències",
+        "nearestMatches": "Els més propers {{limit}} de {{count}} coincidències",
+        "matchingReferences_zero": "Cap coincidència de referències",
+        "matchingReferences_one": "1 coincidència de referència",
+        "matchingReferences_other": "{{count}} coincidències de referències",
+        "searchForReferences": "Cerca algunes referències per activar!",
+        "noReferencesNearby": "No hi ha referències properes",
+        "nearbyReferences": "Referències properes",
+        "searchPlaceholder": "Nom o referència…",
+        "unknownReference": "Referència desconeguda"
+      },
+      "loggingControl": {
+        "theirRefLabel": "La seva Referència"
+      },
+      "postSpotAPI": {
+        "error": "Error publicant l'anunci ZLOTA",
+        "serverResponse": "El servidor va respondre amb estat {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "No duplicats",
+        "dupesCount_one": "1 duplicat",
+        "dupesCount_other": "{{fmtCount}} duplicats",
+        "ref2refCount_zero": "Sense Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Sense referències caçades",
+        "huntedRefsCount_one": "1 referència caçada",
+        "huntedRefsCount_other": "{{fmtCount}} referències caçades",
+        "activatorQSOsCount_zero": "Cap activador QSOs",
+        "activatorQSOsCount_one": "1 activador QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} activadors QSOs",
+        "ref2refQSOsCount_zero": "Cap Ref2Ref QSOs",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSOs",
+        "huntedQSOsCount_zero": "Cap QSOs caçats",
+        "huntedQSOsCount_one": "1 QSO caçat",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs caçats",
+        "operationTotals": "Totals d'operació",
+        "referencesActivatedCount_zero": "Cap referència activada",
+        "referencesActivatedCount_one": "1 referència activada",
+        "referencesActivatedCount_other": "{{fmtCount}} referències activades",
+        "referencesMissedCount_zero": "Cap referència incompleta",
+        "referencesMissedCount_one": "1 referència incompleta",
+        "referencesMissedCount_other": "{{fmtCount}} referències incompletes",
+        "referencesHuntedCount_zero": "Cap referència caçada",
+        "referencesHuntedCount_one": "1 referència caçada",
+        "referencesHuntedCount_other": "{{fmtCount}} referències caçades"
+      }
+    }
+  }
+}

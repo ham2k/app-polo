@@ -1,0 +1,360 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Engleză - English",
+        "ar": "Arabă - العربية",
+        "ast": "Asturiană - Asturianu",
+        "bn": "Bengaleză - বাংলা",
+        "ca": "Catalană - Català",
+        "cs": "Cehă - Čeština",
+        "cy": "Galeză - Cymraeg",
+        "da": "Daneză - Dansk",
+        "de": "Germană - Deutsch",
+        "en-PL": "Păsărească",
+        "en-PT": "Pirat",
+        "eo": "Esperanto",
+        "es": "Spaniolă - Español",
+        "et": "Estoniană - Eesti",
+        "eu": "Bască - Euskara",
+        "fi": "Finlandeză - Suomi",
+        "fr": "Franceză ",
+        "ga": "Irlandeză - Gaeilge",
+        "gl": "Galiciană - Galego",
+        "hi": "Hindusă - हिंदी",
+        "id": "Indoneziană - Bahasa Indonesia",
+        "it": "Italiană - Italiano",
+        "ja": "Japoneză - 日本語",
+        "ko": "Coreeană - 한국어",
+        "lt": "Lituaniană - Lietuvių",
+        "lv": "Letonă - Latvijas",
+        "ms": "Malaieză - Bahasa Melayu",
+        "nb": "Norvegiană Bokmål - Norsk, bokmål",
+        "nl": "Olandeză - Nederlands",
+        "nn": "Norvegiană Nynorsk - Norsk, nynorsk",
+        "pl": "Poloneză, Polski",
+        "pt-BR": "Portugheză (Brazilia) - Português (Brasil)",
+        "pt-PT": "Portugheză (Portugalia) - Português (Portugal)",
+        "pt": "Portugheză - Português",
+        "ro": "Română - Română",
+        "ru": "Rusă - Русский",
+        "sk": "Slovacă - Slovenčina",
+        "sv": "Suedeză - Svenska",
+        "th": "Thailandeză - ภาษาไทย",
+        "tl": "Filipineză - Wikang Filipino",
+        "tlh": "Klingoniană - ᏣᎳᎩ",
+        "tr": "Turcă - Türkçe",
+        "uk": "Ucraineană - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnameză - Tiếng Việt",
+        "zh": "Chineză - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "QSO",
+      "QSOs-a11y": "Q S Ouri",
+      "Operation": "Operațiune",
+      "generalOperation": "Operațiune Generală"
+    },
+    "formatting": {
+      "thousandsDelimiter": ".",
+      "decimalSeparator": ",",
+      "frequencySeparator": " ",
+      "list": {
+        "separator": ", ",
+        "conjunction": " și "
+      },
+      "time": {
+        "tomorrow": "Mâine",
+        "today": "Astăzi",
+        "yesterday": "Ieri",
+        "ago": "{{time}} în urmă",
+        "fromNow": "peste {{time}}",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}h",
+        "shortHoursAndMinutes": "{{h}}h {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}h",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{dayOrd}} {{monthName}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{dayOrd}} {{weekday}}",
+        "varUnder9Months": "{{time}} {{dayOrd}} {{monthName}}",
+        "varOver9Months": "{{time}} {{dayOrd}} {{monthName}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{day}} {{monthAbbr}}",
+        "varShortOver9Months": "{{time}} {{day}} {{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Ianuarie",
+        "2": "Februarie",
+        "3": "Martie",
+        "4": "Aprilie",
+        "5": "Mai",
+        "6": "Iunie",
+        "7": "Iulie",
+        "8": "August",
+        "9": "Septembrie",
+        "10": "Octombrie",
+        "11": "Noiembrie",
+        "12": "Decembrie"
+      },
+      "monthAbbr": {
+        "1": "Ian",
+        "2": "Feb",
+        "3": "Mar",
+        "4": "Apr",
+        "5": "Mai",
+        "6": "Iun",
+        "7": "Iul",
+        "8": "Aug",
+        "9": "Sep",
+        "10": "Oct",
+        "11": "Noi",
+        "12": "Dec"
+      },
+      "weekday": {
+        "1": "Luni",
+        "2": "Marți",
+        "3": "Miercuri",
+        "4": "Joi",
+        "5": "Vineri",
+        "6": "Sâmbătă",
+        "7": "Duminică"
+      },
+      "weekdayAbbr": {
+        "1": "Lun",
+        "2": "Mar",
+        "3": "Mie",
+        "4": "Joi",
+        "5": "Vin",
+        "6": "Sâm",
+        "7": "Dum"
+      },
+      "ordinalDay": {
+        "1": "1 ",
+        "2": "2",
+        "3": "3",
+        "4": "4",
+        "5": "5",
+        "6": "6",
+        "7": "7",
+        "8": "8",
+        "9": "9",
+        "10": "10 ",
+        "11": "11",
+        "12": "12",
+        "13": "13",
+        "14": "14",
+        "15": "15",
+        "16": "16",
+        "17": "17",
+        "18": "18",
+        "19": "19",
+        "20": "20",
+        "21": "21",
+        "22": "22",
+        "23": "23",
+        "24": "24",
+        "25": "25",
+        "26": "26lea",
+        "27": "27",
+        "28": "28",
+        "29": "29",
+        "30": "30",
+        "31": "31"
+      },
+      "distance": {
+        "away": "la {{distance}} depărtare"
+      }
+    },
+    "buttons": {
+      "cancel": "Anulare",
+      "ok": "Ok",
+      "close": "Închide",
+      "login": "Autentificare",
+      "logout": "Deconectare",
+      "delete": "Șterge",
+      "refresh": "Actualizează",
+      "done": "Finalizat",
+      "accept": "Acceptă",
+      "accept-a11y": "Acceptă modificările",
+      "revert": "Anulează",
+      "revert-a11y": "Anulează modificări",
+      "save": "Salvează",
+      "export": "Exportă"
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "patch {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Verifică actualizări...",
+        "stable": "Caută actualizări stabile...",
+        "unstable": "Caută actualizări instabile...",
+        "bleedingEdge": "Verifică actualizări de ultimă generație..."
+      },
+      "tracksPlural": {
+        "stable": "Stabil",
+        "unstable": "Instabil",
+        "bleedingEdge": "În dezvoltare",
+        "Production": "Stabil",
+        "Staging": "Instabil",
+        "Development": "În dezvoltare"
+      },
+      "trackSingular": {
+        "stable": "Stabil",
+        "unstable": "Instabil",
+        "bleedingEdge": "În dezvoltare",
+        "Production": "Stabil",
+        "Staging": "Instabil",
+        "Development": "În dezvoltare"
+      },
+      "versionIsAvailable-md": "Actualizare la {{versionName}} este disponibilă.",
+      "updateNow": "Actualizează acum",
+      "newVersionAvailable-md": "O nouă versiune PoLo este disponibilă!"
+    },
+    "dataFiles": {
+      "loading": "Se încarcă {{name}}",
+      "downloading": "Se descarcă {{name}}",
+      "dataHasToBeDownloaded-md": "Datele pentru **{{name}}** trebuie descărcate.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Datele pentru **{{name}}** nu au fost actualizate recent.",
+      "downloadNow": "Descarcă acum",
+      "refreshNow": "Actualizează acum"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ok!",
+        "__comment__": "Suprascrie acțiunile de notificare specifice aici"
+      },
+      "title": {
+        "__comment__": "Suprascrie titlurile de notificare specificați aici"
+      },
+      "text": {
+        "__comment__": "Suprascrie textele de notificare specifice aici"
+      },
+      "dialogTitle": {
+        "__comment__": "Suprascrie titlurile de dialog specifice aici"
+      },
+      "dialogText": {
+        "__comment__": "Suprascrie textele de dialog specifice aici"
+      },
+      "dataFiles": {
+        "fetching": "Se obține {{title}}…",
+        "progress": "Se obține {{title}}\n\n{{progress}}",
+        "done": "{{title}} a fost descărcat",
+        "error": "Nu am putut descărca {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Text",
+        "csv": "Valori separate cu virgulă",
+        "tsv": "Valori separate cu tab",
+        "other": "Date"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Funcții de bază",
+        "locationBased": "Activități bazate pe locație",
+        "contestsAndFieldOps": "Concursuri și Operațiuni de teren",
+        "lookup": "Căutare de date",
+        "devmode": "Mod Dezvoltator",
+        "other": "Alte funcții"
+      }
+    },
+    "continents": {
+      "AF": "Africa",
+      "AS": "Asia",
+      "EU": "Europa",
+      "NA": "America de Nord",
+      "SA": "America de Sud",
+      "OC": "Oceania"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Bandă Laterală Unică",
+        "USB": "USB",
+        "USB-a11y": "Bandă Laterală Superioară",
+        "LSB": "LSB",
+        "LSB-a11y": "Bandă Laterală Inferioară",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Altele",
+        "other-a11y": "Alt Mod"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metri",
+        "80m-a11y": "80 Metri",
+        "60m-a11y": "60 Metri",
+        "40m-a11y": "40 Metri",
+        "30m-a11y": "30 Metri",
+        "20m-a11y": "20 Metri",
+        "17m-a11y": "17 Metri",
+        "15m-a11y": "15 Metri",
+        "12m-a11y": "12 Metri",
+        "11m-a11y": "11 Metri",
+        "10m-a11y": "10 Metri",
+        "6m-a11y": "6 Metri",
+        "2m-a11y": "2 Metri",
+        "70cm-a11y": "70 Centimetri",
+        "23cm-a11y": "23 Centimetri",
+        "13cm-a11y": "13 Centimetri",
+        "9cm-a11y": "9 Centimetri",
+        "6cm-a11y": "6 Centimetri",
+        "3cm-a11y": "3 Centimetri",
+        "1-25cm-a11y": "1,25 Centimetri",
+        "6mm-a11y": "6 Milimetri",
+        "4mm-a11y": "4 Milimetri",
+        "2-5mm-a11y": "2,5 Milimetri",
+        "2mm-a11y": "2 Milimetri",
+        "1mm-a11y": "1 Milimetru",
+        "submm-a11y": "Submilimetric",
+        "other": "Altele",
+        "other-a11y": "Altă Bandă"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}
