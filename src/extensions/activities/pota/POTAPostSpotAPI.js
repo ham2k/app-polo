@@ -38,7 +38,7 @@ export const POTAPostSpotAPI = async ({ t, calls, comments, freq, mode, refs, sp
         if (response.status !== 200) {
           const body = await response.text()
           Alert.alert(t('extensions.activities.pota.postSpotAPI.error', 'Error posting POTA spot'),
-            t('extensions.activities.pota.postSpotAPI.serverResponse', 'Server responded with error {{status}}: {{body}}', { status: response.status, body: body }))
+            t('extensions.activities.pota.postSpotAPI.serverResponse', 'Server responded with error {{status}}: {{body}}', { status: response.status, body }))
           // reportError('POTA Spotter http error', response, body)
           return false
         }

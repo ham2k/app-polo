@@ -3,7 +3,8 @@
     "name": "February '26 (patch 7)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",
     "changes": [
-      "Catalan, Romanian and Portuguese translations"
+      "Catalan (EA3IPX), Romanian (YO3GND, YO3GNU, YO3BEE), and Portuguese (CR7BTF, PY2MP) translations",
+      "Fixed duplicated comments in spotting shortcuts"
     ]
   },
   "26.2.6": {

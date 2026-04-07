@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -48,7 +48,6 @@ const SpotCommandHook = {
   match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[ /][\s\w\d!,.-_]*)$/i,
   allowSpaces: true,
   describeCommand: (match, { t, vfo, operation }) => {
-    console.log('spot command hook', match, vfo, operation)
     if (!vfo || !operation) return
 
     let comments = match[2]?.substring(1) || ''
@@ -78,9 +77,9 @@ const SpotCommandHook = {
 
     if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
       comments = [match[1], comments].filter(x => x).join(' ')
-      if (match[2]) comments += ` ${match[2].substring(1)}`
-
-      if (operation?.stationCallPlusArray?.length > 0) comments += ` ${operation?.stationCallPlusArray?.length + 1} ops`
+      if (!comments.match(/QRT/i) && operation?.stationCallPlusArray?.length > 0) {
+        comments += ` (${operation?.stationCallPlusArray?.length + 1} ops)`
+      }
     }
 
     if (comments) {
