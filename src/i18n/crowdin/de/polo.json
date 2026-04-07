@@ -213,7 +213,7 @@
       },
       "loggingSettings": {
         "title": "Logging Einstellungen",
-        "description": "Anpassung der Logging-Erfahrung"
+        "description": "Anpassung der Logging-Umgebung"
       },
       "dataSettings": {
         "title": "Daten-Einstellungen",
@@ -770,7 +770,7 @@
       "last100QSOs": "{{rate}} Q/h für die letzten 100",
       "timeSinceLast": "{{time}} seit dem letzten Mal",
       "moreLabel": "Mehr",
-      "theirCallLabel": "Dein Rufzeichen",
+      "theirCallLabel": "Sein Rufzeichen",
       "ourSentLabel": "Gesendet",
       "theirSentLabel": "Rcvd",
       "stateLabel": "Staat",
