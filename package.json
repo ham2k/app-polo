@@ -1,7 +1,7 @@
 {
   "name": "ham2k-polo",
-  "version": "26.2.6",
-  "versionName": "February '26",
+  "version": "26.2.7",
+  "versionName": "February '26 (patch 7)",
   "private": true,
   "scripts": {
     "android": "react-native run-android --appId com.ham2k.polo.alpha",
@@ -16,7 +16,7 @@
     "clean:all": "npm run clean:js && npm run clean:android && npm run clean:ios && npm run clean:watchman",
     "postinstall": "patch-package",
     "crowdin:push": "crowdin push sources",
-    "crowdin:pull": "crowdin pull translations -l cs -l de -l es-ES -l fr -l ja -l pt-BR -l nb -l nl -l sk -l tr -l zh-CN"
+    "crowdin:pull": "crowdin pull translations -l ca -l cs -l de -l es-ES -l fr -l ja -l pt-PT -l pt-BR -l nb -l nl -l ro -l sk -l tr -l zh-CN"
   },
   "dependencies": {
     "@ham2k/lib-callsigns": "0.5.2",

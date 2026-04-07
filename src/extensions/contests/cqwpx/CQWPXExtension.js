@@ -77,14 +77,16 @@ const ReferenceHandler = {
     const ref = findRef(operation, Info.key)
     const qsoRef = findRef(qso, Info.key)
 
-    const fields = [
-      { CONTEST_ID: `CQ-WPX-${ref.mode}` },
+    if (ref?.mode) {
+      const fields = [
+        { CONTEST_ID: `CQ-WPX-${ref.mode}` },
 
-      { STX: qsoRef?.ourNumber },
-      { SRX: qsoRef?.theirNumber }
-    ]
+        { STX: qsoRef?.ourNumber },
+        { SRX: qsoRef?.theirNumber }
+      ]
 
-    return fields
+      return fields
+    }
   },
 
   cabrilloHeaders: ({ operation, settings, headers }) => {

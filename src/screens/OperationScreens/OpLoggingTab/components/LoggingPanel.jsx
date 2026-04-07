@@ -314,7 +314,7 @@ export default function LoggingPanel ({
           dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
           setQSO(undefined, { otherStateChanges: { lastUUID: qso.uuid } })
         }, 50)
-      } else if (isValidQSO && !qso?.deleted) {
+      } else if (qso && isValidQSO && !qso?.deleted) {
         setCurrentSecondaryControl(undefined)
 
         if (qso?._isNew && qso?._manualTime && qso.startAtMillis) {

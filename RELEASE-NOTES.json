@@ -1,9 +1,17 @@
 {
+  "26.2.7": {
+    "name": "February '26 (patch 7)",
+    "photoCaption": "HB9/OK1PTR/P at CH-0165",
+    "changes": [
+      "Catalan, Romanian and Portuguese translations"
+    ]
+  },
   "26.2.6": {
     "name": "February '26 (patch 5)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",
     "changes": [
-      "Allow `A` in RST inputs for Aurora signal reports"
+      "Allow `A` in RST inputs for Aurora signal reports",
+      "Fixed bug in ADIF exports"
     ]
   },
   "26.2.5": {
