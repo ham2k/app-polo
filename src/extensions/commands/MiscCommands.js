@@ -35,7 +35,7 @@ const RTFMCommandHook = {
   describeCommand: (match, { t }) => {
     return t?.('extensions.commands-misc.rtfm', 'Read the fine manual?') || 'Read the fine manual?'
   },
-  invokeCommand: (match, { handleFieldChange }) => {
+  invokeCommand: (match, { t, handleFieldChange }) => {
     Linking.openURL('https://polo.ham2k.com/docs/')
     return t?.('extensions.commands-misc.rtfmConfirm', 'Opening the fine manual') || 'Opening the fine manual'
   }

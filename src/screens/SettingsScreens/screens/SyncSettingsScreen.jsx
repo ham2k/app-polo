@@ -76,7 +76,6 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
   useEffect(() => {
     if (!currentDialog) {
       setImmediate(async () => {
-        console.log('refreshing data')
         if (syncEnabled) {
           dispatch(syncHook.getAccountData())
         }
@@ -223,10 +222,8 @@ Please try again later.`, { error: linkResult.json.error })
     setCurrentDialog('')
     setImmediate(async () => {
       setCounts(await getSyncCounts())
-      if (syncHook) {
-        if (syncEnabled) {
-          dispatch(syncHook.getAccountData())
-        }
+      if (syncHook && syncEnabled) {
+        dispatch(syncHook.getAccountData())
       }
     })
   }, [dispatch, syncEnabled, syncHook])

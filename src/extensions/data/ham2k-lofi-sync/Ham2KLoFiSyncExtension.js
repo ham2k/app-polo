@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -12,7 +12,7 @@ import { selectSettings } from '../../../store/settings'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
 import GLOBAL from '../../../GLOBAL'
 import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
-import { logRemotely, syncMetaForDistribution } from '../../../distro'
+import { syncMetaForDistribution } from '../../../distro'
 
 import packageJson from '../../../../package.json'
 
@@ -81,6 +81,7 @@ const SyncHook = {
 
   getAccountData: () => async (dispatch, getState) => {
     const results = await requestWithAuth({ dispatch, getState, url: 'v1/accounts', method: 'GET' })
+
     if (results.ok) {
       console.log('getAccountData', results.json)
 
@@ -136,7 +137,7 @@ const SyncHook = {
   }
 }
 
-async function requestWithAuth({ dispatch, getState, url, method, body, params }) {
+async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
   if (GLOBAL?.flags?.services?.lofi === false) return { ok: false, status: 500, json: {} }
 
   try {
@@ -172,7 +173,7 @@ async function requestWithAuth({ dispatch, getState, url, method, body, params }
               call: settings.operatorCall
             },
             meta: {
-              ...syncMetaForDistribution({ settings }),
+              ...syncMetaForDistribution({ settings })
             }
           })
         })
@@ -248,17 +249,22 @@ async function requestWithAuth({ dispatch, getState, url, method, body, params }
   return { ok: false, status: 401, json: {} }
 }
 
-function _processResponseMeta({ json, account, response, dispatch }) {
+function _processResponseMeta ({ json, account, response, dispatch }) {
   try {
     if (json?.account && (!account || Object.keys(json.account).find(k => account[k] !== json.account[k]))) {
-      dispatch(setLocalExtensionData({ key: Info.key, account: json.account }))
+      const currentData = selectLocalExtensionData(dispatch.getState(), Info.key) || {}
+      if (json.account?.uuid !== currentData.account?.uuid) {
+        dispatch(setLocalExtensionData({ key: Info.key, account: json.account, previousAccount: currentData.account }))
+      } else {
+        dispatch(setLocalExtensionData({ key: Info.key, account: json.account }))
+      }
     }
   } catch (e) {
     console.log('Error parsing ham2k-lofi sync meta', e, json)
   }
 }
 
-function _buildUserAgent() {
+function _buildUserAgent () {
   if (Platform.OS === 'ios') {
     return `Ham2K Portable Logger/${packageJson.version} iOS ${Platform.Version} ${[Platform.isIphone && 'iPhone', Platform.isIPad && 'iPad', Platform.isTV && 'TV', Platform.isMacCatalyst && 'Catalyst', Platform.isMac && 'Mac'].filter(Boolean).join(' ')}`
   } else if (Platform.OS === 'android') {
