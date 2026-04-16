@@ -85,7 +85,7 @@ const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
 
-  standardExchangeFields: { state: true },
+  standardExchangeFields: { state: true }
 }
 
 const ReferenceHandler = {

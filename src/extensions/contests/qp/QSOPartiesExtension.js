@@ -128,7 +128,7 @@ const ReferenceHandler = {
 
   keyForRef: (ref) => {
     const qp = qpData({ ref })
-    return `${Info.key}-${qp.short}`
+    return `${Info.key}-${qp.short ?? qp.key}`
   },
 
   suggestOperationTitle: (ref) => {

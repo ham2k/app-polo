@@ -42,9 +42,10 @@ import SpotDiscordExtension from './data/spot-discord/SpotDiscordExtension'
 import SpotHistoryExtension from './data/spot-history/SpotHistoryExtension'
 import SpotParksnPeaksExtension from './data/spot-parksnpeaks/SpotParksnPeaksExtension'
 
-import GAPOTAExtension from './contests/gapota/GAPOTAExtension'
+// import GAPOTAExtension from './contests/gapota/GAPOTAExtension'
 import NAQPExtension from './contests/naqp/NAQPExtension'
 import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
+import StateParksExtension from './contests/stateparks/StateParksExtension'
 import SimpleContestExtension from './contests/simple-contest/SimpleContestExtension'
 import CQWPXExtension from './contests/cqwpx/CQWPXExtension'
 
@@ -94,9 +95,10 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(WWFFExtension)
   registerExtension(ZLOTAExtension)
 
-  registerExtension(GAPOTAExtension)
+  // registerExtension(GAPOTAExtension)
   registerExtension(NAQPExtension)
   registerExtension(QSOPartiesExtension)
+  registerExtension(StateParksExtension)
   registerExtension(SimpleContestExtension)
   registerExtension(CQWPXExtension)
 

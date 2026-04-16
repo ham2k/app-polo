@@ -73,7 +73,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
       </View>
       {sections.map(section => (
         <View key={section.day} style={{ flexDirection: 'column', marginVertical: styles.oneSpace }}>
-          <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
+          <Text style={[styles.markdown.body, { marginBottom: styles.oneSpace * 2 }]}>
             <Text style={{ fontWeight: 'bold' }}>{capitalizeFirstLetter(fmtDateFullZulu(section.day))}: </Text>
             <Text>
               {t('screens.opInfoPanel.qsoCount', '{{count}} QSOs', { count: section.count, fmtCount: fmtNumber(section.count ?? 0) })}
@@ -112,7 +112,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
       ))}
 
       <View style={{ flexDirection: 'column', marginTop: styles.oneSpace, paddingBottom: (style.paddingBottom || 0) + styles.oneSpace * 2 }}>
-        <Text style={[styles.markdown.body, { marginBottom: styles.halfSpace }]}>
+        <Text style={[styles.markdown.body, { marginBottom: styles.oneSpace * 2 }]}>
           <Text style={{ fontWeight: 'bold' }}>{t('screens.opInfoPanel.operationTotalsTitle-md', 'Operation Totals:')}</Text>
           <Text>
             {' '}
@@ -136,7 +136,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                     />
                   )}
                 </View>
-                <H2kMarkdown style={{ width: '93%' }} styles={{ markdown: styles.scoringMarkdown }}>
+                <H2kMarkdown style={{ width: '93%', marginBottom: styles.oneSpace * 2 }} styles={{ markdown: styles.scoringMarkdown }}>
                   {score.label && (
                     `### ${score.label}${refKeys.length > 1 ? `×${refKeys.length}` : ''}`
                   )}
