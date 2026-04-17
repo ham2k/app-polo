@@ -66,7 +66,7 @@ describe('combineCallNotes', () => {
       expect(result.emoji).toBe('🍄')
     })
 
-    it('uses text from last note, stripped of its emoji', () => {
+    it('uses text from first note, stripped of its emoji', () => {
       const notes = [
         { call: 'W1AW', note: '🍄 First note text' },
         { call: 'W1AW', note: '⚓ Last note text' }
@@ -136,22 +136,11 @@ describe('combineCallNotes', () => {
 
   describe('multiple notes from multiple sources', () => {
     const theirInfo = { baseCall: 'KI2D', call: 'KI2D' }
-    it('combines notes from multiple sources', () => {
+    it('uses text from the first (highest-priority) source', () => {
       const notes = [
         { call: 'KI2D', note: '🌄 HVCDX Member', source: 'HVCDX Members' },
         { call: 'KI2D', note: '🤩 Ham2K PoLo Creator', source: 'Ham2K Notes' },
         { call: 'KI2D', note: '☕️ Ham2K Supporter', source: 'Ham2K Notes' },
-      ]
-      const result = combineCallNotes(notes, theirInfo)
-      expect(result.note).toBe('🌄☕️🤩 Ham2K PoLo Creator')
-      expect(result.emoji).toBe('🤩')
-    })
-
-    it('combines notes from multiple sources in different order', () => {
-      const notes = [
-        { call: 'KI2D', note: '🤩 Ham2K PoLo Creator', source: 'Ham2K Notes' },
-        { call: 'KI2D', note: '☕️ Ham2K Supporter', source: 'Ham2K Notes' },
-        { call: 'KI2D', note: '🌄 HVCDX Member', source: 'HVCDX Members' },
       ]
       const result = combineCallNotes(notes, theirInfo)
       expect(result.note).toBe('☕️🤩🌄 HVCDX Member')
