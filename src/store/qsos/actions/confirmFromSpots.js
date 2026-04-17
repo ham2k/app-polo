@@ -53,7 +53,7 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
       let currentSpot
       // At most two characters can be wrong
       let currentDistance = 3
-      for (const spot of spots) {
+      for (const spot of (spots ?? [])) {
         if (stationCall.split('/').some(part => part === spot.call)) {
           continue
         }
@@ -100,7 +100,7 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
   }))
 }
 
-function sameUTCDay(aMillis, bMillis) {
+function sameUTCDay (aMillis, bMillis) {
   if (!aMillis || !bMillis) {
     return false
   }
