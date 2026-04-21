@@ -223,7 +223,7 @@
         "generic": "Verificando atualizações…",
         "stable": "Verificando atualizações estáveis…",
         "unstable": "Verificando atualizações instáveis…",
-        "bleedingEdge": "Verificando atualizações de ponta…"
+        "bleedingEdge": "Verificando atualizações experimentais…"
       },
       "tracksPlural": {
         "stable": "Estável",

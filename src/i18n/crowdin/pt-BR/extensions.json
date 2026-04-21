@@ -18,7 +18,7 @@
         "title_one": "Ativando 1 castelo",
         "title_other": "Ativando {{count}} castelos",
         "noCastlesFound": "Nenhum castelo encontrado",
-        "nearestMatches": "{{limit}} Próximos de {{count}} correspondentes",
+        "nearestMatches": "{{limit}} de {{count}} correspondências próximas",
         "matchingCastles_zero": "Nenhum castelo correspondente",
         "matchingCastles_one": "1 castelo correspondente",
         "matchingCastles_other": "{{count}} Castelos correspondentes",
@@ -539,7 +539,7 @@
         "unknownSilo": "Silo desconhecido"
       },
       "loggingControl": {
-        "theirRefLabel": "Seu Silo"
+        "theirRefLabel": "Silo Dele"
       },
       "postSpotAPI": {
         "error": "Erro ao postar spot do SiOTA",

@@ -23,7 +23,7 @@
       "operationList-a11y": "Lista de Operações",
       "noOperations": "Sem Operações!",
       "settings-a11y": "Configurações",
-      "quickCallLookupPlaceholder": "Pesquisa Rápida de indicativos…",
+      "quickCallLookupPlaceholder": "Pesquisa Rápida de Indicativos…",
       "spots-a11y": "Spots"
     },
     "operation": {
@@ -46,7 +46,7 @@
       "updateStation-md_one": "Atualizar `{{newStation}}` em um QSO existente",
       "updateStation-md_other": "Atualizar `{{newStation}}` em {{count}} QSOs existentes",
       "multipleStationsUsed-md": "Esta atividade já tem QSOs usando múltiplos indicativos de estação: `{{stations}}`.\n\n`{{newStation}}` só será usado para novos QSOs.",
-      "singleOperatorUsed-md": "`{{oldOperator}}` usado até agora.\n{{newOperator}} será usado para novos QSOs.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` usado até agora.\n{{newOperator}}` será usado para novos QSOs.",
       "noOperatorUsed-md": "Nenhuma chamada usada até agora.\n{{newOperator}} será usado para novos QSOs.",
       "updateOperator-md": "Atualizar `{{newOperator}}` como operador para todos os QSOs",
       "multipleOperatorsUsed-md": "Esta atividade já tem QSOs usando múltiplos indicativos de operador: `{{operators}}`.\n\n`{{newOperator}}` só será usado para novos QSOs.",
@@ -82,7 +82,7 @@
     },
     "operationData": {
       "title": "Dados da Operação",
-      "selectFromTheExportOptionsBelow": "Selecione entre as opções de exportação abaixo",
+      "selectFromTheExportOptionsBelow": "Selecione das opções de exportação abaixo",
       "exportSingeFile": "Exportar um arquivo",
       "exportSelectedFiles_zero": "Exportar 0 arquivos selecionados",
       "exportSelectedFiles_one": "Exportar 1 arquivo selecionado",
@@ -111,7 +111,7 @@
       }
     },
     "callInfo": {
-      "title": "Informações sobre o Indicativo",
+      "title": "Informações do Indicativo",
       "messages": {
         "duplicate": "Duplicar",
         "invalidBand": "Banda Inválida",
@@ -161,7 +161,7 @@
       "title": "Editar QSO",
       "sections": {
         "qso": "Detalhes do QSO",
-        "their": "Informações deles",
+        "their": "Informações Deles",
         "our": "Nossas Informações",
         "more": "Mais"
       },
@@ -228,8 +228,8 @@
         "description": "QRZ.com e outros serviços"
       },
       "appFeatures": {
-        "title": "Recursos do Aplicativo",
-        "description": "Gerencie recursos como POTA, SOTA, etc."
+        "title": "Funcionalidades da Aplicação",
+        "description": "Gerencie funcionalidades como POTA, SOTA, etc"
       },
       "developerSettings": {
         "title": "Configurações de Desenvolvedor",
@@ -275,7 +275,7 @@
         "description": "Siga-nos para novidades e atualizações"
       },
       "contactUs": {
-        "title": "Contate-Nos",
+        "title": "Contate-nos",
         "description": "help@ham2k.com\n (mas tente os Fóruns ou Chat primeiro!)"
       }
     },
@@ -290,11 +290,11 @@
       },
       "fontScale": {
         "title": "Escala da Fonte",
-        "descriptionXS": "Menor",
+        "descriptionXS": "Mínimo",
         "descriptionSM": "Menor",
         "descriptionMD": "Normal",
         "descriptionLG": "Maior",
-        "descriptionXL": "Maior",
+        "descriptionXL": "Máximo",
         "dialogTitle": "Escala da Fonte",
         "dialogDescription": "Esses tamanhos também são afetados pelas configurações do dispositivo, como Exibição e Acessibilidade."
       },
@@ -343,7 +343,7 @@
         "descriptionOff": "Não usar visualizações divididas"
       },
       "useGrid8": {
-        "title": "Localização de Alta Precisão",
+        "title": "Localização de alta precisão",
         "descriptionOn": "Usar grids de 8 dígitos",
         "descriptionOff": "Usar grids de 6 dígitos"
       },
@@ -354,7 +354,7 @@
       },
       "exportSettings": {
         "title": "Configurações de Exportação",
-        "description": "Personalizar nomes de arquivos e outras configurações"
+        "description": "Personalize nomes de arquivos e outras configurações"
       },
       "privacy": {
         "title": "Privacidade"
@@ -447,7 +447,7 @@
       "confirmClearHistory": {
         "title": "Você tem certeza?",
         "description": "Isso removerá todos os registros históricos previamente importados de arquivos ADIF",
-        "recordsNotDeleted": "Registros de operações não serão deletados"
+        "recordsNotDeleted": "Registros de operações não serão excluídos"
       },
       "importingHistoricalADIF": "Importando registros ADIF… Por favor, tenha paciência!",
       "errorImportingHistoricalADIF": "Erro ao importar histórico ADIF",
@@ -493,7 +493,7 @@
       "syncService.enabled": "Habilitado",
       "syncService.disabled": "Desabilitado",
       "syncServiceDialog": {
-        "title": "Serviço de Sincronização do Arquivo Log Ham2K",
+        "title": "Serviço de Sincronização do Arquivo de log do Ham2K",
         "custom": "Personalizado"
       },
       "syncLinkingDialog": {
@@ -524,12 +524,12 @@
         "warning-md": "Este dispositivo foi sincronizado pela última vez com uma conta diferente (#{{id}}).\n\nPara continuar a sincronização, você precisa decidir entre as seguintes opções:",
         "option1withEmail-md": "Opção #1: Substitua os dados neste dispositivo com os da conta **{{email}}** no servidor.",
         "option1noEmail-md": "Opção #1: Substituir os dados neste dispositivo pelos da nova conta no servidor.",
-        "option1button": "Escolha a opção #1: substituir pelos dados do servidor",
+        "option1button": "Vai com opção #1: substituir pelos dados do servidor",
         "option2withEmail-md": "Opção #2: Combine os dados neste dispositivo com os da conta **{{email}}** no servidor.",
         "option2noEmail-md": "Opção #2: Combine os dados neste dispositivo com os da nova conta no servidor.",
-        "option2button": "Escolha a opção #2: combinar dados",
+        "option2button": "Vai com opção #2: combinar dados",
         "option3-md": "Opção #3: Volte a vincular com a conta anterior, **{{email}}**.",
-        "option3button": "Escolha a opção #3: conta anterior",
+        "option3button": "Vai com opção #3: conta anterior",
         "buttonCancel": "Não, Cancelar",
         "buttonProcees": "Sim, vou arriscar! Substitua tudo!"
       },
@@ -630,7 +630,7 @@
       "title": "Configurações de Desenvolvedor",
       "wipeDatabase": {
         "title": "Apagar Banco de Dados?",
-        "description": "Tem certeza de que deseja deletar todas as Operações, QSOs e outros dados?",
+        "description": "Tem certeza de que deseja excluir todas as Operações, QSOs e outros dados?",
         "noCancel": "Não, Cancelar",
         "yesWipeIt": "Sim, Apagar!"
       },
@@ -718,7 +718,7 @@
       "adifQslMessage": "Mensagem QSL ADIF",
       "templateHelpTitle": "Ajuda para Modelo",
       "includePrivateDataDescription": "Nomes, notas, endereços, etc.",
-      "templateHelp-md": "Alguns elementos de modelo de amostra…\n\n### Exportação de Logs\nAtributos para o log está sendo exportado\n`{{log.station}}` → `{{call}}` Estação para esta exportação\n`{{log.ref}}` → `XX-1234` Referência para esta exportação\n`{{log.refName}}` → `Exemplo de Parque Nacional` Nome da referência para esta exportação\n`{{log.refShortName}}` → `Exemplo NP` Nome curto da referência para esta exportação\n`{{log.handlerType}}` → `pota` Tipo de manipulador para esta exportação\n`{{log.handlerName}}` → `Parques No Ar` Nome do manipulador para esta exportação\n`{{log.handlerShortName}}` → `POTA` Nome curto do manipulador para esta exportação\n\n### Chamadas de Operação\n`{{op.station}}` → `{{call}}` Primeira estação para a operação\n`{{op.operator}}` → `{{call}}` Operador para a operação\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Todas as estações para a operação\n`{{op.otherStations}}` → `{{otherCalls}}` Outras estações para a operação\n\n### Data da Operação\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Outros Detalhes da Operação\n`{{op.title}}` → `em XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Minha Operação Especial`\n`{{op.userNotes}}` → `Cheguei cedo na manhã…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid para esta operação\n\n### Informação QSO\n`{{qso.notes}}` → `Áudio Terrível!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Reporte de sinal enviado por eles\n`{{qso.our.sent}}` → `55` Reporte de sinal que enviamos\n`{{qso.their.grid}}` → `FF99` O grid que eles reportaram\n`{{qso.refs}}` → Uma lista de todos as referências para o QSO (inclui tanto as referências de Operação quanto as referências apenas do QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "templateHelp-md": "Alguns elementos de modelo de amostra…\n\n### Exportação de Logs\nAtributos para o log está sendo exportado\n`{{log.station}}` → `{{call}}` Estação para esta exportação\n`{{log.ref}}` → `XX-1234` Referência para esta exportação\n`{{log.refName}}` → `Exemplo de Parque Nacional` Nome da referência para esta exportação\n`{{log.refShortName}}` → `Exemplo NP` Nome curto da referência para esta exportação\n`{{log.handlerType}}` → `pota` Tipo de manipulador para esta exportação\n`{{log.handlerName}}` → `Parks On The Air` Nome do manipulador para esta exportação\n`{{log.handlerShortName}}` → `POTA` Nome curto do manipulador para esta exportação\n\n### Chamadas de Operação\n`{{op.station}}` → `{{call}}` Primeira estação para a operação\n`{{op.operator}}` → `{{call}}` Operador para a operação\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Todas as estações para a operação\n`{{op.otherStations}}` → `{{otherCalls}}` Outras estações para a operação\n\n### Data da Operação\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Outros Detalhes da Operação\n`{{op.title}}` → `em XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Minha Operação Especial`\n`{{op.userNotes}}` → `Cheguei cedo na manhã…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid para esta operação\n\n### Informação QSO\n`{{qso.notes}}` → `Áudio Terrível!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Reporte de sinal enviado por eles\n`{{qso.our.sent}}` → `55` Reporte de sinal que enviamos\n`{{qso.their.grid}}` → `FF99` O grid que eles reportaram\n`{{qso.refs}}` → Uma lista de todos as referências para o QSO (inclui tanto as referências de Operação quanto as referências apenas do QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Padrões",
         "description": "Configurações de base para todas as exportações",
@@ -764,7 +764,7 @@
         "numbersRow": "Linha de Números",
         "actions": "Ações",
         "lookupAllQSOs": "Buscar todos os QSOs",
-        "confirmSpots": "Confirmar Manchas"
+        "confirmSpots": "Confirmar Spots"
       }
     },
     "opLoggingTab": {
@@ -832,7 +832,7 @@
       "showAllSecondaryControls-a11y": "Mostrar todos os controles secundários",
       "spotting": {
         "selfSpottingAt": "Auto-spot em {{freq}}",
-        "stopAutoRespotting": "Parar auto-re-spoting",
+        "stopAutoRespotting": "Parar auto-re-spotting",
         "setFrequencyFirst": "Primeiro, defina uma frequência para spotar.",
         "reSpotEvery": "Re-spot a cada {{minutes}} min",
         "reSpotAt": "Re-spot em {{freq}}",
@@ -842,7 +842,7 @@
         "nothingToSpot": "Nada para spotar",
         "selfSpottingLabel": "Auto-spot",
         "selfSpottingControls-a11y": "Controles de Auto-spot",
-        "spottingLabel": "Spoting",
+        "spottingLabel": "Spotting",
         "spottingControls-a11y": "Controles de spot",
         "autoRespottingLabel": "Auto-re-spot",
         "autoRespottingControls-a11y": "Controles de Auto-re-spot",
@@ -857,7 +857,7 @@
       "noSpots": "Nenhum spot",
       "spotsCount_zero": "Nenhum spot",
       "spotsCount_one": "1 spot",
-      "spotsCount_other": "{{fmtCount}} spot",
+      "spotsCount_other": "{{fmtCount}} Spots",
       "showingSpots": "Mostrando {{count}} de {{total}}",
       "loadingSpots": "Carregando Spots…",
       "sections": {

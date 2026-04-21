@@ -425,7 +425,7 @@
       }
     },
     "featuresSettings": {
-      "title": "Recursos da App",
+      "title": "Funcionalidades do App",
       "activatingExtension": "Ativar extensão, isto pode demorar um pouco…",
       "fewerOf": "Menos {{category}}…",
       "moreOf": "Mais {{category}}…"
@@ -477,7 +477,7 @@
     },
     "wavelogSettings": {
       "title": "Configurações do Wavelog",
-      "description": "Configurar conexão API Wavelog",
+      "description": "Configurar ligação API Wavelog",
       "noStationsFoundOrInvalidResponse": "Nenhuma estação encontrada ou resposta inválida",
       "errorFetchingStations": "Erro ao resgatar estações: {{message}}",
       "fetchStations": "Resgatar Estações",
@@ -502,8 +502,8 @@
       "deviceNotLinked": "Dispositivo não vinculado! ({{id}})",
       "anonymousAccount": "Conta Anônima (#{{id}})",
       "enableSyncToLinkDevice": "Habilitar sincronização para vincular este dispositivo",
-      "pendingChallenges": "Solicitações de Conexão",
-      "pendingChallengesDescription": "Existem solicitações pendentes para conectar outros dispositivos a esta conta.",
+      "pendingChallenges": "Pedidos de Ligação",
+      "pendingChallengesDescription": "Existem pedidos pendentes para ligar outros dispositivos a esta conta.",
       "checkEmailInboxForConfirmation": "(verifique a sua caixa de entrada de email para confirmação)",
       "accountNumber": "Conta #{{id}}",
       "pendingEmailConfirmation": "(confirmação de e-mail pendente)",
@@ -515,9 +515,9 @@
         "custom": "Personalizado ({{server}})"
       },
       "askAboutLinkingAccounts": {
-        "codeNotFound": "O código não foi encontrado. Tente novamente.",
+        "codeNotFound": "O código não foi encontrado. Por favor, tente novamente.",
         "areYouSure-md": "Tem certeza de que deseja vincular \"**{{device}}**\" a esta conta?",
-        "buttonCancel": "Não, Cancelar",
+        "buttonCancel": "Não, cancelar",
         "buttonProcees": "Sim, vincular!"
       },
       "askAboutMergingAccounts": {
@@ -553,20 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Conta Ham2K LoFi",
-        "changeEmailText": "Mude o e-mail de recuperação para esta conta:",
-        "setEmailText": "Defina um e-mail para sua conta. Ele pode ser usado para identificá-la e facilitar a recuperação posteriormente.",
+        "changeEmailText": "Alterar o email de recuperação para esta conta:",
+        "setEmailText": "Defina um email para a conta. Pode ser usado para identificar e facilitar a recuperação posteriormente.",
         "emailAddressLabel": "Endereço de Email",
-        "linkWithOtherButton": "Ou... conectar com uma conta existente",
-        "linkAccountText": "Conectar com uma conta existente:",
+        "linkWithOtherButton": "Ou... ligar com uma conta existente",
+        "linkAccountText": "Ligar com uma conta existente:",
         "keepExistingAccountButton": "Ou... manter a conta existente",
-        "pendingEmailTextPre": "Um e-mail foi enviado para",
+        "pendingEmailTextPre": "Um email foi enviado para",
         "pendingEmailTextPost": "Por favor, procure-o e siga as instruções.",
-        "confirmLink-md": "Abrir o app em um dispositivo já vinculado com **{{email}}** e confirmar esta solicitação digitando o seguinte código:",
-        "confirmLinkPost-md": "Se você não tiver acesso a outro dispositivo vinculado a esta conta, você pode:",
-        "confirmViaEmailButton": "Confirmar via e-mail",
+        "confirmLink-md": "Abre a app num dispositivo já vinculado com **{{email}}** e confirma este pedido digitando o seguinte código:",
+        "confirmLinkPost-md": "Se não tiver acesso a outro dispositivo vinculado a esta conta, pode:",
+        "confirmViaEmailButton": "Confirmar via email",
         "changeAccountButton": "Alterar Conta",
         "resendButton": "Enviar email novamente",
-        "revertButton": "Alterar E-mail",
+        "revertButton": "Alterar Email",
         "syncFirstButton": "Primeiro volte e conclua a sincronização",
         "continueAnywayButton": "Eu sei o que estou a fazer! Continua",
         "potentialForDataLoss": "Potencial para perda de dados!!!",

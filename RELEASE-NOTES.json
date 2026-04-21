@@ -1,4 +1,12 @@
 {
+  "26.2.9": {
+    "name": "February '26 (patch 9)",
+    "photoCaption": "HB9/OK1PTR/P at CH-0165",
+    "changes": [
+      "QSO Party updates: 7QP, ACQP, AL, AR, CO, CPQP, DE, HI, IN, KS, KY, MD, NEQP, OH, TN, WV",
+      "Improved sync account setup"
+    ]
+  },
   "26.2.8": {
     "name": "February '26 (patch 8)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",

@@ -493,7 +493,7 @@
       "syncService.enabled": "Activé",
       "syncService.disabled": "Désactivé",
       "syncServiceDialog": {
-        "title": "Ham2K Service de Synchronisation du Journal des Fichiers",
+        "title": "Service de Synchronisation Ham2K",
         "custom": "Personnalisé"
       },
       "syncLinkingDialog": {
@@ -537,7 +537,7 @@
         "title": "Fusionner les données locales ?",
         "text": "Êtes-vous sûr de vouloir fusionner ces opérations et QSOs avec le nouveau compte ?\n\nCela fusionnera les QSOs sur cet appareil avec ceux déjà dans le Service de synchronisation pour le nouveau compte et peut entraîner accidentellement le mélange de journaux non liés !\n\nCette opération ne peut pas être annulée.",
         "buttonCancel": "Non, Annuler",
-        "buttonText": "Oui, je prends le risque ! Combinez-les !",
+        "buttonText": "Oui, je prends le risque ! Fusionez-les !",
         "buttonProcees": "Oui, je prends le risque ! Combinez-les !"
       },
       "replaceDataAlert": {
