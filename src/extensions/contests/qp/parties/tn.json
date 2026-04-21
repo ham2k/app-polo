@@ -1,14 +1,14 @@
 {
   "key": "TN",
   "name": "Tennessee QSO Party",
-  "start": "2025-9-7 17:00Z",
-  "end": "2025-9-8 02:59Z",
+  "start": "2026-9-6 17:00Z",
+  "end": "2026-9-7 02:59Z",
   "short": "TNQP",
   "url": "https://tnqp.org/rules/",
   "cabrilloName": "TN-QSO-PARTY",
   "notes": "Contributed by KQ4URU.",
-  "lastUpdated": "2025-03-19 23:15z",
-  "status": "Based on 2025 rules",
+  "lastUpdated": "2026-04-21 12:00z",
+  "status": "Updated for 2026, but rules based on 2025",
   "bonusStations": {
     "K4TCG": 100
   },

@@ -1,14 +1,14 @@
 {
   "key": "KY",
   "name": "Kentucky QSO Party",
-  "start": "2025-6-7 13:00Z",
-  "end": "2025-6-8 00:59Z",
+  "start": "2026-6-6 13:00Z",
+  "end": "2026-6-7 00:59Z",
   "url": "https://kyqsoparty.org/rules/",
   "cabrilloName": "KYQP",
   "notes": "Scoring does not include Power Multiplier.Counties entered by W1GRL and rules by W1BOY",
   "internalNotes": "",
-  "lastUpdated": "2025-05-23 12:00Z",
-  "status": "Updated for 2025, but not verified",
+  "lastUpdated": "2026-04-21 12:00Z",
+  "status": "Updated for 2026, but not verified",
   "options": {
     "dcCountsAsMaryland": false,
     "countyLine": true,
@@ -20,11 +20,15 @@
   },
   "points": {
     "PHONE": 1,
-    "CW": 2,
-    "RTTY": 2
+    "CW": 2
   },
   "bonusStations": {
     "K4KCG": 100
+  },
+  "powerMultipliers": {
+    "QRP": 3,
+    "LOW": 2,
+    "HIGH": 1
   },
   "counties": {
     "ADA": "Adair",

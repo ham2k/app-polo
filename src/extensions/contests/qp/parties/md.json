@@ -1,20 +1,19 @@
 {
   "key": "MD",
   "name": "Maryland-DC QSO Party",
-  "start": "2025-8-9 14:00Z",
-  "end": "2025-8-10 03:59Z",
-  "url": "https://www.w3vpr.org/Maryland-DC_QSO_Party",
-  "status": "Updated for 2025, but not verified",
+  "start": "2026-8-8 14:00Z",
+  "end": "2026-8-9 03:59Z",
+  "url": "https://w3vpr.org/wp/2025/12/21/mdc-qso-party/",
+  "status": "Updated for 2026, but not verified",
   "cabrilloName": "MDC-QSO-PARTY",
   "notes": "Scoring does not include Power and Category multipliers and some bonus points.Contributed by W1GRL & W1BOY",
   "internalNotes": "Bonus points for working at least 13 or all MDCjurisdictions",
-  "lastUpdated": "2025-05-23 12:00Z",
+  "lastUpdated": "2026-04-21 12:00Z",
   "options": {
     "dcCountsAsMaryland": false,
     "dxLocationIsPrefix": true,
     "stateCountsForInState": false,
     "selfSpotting": false,
-
     "countyLine": false,
     "multsPerBandMode": false,
     "dxEntityIsMultiplier": true,
@@ -26,7 +25,7 @@
     "CW": 3
   },
   "bonusStations": {
-    "W3VPR": 100
+    "W3VPR": 50
   },
   "counties": {
     "ALY": "Allegany",
@@ -54,5 +53,5 @@
     "WIC": "Wicomico",
     "WRC": "Worcester",
     "WDC": "Washington DC"
-   }
+  }
 }

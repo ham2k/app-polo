@@ -3,12 +3,12 @@
   "name": "Indiana QSO Party",
   "short": "INQP",
   "url": "http://www.hdxcc.org/inqp/",
-  "start": "2025-5-3 15:00Z",
-  "end": "2025-5-4 02:59Z",
+  "start": "2026-5-2 15:00Z",
+  "end": "2026-5-3 02:59Z",
   "cabrilloName": "IN-QSO-PARTY",
   "notes": "Contributed by W1GRL & W1BOY",
-  "lastUpdated": "2025-03-20 12:00Z",
-  "status": "Updated for 2025, but not verified",
+  "lastUpdated": "2026-04-21 12:00Z",
+  "status": "Updated for 2026, but not verified",
   "options": {
     "dcCountsAsMaryland": true,
     "stateCountsForInState": false,
@@ -19,7 +19,7 @@
     "selfSpotting": true
   },
   "points": {
-    "PHONE": 1,
+    "PHONE": 2,
     "CW": 2
   },
   "counties": {
@@ -117,4 +117,3 @@
     "INWHL": "Whitley"
   }
 }
-
