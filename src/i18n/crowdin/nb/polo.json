@@ -492,17 +492,33 @@
       "syncService": "Synkroniseringstjeneste",
       "syncService.enabled": "Aktivert",
       "syncService.disabled": "Deaktivert",
+      "syncServiceDialog": {
+        "title": "Ham2K Log Filer Sync Tjeneste",
+        "custom": "Tilpasset"
+      },
+      "syncLinkingDialog": {
+        "description": "Skriv inn koden som vises på den andre enheten for å koble den til denne kontoen."
+      },
       "deviceNotLinked": "Enhet ikke linket! ({{id}})",
       "anonymousAccount": "Anonym konto (#{{id}})",
       "enableSyncToLinkDevice": "Aktiver synkronisering for å linke denne enheten",
+      "pendingChallenges": "Tilkoblingsforespørsler",
+      "pendingChallengesDescription": "Det finnes ventende forespørsler om å koble andre enheter til denne kontoen.",
       "checkEmailInboxForConfirmation": "(sjekk innboksen din for bekreftelse)",
       "accountNumber": "Konto #{{id}}",
       "pendingEmailConfirmation": "(venter på e-postbekreftelse)",
+      "accountPendingConfirmation": "(venter på bekreftelse)",
       "tapToConfigure": "Trykk for å konfigurere",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Utvikling)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Offisiell)",
         "custom": "Tilpasset ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "Koden ble ikke funnet. Vennligst prøv igjen.",
+        "areYouSure-md": "Er du sikker på at du vil koble \"**{{device}}**\" med denne kontoen?",
+        "buttonCancel": "Nei, avbryt",
+        "buttonProcees": "Ja, koble den!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Denne enheten ble sist synkronisert med en annen konto (#{{id}}).\n\nFor å fortsette synkronisering må du velge mellom følgende alternativer:",
@@ -521,6 +537,7 @@
         "title": "Kombiner lokale data?",
         "text": "Er du sikker på at du vil kombinere disse operasjonene og QSOene med den nye kontoen?\n\nDette vil kombinere QSOer på denne enheten med det som allerede er i synkroniseringstjenesten for den nye kontoen, og kan ved et uhell resultere i å blande ubeslektede logger!\n\nDenne operasjonen kan ikke angres.",
         "buttonCancel": "Nei, avbryt",
+        "buttonText": "Ja, jeg tar risikoen! Kombiner dem!",
         "buttonProcees": "Ja, jeg tar risikoen! Kombiner dem!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi-konto",
+        "changeEmailText": "Endre gjenopprettings-e-posten for denne kontoen:",
+        "setEmailText": "Angi en e-post for kontoen din. Den kan brukes til å identifisere den og gjøre det enklere å gjenopprette senere.",
         "emailAddressLabel": "E-postadresse",
-        "resendButton": "Send på nytt",
-        "revertButton": "Tilbakestill",
+        "linkWithOtherButton": "Eller… koble til en eksisterende konto",
+        "linkAccountText": "Koble til en eksisterende konto:",
+        "keepExistingAccountButton": "Eller… behold eksisterende konto",
+        "pendingEmailTextPre": "En e-post har blitt sendt til",
+        "pendingEmailTextPost": "Vennligst se etter den og følg instruksjonene.",
+        "confirmLink-md": "Åpne appen på en enhet allerede koblet til **{{email}}** og bekreft denne forespørselen ved å oppgi følgende kode:",
+        "confirmLinkPost-md": "Hvis du ikke har tilgang til en annen enhet koblet til denne kontoen, kan du:",
+        "confirmViaEmailButton": "Bekreft via e-post",
+        "changeAccountButton": "Bytt konto",
+        "resendButton": "Send e-post igjen",
+        "revertButton": "Endre e-post",
         "syncFirstButton": "Gå tilbake og fullfør synkroniseringen først",
         "continueAnywayButton": "Jeg vet hva jeg gjør! Fortsett likevel",
         "potentialForDataLoss": "Mulighet for datatap!!!",

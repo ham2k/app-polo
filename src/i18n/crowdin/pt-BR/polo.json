@@ -492,17 +492,33 @@
       "syncService": "Serviço de Sincronização",
       "syncService.enabled": "Habilitado",
       "syncService.disabled": "Desabilitado",
+      "syncServiceDialog": {
+        "title": "Serviço de Sincronização do Arquivo Log Ham2K",
+        "custom": "Personalizado"
+      },
+      "syncLinkingDialog": {
+        "description": "Digite o código exibido no outro dispositivo para vinculá-lo a esta conta."
+      },
       "deviceNotLinked": "Dispositivo não vinculado! ({{id}})",
       "anonymousAccount": "Conta Anônima (#{{id}})",
       "enableSyncToLinkDevice": "Habilite a sincronização para vincular este dispositivo",
+      "pendingChallenges": "Solicitações de Conexão",
+      "pendingChallengesDescription": "Existem solicitações pendentes para conectar outros dispositivos a esta conta.",
       "checkEmailInboxForConfirmation": "(verifique sua caixa de entrada de e-mail para confirmação)",
       "accountNumber": "Conta #{{id}}",
       "pendingEmailConfirmation": "(confirmação de e-mail pendente)",
+      "accountPendingConfirmation": "(pendente de confirmação)",
       "tapToConfigure": "Toque para configurar",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Desenvolvimento)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Oficial)",
         "custom": "Personalizado ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "O código não foi encontrado. Tente novamente.",
+        "areYouSure-md": "Tem certeza de que deseja vincular \"**{{device}}**\" a esta conta?",
+        "buttonCancel": "Não, cancelar",
+        "buttonProcees": "Sim, vincular!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Este dispositivo foi sincronizado pela última vez com uma conta diferente (#{{id}}).\n\nPara continuar a sincronização, você precisa decidir entre as seguintes opções:",
@@ -521,6 +537,7 @@
         "title": "Combinar Dados Locais?",
         "text": "Você tem certeza de que quer combinar essas operações e QSOs com a nova conta?\n\nIsso irá combinar QSOs neste dispositivo com o que já está no Serviço de Sincronização para a nova conta e pode resultar em mistura acidental de logs não relacionados!\n\nEssa operação não pode ser desfeita.",
         "buttonCancel": "Não, Cancelar",
+        "buttonText": "Sim, vou arriscar! Combine-os!",
         "buttonProcees": "Sim, vou arriscar! Combine-os!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Conta Ham2K LoFi",
+        "changeEmailText": "Altere o email de recuperação para esta conta:",
+        "setEmailText": "Defina um email para sua conta. Ele pode ser usado para identificá-la e facilitar a recuperação posteriormente.",
         "emailAddressLabel": "Endereço de e-mail",
-        "resendButton": "Reenviar",
-        "revertButton": "Reverter",
+        "linkWithOtherButton": "Ou… conecte-se com uma conta existente",
+        "linkAccountText": "Conectar-se com uma conta existente:",
+        "keepExistingAccountButton": "Ou… manter a conta existente",
+        "pendingEmailTextPre": "Um email foi enviado para",
+        "pendingEmailTextPost": "Por favor, procure-o e siga as instruções.",
+        "confirmLink-md": "Abra o app em um dispositivo já vinculado com **{{email}}** e confirme este pedido inserindo o seguinte código:",
+        "confirmLinkPost-md": "Se você não tiver acesso a outro dispositivo vinculado a esta conta, você pode:",
+        "confirmViaEmailButton": "Confirmar por email",
+        "changeAccountButton": "Alterar Conta",
+        "resendButton": "Enviar email novamente",
+        "revertButton": "Alterar Email",
         "syncFirstButton": "Volte e complete a sincronização primeiro",
         "continueAnywayButton": "Eu sei o que estou fazendo! Continuar assim mesmo",
         "potentialForDataLoss": "Potencial para perda de dados!!!",

@@ -492,17 +492,33 @@
       "syncService": "Sincronización",
       "syncService.enabled": "Habilitada",
       "syncService.disabled": "Deshabilitada",
+      "syncServiceDialog": {
+        "title": "Servicio de Sincronización de Archivos de Registro de Ham2K",
+        "custom": "Personalizado"
+      },
+      "syncLinkingDialog": {
+        "description": "Ingrese el código que se muestra en el otro dispositivo para vincularlo a esta cuenta."
+      },
       "deviceNotLinked": "¡Dispositivo no vinculado! ({{id}})",
       "anonymousAccount": "Cuenta Anónima (#{{id}})",
       "enableSyncToLinkDevice": "Habilitar sincronización para poder vincular este dispositivo",
+      "pendingChallenges": "Solicitudes de Conexión",
+      "pendingChallengesDescription": "Hay solicitudes pendientes para conectar otros dispositivos a esta cuenta.",
       "checkEmailInboxForConfirmation": "(verifica tu bandeja de email para confirmar)",
       "accountNumber": "Cuenta #{{id}}",
       "pendingEmailConfirmation": "(esperando por confirmación de email)",
+      "accountPendingConfirmation": "(pendiente de confirmación)",
       "tapToConfigure": "Toca para configurar",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Desarrollo)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Oficial)",
         "custom": "Personalizado ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "No se encontró el código. Inténtalo de nuevo.",
+        "areYouSure-md": "¿Estás seguro de que deseas vincular \"**{{device}}**\" con esta cuenta?",
+        "buttonCancel": "No, Cancelar",
+        "buttonProcees": "Sí, ¡vincularlo!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Este dispositivo fue sincronizado con una cuenta diferente (#{{id}}).\n\nPara continuar sincronizando, necesitas decidir entre las siguientes opciones:",
@@ -521,6 +537,7 @@
         "title": "¿Combinar Datos Locales?",
         "text": "¿Estás seguro de querer combinar estas operaciones y QSOs con la nueva cuenta?\n\nEsto combinará los QSOs en este dispositivo con los que ya están en el Servicio de Sincronización para la nueva cuenta, y puede resultar en mezclar registros no relacionados!\n\nEsta operación no puede ser revertida.",
         "buttonCancel": "No, Cancelar",
+        "buttonText": "Sí, ¡acepto el riesgo! ¡Combinar Todo!",
         "buttonProcees": "Sí, ¡acepto el riesgo! ¡Combinar Todo!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Cuenta de Ham2K LoFi",
+        "changeEmailText": "Cambia el correo electrónico de recuperación para esta cuenta:",
+        "setEmailText": "Establezca un correo electrónico para su cuenta. Se puede utilizar para identificarla y facilitar su recuperación más tarde.",
         "emailAddressLabel": "Dirección de correo electrónico",
-        "resendButton": "Reenviar",
-        "revertButton": "Deshacer",
+        "linkWithOtherButton": "O… conéctate con una cuenta existente",
+        "linkAccountText": "Conéctate con una cuenta existente:",
+        "keepExistingAccountButton": "O… mantén la cuenta existente",
+        "pendingEmailTextPre": "Se ha enviado un correo electrónico a",
+        "pendingEmailTextPost": "Por favor, búscalo y sigue las instrucciones.",
+        "confirmLink-md": "Abre la aplicación en un dispositivo ya vinculado con **{{email}}** y confirma esta solicitud ingresando el siguiente código:",
+        "confirmLinkPost-md": "Si no tienes acceso a otro dispositivo vinculado a esta cuenta, puedes:",
+        "confirmViaEmailButton": "Confirmar por correo electrónico",
+        "changeAccountButton": "Cambiar de Cuenta",
+        "resendButton": "Enviar el correo electrónico de nuevo",
+        "revertButton": "Cambiar Correo Electrónico",
         "syncFirstButton": "Regresar y completar la sincronización primero",
         "continueAnywayButton": "¡Sé lo que estoy haciendo! Continuar de todos modos",
         "potentialForDataLoss": "¡¡¡Posibilidad de pérdida de datos!!!",

@@ -492,17 +492,33 @@
       "syncService": "Sync-Dienst",
       "syncService.enabled": "Aktiviert",
       "syncService.disabled": "Deaktiviert",
+      "syncServiceDialog": {
+        "title": "Ham2K Log Filer Sync-Dienst",
+        "custom": "Benutzerdefiniert"
+      },
+      "syncLinkingDialog": {
+        "description": "Geben Sie den Code ein, der auf dem anderen Gerät angezeigt wird, um es mit diesem Konto zu verknüpfen."
+      },
       "deviceNotLinked": "Gerät nicht verknüpft! ({{id}})",
       "anonymousAccount": "Anonymes Konto (#{{id}})",
       "enableSyncToLinkDevice": "Synchronisieren einschalten, um dieses Gerät zu verknüpfen",
+      "pendingChallenges": "Verbindungsanfragen",
+      "pendingChallengesDescription": "Es gibt noch offene Anfragen für die Verbindung anderer Geräte mit diesem Konto.",
       "checkEmailInboxForConfirmation": "(überprüfen deinen E-Mail-Posteingang auf Bestätigung)",
       "accountNumber": "Konto #{{id}}",
       "pendingEmailConfirmation": "(E-Mail-Bestätigung ausstehend)",
+      "accountPendingConfirmation": "(Bestätigung ausstehend)",
       "tapToConfigure": "Tippe, um zu konfigurieren",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Entwicklung)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Offiziell)",
         "custom": "Benutzerdefiniert ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "Der Code wurde nicht gefunden. Bitte versuchen Sie es erneut.",
+        "areYouSure-md": "Sind Sie sicher, dass Sie \"**{{device}}**\" mit diesem Konto verknüpfen möchten?",
+        "buttonCancel": "Nein, Abbrechen",
+        "buttonProcees": "Ja, verbinde es!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Dieses Gerät wurde zuletzt mit einem anderen Konto (#{{id}}) synchronisiert.\n\nUm weiter zu synchronisieren, musst du zwischen den folgenden Optionen entscheiden:",
@@ -521,6 +537,7 @@
         "title": "Lokale Daten kombinieren?",
         "text": "Bist du sicher, dass du diese Vorgänge und QSOs mit dem neuen Konto kombinieren möchtest?\n\nDies wird die QSOs auf diesem Gerät mit dem synchronisierten Dienst für das neue Konto kombinieren und kann versehentlich in der Vermischung nicht zusammengehöriger Logs resultieren!\n\nDiese Aktion kann nicht rückgängig gemacht werden.",
         "buttonCancel": "Nein, Abbrechen",
+        "buttonText": "Ja, ich gehe das Risiko ein! Kombinieren!",
         "buttonProcees": "Ja, ich gehe das Risiko ein! Kombinieren!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi-Konto",
+        "changeEmailText": "Ändern Sie die Wiederherstellungs-E-Mail für dieses Konto:",
+        "setEmailText": "Legen Sie eine E-Mail für Ihr Konto fest. Sie kann verwendet werden, um es zu identifizieren und später einfacher wiederherzustellen.",
         "emailAddressLabel": "E-Mail-Adresse",
-        "resendButton": "Erneut senden",
-        "revertButton": "Rückgängig machen",
+        "linkWithOtherButton": "Oder… mit einem bestehenden Konto verbinden",
+        "linkAccountText": "Mit einem bestehenden Konto verbinden:",
+        "keepExistingAccountButton": "Oder… bestehendes Konto behalten",
+        "pendingEmailTextPre": "Eine E-Mail wurde an",
+        "pendingEmailTextPost": "Bitte suchen Sie danach und folgen Sie den Anweisungen.",
+        "confirmLink-md": "Öffnen Sie die App auf einem Gerät, das bereits mit **{{email}}** verknüpft ist, und bestätigen Sie diese Anforderung, indem Sie den folgenden Code eingeben:",
+        "confirmLinkPost-md": "Wenn Sie keinen Zugriff auf ein anderes mit diesem Konto verbundenes Gerät haben, können Sie:",
+        "confirmViaEmailButton": "Bestätigen Sie per E-Mail",
+        "changeAccountButton": "Konto ändern",
+        "resendButton": "E-Mail erneut senden",
+        "revertButton": "E-Mail ändern",
         "syncFirstButton": "Gehe zurück und synchronisiere zuerst fertig",
         "continueAnywayButton": "Ich weiß, was ich tue! Trotzdem fortfahren",
         "potentialForDataLoss": "Möglicher Datenverlust!!!",

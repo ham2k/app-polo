@@ -492,17 +492,33 @@
       "syncService": "同步服务",
       "syncService.enabled": "已启用",
       "syncService.disabled": "已禁用",
+      "syncServiceDialog": {
+        "title": "Ham2K日志存档同步服务",
+        "custom": "自定义"
+      },
+      "syncLinkingDialog": {
+        "description": "输入其他设备上显示的代码以将其链接到此帐户。"
+      },
       "deviceNotLinked": "设备未链接！({{id}})",
       "anonymousAccount": "匿名账户 (#{{id}})",
       "enableSyncToLinkDevice": "启用同步以连接此设备",
+      "pendingChallenges": "连接请求",
+      "pendingChallengesDescription": "有待决请求将其他设备连接到此帐户。",
       "checkEmailInboxForConfirmation": "(查看您的电子邮件收件箱以获取确认）",
       "accountNumber": "账户 #{{id}}",
       "pendingEmailConfirmation": "(待邮件确认)",
+      "accountPendingConfirmation": "(待确认)",
       "tapToConfigure": "点击配置",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi（开发）",
         "https://lofi.ham2k.net": "Ham2K LoFi（官方）",
         "custom": "自定义（{{server}}）"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "未找到代码。请重试。",
+        "areYouSure-md": "您确定要将\"**{{device}}**\"与此帐户链接吗？",
+        "buttonCancel": "不，取消",
+        "buttonProcees": "是的，链接它！"
       },
       "askAboutMergingAccounts": {
         "warning-md": "此设备最后一次与不同的账户 (#{{id}}) 同步。\n\n要继续同步，您需要在以下选项中做出决定：",
@@ -521,6 +537,7 @@
         "title": "合并本地数据？",
         "text": "确定要将这些操作与 QSO 合并到新账户吗？\n\n这会把本设备上的 QSO 与新账户在同步服务中已有的记录合并。操作可能会意外导致不相关的日志被混合，无法自动还原。请确认你已备份或确信需要合并。\n\n此操作无法撤销。",
         "buttonCancel": "不，取消",
+        "buttonText": "我愿承担风险！合并它们！",
         "buttonProcees": "我愿承担风险！合并它们！"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi 账号",
+        "changeEmailText": "更改此帐户的恢复电子邮件：",
+        "setEmailText": "为您的帐户设置一个电子邮件。它可以帮助识别和以后更容易恢复。",
         "emailAddressLabel": "电子邮件地址",
-        "resendButton": "重新发送",
-        "revertButton": "恢复",
+        "linkWithOtherButton": "或者...连接现有帐户",
+        "linkAccountText": "连接现有帐户：",
+        "keepExistingAccountButton": "或者...保留现有帐户",
+        "pendingEmailTextPre": "已发送电子邮件至",
+        "pendingEmailTextPost": "请查找并按照指示操作。",
+        "confirmLink-md": "在已经与**{{email}}**连接的设备上打开应用程序，并输入以下代码以确认此请求：",
+        "confirmLinkPost-md": "如果您无法访问链接到此帐户的其他设备，您可以：",
+        "confirmViaEmailButton": "通过电子邮件确认",
+        "changeAccountButton": "更换账户",
+        "resendButton": "再次发送电子邮件",
+        "revertButton": "更改电子邮件",
         "syncFirstButton": "请先返回并完成同步",
         "continueAnywayButton": "我知道我在做什么！继续",
         "potentialForDataLoss": "可能导致数据丢失！！！",

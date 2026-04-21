@@ -204,8 +204,14 @@
       "accept-a11y": "Aksepter endringer",
       "revert": "Tilbakestill",
       "revert-a11y": "Tilbakestill endringer",
+      "apply": "Bruk",
+      "connect": "Koble",
       "save": "Lagre",
       "export": "Eksporter"
+    },
+    "errors": {
+      "generic": "Noe gikk galt. Vennligst prøv igjen senere.",
+      "genericShort": "Noe gikk galt."
     },
     "version": {
       "general": "{{month}} '{{year}}",

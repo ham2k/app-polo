@@ -204,8 +204,14 @@
       "accept-a11y": "Aceptar cambios",
       "revert": "Revertir",
       "revert-a11y": "Revertir cambios",
+      "apply": "Aplicar",
+      "connect": "Conectar",
       "save": "Guardar",
       "export": "Exportar"
+    },
+    "errors": {
+      "generic": "Algo salió mal. Inténtalo de nuevo más tarde.",
+      "genericShort": "Algo salió mal."
     },
     "version": {
       "general": "{{month}} '{{year}}",

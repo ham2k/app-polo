@@ -204,8 +204,14 @@
       "accept-a11y": "Desar Canvis",
       "revert": "Desfer",
       "revert-a11y": "Desfer Canvis",
+      "apply": "Aplica",
+      "connect": "Connecta",
       "save": "Desa",
       "export": "Exporta"
+    },
+    "errors": {
+      "generic": "Alguna cosa ha anat malament. Si us plau, prova-ho de nou més tard.",
+      "genericShort": "Alguna cosa ha anat malament."
     },
     "version": {
       "general": "{{month}} '{{year}}",

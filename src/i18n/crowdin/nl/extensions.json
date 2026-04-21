@@ -890,7 +890,7 @@
       "scoring": {
         "dupesCount_zero": "Geen dubbels",
         "dupesCount_one": "1 dupe",
-        "dupesCount_other": "{{fmtCount}} dupes",
+        "dupesCount_other": "{{fmtCount}} duplicaten",
         "ref2refCount_zero": "Geen Ref2Refs",
         "ref2refCount_one": "1 Ref2Ref",
         "ref2refCount_other": "{{fmtCount}} Ref2Refs",

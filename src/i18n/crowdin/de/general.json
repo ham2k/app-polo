@@ -204,8 +204,14 @@
       "accept-a11y": "Änderungen annehmen",
       "revert": "Rückgangig machen",
       "revert-a11y": "Änderungen rückgängig machen",
+      "apply": "Anwenden",
+      "connect": "Verbinden",
       "save": "Speichern",
       "export": "Exportieren"
+    },
+    "errors": {
+      "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal.",
+      "genericShort": "Etwas ist schiefgelaufen."
     },
     "version": {
       "general": "{{month}} '{{year}}",

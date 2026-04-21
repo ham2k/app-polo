@@ -888,7 +888,7 @@
     },
     "shared": {
       "scoring": {
-        "dupesCount_zero": "No duplicats",
+        "dupesCount_zero": "Sense duplicats",
         "dupesCount_one": "1 duplicat",
         "dupesCount_other": "{{fmtCount}} duplicats",
         "ref2refCount_zero": "Sense Ref2Refs",

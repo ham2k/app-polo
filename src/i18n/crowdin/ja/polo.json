@@ -492,17 +492,33 @@
       "syncService": "同期サービス",
       "syncService.enabled": "有効",
       "syncService.disabled": "無効",
+      "syncServiceDialog": {
+        "title": "Ham2K ログファイラー 同期サービス",
+        "custom": "カスタム"
+      },
+      "syncLinkingDialog": {
+        "description": "このアカウントにリンクするために、他のデバイスに表示されているコードを入力してください。"
+      },
       "deviceNotLinked": "デバイスがリンクされていません！({{id}})",
       "anonymousAccount": "匿名アカウント (#{{id}})",
       "enableSyncToLinkDevice": "同期を有効にしてこのデバイスをリンク",
+      "pendingChallenges": "接続リクエスト",
+      "pendingChallengesDescription": "このアカウントに他のデバイスを接続するための保留中のリクエストがあります。",
       "checkEmailInboxForConfirmation": "(確認のためメールボックスをチェックしてください)",
       "accountNumber": "アカウント #{{id}}",
       "pendingEmailConfirmation": "(メール確認待ち)",
+      "accountPendingConfirmation": "(確認待ち)",
       "tapToConfigure": "タップして設定",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (開発版)",
         "https://lofi.ham2k.net": "Ham2K LoFi (正式版)",
         "custom": "カスタム ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "コードが見つかりませんでした。もう一度お試しください。",
+        "areYouSure-md": "本当に\"**{{device}}**\"をこのアカウントにリンクしますか？",
+        "buttonCancel": "いいえ、キャンセルします",
+        "buttonProcees": "はい、リンクします！"
       },
       "askAboutMergingAccounts": {
         "warning-md": "このデバイスは最後に別のアカウント (#{{id}}) と同期しました。\n\n同期を続行するには、次のオプションから選択する必要があります:",
@@ -521,6 +537,7 @@
         "title": "ローカルデータを結合しますか？",
         "text": "これらのオペレーションとQSOを新しいアカウントと結合してもよいですか？\n\nこれにより、このデバイスのQSOが新しいアカウントの同期サービスに既にあるデータと結合され、無関係なログが誤って混在する可能性があります！\n\nこの操作は元に戻せません。",
         "buttonCancel": "いいえ、キャンセルします",
+        "buttonText": "はい、リスクを承知します！結合します！",
         "buttonProcees": "はい、リスクを承知します！結合します！"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi アカウント",
+        "changeEmailText": "このアカウントのリカバリメールを変更する：",
+        "setEmailText": "アカウント用のメールを設定してください。識別および後での回復を容易にするために使用できます。",
         "emailAddressLabel": "メールアドレス",
-        "resendButton": "再送信",
-        "revertButton": "元に戻す",
+        "linkWithOtherButton": "または…既存のアカウントに接続",
+        "linkAccountText": "既存のアカウントに接続：",
+        "keepExistingAccountButton": "または…既存のアカウントを保持する",
+        "pendingEmailTextPre": "メールが送信されました",
+        "pendingEmailTextPost": "指示に従ってください。",
+        "confirmLink-md": "**{{email}}**ですでにリンクされているデバイスでアプリを開き、次のコードを入力してこのリクエストを確認してください：",
+        "confirmLinkPost-md": "このアカウントにリンクされた他のデバイスにアクセスできない場合は、次の操作を行います：",
+        "confirmViaEmailButton": "メールで確認",
+        "changeAccountButton": "アカウントを変更",
+        "resendButton": "再度メールを送信",
+        "revertButton": "メールを変更",
         "syncFirstButton": "先に同期を完了してください",
         "continueAnywayButton": "何が起こるのか理解しています！続行します",
         "potentialForDataLoss": "データ損失の可能性があります!!!",

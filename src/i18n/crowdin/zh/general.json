@@ -204,8 +204,14 @@
       "accept-a11y": "接受更改",
       "revert": "恢复",
       "revert-a11y": "恢复更改",
+      "apply": "应用",
+      "connect": "连接",
       "save": "保存",
       "export": "导出"
+    },
+    "errors": {
+      "generic": "出了些问题。请稍后重试。",
+      "genericShort": "出了些问题。"
     },
     "version": {
       "general": "{{month}} '{{year}}",

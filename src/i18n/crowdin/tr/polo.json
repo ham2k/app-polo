@@ -492,17 +492,33 @@
       "syncService": "Senkronizasyon Hizmeti",
       "syncService.enabled": "Etkin",
       "syncService.disabled": "Devre Dışı",
+      "syncServiceDialog": {
+        "title": "Ham2K Günlük Dosyası Sync Servisi",
+        "custom": "Özel"
+      },
+      "syncLinkingDialog": {
+        "description": "Bu hesabı bağlamak için diğer cihazda gösterilen kodu girin."
+      },
       "deviceNotLinked": "Cihaz bağlı değil! ({{id}})",
       "anonymousAccount": "Anonim Hesap (#{{id}})",
       "enableSyncToLinkDevice": "Bu cihazı bağlamak için senkronizasyonu etkinleştirin",
+      "pendingChallenges": "Bağlantı İstekleri",
+      "pendingChallengesDescription": "Bu hesaba başka cihazları bağlamak için bekleyen istekler var.",
       "checkEmailInboxForConfirmation": "(onay için e-posta kutunuzu kontrol edin)",
       "accountNumber": "Hesap #{{id}}",
       "pendingEmailConfirmation": "(e-posta onayı bekleniyor)",
+      "accountPendingConfirmation": "(onay bekleniyor)",
       "tapToConfigure": "Yapılandırmak için dokunun",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Geliştirme)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Resmi)",
         "custom": "Özel ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "Kod bulunamadı. Lütfen tekrar deneyin.",
+        "areYouSure-md": "\"**{{device}}**\" bu hesapla bağlantı kurmak istediğinizden emin misiniz?",
+        "buttonCancel": "Hayır, Vazgeç",
+        "buttonProcees": "Evet, Bağla!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Bu cihaz en son farklı bir hesapla senkronize edildi (#{{id}}).\n\nSenkronizasyona devam edebilmek için şu seçeneklerden birini seçmelisiniz:",
@@ -521,6 +537,7 @@
         "title": "Yerel Verileri Birleştir?",
         "text": "Bu işlemleri ve QSO'ları yeni hesapla birleştirmek istediğinizden emin misiniz?\n\nBu, bu cihazdaki QSO'ları yeni hesap için Senkronizasyon Hizmetindekilerle birleştirir ve yanlışlıkla ilgisiz günlüklerin karışmasına neden olabilir!\n\nBu işlem geri alınamaz.",
         "buttonCancel": "Hayır, Vazgeç",
+        "buttonText": "Evet, riski kabul ediyorum! Hepsini Birleştir!",
         "buttonProcees": "Evet, riski kabul ediyorum! Hepsini Birleştir!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi Hesap",
+        "changeEmailText": "Bu hesap için kurtarma e-postasını değiştirin:",
+        "setEmailText": "Hesabınız için bir e-posta ayarlayın. Bu, hesabınızı tanımlamak ve daha sonra kolayca kurtarabilmek için kullanılabilir.",
         "emailAddressLabel": "E-mail Adresi",
-        "resendButton": "Yeniden Gönder",
-        "revertButton": "Geri Al",
+        "linkWithOtherButton": "Veya bir mevcut hesapla bağlan",
+        "linkAccountText": "Mevcut bir hesapla bağlan:",
+        "keepExistingAccountButton": "Veya mevcut hesabı sakla",
+        "pendingEmailTextPre": "E-posta gönderildi",
+        "pendingEmailTextPost": "Lütfen bulup talimatları takip edin.",
+        "confirmLink-md": "**{{email}}** ile zaten bağlı bir cihazda uygulamayı açın ve aşağıdaki kodu girerek bu isteği onaylayın:",
+        "confirmLinkPost-md": "Bu hesaba bağlı başka bir cihaza erişiminiz yoksa şunları yapabilirsiniz:",
+        "confirmViaEmailButton": "E-posta ile onayla",
+        "changeAccountButton": "Hesabı Değiştir",
+        "resendButton": "E-postayı tekrar gönder",
+        "revertButton": "E-postayı Değiştir",
         "syncFirstButton": "Önce senkronize etme işlemini tamamlayın",
         "continueAnywayButton": "Ne yaptığımı biliyorum! Yine de Devam Et",
         "potentialForDataLoss": "Veri kaybı olasılığı!!!",

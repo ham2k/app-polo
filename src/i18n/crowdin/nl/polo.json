@@ -492,17 +492,33 @@
       "syncService": "Synchronisatie Service",
       "syncService.enabled": "Ingeschakeld",
       "syncService.disabled": "Uitgeschakeld",
+      "syncServiceDialog": {
+        "title": "Ham2K Log Filer Synchronisatieservice",
+        "custom": "Aangepast"
+      },
+      "syncLinkingDialog": {
+        "description": "Voer de code in die op het andere apparaat wordt weergegeven om deze aan dit account te koppelen."
+      },
       "deviceNotLinked": "Apparaat niet gelinked! ({{id}})",
       "anonymousAccount": "Anoniem account (#{{id}})",
       "enableSyncToLinkDevice": "Schakel synchronisatie in om dit apparaat te koppelen",
+      "pendingChallenges": "Verbindingsverzoeken",
+      "pendingChallengesDescription": "Er zijn hangende verzoeken om andere apparaten aan dit account te koppelen.",
       "checkEmailInboxForConfirmation": "(controleer je e-mailinbox voor bevestiging)",
       "accountNumber": "Account #{{id}}",
       "pendingEmailConfirmation": "(e-mailbevestiging in afwachting)",
+      "accountPendingConfirmation": "(hangende bevestiging)",
       "tapToConfigure": "Tik om te configureren",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Ontwikkeling)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Officieel)",
         "custom": "Aangepast ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "De code is niet gevonden. Probeer het opnieuw.",
+        "areYouSure-md": "Weet je zeker dat je \"**{{device}}**\" aan dit account wilt koppelen?",
+        "buttonCancel": "Nee, Annuleer",
+        "buttonProcees": "Ja, koppel het!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Dit apparaat was voor het laatst gesynchroniseerd met een ander account (#{{id}}).\n\nOm door te gaan met synchroniseren, moet je kiezen tussen de volgende opties:",
@@ -521,6 +537,7 @@
         "title": "Lokale Data Combineren?",
         "text": "Weet je zeker dat je deze activaties en QSO's wilt combineren met het nieuwe account?\n\nDit zal QSO's op dit apparaat combineren met wat zich al in de synchronisatie bevindt voor het nieuwe account en kan per ongeluk leiden tot het samenvoegen van niet-gerelateerde logboeken!\n\nDeze operatie kan niet ongedaan worden gemaakt.",
         "buttonCancel": "Nee, Annuleer",
+        "buttonText": "Ja, ik neem het risico! Voeg ze samen!",
         "buttonProcees": "Ja, ik neem het risico! Voeg ze samen!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi Account",
+        "changeEmailText": "Wijzig het herstel-e-mailadres voor dit account:",
+        "setEmailText": "Stel een e-mail in voor uw account. Hiermee kunt u het identificeren en later gemakkelijker herstellen.",
         "emailAddressLabel": "E-mailadres",
-        "resendButton": "Opnieuw verzenden",
-        "revertButton": "Herstellen",
+        "linkWithOtherButton": "Of… verbinden met een bestaand account",
+        "linkAccountText": "Verbinden met een bestaand account:",
+        "keepExistingAccountButton": "Of… bestaand account behouden",
+        "pendingEmailTextPre": "Er is een e-mail verzonden naar",
+        "pendingEmailTextPost": "Zoek ernaar en volg de instructies.",
+        "confirmLink-md": "Open de app op een apparaat dat al gekoppeld is met **{{email}}** en bevestig dit verzoek door de volgende code in te voeren:",
+        "confirmLinkPost-md": "Als je geen toegang hebt tot een ander apparaat dat aan dit account is gekoppeld, kun je:",
+        "confirmViaEmailButton": "Bevestig via e-mail",
+        "changeAccountButton": "Account wijzigen",
+        "resendButton": "E-mail opnieuw verzenden",
+        "revertButton": "E-mail wijzigen",
         "syncFirstButton": "Ga terug en voltooi eerst de synchronisatie",
         "continueAnywayButton": "Ik weet wat ik doe! Toch doorgaan",
         "potentialForDataLoss": "Opgepast voor gegevensverlies!!!",

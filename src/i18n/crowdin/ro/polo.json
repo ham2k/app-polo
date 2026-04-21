@@ -492,17 +492,33 @@
       "syncService": "Serviciu de Sincronizare",
       "syncService.enabled": "Activat",
       "syncService.disabled": "Dezactivat",
+      "syncServiceDialog": {
+        "title": "Serviciul de Sincronizare Ham2K Log Filer",
+        "custom": "Personalizat"
+      },
+      "syncLinkingDialog": {
+        "description": "Introduceți codul afişat pe celălalt dispozitiv pentru a-l conecta la acest cont."
+      },
       "deviceNotLinked": "Dispozitiv neconectat! ({{id}})",
       "anonymousAccount": "Cont Anonim (#{{id}})",
       "enableSyncToLinkDevice": "Activați sincronizarea pentru a conecta acest dispozitiv",
+      "pendingChallenges": "Cereri de Conexiune",
+      "pendingChallengesDescription": "Există cereri în așteptare pentru a conecta alte dispozitive la acest cont.",
       "checkEmailInboxForConfirmation": "(verificați inbox-ul email-ului pentru confirmare)",
       "accountNumber": "Contul #{{id}}",
       "pendingEmailConfirmation": "(confirmare email în așteptare)",
+      "accountPendingConfirmation": "(confirmare în așteptare)",
       "tapToConfigure": "Apăsați pentru configurare",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Dezvoltare)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Oficial)",
         "custom": "Personalizat ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "Codul nu a fost găsit. Vă rugăm să încercați din nou.",
+        "areYouSure-md": "Ești sigur că dorești să conectezi „**{{device}}**” la acest cont?",
+        "buttonCancel": "Nu, Anulează",
+        "buttonProcees": "Da, Conectează-l!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Acest dispozitiv a fost sincronizat ultima dată cu un cont diferit (#{{id}}).\n\nPentru a continua sincronizarea, trebuie să alegeți între următoarele opțiuni:",
@@ -521,6 +537,7 @@
         "title": "Combină datele locale?",
         "text": "Ești sigur că vrei să combini aceste operațiuni și QSO-uri cu noul cont?\n\nAcest lucru va combina QSO-urile de pe acest dispozitiv cu ceea ce există deja în Serviciul de Sincronizare pentru noul cont și poate rezulta din greșeală în amestecarea jurnalelor neconexe!\n\nAceastă operațiune nu poate fi anulată.",
         "buttonCancel": "Nu, Anulează",
+        "buttonText": "Da, îmi asum riscul! Combină-le!",
         "buttonProcees": "Da, îmi asum riscul! Combină-le!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Cont LoFi Ham2K",
+        "changeEmailText": "Schimbați email-ul de recuperare pentru acest cont:",
+        "setEmailText": "Setați un email pentru contul dumneavoastră. Poate fi folosit pentru a-l identifica și pentru a facilita recuperarea ulterioară.",
         "emailAddressLabel": "Adresă de Email",
-        "resendButton": "Retrimite",
-        "revertButton": "Anulează",
+        "linkWithOtherButton": "Sau... conectați-vă cu un cont existent",
+        "linkAccountText": "Conectați-vă cu un cont existent:",
+        "keepExistingAccountButton": "Sau... păstrați contul existent",
+        "pendingEmailTextPre": "Un email a fost trimis către",
+        "pendingEmailTextPost": "Vă rugăm să îl căutați și să urmați instrucțiunile.",
+        "confirmLink-md": "Deschideți aplicația pe un dispozitiv deja conectat cu **{{email}}** și confirmați această solicitare introducând codul următor:",
+        "confirmLinkPost-md": "Dacă nu aveți acces la alt dispozitiv conectat cu acest cont, puteți:",
+        "confirmViaEmailButton": "Confirmați prin email",
+        "changeAccountButton": "Schimbați Contul",
+        "resendButton": "Trimiteți emailul din nou",
+        "revertButton": "Schimbați Emailul",
         "syncFirstButton": "Întoarce-te și finalizează sincronizarea mai întâi",
         "continueAnywayButton": "Știu ce fac! Continuă oricum",
         "potentialForDataLoss": "Risc de pierdere a datelor!!!",

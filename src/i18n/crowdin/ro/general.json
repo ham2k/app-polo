@@ -204,8 +204,14 @@
       "accept-a11y": "Acceptă modificările",
       "revert": "Anulează",
       "revert-a11y": "Anulează modificări",
+      "apply": "Aplică",
+      "connect": "Conectează",
       "save": "Salvează",
       "export": "Exportă"
+    },
+    "errors": {
+      "generic": "Ceva n-a mers bine. Încercați din nou mai târziu.",
+      "genericShort": "Ceva n-a mers bine."
     },
     "version": {
       "general": "{{month}} '{{year}}",

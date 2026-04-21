@@ -204,8 +204,14 @@
       "accept-a11y": "Wijzigingen Accepteren",
       "revert": "Herstellen",
       "revert-a11y": "Wijzigingen Herstellen",
+      "apply": "Toepassen",
+      "connect": "Verbind",
       "save": "Opslaan",
       "export": "Exporteren"
+    },
+    "errors": {
+      "generic": "Er is iets misgegaan. Probeer het later opnieuw.",
+      "genericShort": "Er is iets misgegaan."
     },
     "version": {
       "general": "{{month}} '{{year}}",

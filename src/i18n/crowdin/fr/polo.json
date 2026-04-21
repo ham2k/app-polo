@@ -224,8 +224,8 @@
         "description": "Synchronisation et sauvegarde sur le cloud"
       },
       "accountsSettings": {
-        "title": "Comptes et Services",
-        "description": "QRZ.com et d'autres services"
+        "title": "Comptes et services",
+        "description": "QRZ.com et autres services"
       },
       "appFeatures": {
         "title": "Fonctionnalités de l'application",
@@ -492,17 +492,33 @@
       "syncService": "Service de synchronisation",
       "syncService.enabled": "Activé",
       "syncService.disabled": "Désactivé",
+      "syncServiceDialog": {
+        "title": "Ham2K Service de Synchronisation du Journal des Fichiers",
+        "custom": "Personnalisé"
+      },
+      "syncLinkingDialog": {
+        "description": "Entrez le code affiché sur l'autre appareil pour le lier à ce compte."
+      },
       "deviceNotLinked": "Appareil non lié ! ({{id}})",
       "anonymousAccount": "Compte anonyme (#{{id}})",
       "enableSyncToLinkDevice": "Activez la synchronisation pour lier cet appareil",
+      "pendingChallenges": "Demandes de Connexion",
+      "pendingChallengesDescription": "Des demandes de connexion d'autres appareils à ce compte sont en attente.",
       "checkEmailInboxForConfirmation": "(vérifiez votre boîte mail pour confirmation)",
       "accountNumber": "Compte #{{id}}",
       "pendingEmailConfirmation": "(confirmation par e-mail en attente)",
+      "accountPendingConfirmation": "(confirmation en attente)",
       "tapToConfigure": "Appuyez pour configurer",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Développement)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Officiel)",
         "custom": "Personnalisé ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "Le code n'a pas été trouvé. Veuillez réessayer.",
+        "areYouSure-md": "Êtes-vous sûr de vouloir lier \"**{{device}}**\" à ce compte ?",
+        "buttonCancel": "Non, annuler",
+        "buttonProcees": "Oui, liez-le !"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Cet appareil a été synchronisé pour la dernière fois avec un compte différent (#{{id}}).\n\nPour continuer la synchronisation, vous devez choisir entre les options suivantes :",
@@ -521,6 +537,7 @@
         "title": "Fusionner les données locales ?",
         "text": "Êtes-vous sûr de vouloir fusionner ces opérations et QSOs avec le nouveau compte ?\n\nCela fusionnera les QSOs sur cet appareil avec ceux déjà dans le Service de synchronisation pour le nouveau compte et peut entraîner accidentellement le mélange de journaux non liés !\n\nCette opération ne peut pas être annulée.",
         "buttonCancel": "Non, Annuler",
+        "buttonText": "Oui, je prends le risque ! Combinez-les !",
         "buttonProcees": "Oui, je prends le risque ! Combinez-les !"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Compte Ham2K LoFi",
+        "changeEmailText": "Modifier l'email de récupération pour ce compte :",
+        "setEmailText": "Définissez un email pour votre compte. Cela peut servir à l'identifier et à le récupérer plus facilement ultérieurement.",
         "emailAddressLabel": "Adresse courriel",
-        "resendButton": "Renvoyer",
-        "revertButton": "Rétablir",
+        "linkWithOtherButton": "Ou… connectez-vous avec un compte existant",
+        "linkAccountText": "Connectez-vous avec un compte existant :",
+        "keepExistingAccountButton": "Ou… conservez le compte existant",
+        "pendingEmailTextPre": "Un email a été envoyé à",
+        "pendingEmailTextPost": "Veuillez le rechercher et suivre les instructions.",
+        "confirmLink-md": "Ouvrez l'application sur un appareil déjà lié avec **{{email}}** et confirmez cette demande en entrant le code suivant :",
+        "confirmLinkPost-md": "Si vous n'avez pas accès à un autre appareil lié à ce compte, vous pouvez :",
+        "confirmViaEmailButton": "Confirmer par email",
+        "changeAccountButton": "Changer de compte",
+        "resendButton": "Renvoyer l'email",
+        "revertButton": "Changer d'email",
         "syncFirstButton": "Retourner et terminer la synchronisation d’abord",
         "continueAnywayButton": "Je sais ce que je fais ! Continuer quand même",
         "potentialForDataLoss": "Risque de perte de données !!!",

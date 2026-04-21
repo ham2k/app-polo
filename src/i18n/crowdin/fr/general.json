@@ -204,8 +204,14 @@
       "accept-a11y": "Accepter les modifications",
       "revert": "Rétablir",
       "revert-a11y": "Rétablir les modifications",
+      "apply": "Appliquer",
+      "connect": "Connecter",
       "save": "Enregistrer",
       "export": "Exporter"
+    },
+    "errors": {
+      "generic": "Quelque chose s'est mal passé. Veuillez réessayer plus tard.",
+      "genericShort": "Quelque chose s'est mal passé."
     },
     "version": {
       "general": "{{month}} '{{year}}",

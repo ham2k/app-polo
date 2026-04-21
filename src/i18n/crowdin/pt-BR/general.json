@@ -11,8 +11,8 @@
         "cy": "Galês - Cymraeg",
         "da": "Dinamarquês - Dansk",
         "de": "Alemão - Deutsch",
-        "en-PL": "Pig Latin",
-        "en-PT": "Pirata",
+        "en-PL": "Língua do P - Pig Latin",
+        "en-PT": "Pirata - Pirate",
         "eo": "Esperanto - Esperanto",
         "es": "Espanhol - Español",
         "et": "Estoniano - Eesti",
@@ -204,12 +204,18 @@
       "accept-a11y": "Aceitar Alterações",
       "revert": "Reverter",
       "revert-a11y": "Reverter Alterações",
+      "apply": "Aplicar",
+      "connect": "Conectar",
       "save": "Salvar",
       "export": "Exportar"
     },
+    "errors": {
+      "generic": "Algo deu errado. Por favor, tente novamente mais tarde.",
+      "genericShort": "Algo deu errado."
+    },
     "version": {
       "general": "{{month}} '{{year}}",
-      "patch": "patch {{patch}}",
+      "patch": "atualização {{patch}}",
       "specific": "{{month}} '{{year}} {{patch}}"
     },
     "updates": {

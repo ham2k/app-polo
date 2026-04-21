@@ -204,8 +204,14 @@
       "accept-a11y": "Přijmout změny",
       "revert": "Vrátit zpět",
       "revert-a11y": "Vrátit změny",
+      "apply": "Použít",
+      "connect": "Připojit",
       "save": "Uložit",
       "export": "Exportovat"
+    },
+    "errors": {
+      "generic": "Nastala chyba. Zkuste to prosím později.",
+      "genericShort": "Něco se pokazilo."
     },
     "version": {
       "general": "{{month}} '{{year}}",

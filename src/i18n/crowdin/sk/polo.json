@@ -492,17 +492,33 @@
       "syncService": "Synchronizačná služba",
       "syncService.enabled": "Zapnuté",
       "syncService.disabled": "Vypnuté",
+      "syncServiceDialog": {
+        "title": "Služba synchronizácie Ham2K Log Filer",
+        "custom": "Vlastný"
+      },
+      "syncLinkingDialog": {
+        "description": "Zadajte kód zobrazený na druhom zariadení, ak ho chcete prepojiť s týmto účtom."
+      },
       "deviceNotLinked": "Zariadenie nie je prepojené! ({{id}})",
       "anonymousAccount": "Anonymný účet (#{{id}})",
       "enableSyncToLinkDevice": "Povoliť synchronizáciu na prepojenie tohto zariadenia",
+      "pendingChallenges": "Žiadosti o pripojenie",
+      "pendingChallengesDescription": "Existujú nevybavené žiadosti o pripojenie ďalších zariadení k tomuto účtu.",
       "checkEmailInboxForConfirmation": "(skontrolujte svoju e-mailovú schránku pre potvrdenie)",
       "accountNumber": "Účet #{{id}}",
       "pendingEmailConfirmation": "(čaká sa na potvrdenie e-mailom)",
+      "accountPendingConfirmation": "(čaká na potvrdenie)",
       "tapToConfigure": "Ťuknite pre konfiguráciu",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (vývoj)",
         "https://lofi.ham2k.net": "Ham2K LoFi (oficiálne)",
         "custom": "Vlastné ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "Kód nebol nájdený. Skúste to prosím znova.",
+        "areYouSure-md": "Ste si istí, že chcete prepojiť \"**{{device}}**\" s týmto účtom?",
+        "buttonCancel": "Nie, zrušiť",
+        "buttonProcees": "Áno, prepojiť!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Toto zariadenie bolo naposledy synchronizované s iným účtom (#{{id}}).\n\nAby ste mohli pokračovať v synchronizácii, musíte sa rozhodnúť medzi nasledujúcimi možnosťami:",
@@ -521,6 +537,7 @@
         "title": "Kombinovať lokálne dáta?",
         "text": "Naozaj chcete kombinovať tieto operácie a QSO s novým účtom?\n\nToto skombinuje QSOS na tomto zariadení s tým, čo už je v synchronizačnej službe pre nový účet, a môže neúmyselne viesť k miešaniu nesúvisiacich záznamov.\n\nTáto operácia sa nedá vrátiť späť.",
         "buttonCancel": "Nie, Zrušiť",
+        "buttonText": "Áno, riskujem! Kombinovať ich!",
         "buttonProcees": "Áno, riskujem! Kombinovať ich!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi účet",
+        "changeEmailText": "Zmeniť obnovovací email pre tento účet:",
+        "setEmailText": "Nastavte si email pre váš účet. Môže sa použiť na identifikáciu a zjednoduší sa tak neskoršie obnovenie.",
         "emailAddressLabel": "Emailová adresa",
-        "resendButton": "Odoslať znova",
-        "revertButton": "Vrátiť späť",
+        "linkWithOtherButton": "Alebo… pripojte sa k existujúcemu účtu",
+        "linkAccountText": "Pripojiť k existujúcemu účtu:",
+        "keepExistingAccountButton": "Alebo… ponechať existujúci účet",
+        "pendingEmailTextPre": "Email bol odoslaný na",
+        "pendingEmailTextPost": "Prosím, vyhľadajte ho a postupujte podľa pokynov.",
+        "confirmLink-md": "Otvorte aplikáciu na zariadení, ktoré je už prepojené s **{{email}}** a potvrďte túto žiadosť zadaním nasledujúceho kódu:",
+        "confirmLinkPost-md": "Ak nemáte prístup k inému zariadeniu prepojenému s týmto účtom, môžete:",
+        "confirmViaEmailButton": "Potvrdiť cez email",
+        "changeAccountButton": "Zmeniť účet",
+        "resendButton": "Poslať email znovu",
+        "revertButton": "Zmeniť email",
         "syncFirstButton": "Najprv sa vrátiť a dokončiť synchronizáciu",
         "continueAnywayButton": "Viem, čo robím! Napriek tomu pokračovať",
         "potentialForDataLoss": "Možnosť straty údajov!!!",

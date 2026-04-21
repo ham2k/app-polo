@@ -204,8 +204,14 @@
       "accept-a11y": "Değişiklikleri Kabul Et",
       "revert": "Geri Al",
       "revert-a11y": "Değişiklikleri Geri Al",
+      "apply": "Uygula",
+      "connect": "Bağlan",
       "save": "Kaydet",
       "export": "Dışa Aktar"
+    },
+    "errors": {
+      "generic": "Bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin.",
+      "genericShort": "Bir şeyler ters gitti."
     },
     "version": {
       "general": "{{month}} '{{year}}",

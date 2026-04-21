@@ -204,8 +204,14 @@
       "accept-a11y": "変更を承認",
       "revert": "元に戻す",
       "revert-a11y": "変更を元に戻す",
+      "apply": "適用",
+      "connect": "接続",
       "save": "保存",
       "export": "エクスポート"
+    },
+    "errors": {
+      "generic": "問題が発生しました。しばらくしてから再試行してください。",
+      "genericShort": "問題が発生しました。"
     },
     "version": {
       "general": "{{month}} '{{year}}",
