@@ -492,17 +492,33 @@
       "syncService": "Sync Service",
       "syncService.enabled": "Enabled",
       "syncService.disabled": "Disabled",
+      "syncServiceDialog": {
+        "title": "Ham2K Log Filer Sync Service",
+        "custom": "Custom"
+      },
+      "syncLinkingDialog": {
+        "description": "Enter the code displayed on the other device to link it to this account."
+      },
       "deviceNotLinked": "Device not linked! ({{id}})",
       "anonymousAccount": "Anonymous Account (#{{id}})",
       "enableSyncToLinkDevice": "Enable sync to link this device",
+      "pendingChallenges": "Connection Requests",
+      "pendingChallengesDescription": "There are pending requests to connect other devices to this account.",
       "checkEmailInboxForConfirmation": "(check your email inbox for confirmation)",
       "accountNumber": "Account #{{id}}",
       "pendingEmailConfirmation": "(pending email confirmation)",
+      "accountPendingConfirmation": "(pending confirmation)",
       "tapToConfigure": "Tap to configure",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Development)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Official)",
         "custom": "Custom ({{server}})"
+      },
+      "askAboutLinkingAccounts": {
+        "codeNotFound": "The code was not found. Please try again.",
+        "areYouSure-md": "Are you sure you want to link \"**{{device}}**\" with this account?",
+        "buttonCancel": "No, cancel",
+        "buttonProcees": "Yes, link it!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "This device was last synced with a different account (#{{id}}).\n\nIn order to continue syncing, you need to decide between the following options:",
@@ -521,6 +537,7 @@
         "title": "Combine Local Data?",
         "text": "Are you sure you want to combine these operations and QSOs with the new account?\n\nThis will combine QSOs on this device with what's already in the Sync Service for the new account, and can accidentally result in mixing unrelated logs!\n\nThis operation cannot be undone.",
         "buttonCancel": "No, Cancel",
+        "buttonText": "Yes, I'll take the risk! Combine Them!",
         "buttonProcees": "Yes, I'll take the risk! Combine Them!"
       },
       "replaceDataAlert": {
@@ -536,9 +553,20 @@
       },
       "syncAccountDialog": {
         "title": "Ham2K LoFi Account",
+        "changeEmailText": "Change the recovery email for this account:",
+        "setEmailText": "Set an email for your account. It can be used to identify it and make it easier to recover later.",
         "emailAddressLabel": "Email Address",
-        "resendButton": "Resend",
-        "revertButton": "Revert",
+        "linkWithOtherButton": "Or… connect with an existing account",
+        "linkAccountText": "Connect with an existing account:",
+        "keepExistingAccountButton": "Or… keep existing account",
+        "pendingEmailTextPre": "An email has been sent to",
+        "pendingEmailTextPost": "Please look for it and follow the instructions.",
+        "confirmLink-md": "Open the app on a device already linked with **{{email}}** and confirm this request by entering the following code:",
+        "confirmLinkPost-md": "If you don't have access to another device linked to this account, you can:",
+        "confirmViaEmailButton": "Confirm via email",
+        "changeAccountButton": "Change Account",
+        "resendButton": "Send email again",
+        "revertButton": "Change Email",
         "syncFirstButton": "Go back and complete syncing first",
         "continueAnywayButton": "I know what I'm doing! Continue Anyway",
         "potentialForDataLoss": "Potential for data loss!!!",

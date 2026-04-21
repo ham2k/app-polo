@@ -30,6 +30,7 @@ import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
 import { prepareSyncToReplaceLocalData, prepareSyncToCombineLocalData } from '../../../store/sync'
 
 import { SyncSettingsForDistribution } from '../../../distro'
+import { SyncLinkingDialog } from '../components/SyncLinkingDialog'
 
 const LOFI_SERVER_LABELS = {
   // 'https://dev.lofi.ham2k.net': 'Ham2K LoFi (Development)',
@@ -107,14 +108,14 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
     } else {
       if (lofiData?.account?.email) {
         if (lofiData?.pending_link_email && lofiData?.pending_link_email !== lofiData?.account?.email) {
-          return t('screens.syncSettings.checkEmailInboxForConfirmation', '(check your email inbox for confirmation)')
+          return t('screens.syncSettings.accountPendingConfirmation', '(pending confirmation)')
         } else if (lofiData?.account?.pending_email && lofiData?.account?.pending_email !== lofiData?.account?.email) {
-          return t('screens.syncSettings.checkEmailInboxForConfirmation', '(check your email inbox for confirmation)')
+          return t('screens.syncSettings.accountPendingConfirmation', '(pending confirmation)')
         } else {
           return t('screens.syncSettings.accountNumber', 'Account #{{id}}', { id: lofiData?.account?.uuid.slice(0, 8).toUpperCase() })
         }
       } else if (lofiData?.account?.pending_email) {
-        return t('screens.syncSettings.pendingEmailConfirmation', '(pending email confirmation)')
+        return t('screens.syncSettings.accountPendingConfirmation', '(pending confirmation)')
       } else {
         return t('screens.syncSettings.tapToConfigure', 'Tap to configure')
       }
@@ -269,6 +270,28 @@ Please try again later.`, { error: linkResult.json.error })
             syncHook={syncHook}
             onDialogDone={handleDialogDone}
           />
+        )}
+
+        {lofiData.pendingChallenges > 0 && (
+          <>
+            <H2kListItem
+              title={t('screens.syncSettings.pendingChallenges', 'Connection Requests')}
+              description={t('screens.syncSettings.pendingChallengesDescription', 'There are pending requests to connect other devices to this account.')}
+              leftIcon="account-multiple-plus"
+              onPress={() => setCurrentDialog('linkAccount')}
+              leftIconColor={styles.colors.important}
+              titleStyle={{ color: styles.colors.important }}
+              descriptionStyle={{ color: styles.colors.important }}
+            />
+            {currentDialog === 'linkAccount' && (
+              <SyncLinkingDialog
+                styles={styles}
+                visible={true}
+                syncHook={syncHook}
+                onDialogDone={handleDialogDone}
+              />
+            )}
+          </>
         )}
 
         {askAboutMergingAccounts && (

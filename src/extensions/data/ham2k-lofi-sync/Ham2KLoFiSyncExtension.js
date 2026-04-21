@@ -70,8 +70,28 @@ const SyncHook = {
   },
 
   linkClient: (email) => async (dispatch, getState) => {
-    const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/link', method: 'POST', body: JSON.stringify({ email }) })
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/permissions', method: 'POST', body: JSON.stringify({ email }) })
     return response
+  },
+
+  linkClientWithEmail: (email) => async (dispatch, getState) => {
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/permissions', method: 'POST', body: JSON.stringify({ email, send_email: true }) })
+    return response
+  },
+
+  getPermissions: (params) => async (dispatch, getState) => {
+    const { account } = selectLocalExtensionData(getState(), Info.key) || {}
+    const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}/permissions`, method: 'GET', params })
+
+    return results
+  },
+
+  updatePermission: (permissionId, data) => async (dispatch, getState) => {
+    const { account } = selectLocalExtensionData(getState(), Info.key) || {}
+    const body = JSON.stringify(data)
+    const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}/permissions/${permissionId}`, method: 'PATCH', body })
+
+    return results
   },
 
   resetClient: (email) => async (dispatch, getState) => {
@@ -105,6 +125,9 @@ const SyncHook = {
       if (results.json.subscription) updates.subscription = results.json.subscription
       if (results.json.operations) updates.operations = results.json.operations
       if (results.json.qsos) updates.qsos = results.json.qsos
+
+      if (results.json.pending_challenges !== undefined) updates.pendingChallenges = results.json.pending_challenges
+
       if (Object.keys(updates).length > 0) {
         dispatch(setLocalExtensionData({ key: Info.key, ...updates }))
       }
@@ -151,6 +174,10 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
     const secret = Config.HAM2K_LOFI_SECRET || 'no-secret'
 
     if (server.endsWith('/')) server = server.slice(0, -1)
+
+    if (params) {
+      url = `${url}${url.includes('?') ? '&' : '?'}${new URLSearchParams(params).toString()}`
+    }
 
     let retries = 2 // just so that we can re-authenticate if needed
     while (retries > 0) {
@@ -252,7 +279,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
 function _processResponseMeta ({ json, account, response, dispatch }) {
   try {
     if (json?.account && (!account || Object.keys(json.account).find(k => account[k] !== json.account[k]))) {
-      const currentData = selectLocalExtensionData(dispatch.getState(), Info.key) || {}
+      const currentData = dispatch((_dispatch, getState) => selectLocalExtensionData(getState(), Info.key) || {})
       if (json.account?.uuid !== currentData.account?.uuid) {
         dispatch(setLocalExtensionData({ key: Info.key, account: json.account, previousAccount: currentData.account }))
       } else {
