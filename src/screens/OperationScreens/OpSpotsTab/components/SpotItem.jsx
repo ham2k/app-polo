@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -12,6 +12,7 @@ import { View } from 'react-native'
 import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
 import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
 import { H2kPressable, H2kIcon } from '../../../../ui'
+import { findBestHook } from '../../../../extensions/registry'
 
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
   const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
@@ -71,6 +72,14 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
     return workedStyles
   }, [spot, styles])
 
+  const refIcons = useMemo(() => {
+    return (spot.refs || []).filter(ref => ref.type).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
+      <View key={`${ref.type}:${ref.ref}`} style={[styles.fields.icon, commonStyle, refStyle]}>
+        <H2kIcon key={i} name={handler?.iconForQSO} color={(ref?.type === 'scoring' && refStyle?.color) || commonStyle?.color} size={styles.normalFontSize} />
+      </View>
+    ))
+  }, [spot.refs, styles.fields.icon, styles.normalFontSize, commonStyle, refStyle])
+
   return (
     <H2kPressable onPress={() => onPress && onPress({ spot })}>
       <View style={styles.doubleRow}>
@@ -98,16 +107,7 @@ const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedW
         <View style={styles.doubleRowInnerRow}>
           <Text style={[styles.fields.band, commonStyle, bandStyle]}>{spot.band}</Text>
           <Text style={[styles.fields.mode, commonStyle, modeStyle]}>{spot.mode}</Text>
-          {spot.spots.filter(s => s?.icon).map(subSpot => (
-            <View key={subSpot.subSource ?? subSpot.source} style={[styles.fields.icon, commonStyle, refStyle]}>
-              <H2kIcon
-                key={subSpot.subSource ?? subSpot.source}
-                name={subSpot.icon}
-                size={styles.normalFontSize}
-                color={(subSpot?.type === 'scoring' && refStyle?.color) || commonStyle?.color}
-              />
-            </View>
-          ))}
+          {refIcons}
           <Text style={[styles.fields.label, commonStyle, refStyle]} numberOfLines={1} ellipsizeMode="tail">
             {spot.spot.emoji}
             {spot.spot.label}

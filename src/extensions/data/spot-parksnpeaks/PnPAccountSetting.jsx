@@ -84,7 +84,7 @@ function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
         <H2kTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
-          keyboard="dumb"
+          keyboard="email"
           label={t('extensions.spots.parksnpeaks.account.usernameLabel', 'Username (not callsign)')}
           placeholder={t('extensions.spots.parksnpeaks.account.usernamePlaceholder', 'your account username')}
           onChangeText={onChangeUserId}

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -15,7 +15,7 @@ export function fmtFreqInMHz (freq, { mode } = { mode: 'trim' }) {
     if (mode === 'full') {
       return withSeparator
     } else if (mode === 'compact') { // Remove decimals, but show separator or space for alignment
-      return withSeparator.replace(TRAILING_DIGITS_REGEX, (match, p1, p2) => p2 === '000' ? ' ' : p1)
+      return withSeparator.replace(TRAILING_DIGITS_REGEX, (match, p1, p2) => p2 === '000' ? '' : p1)
     } else { // Remove trailing zeroes
       return withSeparator.replace(TRAILING_DIGITS_REGEX, (match, p1, p2) => p2 === '000' ? '' : p1 + p2)
     }
@@ -25,7 +25,7 @@ export function fmtFreqInMHz (freq, { mode } = { mode: 'trim' }) {
 }
 
 export function partsForFreqInMHz (freq) {
-  if (!freq || freq === NaN) return ['?', '', '']
+  if (!freq || isNaN(freq)) return ['?', '', '']
 
   const parts = fmtFreqInMHz(freq, { compact: false }).split(/[,.]/)
   parts[1] = parts[1] ?? '000'

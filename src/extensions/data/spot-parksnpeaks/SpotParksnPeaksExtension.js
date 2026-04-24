@@ -5,8 +5,6 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-// See https://discord.com/developers/docs/resources/webhook#execute-webhook
-
 import { Alert } from 'react-native'
 
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
@@ -15,7 +13,6 @@ import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
 import packageJson from '../../../../package.json'
 
-import { findRef } from '../../../tools/refTools'
 import { fmtFreqInMHz } from '../../../tools/frequencyFormats'
 
 import { PnPAccountSetting } from './PnPAccountSetting'
@@ -32,7 +29,7 @@ export const Info = {
 
 const Extension = {
   ...Info,
-  category: 'devmode',
+  category: 'lookup',
   onActivation: ({ registerHook }) => {
     registerHook('spots', { hook: SpotsHook })
     registerHook('setting', {
@@ -47,18 +44,18 @@ const Extension = {
 export default Extension
 
 const OUTBOUND_SPOT_TYPES = {
-  'siotaActivation': 'SiOTA',
-  'wwffActivation': 'WWFF',
+  siotaActivation: 'SiOTA',
+  wwffActivation: 'WWFF'
 }
 
 const INBOUND_SPOT_TYPES = {
-  'SiOTA': 'siota',
-  'WWFF': 'wwff'
+  SiOTA: 'siota',
+  WWFF: 'wwff'
 }
 
 const INBOUND_SPOT_ICONS = {
-  'SiOTA': SiOTAInfo.icon,
-  'WWFF': WWFFInfo.icon
+  SiOTA: SiOTAInfo.icon,
+  WWFF: WWFFInfo.icon
 }
 
 const CACHE = {}
@@ -82,7 +79,7 @@ const SpotsHook = {
 
     let activatorCallsign = operation.stationCall || state.settings.operatorCall
     if (operation.local?.isMultiStation) {
-      activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? "0"}`
+      activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? '0'}`
     }
 
     for (const ref of operation.refs) {
@@ -161,15 +158,12 @@ const SpotsHook = {
       })
       spots = await response.json()
       CACHE.spots = [...spots]
-      console.log('PnP Spots', spots)
     } else {
       spots = [...CACHE.spots]
     }
 
     const qsos = []
     for (const spot of spots) {
-      console.log('PnP Spot', spot)
-
       if (!INBOUND_SPOT_TYPES[spot.actClass]) continue
 
       const spotTime = Date.parse(spot.actTime + 'Z')
@@ -187,7 +181,7 @@ const SpotsHook = {
           timeInMillis: spotTime,
           source: Info.key,
           icon: INBOUND_SPOT_ICONS[spot.actClass] || Info.icon,
-          label: `${spot.actSiteID}: ${spot?.altLocation || 'Unknown Reference'}`,
+          label: `${spot.actSiteID}: ${spot?.actLocation || ''}`,
           sourceInfo: {
             comments: spot.actComments,
             spotter: spot.actSpoter.toUpperCase().trim()

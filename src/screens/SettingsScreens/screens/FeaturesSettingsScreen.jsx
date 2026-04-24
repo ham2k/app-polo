@@ -128,7 +128,7 @@ const CATEGORY_TITLES = {
   core: 'Core Features',
   locationBased: 'Location-based Activities',
   contestsAndFieldOps: 'Contests & Field Ops',
-  lookup: 'Data Lookup',
+  lookup: 'Data Lookup & Spotting',
   devmode: 'Developer Mode',
   other: 'Other Features'
 }
