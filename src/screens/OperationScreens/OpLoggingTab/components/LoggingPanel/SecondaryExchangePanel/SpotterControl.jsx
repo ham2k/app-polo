@@ -43,6 +43,7 @@ export function SpotterControlInputs (props) {
   const [inProgress, setInProgress] = useState(false)
   const [spotStatus, setSpotStatus] = useState({})
   const [comments, setComments] = useState()
+  const [suggested, setSuggested] = useState()
 
   const now = useSelector(selectSecondsTick)
 
@@ -79,11 +80,6 @@ export function SpotterControlInputs (props) {
             autoRespotting: false
           }
         } else if (vfo.freq !== operation?.local?.spottedFreq) {
-          if (comments === undefined || comments === 'QRV ') {
-            let suggested = operation?.local?.spottedFreq ? 'QSY ' : 'QRV '
-            if (operation?.stationCallPlusArray?.length > 0) suggested += `(${operation?.stationCallPlusArray?.length + 1} ops) `
-            setComments(suggested)
-          }
           return {
             spotterMessage: t('screens.opLoggingTab.spotting.selfSpotAt', 'Self-spot at {{freq}}', { freq: fmtFreqInMHz(vfo.freq) }),
             spotterDisabled: false
@@ -135,14 +131,19 @@ export function SpotterControlInputs (props) {
         spotterDisabled: true
       }
     }
-  }, [
-    t, now, comments, inProgress, isSelfSpotting,
-    hooksWithSpotting.length,
-    qso?.freq, qso?.their?.call, qso?.startAtMillis, vfo.freq,
-    operation?.local?.spottedFreq, operation?.local?.spottedAt,
-    operation?.local?.autoRespotting,
-    operation?.stationCallPlusArray?.length
-  ])
+  }, [t, now, comments, inProgress, isSelfSpotting, hooksWithSpotting.length, qso?.freq, qso?.their?.call, qso?.startAtMillis, vfo.freq, operation?.local?.spottedFreq, operation?.local?.spottedAt, operation?.local?.autoRespotting])
+
+  useEffect(() => {
+    if (vfo.freq !== operation?.local?.spottedFreq) {
+      if (comments === undefined || comments === 'QRV ') {
+        let _suggested = operation?.local?.spottedFreq ? 'QSY ' : 'QRV '
+        if (operation?.stationCallPlusArray?.length > 0) _suggested += `(${operation?.stationCallPlusArray?.length + 1} ops) `
+        setSuggested(_suggested)
+      }
+    } else if (comments?.length > 0 && (now - (operation?.local?.spottedAt || 0) < (1000 * 15))) {
+      setSuggested('')
+    }
+  }, [vfo.freq, operation?.local?.spottedFreq, operation?.stationCallPlusArray?.length, comments, setSuggested, operation?.local?.spottedAt, now])
 
   const handleSpotting = useCallback(async () => {
     if (autoRespotting === true) {
@@ -165,7 +166,7 @@ export function SpotterControlInputs (props) {
           focusedRef={focusedRef}
           style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
           label={t('screens.opLoggingTab.spotting.commentsLabel', 'Comments')}
-          value={comments ?? ''}
+          value={comments ?? suggested ?? ''}
           onChangeText={setComments}
           disabled={!online || spotterDisabled}
         />
