@@ -7,7 +7,7 @@
 
 export const Info = {
   key: 'tota',
-  icon: 'fa-tower-observation',
+  icon: 'tower-fire',
   name: 'Towers on the Air',
   shortName: 'TOTA',
   doubleContact: 'Tower-to-Tower',
