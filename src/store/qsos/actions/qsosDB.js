@@ -18,6 +18,7 @@ import { logTimer } from '../../../tools/perfTools'
 import { annotateQSO } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 import { selectSettings } from '../../settings'
 import { selectRuntimeOnline } from '../../runtime'
+import { enqueueLiveQSOPosts } from '../../liveQSO'
 
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
@@ -73,7 +74,7 @@ export const queryQSOs = async (query, params) => {
   return qsos
 }
 
-export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
+export const addQSO = ({ uuid, qso, synced = false, source }) => addQSOs({ uuid, qsos: [qso], synced, source })
 
 export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
   const qso = {
@@ -84,7 +85,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
     freq: 0,
     band: 'event',
     mode: event.event ?? 'event',
-    event,
+    event
   }
 
   return addQSOs({ uuid, qsos: [qso], synced })
@@ -92,7 +93,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
 
 const DEBUG = false
 
-export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
+export const addQSOs = ({ uuid, qsos, synced = false, source }) => async (dispatch, getState) => {
   const now = Date.now()
 
   if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
@@ -166,6 +167,9 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
   if (!synced) {
     setImmediate(() => {
       sendQSOsToSyncService({ dispatch, getState })
+      if (source === 'logging-panel') {
+        enqueueLiveQSOPosts({ getState, uuid, qsos })
+      }
       if (DEBUG) logTimer('addQSOs', 'done updating operation')
     })
   }
