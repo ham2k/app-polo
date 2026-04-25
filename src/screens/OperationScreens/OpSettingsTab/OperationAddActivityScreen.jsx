@@ -56,7 +56,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
       }))
     }
 
-    trackEvent('add_activity', { activity: activity?.key })
+    trackEvent('activity_added', { activity: activity?.key })
     navigation.dispatch(StackActions.replace('OperationActivityOptions', { operation: operation.uuid, activity: activity.key }))
   }, [operation, dispatch, navigation])
 

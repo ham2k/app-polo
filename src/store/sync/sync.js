@@ -13,7 +13,7 @@ import GLOBAL from '../../GLOBAL'
 
 import { findHooks } from '../../extensions/registry'
 import { addNotice, clearMatchingNotices, selectFeatureFlag } from '../system'
-// import { logRemotely } from '../../distro'
+
 import { clearAllOperationData, getSyncCounts, markOperationsAsSynced, mergeSyncOperations, queryOperations, resetSyncedStatus } from '../operations'
 import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
 import { selectFiveSecondsTick, startTickTock, stopTickTock } from '../time'
@@ -88,7 +88,6 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
       console.log('-- localData', localData)
 
       setGoAheadWithSync(false)
-      // logRemotely({ message: 'account changed, sync disabled', currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
       _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID: localData?.sync?.lastSyncAccountUUID })
     } else {
       if (VERBOSE > 1) console.log(' -- no account, sync enabled')
@@ -213,7 +212,6 @@ async function _doOneRoundOfSyncing ({ dispatch, settings, oneSmallBatchOnly = f
     const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
 
     const syncHook = findHooks('sync')[0] // only one sync source
-    // logRemotely({ message: 'doOneRoundOfSyncing - hook', hook: syncHook?.key })
     if (!syncHook) return
 
     if (VERBOSE > 0) console.log(' -- syncing', syncHook.key, `qsoBatchSize: ${qsoBatchSize}, operationBatchSize: ${operationBatchSize}`, oneSmallBatchOnly, localData?.sync)
@@ -313,7 +311,6 @@ async function _doOneRoundOfSyncing ({ dispatch, settings, oneSmallBatchOnly = f
         if (VERBOSE > 0) console.log(' -- sync direction', syncDirection, syncPayload.meta.sync, localData?.sync)
       }
 
-      // logRemotely({ message: 'syncing', qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: !!syncPayload.meta })
       if (VERBOSE > 0) console.log(' -- sync payload', { qsos: syncPayload.qsos?.length, operations: syncPayload.operations?.length, settings: !!syncPayload.settings, meta: syncPayload.meta })
 
       // Call the server's `sync` endpoint
@@ -403,7 +400,6 @@ async function _doOneRoundOfSyncing ({ dispatch, settings, oneSmallBatchOnly = f
 
     errorCount = 0
   } catch (error) {
-    // logRemotely({ error: 'Error syncing', message: error.message })
     console.log('Error syncing', error)
 
     _releaseSyncLoop()
@@ -412,7 +408,6 @@ async function _doOneRoundOfSyncing ({ dispatch, settings, oneSmallBatchOnly = f
     if (errorCount < 8) {
       const delay = (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + ((2 ** errorCount) * 1000)
       if (VERBOSE > 1) console.log(' -- retrying in ', delay)
-      // logRemotely({ message: 'retrying in', delay })
       _scheduleNextSyncLoop({ dispatch, delay })
     }
   }

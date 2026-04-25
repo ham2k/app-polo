@@ -15,7 +15,7 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context'
 
 export const BaseStylesContext = createContext()
 
-export function useBaseStyles({ theme }) {
+export function useBaseStyles ({ theme }) {
   const { width, height } = useSafeAreaFrame()
   // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
 
@@ -38,7 +38,7 @@ export function useBaseStyles({ theme }) {
   return baseStyles
 }
 
-export function useThemedStyles(styleMassager, extraArg1, extraArg2, extraArg3, extraArg4) {
+export function useThemedStyles (styleMassager, extraArg1, extraArg2, extraArg3, extraArg4) {
   const baseStyles = useContext(BaseStylesContext)
 
   const styles = useMemo(() => {

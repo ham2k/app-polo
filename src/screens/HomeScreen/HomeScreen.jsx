@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { View } from 'react-native'
 import { AnimatedFAB, Text } from 'react-native-paper'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
@@ -17,11 +17,10 @@ import { useTranslation } from 'react-i18next'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import { addNewOperation, selectOperationIds } from '../../store/operations'
-import { selectRawSettings, selectSettings } from '../../store/settings'
+import { selectSettings } from '../../store/settings'
 import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
-import { trackEvent, trackSettings } from '../../distro'
-import { selectRuntimeOnline } from '../../store/runtime'
+import { trackEvent } from '../../distro'
 import { FlashList } from '@shopify/flash-list'
 import { useIsFocused } from '@react-navigation/native'
 import { useSelectorConditionally } from '../components/useConditionally'
@@ -30,14 +29,12 @@ export default function HomeScreen ({ navigation }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const safeArea = useSafeAreaInsets()
-  const online = useSelector(selectRuntimeOnline)
 
   const styles = useThemedStyles(prepareStyles, { safeArea })
 
   const isFocused = useIsFocused()
   const operationIds = useSelectorConditionally(isFocused, selectOperationIds)
   const settings = useSelectorConditionally(isFocused, selectSettings)
-  const rawSettings = useSelectorConditionally(isFocused, selectRawSettings)
 
   useEffect(() => {
     if (!settings?.operatorCall) {
@@ -48,18 +45,12 @@ export default function HomeScreen ({ navigation }) {
   }, [settings, navigation])
 
   useEffect(() => {
-    if (online) trackSettings({ settings: rawSettings })
-    // We don't want to track changes in settings, so no dependencies here
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  useEffect(() => {
     navigation.setOptions({ rightAction: 'cog', rightA11yLabel: t('screens.home.settings-a11y', 'screens.home.settings', 'Settings'), onRightActionPress: () => navigation.navigate('Settings'), leftAction: 'logo' })
   }, [navigation, t])
 
   const handleNewOperation = useCallback(async () => {
     const operation = await dispatch(addNewOperation({ _useTemplates: true }))
-    trackEvent('create_operation')
+    trackEvent('operation_created')
     navigation.navigate('Operation', { uuid: operation.uuid, operation, _isNew: true })
   }, [dispatch, navigation])
 

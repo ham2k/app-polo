@@ -98,7 +98,7 @@ export default function OperationDataScreen (props) {
 
   const handleExports = useCallback(({ options }) => {
     options.forEach((option) => {
-      trackEvent('export_operation', {
+      trackEvent('operation_exported', {
         export_type: [option.exportType ?? option.handler.key, option.format].join('.'),
         qso_count: operation.qsoCount,
         duration_minutes: Math.round((operation.startAtMillisMax - operation.startAtMillisMin) / (1000 * 60)),
@@ -152,7 +152,7 @@ export default function OperationDataScreen (props) {
 
       const filename = decodeURIComponent(localCopy?.localUri?.replace('file://', ''))
       const { adifCount, importCount } = await dispatch(importADIFIntoOperation(filename, operation, qsos))
-      trackEvent('import_adif', {
+      trackEvent('operation_imported_adif', {
         import_count: importCount,
         adif_count: adifCount,
         qso_count: operation.qsoCount,

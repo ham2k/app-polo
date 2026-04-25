@@ -73,7 +73,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
   const [dialog, setDialog] = useState()
 
   const handleAction = useCallback((notice, action) => {
-    trackEvent('accept_notice', { notice_action: action.action, notice_key: notice.actionArgs?.key })
+    trackEvent('notice_accepted', { notice_action: action.action, notice_key: notice.actionArgs?.key })
 
     dispatch(dismissNotice(notice))
     if (notices[1]) {
@@ -83,7 +83,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
   }, [dispatch, navigation, notices, i18next])
 
   const handleDismiss = useCallback((notice) => {
-    trackEvent('dismiss_notice', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
+    trackEvent('notice_dismissed', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
 
     dispatch(dismissNotice(notice))
     if (notices[1]) {

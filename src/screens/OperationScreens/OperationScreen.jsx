@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, View } from 'react-native'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -25,7 +25,6 @@ import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import OpSpotsTab from './OpSpotsTab/OpSpotsTab'
 import OpMapTab from './OpMapTab/OpMapTab'
 import OpInfoTab from './OpInfoTab/OpInfoTab'
-import { trackOperation } from '../../distro'
 import { selectRuntimeOnline } from '../../store/runtime'
 import { useUIState } from '../../store/ui'
 import { Icon, Menu, Text } from 'react-native-paper'
@@ -68,15 +67,6 @@ export default function OperationScreen (props) {
       await dispatch(loadQSOs(route.params.operation.uuid))
     })
   }, [route.params?.operation?.uuid, route.params?.uuid, dispatch])
-
-  const [lastTracking, setLastTracking] = useState(0)
-
-  useEffect(() => {
-    if (Date.now() - lastTracking > 1000 * 60 * 5 && online) {
-      trackOperation({ settings, operation })
-      setLastTracking(Date.now())
-    }
-  }, [settings, operation, lastTracking, online])
 
   const headerOptions = useMemo(() => {
     let options = {}

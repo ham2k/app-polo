@@ -41,7 +41,6 @@ actions:
           import GLOBAL from '../../../GLOBAL'
 
           // Then: Feature/component imports
-          import { logRemotely } from '../../../distro'
           import { selectSettings } from '../../../store/settings'
           ```
 
