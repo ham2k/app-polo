@@ -231,7 +231,7 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       marginBottom: baseTheme.oneSpace
     },
     version: {
-      fontSize: baseTheme.normalFontSize * 1.3,
+      fontSize: baseTheme.normalFontSize * 1.8,
       lineHeight: baseTheme.normalFontSize * 2,
       fontWeight: 'bold',
       textShadowColor: topHaloColor,

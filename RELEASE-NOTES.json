@@ -1,4 +1,11 @@
 {
+  "26.5.0-pre0": {
+    "name": "May '26 - Pre 0",
+    "photoCaption": "F4WFI at FR-13916",
+    "changes": [
+      "Performance and stability improvements"
+    ]
+  },
   "26.2.9": {
     "name": "February '26 (patch 9)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",
