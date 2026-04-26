@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import base64 from 'react-native-base64'
+import base64 from 'react-native-quick-base64'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
@@ -42,7 +42,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
     let call = operation.stationCall
 
     if (operation.local?.isMultiStation) {
-      call = `${call}/M${operation.local.multiIdentifier ?? "0"}`
+      call = `${call}/M${operation.local.multiIdentifier ?? '0'}`
     }
 
     // console.log('-- spot to QP Hub')
@@ -87,7 +87,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
     let call = operation.stationCall
 
     if (operation.local?.isMultiStation) {
-      call = `${call}-${operation.local.multiIdentifier ?? "0"}`
+      call = `${call}-${operation.local.multiIdentifier ?? '0'}`
     }
 
     // console.log('-- spot to APRS')
@@ -111,7 +111,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
         lonInfo.degrees.toString().padStart(3, '0'),
         lonInfo.fractionalMinutes.toFixed(2),
         lonInfo.direction,
-        '(',  // Symbol for car with antenna
+        '(', // Symbol for car with antenna
         message
       ].join('')
     } else {
@@ -127,7 +127,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
           'Content-Type': 'application/octet-stream',
           'Accept-Type': 'text/plain',
           'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
-          'Authorization': `APRS-IS ${base64.encode(header)}`
+          Authorization: `APRS-IS ${base64.encode(header)}`
         },
         body: `${call}>APRS,TCPIP*:${command}`
       })
@@ -155,17 +155,16 @@ export const SpotsHook = {
     const ref = findRef(operation, Info.activationType)
     const qp = qpData({ ref })
 
-    let spots = []
+    const spots = []
 
     const now = new Date()
 
     if (online && GLOBAL?.flags?.services?.qpmobiletracker !== false) {
-
       if (DEBUG) console.log('Fetching Mobile Tracker Spots', qp)
 
       try {
         const response = await fetchWithTimeout(`${MOBILE_TRACKER_SERVER}/stations.geojson`, {
-          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
         })
 
         if (response.ok) {
@@ -216,7 +215,7 @@ export const SpotsHook = {
         if (DEBUG) console.log('Fetching QP Hub Spots', url)
 
         const response = await fetchWithTimeout(url, {
-          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`
         })
 
         if (response.ok) {
@@ -241,7 +240,7 @@ export const SpotsHook = {
               mode: modeForFrequency(freq, { ituRegion: 2 }),
               refs: [{ type: Info.activationType, location: cells[3] }],
               spot: {
-                timeInMillis: Date.parse(cells[0] + "Z") ?? now,
+                timeInMillis: Date.parse(cells[0] + 'Z') ?? now,
                 source: Info.key,
                 subSource: `${Info.key}/qsopartyhub`,
                 icon: Info.icon,
@@ -272,7 +271,7 @@ export const SpotsHook = {
   }
 }
 
-function _aprsPasscodeForCall(call) {
+function _aprsPasscodeForCall (call) {
   call = call.toUpperCase()
   call = call.split('-')[0]
   let passcode = 29666
