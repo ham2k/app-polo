@@ -19,8 +19,7 @@ class MainApplication : Application(), ReactApplication, ShareApplication {
       context = applicationContext,
       packageList =
         PackageList(this).packages.apply {
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // add(MyReactNativePackage())
+          add(UDPModulePackage())
         }
     )
   }
