@@ -7,12 +7,38 @@
  */
 
 export const DEFAULT_LIVE_QSO_HTTP_URL = ''
+export const DEFAULT_LIVE_QSO_UDP_URL = ''
+
+export const LIVE_QSO_UDP_MESSAGE_FORMATS = {
+  rawADIF: 'raw-adif',
+  wsjtxCompatible: 'wsjt-x-compatible'
+}
+
+export const LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS = [
+  {
+    value: LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF,
+    title: 'Raw ADIF',
+    description: 'Log4OM, HRD, GridTracker'
+  },
+  {
+    value: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible,
+    title: 'WSJT-X compatible',
+    description: 'DXKeeper, HRD, AC Log, MacLoggerDX'
+  }
+]
 
 export function normalizeLiveQSOURL (url) {
   const trimmed = (url || '').trim()
   if (!trimmed) return ''
   if (/^[a-z]+:\/\//i.test(trimmed)) return trimmed
   return `http://${trimmed}`
+}
+
+export function normalizeLiveQSOUDPURL (url) {
+  const trimmed = (url || '').trim()
+  if (!trimmed) return ''
+  if (/^[a-z]+:\/\//i.test(trimmed)) return trimmed
+  return `udp://${trimmed}`
 }
 
 export function selectLiveQSOHTTPSettings (settings) {
@@ -23,8 +49,25 @@ export function selectLiveQSOHTTPSettings (settings) {
     url: normalizeLiveQSOURL(liveQSOSettings.url || DEFAULT_LIVE_QSO_HTTP_URL),
     individualRequests: liveQSOSettings.individualRequests === true,
     sendADIFHeader: liveQSOSettings.sendADIFHeader !== false,
-    sendEdits: liveQSOSettings.sendEdits === true
+    sendEdits: liveQSOSettings.sendEdits === true,
+    sendDeletes: liveQSOSettings.sendDeletes === true
   }
+}
+
+export function selectLiveQSOUDPSettings (settings) {
+  const liveQSOSettings = settings?.liveQSO?.udp || {}
+
+  return {
+    enabled: liveQSOSettings.enabled === true,
+    url: normalizeLiveQSOUDPURL(liveQSOSettings.url || DEFAULT_LIVE_QSO_UDP_URL),
+    messageFormat: liveQSOSettings.messageFormat || LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF,
+    sendEdits: liveQSOSettings.sendEdits === true,
+    sendDeletes: liveQSOSettings.sendDeletes === true
+  }
+}
+
+export function liveQSOUDPMessageFormatOption (messageFormat) {
+  return LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS.find((option) => option.value === messageFormat) || LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS[0]
 }
 
 export function summarizeLiveQSOURL (url, options = {}) {

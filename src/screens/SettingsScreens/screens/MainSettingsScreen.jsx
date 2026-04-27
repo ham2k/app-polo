@@ -393,7 +393,7 @@ function settingsScreensArray ({ t, includeMain, topLevelBack, splitView }) {
     />,
 
     <Stack.Screen name="LiveQSOSocketSettings" key="LiveQSOSocketSettings"
-      options={{ title: t('screens.liveQSOSocketSettings.title', 'ADIF over socket'), leftAction: topLevelBack ? 'back' : 'none' }}
+      options={{ title: t('screens.liveQSOUDPSettings.title', 'UDP ADIF'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={LiveQSOSocketSettingsScreen}
     />
 

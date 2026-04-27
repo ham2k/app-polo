@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { selectSettings } from '../../../store/settings'
-import { selectLiveQSOHTTPSettings, summarizeLiveQSOURL } from '../../../store/liveQSO'
+import { liveQSOUDPMessageFormatOption, selectLiveQSOHTTPSettings, selectLiveQSOUDPSettings, summarizeLiveQSOURL } from '../../../store/liveQSO'
 import { H2kListItem, H2kListSection } from '../../../ui'
 
 export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
@@ -24,9 +24,14 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
   const settings = useSelector(selectSettings)
 
   const httpSettings = selectLiveQSOHTTPSettings(settings)
+  const udpSettings = selectLiveQSOUDPSettings(settings)
+  const udpFormatOption = liveQSOUDPMessageFormatOption(udpSettings.messageFormat)
   const httpDescription = httpSettings.enabled
     ? t('screens.liveQSOSettings.httpEnabledDescription', 'Enabled • {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
     : t('screens.liveQSOSettings.httpDisabledDescription', 'Disabled • {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
+  const udpDescription = settings?.liveQSO?.udp?.messageFormat
+    ? t('screens.liveQSOSettings.udpSelectedDescription', '{{format}} • {{programs}}', { format: udpFormatOption.title, programs: udpFormatOption.description })
+    : t('screens.liveQSOSettings.udpDefaultDescription', 'Live logging with Log4OM, DXKeeper, MacLoggerDX, HRD and more')
 
   return (
     <ScreenContainer>
@@ -39,8 +44,8 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
             onPress={() => navigation.navigate('LiveQSOHTTPSettings')}
           />
           <H2kListItem
-            title={t('screens.liveQSOSettings.adifSocket.title', 'ADIF over socket')}
-            description={t('screens.liveQSOSettings.adifSocket.description', 'Planned transport. Not wired in this build yet.')}
+            title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
+            description={udpDescription}
             leftIcon="lan"
             onPress={() => navigation.navigate('LiveQSOSocketSettings')}
           />

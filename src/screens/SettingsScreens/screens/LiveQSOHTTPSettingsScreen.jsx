@@ -95,6 +95,15 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
             rightSwitchOnValueChange={(value) => mergeHTTPSettings({ sendEdits: value })}
             onPress={() => mergeHTTPSettings({ sendEdits: !httpSettings.sendEdits })}
           />
+
+          <H2kListItem
+            title={t('screens.liveQSOHTTPSettings.sendDeletes.title', 'Send deletes')}
+            description={httpSettings.sendDeletes ? t('screens.liveQSOHTTPSettings.sendDeletes.descriptionOn', 'Send deleted QSOs with HTTP DELETE') : t('screens.liveQSOHTTPSettings.sendDeletes.descriptionOff', 'Do not send deleted QSOs')}
+            leftIcon="delete-outline"
+            rightSwitchValue={httpSettings.sendDeletes}
+            rightSwitchOnValueChange={(value) => mergeHTTPSettings({ sendDeletes: value })}
+            onPress={() => mergeHTTPSettings({ sendDeletes: !httpSettings.sendDeletes })}
+          />
         </H2kListSection>
 
         <View style={{ height: safeAreaInsets.bottom }} />

@@ -21,8 +21,9 @@ function buildRequestVariants ({ baseRequest, httpSettings }) {
   return bodies.map((body) => ({ ...baseRequest, body }))
 }
 
-function buildLiveQSORequests ({ operation, qso, settings, ourInfo, httpSettings, method }) {
-  const exportOptions = dataExportOptions({ operation, qsos: [qso], settings, ourInfo })
+function buildLiveQSORequests ({ action, operation, qso, settings, ourInfo, httpSettings, method }) {
+  const qsoForExport = action === 'delete' ? { ...qso, deleted: false } : qso
+  const exportOptions = dataExportOptions({ operation, qsos: [qsoForExport], settings, ourInfo })
     .filter((option) => option?.format === 'adif')
 
   const selectedOptions = selectExportOptions({ exportOptions })
@@ -40,7 +41,7 @@ function buildLiveQSORequests ({ operation, qso, settings, ourInfo, httpSettings
         exportType: option.exportType ?? option.handler?.key ?? 'live-qso',
         body: qsonToADIF({
           operation: { ...operation, ...(option.exportData || {}) },
-          qsos: [qso],
+          qsos: [qsoForExport],
           settings,
           format: option.format,
           ...option
@@ -69,7 +70,7 @@ async function postLiveQSORequest (request) {
 
   if (!response.ok) {
     const text = await response.text()
-    throw new Error(`Live QSO POST failed: ${response.status} ${response.statusText} ${text}`.trim())
+    throw new Error(`Live QSO request failed: ${response.status} ${response.statusText} ${text}`.trim())
   }
 }
 
@@ -91,6 +92,7 @@ async function processQueue () {
       if (!method) continue
 
       const requests = buildLiveQSORequests({
+        action: work.action,
         operation,
         qso: work.qso,
         settings,
@@ -116,6 +118,7 @@ function methodForAction (action, httpSettings) {
   if (!httpSettings?.enabled || !httpSettings?.url) return undefined
   if (action === 'create') return 'POST'
   if (action === 'update' && httpSettings.sendEdits) return 'PUT'
+  if (action === 'delete' && httpSettings.sendDeletes) return 'DELETE'
   return undefined
 }
 
@@ -159,7 +162,11 @@ function splitADIFBody (body) {
 }
 
 export function enqueueLiveQSOPosts ({ getState, uuid, qsos, action = 'create' }) {
-  const activeQSOs = (qsos || []).filter((qso) => qso && !qso.event && !qso.deleted)
+  const activeQSOs = (qsos || []).filter((qso) => {
+    if (!qso || qso.event) return false
+    if (action === 'delete') return qso.deleted
+    return !qso.deleted
+  })
   activeQSOs.forEach((qso) => {
     queue.push({ getState, uuid, qso, action })
   })
