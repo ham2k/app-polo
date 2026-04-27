@@ -1,6 +1,6 @@
 /*
  * Copyright ©️ 2026 Sebastian Delmont <sd@ham2k.com>
- * and Richard YO3GND <dev.9425@yo3gnd.ro>
+ * Copyright ©️ 2026 Richard YO3GND <dev.9425@yo3gnd.ro>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -43,12 +43,6 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
             description={t('screens.liveQSOSettings.adifSocket.description', 'Planned transport. Not wired in this build yet.')}
             leftIcon="lan"
             onPress={() => navigation.navigate('LiveQSOSocketSettings')}
-          />
-          <H2kListItem
-            title={t('screens.liveQSOSettings.n1mm.title', 'N1MM style broadcast')}
-            description={t('screens.liveQSOSettings.n1mm.description', 'Planned transport. Not wired in this build yet.')}
-            leftIcon="broadcast"
-            onPress={() => navigation.navigate('LiveQSON1MMSettings')}
           />
         </H2kListSection>
 

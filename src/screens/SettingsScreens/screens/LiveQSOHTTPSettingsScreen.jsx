@@ -6,7 +6,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -15,8 +15,8 @@ import { useTranslation } from 'react-i18next'
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { mergeSettings, selectSettings } from '../../../store/settings'
-import { liveQSOExporterOptions, normalizeLiveQSOURL, selectLiveQSOHTTPSettings, summarizeLiveQSOURL } from '../../../store/liveQSO'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kDropDown, H2kListItem, H2kListSection, H2kText, H2kTextInput } from '../../../ui'
+import { normalizeLiveQSOURL, selectLiveQSOHTTPSettings, summarizeLiveQSOURL } from '../../../store/liveQSO'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kText, H2kTextInput } from '../../../ui'
 
 export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
   const { t } = useTranslation()
@@ -27,21 +27,13 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
   const dispatch = useDispatch()
 
   const httpSettings = selectLiveQSOHTTPSettings(settings)
-  const exporterOptions = useMemo(() => liveQSOExporterOptions({ settings, t }), [settings, t])
-  const exporterSummary = exporterOptions.find((option) => option.value === httpSettings.exporter)?.label ?? exporterOptions[0]?.label ?? ''
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
   const [draftURL, setDraftURL] = useState(httpSettings.url)
-  const [exporterDialogVisible, setExporterDialogVisible] = useState(false)
-  const [draftExporter, setDraftExporter] = useState(httpSettings.exporter)
 
   useEffect(() => {
     setDraftURL(httpSettings.url)
   }, [httpSettings.url])
-
-  useEffect(() => {
-    setDraftExporter(httpSettings.exporter)
-  }, [httpSettings.exporter])
 
   const mergeHTTPSettings = useCallback((partial) => {
     dispatch(mergeSettings({ liveQSO: { http: partial } }))
@@ -56,16 +48,6 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
     setDraftURL(httpSettings.url)
     setURLDialogVisible(false)
   }, [httpSettings.url])
-
-  const saveExporter = useCallback(() => {
-    mergeHTTPSettings({ exporter: draftExporter })
-    setExporterDialogVisible(false)
-  }, [draftExporter, mergeHTTPSettings])
-
-  const cancelExporterDialog = useCallback(() => {
-    setDraftExporter(httpSettings.exporter)
-    setExporterDialogVisible(false)
-  }, [httpSettings.exporter])
 
   return (
     <ScreenContainer>
@@ -85,13 +67,6 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
             description={summarizeLiveQSOURL(httpSettings.url, { maxLength: 56 })}
             leftIcon="webhook"
             onPress={() => setURLDialogVisible(true)}
-          />
-
-          <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.exporter.title', 'Exporter')}
-            description={exporterSummary}
-            leftIcon="file-swap-outline"
-            onPress={() => setExporterDialogVisible(true)}
           />
 
           <H2kListItem
@@ -144,27 +119,6 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
           <H2kDialogActions>
             <H2kButton onPress={cancelURLDialog}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
             <H2kButton onPress={saveURL}>{t('general.buttons.ok', 'Ok')}</H2kButton>
-          </H2kDialogActions>
-        </H2kDialog>
-      )}
-
-      {exporterDialogVisible && (
-        <H2kDialog visible={true} onDismiss={cancelExporterDialog}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSOHTTPSettings.exporter.dialogTitle', 'Choose exporter')}</H2kDialogTitle>
-          <H2kDialogContent>
-            <H2kDropDown
-              label={t('screens.liveQSOHTTPSettings.exporter.title', 'Exporter')}
-              value={draftExporter}
-              options={exporterOptions}
-              placeholder={t('screens.liveQSOHTTPSettings.exporter.placeholder', 'Select exporter')}
-              dropDownContainerMaxHeight={styles.oneSpace * 18}
-              style={{ width: '100%' }}
-              onChangeText={setDraftExporter}
-            />
-          </H2kDialogContent>
-          <H2kDialogActions>
-            <H2kButton onPress={cancelExporterDialog}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
-            <H2kButton onPress={saveExporter}>{t('general.buttons.ok', 'Ok')}</H2kButton>
           </H2kDialogActions>
         </H2kDialog>
       )}

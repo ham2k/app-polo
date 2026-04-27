@@ -11,7 +11,7 @@ import packageJson from '../../../package.json'
 import { qsonToADIF } from '../../tools/qsonToADIF'
 import { dataExportOptions, selectOperation, selectOperationCallInfo } from '../operations'
 import { selectSettings } from '../settings'
-import { DEFAULT_LIVE_QSO_EXPORTER, liveQSOExporterValueForOption, selectLiveQSOHTTPSettings } from './liveQSOSettings'
+import { selectLiveQSOHTTPSettings } from './liveQSOSettings'
 
 const queue = []
 let processing = false
@@ -25,7 +25,7 @@ function buildLiveQSORequests ({ operation, qso, settings, ourInfo, httpSettings
   const exportOptions = dataExportOptions({ operation, qsos: [qso], settings, ourInfo })
     .filter((option) => option?.format === 'adif')
 
-  const selectedOptions = selectExportOptions({ exportOptions, exporter: httpSettings.exporter })
+  const selectedOptions = selectExportOptions({ exportOptions })
 
   if (selectedOptions.length === 0) {
     return []
@@ -50,11 +50,9 @@ function buildLiveQSORequests ({ operation, qso, settings, ourInfo, httpSettings
   }).flat().filter((request) => request.body?.includes('<EOR>'))
 }
 
-function selectExportOptions ({ exportOptions, exporter = DEFAULT_LIVE_QSO_EXPORTER }) {
+function selectExportOptions ({ exportOptions }) {
   return exportOptions.filter((option) => {
-    if (liveQSOExporterValueForOption({ option, handler: option?.handler }) === exporter) return true
-    if (exporter === DEFAULT_LIVE_QSO_EXPORTER && option?.handler?.key === 'core-adif') return true
-    return false
+    return option?.exportType === 'full-adif' || option?.handler?.key === 'core-adif'
   })
 }
 
