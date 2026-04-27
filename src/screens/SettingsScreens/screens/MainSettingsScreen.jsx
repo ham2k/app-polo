@@ -34,6 +34,10 @@ import ExtensionScreen from './ExtensionScreen'
 import FeaturesSettingsScreen from './FeaturesSettingsScreen'
 import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
+import LiveQSOSettingsScreen from './LiveQSOSettingsScreen'
+import LiveQSOHTTPSettingsScreen from './LiveQSOHTTPSettingsScreen'
+import LiveQSOSocketSettingsScreen from './LiveQSOSocketSettingsScreen'
+import LiveQSON1MMSettingsScreen from './LiveQSON1MMSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
 import WavelogSettingsScreen from './WavelogSettingsScreen'
@@ -377,6 +381,26 @@ function settingsScreensArray ({ t, includeMain, topLevelBack, splitView }) {
     <Stack.Screen name="WavelogSettings" key="WavelogSettings"
       options={{ title: t('screens.wavelogSettings.title', 'Wavelog Settings'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={WavelogSettingsScreen}
+    />,
+
+    <Stack.Screen name="LiveQSOSettings" key="LiveQSOSettings"
+      options={{ title: t('screens.liveQSOSettings.title', 'Live QSO logging'), leftAction: topLevelBack ? 'back' : 'none' }}
+      component={LiveQSOSettingsScreen}
+    />,
+
+    <Stack.Screen name="LiveQSOHTTPSettings" key="LiveQSOHTTPSettings"
+      options={{ title: t('screens.liveQSOHTTPSettings.title', 'HTTP Endpoint'), leftAction: topLevelBack ? 'back' : 'none' }}
+      component={LiveQSOHTTPSettingsScreen}
+    />,
+
+    <Stack.Screen name="LiveQSOSocketSettings" key="LiveQSOSocketSettings"
+      options={{ title: t('screens.liveQSOSocketSettings.title', 'ADIF over socket'), leftAction: topLevelBack ? 'back' : 'none' }}
+      component={LiveQSOSocketSettingsScreen}
+    />,
+
+    <Stack.Screen name="LiveQSON1MMSettings" key="LiveQSON1MMSettings"
+      options={{ title: t('screens.liveQSON1MMSettings.title', 'N1MM style broadcast'), leftAction: topLevelBack ? 'back' : 'none' }}
+      component={LiveQSON1MMSettingsScreen}
     />
 
   ]

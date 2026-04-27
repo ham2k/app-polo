@@ -74,7 +74,7 @@ export const queryQSOs = async (query, params) => {
   return qsos
 }
 
-export const addQSO = ({ uuid, qso, synced = false, source }) => addQSOs({ uuid, qsos: [qso], synced, source })
+export const addQSO = ({ uuid, qso, synced = false, source, liveQSOAction }) => addQSOs({ uuid, qsos: [qso], synced, source, liveQSOAction })
 
 export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
   const qso = {
@@ -93,7 +93,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
 
 const DEBUG = false
 
-export const addQSOs = ({ uuid, qsos, synced = false, source }) => async (dispatch, getState) => {
+export const addQSOs = ({ uuid, qsos, synced = false, source, liveQSOAction }) => async (dispatch, getState) => {
   const now = Date.now()
 
   if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
@@ -168,7 +168,7 @@ export const addQSOs = ({ uuid, qsos, synced = false, source }) => async (dispat
     setImmediate(() => {
       sendQSOsToSyncService({ dispatch, getState })
       if (source === 'logging-panel') {
-        enqueueLiveQSOPosts({ getState, uuid, qsos })
+        enqueueLiveQSOPosts({ getState, uuid, qsos, action: liveQSOAction })
       }
       if (DEBUG) logTimer('addQSOs', 'done updating operation')
     })
