@@ -8,14 +8,14 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { mergeSettings, selectSettings } from '../../../store/settings'
-import { normalizeLiveQSOURL, selectLiveQSOHTTPSettings, summarizeLiveQSOURL } from '../../../store/liveQSO'
+import { normalizeLiveQSOURL, selectLiveQSOHTTPSettings, sendLiveQSOHTTPTest, summarizeLiveQSOURL } from '../../../store/liveQSO'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kText, H2kTextInput } from '../../../ui'
 
 export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
@@ -48,6 +48,25 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
     setDraftURL(httpSettings.url)
     setURLDialogVisible(false)
   }, [httpSettings.url])
+
+  const sendTestMessage = useCallback(async () => {
+    try {
+      const result = await sendLiveQSOHTTPTest({ settings: httpSettings })
+      const body = result.ok
+        ? t('screens.liveQSOHTTPSettings.test.successBodyOk', 'Done. Response = {{status}}\nSend successful!', { status: result.status })
+        : t('screens.liveQSOHTTPSettings.test.successBodyStatus', 'Done. Response = {{status}}', { status: result.status })
+
+      Alert.alert(
+        t('screens.liveQSOHTTPSettings.test.successTitle', 'HTTP test sent'),
+        body
+      )
+    } catch (error) {
+      Alert.alert(
+        t('screens.liveQSOHTTPSettings.test.errorTitle', 'Error sending HTTP test'),
+        error?.message ?? t('screens.liveQSOHTTPSettings.test.errorBody', 'Unknown error')
+      )
+    }
+  }, [httpSettings, t])
 
   return (
     <ScreenContainer>
@@ -103,6 +122,13 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
             rightSwitchValue={httpSettings.sendDeletes}
             rightSwitchOnValueChange={(value) => mergeHTTPSettings({ sendDeletes: value })}
             onPress={() => mergeHTTPSettings({ sendDeletes: !httpSettings.sendDeletes })}
+          />
+
+          <H2kListItem
+            title={t('screens.liveQSOHTTPSettings.test.title', 'Send test ADIF')}
+            description={t('screens.liveQSOHTTPSettings.test.description', 'Sends a test QSO to the configured URL')}
+            leftIcon="send-outline"
+            onPress={sendTestMessage}
           />
         </H2kListSection>
 

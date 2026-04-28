@@ -22,6 +22,20 @@ const WSJTX_SCHEMA_NUMBER = 3
 const WSJTX_LOGGED_ADIF_TYPE = 12
 const WSJTX_SENDER_ID = `Ham2K-PoLo/${packageJson.version}`
 
+function formatADIFDateTime (date = new Date()) {
+  const year = date.getFullYear()
+  const month = `${date.getMonth() + 1}`.padStart(2, '0')
+  const day = `${date.getDate()}`.padStart(2, '0')
+  const hours = `${date.getHours()}`.padStart(2, '0')
+  const minutes = `${date.getMinutes()}`.padStart(2, '0')
+  const seconds = `${date.getSeconds()}`.padStart(2, '0')
+
+  return {
+    qsoDate: `${year}${month}${day}`,
+    timeOn: `${hours}${minutes}${seconds}`
+  }
+}
+
 function buildRequestVariants ({ baseRequest, httpSettings }) {
   const bodies = adifBodiesForRequest(baseRequest.body, httpSettings)
   return bodies.map((body) => ({ ...baseRequest, body }))
@@ -247,6 +261,50 @@ function adifDatagramsForExport (entry, udpSettings) {
       payload: adifText
     }
   })
+}
+
+export function buildLiveQSOTestADIF (date = new Date()) {
+  const { qsoDate, timeOn } = formatADIFDateTime(date)
+
+  return [
+    'ADIF test from Ham2K PoLo',
+    '<ADIF_VER:5>3.1.5',
+    '<PROGRAMID:21>Ham2K Portable Logger',
+    `<PROGRAMVERSION:${packageJson.version.length}>${packageJson.version}`,
+    '<EOH>',
+    `<CALL:6>N0CALL <MODE:2>CW <BAND:3>20m <FREQ:9>14.069000 <QSO_DATE:8>${qsoDate} <TIME_ON:6>${timeOn} <EOR>`
+  ].join('\n')
+}
+
+export async function sendLiveQSOHTTPTest ({ settings, date = new Date() }) {
+  const response = await fetch(settings?.url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'User-Agent': `Ham2K-PoLo/${packageJson.version}`,
+      'X-Ham2K-Export-Type': 'full-adif'
+    },
+    body: buildLiveQSOTestADIF(date)
+  })
+
+  return {
+    ok: response.ok,
+    status: response.status
+  }
+}
+
+export async function sendLiveQSOUDPTest ({ settings, date = new Date() }) {
+  const datagrams = adifDatagramsForExport({
+    exportType: 'full-adif',
+    body: buildLiveQSOTestADIF(date)
+  }, settings)
+
+  for (const datagram of datagrams) {
+    await postLiveQSOUDPDatagram({
+      url: settings?.url,
+      ...datagram
+    })
+  }
 }
 
 export function enqueueLiveQSOPosts ({ getState, uuid, qsos, action = 'create' }) {

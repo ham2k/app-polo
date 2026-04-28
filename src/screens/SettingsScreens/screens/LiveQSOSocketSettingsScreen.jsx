@@ -20,7 +20,7 @@ import {
   LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS,
   liveQSOUDPMessageFormatOption,
   normalizeLiveQSOUDPURL,
-  sendUDPMessage,
+  sendLiveQSOUDPTest,
   selectLiveQSOUDPSettings,
   summarizeLiveQSOUDPURL
 } from '../../../store/liveQSO'
@@ -76,15 +76,11 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
   const sendTestMessage = useCallback(async () => {
     try {
-      await sendUDPMessage({
-        url: udpSettings.url,
-        payload: 'TEST\n',
-        broadcast: false
-      })
+      await sendLiveQSOUDPTest({ settings: udpSettings })
 
       Alert.alert(
         t('screens.liveQSOUDPSettings.test.successTitle', 'UDP test sent'),
-        t('screens.liveQSOUDPSettings.test.successBody', 'Sent TEST to {{url}}', { url: displayLiveQSOUDPURL(udpSettings.url) })
+        t('screens.liveQSOUDPSettings.test.successBody', 'Done.')
       )
     } catch (error) {
       Alert.alert(
@@ -92,7 +88,7 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
         error?.message ?? t('screens.liveQSOUDPSettings.test.errorBody', 'Unknown error')
       )
     }
-  }, [t, udpSettings.url])
+  }, [t, udpSettings])
 
   return (
     <ScreenContainer>
@@ -122,13 +118,6 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOUDPSettings.test.title', 'Send test message')}
-            description={t('screens.liveQSOUDPSettings.test.description', 'Send TEST to the configured UDP target')}
-            leftIcon="send-outline"
-            onPress={sendTestMessage}
-          />
-
-          <H2kListItem
             title={t('screens.liveQSOUDPSettings.sendEdits.title', 'Send edits')}
             description={udpSettings.sendEdits ? t('screens.liveQSOUDPSettings.sendEdits.descriptionOn', 'Send edited QSOs over UDP') : t('screens.liveQSOUDPSettings.sendEdits.descriptionOff', 'Do not send edited QSOs')}
             leftIcon="file-edit-outline"
@@ -138,12 +127,10 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOUDPSettings.sendDeletes.title', 'Send deletes')}
-            description={udpSettings.sendDeletes ? t('screens.liveQSOUDPSettings.sendDeletes.descriptionOn', 'Send deleted QSOs over UDP') : t('screens.liveQSOUDPSettings.sendDeletes.descriptionOff', 'Do not send deleted QSOs')}
-            leftIcon="delete-outline"
-            rightSwitchValue={udpSettings.sendDeletes}
-            rightSwitchOnValueChange={(value) => mergeUDPSettings({ sendDeletes: value })}
-            onPress={() => mergeUDPSettings({ sendDeletes: !udpSettings.sendDeletes })}
+            title={t('screens.liveQSOUDPSettings.test.title', 'Send test ADIF')}
+            description={t('screens.liveQSOUDPSettings.test.description', 'Sends a test QSO to the configured URL')}
+            leftIcon="send-outline"
+            onPress={sendTestMessage}
           />
         </H2kListSection>
         <View style={{ height: safeAreaInsets.bottom }} />
