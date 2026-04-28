@@ -11,11 +11,16 @@ import packageJson from '../../../package.json'
 import { qsonToADIF } from '../../tools/qsonToADIF'
 import { dataExportOptions, selectOperation, selectOperationCallInfo } from '../operations'
 import { selectSettings } from '../settings'
-import { sendUDPMessage } from './liveQSOUDPNative'
+import { sendUDPMessage, sendWSJTXLoggedADIFMessage } from './liveQSOUDPNative'
 import { LIVE_QSO_UDP_MESSAGE_FORMATS, selectLiveQSOHTTPSettings, selectLiveQSOUDPSettings } from './liveQSOSettings'
+import { WSJTXLoggedADIFMessage } from './liveQSOWSJTXMessage'
 
 const queue = []
 let processing = false
+const WSJTX_MAGIC_NUMBER = 0xadbccbda
+const WSJTX_SCHEMA_NUMBER = 3
+const WSJTX_LOGGED_ADIF_TYPE = 12
+const WSJTX_SENDER_ID = `Ham2K-PoLo/${packageJson.version}`
 
 function buildRequestVariants ({ baseRequest, httpSettings }) {
   const bodies = adifBodiesForRequest(baseRequest.body, httpSettings)
@@ -61,9 +66,9 @@ function buildLiveQSORequests ({ exports, httpSettings, method }) {
 
 function buildLiveQSOUDPDatagrams ({ exports, udpSettings }) {
   return exports.map((entry) => {
-    return adifDatagramsForExport(entry.body, udpSettings).map((payload) => ({
+    return adifDatagramsForExport(entry, udpSettings).map((payload) => ({
       url: udpSettings.url,
-      payload
+      ...payload
     }))
   }).flat()
 }
@@ -92,6 +97,15 @@ async function postLiveQSORequest (request) {
 }
 
 async function postLiveQSOUDPDatagram (datagram) {
+  if (datagram.wsjtxMessage) {
+    await sendWSJTXLoggedADIFMessage({
+      url: datagram.url,
+      message: datagram.wsjtxMessage,
+      broadcast: false
+    })
+    return
+  }
+
   await sendUDPMessage({
     url: datagram.url,
     payload: datagram.payload,
@@ -208,17 +222,30 @@ function splitADIFBody (body) {
   return { header, records }
 }
 
-function adifDatagramsForExport (body, udpSettings) {
+function adifDatagramsForExport (entry, udpSettings) {
+  const { body } = entry
   const { header, records } = splitADIFBody(body)
-  if (records.length === 0) return body ? [body] : []
+  if (records.length === 0) {
+    return body ? [{ payload: body }] : []
+  }
 
   return records.map((record) => {
+    const adifText = `${header}${record}\n`
     if (udpSettings.messageFormat === LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible) {
-      // FIXME: wrap this single-record ADIF payload in a WSJT-X compatible UDP packet.
-      return `${header}${record}\n`
+      return {
+        wsjtxMessage: new WSJTXLoggedADIFMessage({
+          magicNumber: WSJTX_MAGIC_NUMBER,
+          schemaNumber: WSJTX_SCHEMA_NUMBER,
+          messageType: WSJTX_LOGGED_ADIF_TYPE,
+          senderId: WSJTX_SENDER_ID,
+          adifText
+        })
+      }
     }
 
-    return `${header}${record}\n`
+    return {
+      payload: adifText
+    }
   })
 }
 

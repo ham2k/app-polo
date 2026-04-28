@@ -24,6 +24,29 @@ export async function sendUDPMessage ({ url, payload, broadcast = false }) {
   return UDPModule.send(host, port, `${payload ?? ''}`, { broadcast })
 }
 
+export async function sendWSJTXLoggedADIFMessage ({ url, message, broadcast = false }) {
+  if (Platform.OS !== 'android') {
+    throw new Error('UDP sending is only available on Android')
+  }
+
+  if (!UDPModule?.sendWSJTXLoggedADIF) {
+    throw new Error('WSJT-X UDP native method is not available')
+  }
+
+  const { host, port } = parseUDPURL(url)
+
+  return UDPModule.sendWSJTXLoggedADIF(
+    host,
+    port,
+    message.magicNumber,
+    message.schemaNumber,
+    message.messageType,
+    `${message.senderId ?? ''}`,
+    `${message.adifText ?? ''}`,
+    { broadcast }
+  )
+}
+
 export function parseUDPURL (url) {
   const trimmed = `${url ?? ''}`.trim()
   const normalized = /^[a-z]+:\/\//i.test(trimmed) ? trimmed : `udp://${trimmed}`
