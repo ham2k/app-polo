@@ -41,6 +41,10 @@ export function normalizeLiveQSOUDPURL (url) {
   return `udp://${trimmed}`
 }
 
+export function displayLiveQSOUDPURL (url) {
+  return normalizeLiveQSOUDPURL(url).replace(/^udp:\/\//i, '')
+}
+
 export function selectLiveQSOHTTPSettings (settings) {
   const liveQSOSettings = settings?.liveQSO?.http || {}
 
@@ -77,4 +81,13 @@ export function summarizeLiveQSOURL (url, options = {}) {
   if (!normalized) return empty
   if (normalized.length <= maxLength) return normalized
   return `${normalized.slice(0, maxLength - 1)}…`
+}
+
+export function summarizeLiveQSOUDPURL (url, options = {}) {
+  const { empty = 'No URL configured', maxLength = 42 } = options
+  const displayURL = displayLiveQSOUDPURL(url)
+
+  if (!displayURL) return empty
+  if (displayURL.length <= maxLength) return displayURL
+  return `${displayURL.slice(0, maxLength - 1)}…`
 }

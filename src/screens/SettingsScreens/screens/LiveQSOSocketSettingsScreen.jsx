@@ -8,7 +8,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -16,11 +16,13 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { mergeSettings, selectSettings } from '../../../store/settings'
 import {
+  displayLiveQSOUDPURL,
   LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS,
   liveQSOUDPMessageFormatOption,
   normalizeLiveQSOUDPURL,
+  sendUDPMessage,
   selectLiveQSOUDPSettings,
-  summarizeLiveQSOURL
+  summarizeLiveQSOUDPURL
 } from '../../../store/liveQSO'
 import {
   H2kButton,
@@ -47,10 +49,10 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
   const [formatDialogVisible, setFormatDialogVisible] = useState(false)
-  const [draftURL, setDraftURL] = useState(udpSettings.url)
+  const [draftURL, setDraftURL] = useState(displayLiveQSOUDPURL(udpSettings.url))
 
   useEffect(() => {
-    setDraftURL(udpSettings.url)
+    setDraftURL(displayLiveQSOUDPURL(udpSettings.url))
   }, [udpSettings.url])
 
   const mergeUDPSettings = useCallback((partial) => {
@@ -72,6 +74,26 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
     setFormatDialogVisible(false)
   }, [mergeUDPSettings])
 
+  const sendTestMessage = useCallback(async () => {
+    try {
+      await sendUDPMessage({
+        url: udpSettings.url,
+        payload: 'TEST\n',
+        broadcast: false
+      })
+
+      Alert.alert(
+        t('screens.liveQSOUDPSettings.test.successTitle', 'UDP test sent'),
+        t('screens.liveQSOUDPSettings.test.successBody', 'Sent TEST to {{url}}', { url: displayLiveQSOUDPURL(udpSettings.url) })
+      )
+    } catch (error) {
+      Alert.alert(
+        t('screens.liveQSOUDPSettings.test.errorTitle', 'Error sending UDP test'),
+        error?.message ?? t('screens.liveQSOUDPSettings.test.errorBody', 'Unknown error')
+      )
+    }
+  }, [t, udpSettings.url])
+
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
@@ -87,7 +109,7 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
           <H2kListItem
             title={t('screens.liveQSOUDPSettings.url.title', 'Set URL')}
-            description={summarizeLiveQSOURL(udpSettings.url, { maxLength: 56 })}
+            description={summarizeLiveQSOUDPURL(udpSettings.url, { maxLength: 56 })}
             leftIcon="webhook"
             onPress={() => setURLDialogVisible(true)}
           />
@@ -97,6 +119,13 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
             description={t('screens.liveQSOUDPSettings.messageFormat.description', '{{format}} • {{programs}}', { format: selectedFormat.title, programs: selectedFormat.description })}
             leftIcon="format-list-bulleted"
             onPress={() => setFormatDialogVisible(true)}
+          />
+
+          <H2kListItem
+            title={t('screens.liveQSOUDPSettings.test.title', 'Send test message')}
+            description={t('screens.liveQSOUDPSettings.test.description', 'Send TEST to the configured UDP target')}
+            leftIcon="send-outline"
+            onPress={sendTestMessage}
           />
 
           <H2kListItem
@@ -129,7 +158,7 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={draftURL}
               label={t('screens.liveQSOUDPSettings.url.inputLabel', 'Target URL')}
-              placeholder={t('screens.liveQSOUDPSettings.url.placeholder', 'udp://example.local:2237')}
+              placeholder={t('screens.liveQSOUDPSettings.url.placeholder', 'example.local:2237')}
               keyboard="dumb"
               autoCapitalize="none"
               autoCorrect={false}
