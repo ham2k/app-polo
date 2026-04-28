@@ -11,7 +11,8 @@ import packageJson from '../../../package.json'
 import { qsonToADIF } from '../../tools/qsonToADIF'
 import { dataExportOptions, selectOperation, selectOperationCallInfo } from '../operations'
 import { selectSettings } from '../settings'
-import { selectLiveQSOHTTPSettings } from './liveQSOSettings'
+import { sendUDPMessage } from './liveQSOUDPNative'
+import { LIVE_QSO_UDP_MESSAGE_FORMATS, selectLiveQSOHTTPSettings, selectLiveQSOUDPSettings } from './liveQSOSettings'
 
 const queue = []
 let processing = false
@@ -21,7 +22,7 @@ function buildRequestVariants ({ baseRequest, httpSettings }) {
   return bodies.map((body) => ({ ...baseRequest, body }))
 }
 
-function buildLiveQSORequests ({ action, operation, qso, settings, ourInfo, httpSettings, method }) {
+function buildLiveQSOExports ({ action, operation, qso, settings, ourInfo }) {
   const qsoForExport = action === 'delete' ? { ...qso, deleted: false } : qso
   const exportOptions = dataExportOptions({ operation, qsos: [qsoForExport], settings, ourInfo })
     .filter((option) => option?.format === 'adif')
@@ -32,23 +33,39 @@ function buildLiveQSORequests ({ action, operation, qso, settings, ourInfo, http
     return []
   }
 
-  return selectedOptions.map((option) => {
+  return selectedOptions.map((option) => ({
+    exportType: option.exportType ?? option.handler?.key ?? 'live-qso',
+    body: qsonToADIF({
+      operation: { ...operation, ...(option.exportData || {}) },
+      qsos: [qsoForExport],
+      settings,
+      format: option.format,
+      ...option
+    })
+  })).filter((entry) => entry.body?.includes('<EOR>'))
+}
+
+function buildLiveQSORequests ({ exports, httpSettings, method }) {
+  return exports.map((entry) => {
     return buildRequestVariants({
       httpSettings,
       baseRequest: {
         url: httpSettings.url,
         method,
-        exportType: option.exportType ?? option.handler?.key ?? 'live-qso',
-        body: qsonToADIF({
-          operation: { ...operation, ...(option.exportData || {}) },
-          qsos: [qsoForExport],
-          settings,
-          format: option.format,
-          ...option
-        })
+        exportType: entry.exportType,
+        body: entry.body
       }
     })
-  }).flat().filter((request) => request.body?.includes('<EOR>'))
+  }).flat()
+}
+
+function buildLiveQSOUDPDatagrams ({ exports, udpSettings }) {
+  return exports.map((entry) => {
+    return adifDatagramsForExport(entry.body, udpSettings).map((payload) => ({
+      url: udpSettings.url,
+      payload
+    }))
+  }).flat()
 }
 
 function selectExportOptions ({ exportOptions }) {
@@ -74,6 +91,14 @@ async function postLiveQSORequest (request) {
   }
 }
 
+async function postLiveQSOUDPDatagram (datagram) {
+  await sendUDPMessage({
+    url: datagram.url,
+    payload: datagram.payload,
+    broadcast: false
+  })
+}
+
 async function processQueue () {
   if (processing) return
   processing = true
@@ -85,24 +110,41 @@ async function processQueue () {
       const state = work.getState()
       const settings = selectSettings(state)
       const httpSettings = selectLiveQSOHTTPSettings(settings)
+      const udpSettings = selectLiveQSOUDPSettings(settings)
       const operation = selectOperation(state, work.uuid)
       const ourInfo = selectOperationCallInfo(state, work.uuid)
-      const method = methodForAction(work.action, httpSettings)
-
-      if (!method) continue
-
-      const requests = buildLiveQSORequests({
+      const exports = buildLiveQSOExports({
         action: work.action,
         operation,
         qso: work.qso,
         settings,
-        ourInfo,
-        httpSettings,
-        method
+        ourInfo
       })
 
-      for (const request of requests) {
-        await postLiveQSORequest(request)
+      if (exports.length === 0) continue
+
+      const method = methodForAction(work.action, httpSettings)
+      if (method) {
+        const requests = buildLiveQSORequests({
+          exports,
+          httpSettings,
+          method
+        })
+
+        for (const request of requests) {
+          await postLiveQSORequest(request)
+        }
+      }
+
+      if (udpEnabledForAction(work.action, udpSettings)) {
+        const datagrams = buildLiveQSOUDPDatagrams({
+          exports,
+          udpSettings
+        })
+
+        for (const datagram of datagrams) {
+          await postLiveQSOUDPDatagram(datagram)
+        }
       }
     } catch (error) {
       console.error('[LiveQSO] Error sending QSO', error)
@@ -120,6 +162,11 @@ function methodForAction (action, httpSettings) {
   if (action === 'update' && httpSettings.sendEdits) return 'PUT'
   if (action === 'delete' && httpSettings.sendDeletes) return 'DELETE'
   return undefined
+}
+
+function udpEnabledForAction (action, udpSettings) {
+  if (!udpSettings?.enabled || !udpSettings?.url) return false
+  return action === 'create'
 }
 
 function adifBodiesForRequest (body, httpSettings) {
@@ -159,6 +206,20 @@ function splitADIFBody (body) {
     .map((part) => `${part} <EOR>`)
 
   return { header, records }
+}
+
+function adifDatagramsForExport (body, udpSettings) {
+  const { header, records } = splitADIFBody(body)
+  if (records.length === 0) return body ? [body] : []
+
+  return records.map((record) => {
+    if (udpSettings.messageFormat === LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible) {
+      // FIXME: wrap this single-record ADIF payload in a WSJT-X compatible UDP packet.
+      return `${header}${record}\n`
+    }
+
+    return `${header}${record}\n`
+  })
 }
 
 export function enqueueLiveQSOPosts ({ getState, uuid, qsos, action = 'create' }) {
