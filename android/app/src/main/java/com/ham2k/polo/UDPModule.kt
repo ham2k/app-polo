@@ -11,8 +11,11 @@ import java.net.DatagramSocket
 import java.net.InetAddress
 
 class UDPModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaModule(reactContext) {
+  companion object {
+    const val NAME = "UDPModule"
+  }
 
-  override fun getName(): String = "UDPModule"
+  override fun getName(): String = NAME
 
   @ReactMethod
   fun send(host: String, port: Int, payload: String, options: ReadableMap?, promise: Promise) {
