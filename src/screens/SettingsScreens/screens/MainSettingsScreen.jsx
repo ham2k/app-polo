@@ -36,6 +36,7 @@ import GeneralSettingsScreen from './GeneralSettingsScreen'
 import LoggingSettingsScreen from './LoggingSettingsScreen'
 import LiveQSOSettingsScreen from './LiveQSOSettingsScreen'
 import LiveQSOHTTPSettingsScreen from './LiveQSOHTTPSettingsScreen'
+import LiveQSON1MMSettingsScreen from './LiveQSON1MMSettingsScreen'
 import LiveQSOSocketSettingsScreen from './LiveQSOSocketSettingsScreen'
 import VersionSettingsScreen from './VersionSettingsScreen'
 import SyncSettingsScreen from './SyncSettingsScreen'
@@ -395,6 +396,11 @@ function settingsScreensArray ({ t, includeMain, topLevelBack, splitView }) {
     <Stack.Screen name="LiveQSOSocketSettings" key="LiveQSOSocketSettings"
       options={{ title: t('screens.liveQSOUDPSettings.title', 'UDP ADIF'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={LiveQSOSocketSettingsScreen}
+    />,
+
+    <Stack.Screen name="LiveQSON1MMSettings" key="LiveQSON1MMSettings"
+      options={{ title: t('screens.liveQSON1MMSettings.title', 'N1MM Broadcast'), leftAction: topLevelBack ? 'back' : 'none' }}
+      component={LiveQSON1MMSettingsScreen}
     />
 
   ]
