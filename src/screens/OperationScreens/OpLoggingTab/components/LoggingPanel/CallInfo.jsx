@@ -49,7 +49,7 @@ export const MESSAGES_FOR_SCORING = {
 
 const DEBUG = false
 
-export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, styles, themeColor, updateQSO, settings }) {
+export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, styles, themeColor, setQSO, settings }) {
   const { t } = useTranslation()
 
   const navigation = useNavigation()
@@ -67,10 +67,6 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
   useEffect(() => { // Merge all data sources and update guesses and QSO
     // console.log('CallInfo effect', { qsoCall: theirCall, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status })
     if (theirCall === call && status && qso?.their?.lookup?.status !== status) {
-      // console.log('-- updateQSO!')
-      // We need to first clear the guess and lookup, otherwise the new values will be merged with the old ones
-      updateQSO && updateQSO({ their: { guess: undefined, lookup: undefined } })
-
       const updates = { their: { guess, lookup: { ...lookup, status } } }
 
       if (guess?.refs?.length > 0) {
@@ -82,10 +78,11 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
         }
       }
 
-      // Then we update the QSO with the new values
-      updateQSO && updateQSO(updates)
+      // We need to do explicit merging, instead of relying on the deepMerge in updateQSO
+      // because refs, their.guess and their.lookup should be replaced, not merged
+      setQSO && setQSO({ ...qso, ...updates, their: { ...qso.their, ...updates.their } })
     }
-  }, [updateQSO, guess, lookup, call, theirCall, qso?.their?.lookup?.status, status, qso?.their?.guess?.state, qso?.their?.guess?.name, when, qso?.refs])
+  }, [guess, lookup, call, theirCall, qso.their?.lookup?.status, status, qso.their?.guess?.state, qso.their?.guess?.name, when, qso.refs, qso, setQSO])
 
   const [locationInfo, flag] = useMemo(() => {
     let isOnTheGo = (lookup?.dxccCode && lookup?.dxccCode !== guess.dxccCode)

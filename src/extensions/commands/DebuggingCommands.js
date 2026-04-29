@@ -20,6 +20,7 @@ import { logTimer } from '../../tools/perfTools'
 import { annotateQSO } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 import { getAllCallsFromNotes } from '../data/call-notes/CallNotesExtension'
 import { refreshCrowdInTranslations } from '../../i18n/i18n'
+import { setStateForComponentAndKey } from '../../store/ui'
 
 const Info = {
   key: 'commands-debug',
@@ -108,10 +109,10 @@ Five Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tem
       action: 'dialog',
       actionArgs: {
         dialogTitle: title ? `${title} Dialog` : undefined,
-        dialogText: dialogText,
+        dialogText,
         dialogActions: [
           { label: 'Change', action: 'navigate', args: ['Settings', { screen: 'DataSettings' }] },
-          { label: 'RTFM', action: 'link', args: { url: 'https://polo.ham2k.com/docs' } },
+          { label: 'RTFM', action: 'link', args: { url: 'https://polo.ham2k.com/docs' } }
         ]
       }
     }))
@@ -228,7 +229,7 @@ const SeedCommandHook = {
     const count = parseInt(match[1], 10)
     return `Seed the log with ${count} QSOs?`
   },
-  invokeCommand: (match, { t, handleFieldChange, handleSubmit, updateLoggingState, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
+  invokeCommand: (match, { t, handleFieldChange, handleSubmit, dispatch, qso, vfo, operation, settings, online, ourInfo }) => {
     if (!operation) return
 
     let count = parseInt(match[1], 10)
@@ -238,9 +239,9 @@ const SeedCommandHook = {
 
         const times = []
         for (let i = 0; i < count; i++) {
-          const t = poissonRandom(120) * 1000 // mean of 120 seconds per QSO
-          times.push(t)
-          startAtMillis -= t
+          const time = poissonRandom(120) * 1000 // mean of 120 seconds per QSO
+          times.push(time)
+          startAtMillis -= time
         }
         const calls = getAllCallsFromNotes().filter(x => x)
         if (calls.length === 0) calls.concat(['KI2D', 'M1SDH', 'EI5IYB', 'M0LZN', 'WV3H', 'LB4FH', 'VK1AO'])
@@ -280,7 +281,8 @@ const SeedCommandHook = {
         }
         console.log('adding', qsos)
         await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
-        updateLoggingState({ selectedUUID: undefined, lastUUID: qsos[qsos.length - 1]?.uuid })
+        await dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'selectedUUID', value: undefined }))
+        await dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'lastUUID', value: qsos[qsos.length - 1]?.uuid }))
 
         logTimer('seeding', 'Done seeding')
       } catch (e) {
@@ -302,7 +304,6 @@ const RefreshCrowdInTranslationsCommandHook = {
     } else {
       return `Refresh [${i18n.language}] CrowdIn translations?`
     }
-    return 'Refresh CrowdIn translations?'
   },
   invokeCommand: (match, { dispatch, settings, i18n, t }) => {
     const all = match[1] === 'CROWDINALL'
@@ -314,7 +315,6 @@ const RefreshCrowdInTranslationsCommandHook = {
     } else {
       return `Refreshing [${i18n.language}] CrowdIn translations…`
     }
-    return 'Refreshing CrowdIn translations…'
   }
 }
 
@@ -366,20 +366,22 @@ const RecoverBackupCommandHook = {
   match: /^(RECOVER!)$/i,
   allowSpaces: true,
   describeCommand: (match, { i18n, settings, t }) => {
-    return "Recover local dabatase backup?"
+    return 'Recover local dabatase backup?'
   },
   invokeCommand: (match, { dispatch, settings, t }) => {
     setImmediate(async () => {
       const tables = await dbSelectAll("SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name")
       console.log('tables', tables)
-      const backups = tables.map(t => {
-        const match = t.name.match(/^bkp_(\d+)_(.*)$/)
-        if (match) {
+      const backups = tables.map(table => {
+        const matches = table.name.match(/^bkp_(\d+)_(.*)$/)
+        if (matches) {
           return {
             backupTable: t.name,
-            timestamp: match[1],
-            tableName: match[2]
+            timestamp: matches[1],
+            tableName: matches[2]
           }
+        } else {
+          return false
         }
       }).filter(Boolean)
       console.log('backups', backups)
@@ -390,11 +392,11 @@ const RecoverBackupCommandHook = {
       })
       await dispatch(loadOperations())
     })
-    return "Recovering local database backup…"
+    return 'Recovering local database backup…'
   }
 }
 
-function randomRST(mode) {
+function randomRST (mode) {
   const n = Math.min(poissonRandom(7), 9)
   if (mode === 'CW' || mode === 'RTTY') {
     return `${Math.min(n, 5)}${n}${n}`
@@ -402,4 +404,3 @@ function randomRST(mode) {
     return `${Math.min(n, 5)}${n}`
   }
 }
-

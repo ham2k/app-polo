@@ -49,7 +49,7 @@ const PositionedControlChip = (props) => {
 }
 
 export const SecondaryControlSelectionsubPanel = ({
-  qso, operation, vfo, settings, navigation, setQSO, updateQSO, handleFieldChange, onSubmitEditing, focusedRef, styles,
+  qso, operation, vfo, settings, navigation, updateQSO, handleFieldChange, onSubmitEditing, focusedRef, styles,
   themeColor, currentSecondaryControl, setCurrentSecondaryControl,
   allControls, enabledControls
 }) => {
@@ -141,7 +141,6 @@ export const SecondaryControlSelectionsubPanel = ({
             style={secondaryComponentStyle} styles={styles} themeColor={themeColor}
             handleFieldChange={handleFieldChange}
             setCurrentSecondaryControl={setCurrentSecondaryControl}
-            setQSO={setQSO}
             updateQSO={updateQSO}
             onSubmitEditing={onSubmitEditing}
             focusedRef={focusedRef}

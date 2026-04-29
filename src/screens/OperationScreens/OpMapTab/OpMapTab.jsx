@@ -19,9 +19,10 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../../store/operations'
 import { selectQSOs } from '../../../store/qsos'
 import { selectSettings } from '../../../store/settings'
-import { useSelectorConditionally, useUIStateConditionally } from '../../components/useConditionally'
+import { useSelectorConditionally } from '../../components/useConditionally'
 
 import MapWithQSOs from './components/MapWithQSOs'
+import { selectStateForComponentAndKey } from '../../../store/ui'
 
 export default function OpMapTab ({ navigation, route }) {
   const { t } = useTranslation()
@@ -32,11 +33,13 @@ export default function OpMapTab ({ navigation, route }) {
 
   const isFocused = useIsFocused()
   const settings = useSelectorConditionally(isFocused, selectSettings)
+  console.log('⁉️ OpMapTab render')
 
   const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
   const operation = useSelectorConditionally(isFocused, operationSelector)
 
-  const [loggingState] = useUIStateConditionally(isFocused, 'OpLoggingTab', 'loggingState', {})
+  const selectedUUIDSelector = useCallback((state) => selectStateForComponentAndKey(state, 'OpLoggingTab', 'selectedUUID'), [])
+  const selectedUUID = useSelectorConditionally(isFocused, selectedUUIDSelector)
 
   const [projection, setProjection] = useState('mercator')
 
@@ -132,7 +135,7 @@ You might need a paid QRZ.com account for location lookups.`),
         qth={qth}
         qsos={qsos}
         settings={settings}
-        selectedUUID={loggingState?.selectedUUID}
+        selectedUUID={selectedUUID}
       />
       {warnings.length > 0 && (
         <View style={{ position: 'absolute', top: styles.oneSpace * 1, left: styles.oneSpace * 1 + safeAreaInsets.left, right: styles.oneSpace * 1 + safeAreaInsets.right }}>

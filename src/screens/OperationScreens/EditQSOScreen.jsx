@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,12 +16,12 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { useUIState } from '../../store/ui'
 import { selectOperation } from '../../store/operations'
 import { selectSettings } from '../../store/settings'
 import { parseFreqInMHz } from '../../tools/frequencyFormats'
 import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
 import ScreenContainer from '../components/ScreenContainer'
+import { useUIState } from '../../store/ui'
 
 const QSO_SECTIONS = [
   {
@@ -86,7 +86,6 @@ const QSO_SECTIONS = [
 
 export default function EditQSOScreen ({ navigation, route }) {
   const { t } = useTranslation()
-
   const styles = useThemedStyles()
   const settings = useSelector(selectSettings)
 
@@ -95,21 +94,9 @@ export default function EditQSOScreen ({ navigation, route }) {
   const operationSelector = useCallback((state) => selectOperation(state, route.params.operation?.uuid ?? route.params.operation), [route.params.operation])
   const operation = useSelector(operationSelector)
 
-  const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
-  const [qso, updateQSO] = useMemo(() => {
-    const qsoValue = loggingState?.qso
-    const updateQSOFunction = (changes, more) => {
-      const updatedQSO = { ...qsoValue, ...changes }
-
-      updateLoggingState({
-        qso: changes,
-        hasChanges: !!qsoValue?._isSuggested || JSON.stringify(updatedQSO) !== JSON.stringify(loggingState?.originalQSO),
-        ...more?.otherStateChanges
-      })
-    }
-
-    return [qsoValue, updateQSOFunction]
-  }, [loggingState, updateLoggingState])
+  const [qso,, updateQSO] = useUIState('OpLoggingTab', 'qso')
+  const [originalQSO] = useUIState('OpLoggingTab', 'originalQSO')
+  const [, setHasChanges] = useUIState('OpLoggingTab', 'hasChanges')
 
   const handleChanges = useCallback(event => {
     const { fieldId } = event
@@ -131,8 +118,9 @@ export default function EditQSOScreen ({ navigation, route }) {
         changes[field.setKey || field.key] = value
       }
       updateQSO(changes)
+      setHasChanges(!!qso?._isSuggested || JSON.stringify(qso) !== JSON.stringify(originalQSO))
     }
-  }, [qso, updateQSO])
+  }, [qso, updateQSO, originalQSO, setHasChanges])
 
   useEffect(() => {
     if (!operation || !qso) {

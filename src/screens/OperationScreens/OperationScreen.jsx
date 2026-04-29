@@ -1,11 +1,11 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Animated, PanResponder, View } from 'react-native'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -33,6 +33,7 @@ import { hasRef } from '../../tools/refTools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import GLOBAL from '../../GLOBAL'
 import { selectFeatureFlags } from '../../store/system'
+import { manageNextQSO } from './OpLoggingTab/components/LoggingPanel/loggingFunctions'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -50,11 +51,23 @@ export default function OperationScreen (props) {
   const featureFlags = useSelector(selectFeatureFlags)
 
   const operationSelector = useCallback((state) => selectOperation(state, route.params.operation?.uuid ?? route.params.uuid), [route.params.operation?.uuid, route.params.uuid])
-  const operation = useSelector(operationSelector)
-
-  const suggestedQSO = route?.params?.qso
   const settings = useSelector(selectSettings)
+  const operation = useSelector(operationSelector)
   const online = useSelector(selectRuntimeOnline)
+
+  const [lastSuggestedQSO, setLastSuggestedQSO] = useState(null)
+  const [lastSelectedUUID, setLastSelectedUUID] = useState(null)
+
+  useEffect(() => {
+    if (route?.params?.qso && lastSuggestedQSO !== route?.params?.qso) {
+      setLastSuggestedQSO(route?.params?.qso)
+      dispatch(manageNextQSO({ suggestedQSO: route?.params?.qso, qsos: operation?.qsos, operation, settings }))
+    }
+    if (route?.params?.selectedUUID && lastSelectedUUID !== route?.params?.selectedUUID) {
+      setLastSelectedUUID(route?.params?.selectedUUID)
+      dispatch(manageNextQSO({ selectedUUID: route?.params?.selectedUUID, qsos: operation?.qsos, operation, settings }))
+    }
+  }, [route?.params?.qso, route?.params?.selectedUUID, lastSuggestedQSO, lastSelectedUUID, dispatch, operation, settings])
 
   useEffect(() => { // Ensure the clock is ticking
     dispatch(startTickTock())
@@ -63,10 +76,10 @@ export default function OperationScreen (props) {
 
   useEffect(() => { // When starting, make sure all operation data is loaded
     setImmediate(async () => {
-      await dispatch(loadOperation(route.params.operation?.uuid ?? route.params.uuid))
-      await dispatch(loadQSOs(route.params.operation.uuid))
+      await dispatch(loadOperation(operation.uuid))
+      await dispatch(loadQSOs(operation.uuid))
     })
-  }, [route.params?.operation?.uuid, route.params?.uuid, dispatch])
+  }, [operation?.uuid, dispatch])
 
   const headerOptions = useMemo(() => {
     let options = {}
@@ -155,7 +168,7 @@ export default function OperationScreen (props) {
               }}
             >
               <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} splitView={splitView} />
-              <OpLoggingTab navigation={navigation} route={{ params: { operation, qso: suggestedQSO, splitView, selectedUUID: route?.params?.selectedUUID } }} splitView={splitView} />
+              <OpLoggingTab navigation={navigation} route={{ params: { operation, splitView } }} splitView={splitView} />
             </Animated.View>
             <View
               style={{

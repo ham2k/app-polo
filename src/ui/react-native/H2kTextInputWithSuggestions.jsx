@@ -10,32 +10,34 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { H2kTextInput } from './H2kTextInput'
 import { useUIState } from '../../store/ui'
 import createFuzzySearch from '@nozbe/microfuzz'
+import { useDispatch } from 'react-redux'
 
 export function H2kTextInputWithSuggestions (props) {
   const {
     value, suggestions, minimumLengthForSuggestions, fieldId, innerRef, onFocus, onBlur, onSpace, onChange, onChangeText
   } = props
+  const dispatch = useDispatch()
 
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
 
-  const [loggingState, , updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
+  const [infoMessage, setInfoMessage] = useUIState('OpLoggingTab', 'infoMessage')
 
   const [isFocused, setIsFocused] = useState(false)
   const [previousMessage, setPreviousMessage] = useState()
 
   const handleFocus = useCallback((event) => {
     setIsFocused(true)
-    setPreviousMessage(loggingState.infoMessage)
+    setPreviousMessage(infoMessage)
     onFocus && onFocus({ ...event, ref: actualInnerRef })
-  }, [loggingState.infoMessage, onFocus, actualInnerRef])
+  }, [infoMessage, onFocus, actualInnerRef])
 
   const handleBlur = useCallback((event) => {
     setIsFocused(false)
-    updateLoggingState({ infoMessage: previousMessage })
+    setInfoMessage(previousMessage)
     setPreviousMessage(undefined)
     onBlur && onBlur({ ...event, ref: actualInnerRef.current })
-  }, [updateLoggingState, previousMessage, onBlur, actualInnerRef])
+  }, [setInfoMessage, previousMessage, onBlur, actualInnerRef])
 
   const fuzzySearch = useMemo(() => {
     return createFuzzySearch(suggestions ?? [], {
@@ -52,8 +54,7 @@ export function H2kTextInputWithSuggestions (props) {
       if (directMatch) {
         // const suggestionsMessage = `**${directMatch[0]}**: ${directMatch[1]}`
         // setBestSuggestion(undefined)
-        // updateLoggingState({ infoMessage: suggestionsMessage })
-        updateLoggingState({ infoMessage: undefined })
+        setInfoMessage(undefined)
       } else if (value?.length >= (minimumLengthForSuggestions ?? 3)) {
         const results = fuzzySearch(value)
         if (results.length > 0) {
@@ -65,18 +66,18 @@ export function H2kTextInputWithSuggestions (props) {
           }
           const suggestionsMessage = suggestionsList?.join('\n')
           setBestSuggestion(results[0]?.item?.[0])
-          updateLoggingState({ infoMessage: suggestionsMessage })
+          setInfoMessage(suggestionsMessage)
         } else {
           const suggestionsMessage = `No matches for **\`${value}\`**`
           setBestSuggestion(undefined)
-          updateLoggingState({ infoMessage: suggestionsMessage })
+          setInfoMessage(suggestionsMessage)
         }
       } else {
         setBestSuggestion(undefined)
-        updateLoggingState({ infoMessage: undefined })
+        setInfoMessage(undefined)
       }
     }
-  }, [suggestions, updateLoggingState, value, isFocused, fuzzySearch, minimumLengthForSuggestions])
+  }, [suggestions, value, isFocused, fuzzySearch, minimumLengthForSuggestions, dispatch, setInfoMessage])
 
   const handleSpace = useCallback((event) => {
     if (bestSuggestion) {

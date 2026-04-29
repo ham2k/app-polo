@@ -6,25 +6,26 @@
  */
 
 import { useDispatch, useSelector } from 'react-redux'
-import { selectStateForComponent, setStateForComponent, updateStateForComponent } from './uiSlice'
-import { useCallback, useEffect, useMemo } from 'react'
+import { selectStateForComponentAndKey, setStateForComponentAndKey, updateStateForComponentAndKey } from './uiSlice'
+import { useCallback } from 'react'
 
-export function useUIState(component, key, initialValue) {
+export function useUIState (component, key, defaultValue) {
   const dispatch = useDispatch()
 
-  const componentDataSelector = useCallback((state) => selectStateForComponent(state, component), [component])
+  const componentDataSelector = useCallback((state) => selectStateForComponentAndKey(state, component, key), [component, key])
   const componentData = useSelector(componentDataSelector)
 
-  const setter = useCallback((newData) => dispatch(setStateForComponent({ component, [key]: newData })), [dispatch, component, key])
-  const updater = useCallback((newData) => dispatch(updateStateForComponent({ component, [key]: newData })), [dispatch, component, key])
+  const setter = useCallback((newData) => {
+    // console.log('useUIState setter called with', component, key, newData)
+    return dispatch(setStateForComponentAndKey({ component, key, value: newData }))
+  }, [dispatch, component, key])
 
-  useEffect(() => {
-    if ((!componentData || componentData[key] === undefined) && initialValue !== undefined) {
-      setter(initialValue)
-    }
-  }, [setter, initialValue, componentData, key, component])
+  const updater = useCallback((newData) => {
+    // console.log('useUIState updater called with', component, key, newData)
+    return dispatch(updateStateForComponentAndKey({ component, key, value: newData, defaultValue }))
+  }, [dispatch, component, key, defaultValue])
 
-  const data = (componentData && componentData[key]) ?? initialValue
+  const data = (componentData ?? defaultValue)
 
   return [data, setter, updater]
 }

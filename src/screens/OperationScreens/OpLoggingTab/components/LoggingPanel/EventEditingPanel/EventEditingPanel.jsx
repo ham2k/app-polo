@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2025 Sebastian Delmont < sd@ham2k.com>
+ * Copyright ©️ 2025-2026 Sebastian Delmont < sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -17,7 +17,7 @@ export default function EventEditingPanel ({
   qso, qsos, operation, vfo, settings,
   style, themeColor, isKeyboardVisible, splitView,
   disabled,
-  onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef,
+  onSubmitEditing, handleFieldChange, updateQSO, mainFieldRef, focusedRef,
   allowSpacesInCallField
 }) {
   const styles = useThemedStyles(prepareStyles, { style })
@@ -39,7 +39,6 @@ export default function EventEditingPanel ({
             styles={styles}
             handleFieldChange={handleFieldChange}
             onSubmitEditing={onSubmitEditing}
-            setQSO={setQSO}
             updateQSO={updateQSO}
             mainFieldRef={mainFieldRef}
             focusedRef={focusedRef}
@@ -62,7 +61,6 @@ export default function EventEditingPanel ({
             styles={styles}
             handleFieldChange={handleFieldChange}
             onSubmitEditing={onSubmitEditing}
-            setQSO={setQSO}
             updateQSO={updateQSO}
             mainFieldRef={mainFieldRef}
             focusedRef={focusedRef}

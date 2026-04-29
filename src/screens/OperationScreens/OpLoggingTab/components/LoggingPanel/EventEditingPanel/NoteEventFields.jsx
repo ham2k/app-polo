@@ -13,7 +13,7 @@ export default function NoteEventFields ({
   qso, qsos, operation, vfo, settings,
   style, styles, themeColor, isKeyboardVisible, splitView,
   disabled,
-  onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef
+  onSubmitEditing, handleFieldChange, updateQSO, mainFieldRef, focusedRef
 }) {
   return (
     <H2kTextInput

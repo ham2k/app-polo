@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -19,7 +19,7 @@ const setTimeoutForCommand = (callback, timeout = 1000) => {
   commandDescriptionTimeout = setTimeout(callback, timeout)
 }
 
-export function checkAndProcessCommands(value, extraParams) {
+export function checkAndProcessCommands (value, extraParams) {
   if (commandDescriptionTimeout) {
     clearTimeout(commandDescriptionTimeout)
   }
@@ -27,7 +27,6 @@ export function checkAndProcessCommands(value, extraParams) {
   const { matchingCommand, match } = findMatchingCommand(value)
 
   if (matchingCommand && matchingCommand.invokeCommand) {
-
     const { handleFieldChange, updateQSO, handleSubmit } = extraParams
     let callWasCleared = false
     // We need special wrappers for `handleFieldChange` and `updateQSO` in order to also reset the call if a command was processed
@@ -55,7 +54,7 @@ export function checkAndProcessCommands(value, extraParams) {
         handleFieldChange: handleFieldChangeWrapper,
         updateQSO: updateQSOWrapper,
         handleSubmit: handleSubmitWrapper,
-        setTimeoutForCommand: setTimeoutForCommand
+        setTimeoutForCommand
       }
     )
     if (!callWasCleared) {
@@ -72,8 +71,7 @@ export function checkAndProcessCommands(value, extraParams) {
   }
 }
 
-export function checkAndDescribeCommands(value, extraParams) {
-
+export function checkAndDescribeCommands (value, extraParams) {
   if (commandDescriptionTimeout) {
     clearTimeout(commandDescriptionTimeout)
   }
@@ -104,7 +102,7 @@ export function checkAndDescribeCommands(value, extraParams) {
   }
 }
 
-export function findMatchingCommand(value) {
+export function findMatchingCommand (value) {
   const hooks = findHooks('command')
   let match
 
@@ -131,4 +129,3 @@ export function findMatchingCommand(value) {
   })
   return { matchingCommand, match }
 }
-

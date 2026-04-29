@@ -12,24 +12,27 @@ import { useIsFocused } from '@react-navigation/native'
 
 import { selectOperation } from '../../../store/operations'
 import { selectSectionedQSOs } from '../../../store/qsos'
-import { useSelectorConditionally, useUIStateConditionally } from '../../components/useConditionally'
+import { useSelectorConditionally } from '../../components/useConditionally'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 import { CallInfoPanel } from './components/CallInfoPanel'
 import { OpInfoPanel } from './components/OpInfoPanel'
+import { selectStateForComponentAndKey } from '../../../store/ui'
 
 export default function OpInfoTab ({ navigation, route }) {
   const isFocused = useIsFocused()
   const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
   const operation = useSelectorConditionally(isFocused ? 'opInfoTab operation' : undefined, operationSelector)
-  const [loggingState] = useUIStateConditionally(isFocused, 'OpLoggingTab', 'loggingState', {})
+
+  const qsoSelector = useCallback((state) => selectStateForComponentAndKey(state, 'OpLoggingTab', 'qso'), [])
+  const qso = useSelectorConditionally(isFocused, qsoSelector)
 
   const sectionedQSOsSelector = useCallback((state) => selectSectionedQSOs(state, operation?.uuid), [operation?.uuid])
   const { sections, qsos, activeQSOs } = useSelectorConditionally(isFocused, sectionedQSOsSelector)
 
   const themeColor = useMemo(() => {
-    return (!loggingState?.qso?._isNew ? 'secondary' : 'tertiary')
-  }, [loggingState?.qso?._isNew])
+    return (!qso?._isNew ? 'secondary' : 'tertiary')
+  }, [qso?._isNew])
 
   const styles = useThemedStyles()
   const safeAreaInsets = useSafeAreaInsets()
@@ -45,10 +48,10 @@ export default function OpInfoTab ({ navigation, route }) {
         backgroundColor: styles.theme.colors[`${themeColor}Container`]
       }}
     >
-      {loggingState.qso?.their?.call ? (
-        <CallInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qso={loggingState.qso} operation={operation} sections={sections} themeColor={themeColor} />
+      {qso?.their?.call ? (
+        <CallInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qso={qso} operation={operation} sections={sections} themeColor={themeColor} />
       ) : (
-        <OpInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qsos={qsos} qso={loggingState.qso} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
+        <OpInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qsos={qsos} qso={qso} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
       )}
     </GestureHandlerRootView>
   )

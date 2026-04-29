@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -21,7 +21,6 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
 import { setOperationLocalData } from '../../../../store/operations'
-import { useUIState } from '../../../../store/ui'
 import { addQSO, addQSOs } from '../../../../store/qsos'
 import { setVFO } from '../../../../store/station/stationSlice'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
@@ -40,8 +39,10 @@ import { CallInfo } from './LoggingPanel/CallInfo'
 import { OpInfo } from './LoggingPanel/OpInfo'
 import { EventInfo } from './LoggingPanel/EventInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
-import { annotateQSO, resetCallLookupCache } from './LoggingPanel/useCallLookup'
+import { annotateQSO } from './LoggingPanel/useCallLookup'
 import EventEditingPanel from './LoggingPanel/EventEditingPanel/EventEditingPanel'
+import { manageNextQSO } from './LoggingPanel/loggingFunctions'
+import { useUIState } from '../../../../store/ui'
 
 const DEBUG = false
 
@@ -53,33 +54,35 @@ export default function LoggingPanel ({
 }) {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
-  const [loggingState, setLoggingState, updateLoggingState] = useUIState('OpLoggingTab', 'loggingState', {})
 
   const [allowSpacesInCallField, setAllowSpacesInCallField] = useState(false)
 
-  const [qso, setQSO, updateQSO] = useMemo(() => {
-    const qsoValue = loggingState?.qso
-    const setQSOFunction = (newQSO, more) => {
-      setLoggingState({
-        ...loggingState,
-        qso: newQSO,
-        selectedUUID: newQSO?.uuid,
-        originalQSO: cloneDeep(newQSO),
-        hasChanges: !!qsoValue?._isSuggested,
-        infoMessage: undefined,
-        ...more?.otherStateChanges
-      })
+  const [infoMessage, ,] = useUIState('OpLoggingTab', 'infoMessage')
+
+  const [qso, setQSO, updateQSO] = useUIState('OpLoggingTab', 'qso')
+  const [originalQSO, setOriginalQSO] = useUIState('OpLoggingTab', 'originalQSO')
+  const [hasChanges, setHasChanges] = useUIState('OpLoggingTab', 'hasChanges')
+  const [undoInfo, setUndoInfo] = useUIState('OpLoggingTab', 'undoInfo')
+  const [, setSelectedUUID] = useUIState('OpLoggingTab', 'selectedUUID')
+  const [, setLastUUID] = useUIState('OpLoggingTab', 'lastUUID')
+  const [, setCallStack] = useUIState('OpLoggingTab', 'callStack')
+
+  // console.log('--- LoggingPanel render')
+  // console.log('-- qso', qso)
+  // console.log('-- call', qso?.their?.call)
+  // console.log('-- hasChanges', hasChanges)
+  // console.log('-- undoInfo', undoInfo)
+  // console.log('-- originalQSO', originalQSO)
+
+  useEffect(() => {
+    if (qso?.uuid && qso?.uuid !== originalQSO?.uuid) {
+      setOriginalQSO(cloneDeep(qso))
+      setHasChanges(!!qso?._isSuggested)
+      // setUndoInfo(undefined)
+    } else {
+      setHasChanges(!!qso?._isSuggested || JSON.stringify(qso) !== JSON.stringify(originalQSO))
     }
-    const updateQSOFunction = (changes, more) => {
-      const updatedQSO = { ...qsoValue, ...changes }
-      updateLoggingState({
-        qso: changes,
-        hasChanges: !!qsoValue?._isSuggested || JSON.stringify(updatedQSO) !== JSON.stringify(loggingState?.originalQSO),
-        ...more?.otherStateChanges
-      })
-    }
-    return [qsoValue, setQSOFunction, updateQSOFunction]
-  }, [loggingState, setLoggingState, updateLoggingState])
+  }, [originalQSO, qso, setOriginalQSO, setHasChanges, setUndoInfo])
 
   const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
   const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
@@ -89,6 +92,13 @@ export default function LoggingPanel ({
   const dispatch = useDispatch()
 
   const mainFieldRef = useRef()
+  const [focusedUUID, setFocusedUUID] = useState()
+  useEffect(() => { // If there's a new QSO, focus the main field
+    if (qso?.uuid && qso?.uuid !== focusedUUID) {
+      mainFieldRef.current?.focus()
+      setFocusedUUID(qso?.uuid)
+    }
+  }, [focusedUUID, qso?.uuid])
 
   const [currentSecondaryControl, reallySetCurrentSecondaryControl] = useState({})
   const setCurrentSecondaryControl = useCallback((control) => {
@@ -116,56 +126,6 @@ export default function LoggingPanel ({
       return [true, undefined]
     }
   }, [qso, operation, vfo, t])
-
-  useEffect(() => { // Manage the QSO Queue
-    // When there is no current QSO, pop one from the queue or create a new one
-    // If the currently selected QSO changes, push the current one to the queue and load the new one
-    if (!loggingState?.selectedUUID) {
-      let nextQSO
-      const otherStateChanges = {}
-
-      if (loggingState?.qsoQueue?.length > 0) {
-        nextQSO = loggingState.qsoQueue.pop() ?? prepareNewQSO(operation, qsos, vfo, settings)
-        otherStateChanges.qsoQueue = loggingState.qsoQueue
-      } else {
-        nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
-      }
-
-      if (loggingState.callStack) {
-        otherStateChanges.callStack = undefined
-        nextQSO.their = nextQSO.their || {}
-        nextQSO.their.call = loggingState.callStack
-      }
-
-      setQSO(nextQSO, { otherStateChanges })
-      dispatch(resetCallLookupCache())
-      setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
-        mainFieldRef?.current?.focus()
-      }, 100)
-    } else if ((qso?.uuid !== loggingState?.selectedUUID) || !qso) {
-      let nextQSO
-      const otherStateChanges = { undoInfo: undefined }
-
-      if (loggingState?.suggestedQSO) {
-        nextQSO = prepareSuggestedQSO(loggingState?.suggestedQSO, qsos, operation, vfo, settings)
-        otherStateChanges.suggestedQSO = undefined
-      } else {
-        nextQSO = qsos.find(q => q.uuid === loggingState?.selectedUUID)
-        if (nextQSO) nextQSO = prepareExistingQSO(nextQSO)
-        else nextQSO = prepareNewQSO(operation, qsos, settings)
-      }
-
-      if (qso?._isNew && !qso?._isSuggested) {
-        otherStateChanges.qsoQueue = [...loggingState?.qsoQueue || [], qso]
-      }
-
-      setQSO(nextQSO, { otherStateChanges })
-
-      setTimeout(() => { // On android, if the field was disabled and then reenabled, it won't focus without a timeout
-        mainFieldRef?.current?.focus()
-      }, 100)
-    }
-  }, [loggingState?.selectedUUID, loggingState?.suggestedQSO, loggingState.qsoQueue, operation, settings, qso, vfo, qsos, setQSO, dispatch, loggingState.callStack])
 
   useEffect(() => { // Validate and analize the callsign
     const { call } = parseStackedCalls(qso?.their?.call ?? '')
@@ -208,7 +168,7 @@ export default function LoggingPanel ({
     }
 
     if (fieldId === 'theirCall') {
-      const { description, allowSpaces, matchingCommand } = checkAndDescribeCommands(value, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, setCommandInfo })
+      const { description, allowSpaces, matchingCommand } = checkAndDescribeCommands(value, { qso, originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, setCommandInfo })
       setCommandInfo({ message: description || undefined, matchingCommand, match: !!matchingCommand })
       setAllowSpacesInCallField(allowSpaces)
 
@@ -236,7 +196,6 @@ export default function LoggingPanel ({
       if (qso?._isNew) dispatch(setVFO({ band: value, freq: undefined }))
     } else if (fieldId === 'mode') {
       const { theirReport, ourReport } = _convertRSTValues({ theirReport: qso?.their?.sent, ourReport: qso?.our?.sent, mode: value, originalMode: qso?.mode }, { settings })
-      console.log('theirReport', theirReport, 'ourReport', ourReport)
       updateQSO({ mode: value, their: { sent: theirReport ?? qso?.their?.sent }, our: { sent: ourReport ?? qso?.our?.sent } })
       if (qso?._isNew) dispatch(setVFO({ mode: value }))
     } else if (fieldId === 'time' || fieldId === 'date') {
@@ -254,7 +213,7 @@ export default function LoggingPanel ({
     } else if (fieldId === 'eventData') {
       updateQSO({ event: { data: value } })
     }
-  }, [qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, setCommandInfo, updateQSO])
+  }, [qso, originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, setCommandInfo, updateQSO])
 
   // Since our fields and logic often perform some async work,
   // we need to wait a few milliseconds before submitting to ensure all async work is complete.
@@ -282,7 +241,7 @@ export default function LoggingPanel ({
       // First, try to process any commands, but only if we're not editing an event
       if (!qso?.event) {
         const command = qso?.their?.call
-        const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit, setCommandInfo })
+        const commandResult = checkAndProcessCommands(command, { qso, originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, updateQSO, handleFieldChange, handleSubmit, setCommandInfo })
         if (commandResult) {
           trackEvent('command_executed', { command })
           setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
@@ -298,22 +257,14 @@ export default function LoggingPanel ({
       if (qso?._willBeDeleted !== undefined) {
         qso.deleted = qso._willBeDeleted
         delete qso._willBeDeleted
-        dispatch(addQSO({ uuid: operation.uuid, qso }))
-        updateLoggingState({
-          qso: undefined,
-          selectedUUID: undefined,
-          lastUUID: undefined, // qso.uuid,
-          originalQSO: undefined,
-          hasChanges: false,
-          undoInfo: undefined
-        })
+        await dispatch(addQSO({ uuid: operation.uuid, qso }))
+        await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
         trackEvent(eventName, { their_prefix: qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
       } else if (qso?.event && !qso?.deleted) {
         // Events are just saved as-is, no extra processing needed.
-        setTimeout(() => {
-          dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
-          setQSO(undefined, { otherStateChanges: { lastUUID: qso.uuid } })
-        }, 50)
+        await setLastUUID(qso.uuid)
+        await dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
+        await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
       } else if (qso && isValidQSO && !qso?.deleted) {
         setCurrentSecondaryControl(undefined)
 
@@ -385,16 +336,18 @@ export default function LoggingPanel ({
           }
         }
 
-        setTimeout(() => {
+        setTimeout(async () => {
           // Add the QSO to the operation, and set a new QSO
           // But leave enough time for blur effects to take place before being overwritten by the new setQSO
           // Just 10ms did not seemed to be enough in tests, but 50ms is fine.
 
-          dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
+          await dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
           if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
           // Let queue management decide what to do next
-          setQSO(undefined, { otherStateChanges: { lastUUID, callStack } })
+          await setLastUUID(lastUUID)
+          await setCallStack(callStack)
+          await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
         }, 50)
 
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
@@ -402,39 +355,45 @@ export default function LoggingPanel ({
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 0)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
-  }, [
-    qso, loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, i18n, t, online, ourInfo,
-    updateQSO, updateLoggingState, handleFieldChange, isValidQSO,
-    setCommandInfo, setCurrentSecondaryControl, setQSO, doSubmit, handleSubmit
-  ])
+  }, [qso, operation, vfo, qsos, dispatch, settings, i18n, t, online, ourInfo, updateQSO, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, doSubmit, handleSubmit, originalQSO, setLastUUID, setCallStack])
+
+  const undoTimeout = useRef()
 
   const handleWipe = useCallback(() => { // Wipe a new QSO
     if (qso?._isNew) {
       if (qso?._isSuggested) {
-        setQSO(undefined)
+        dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
       } else {
-        setQSO(undefined, { otherStateChanges: { undoInfo: { qso } } })
+        setUndoInfo({ qso, originalQSO })
+        dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
       }
-      const timeout = setTimeout(() => updateLoggingState({ undoInfo: undefined }), 10 * 1000) // Undo will clear after 10 seconds
-      return () => clearTimeout(timeout)
+      if (undoTimeout.current) clearTimeout(undoTimeout.current)
+      undoTimeout.current = setTimeout(() => {
+        setUndoInfo(undefined)
+      }, 10 * 1000) // Undo will clear after 10 seconds
+      return () => clearTimeout(undoTimeout.current)
     }
-  }, [qso, setQSO, updateLoggingState])
+  }, [qso, dispatch, operation, vfo, settings, setUndoInfo, originalQSO])
 
-  const handleUnwipe = useCallback(() => { // Undo wiping a new QSO
-    if (loggingState?.undoInfo) {
-      setQSO(loggingState?.undoInfo.qso, { otherStateChanges: { undoInfo: undefined, hasChanges: true } })
+  const handleUnwipe = useCallback(async () => { // Undo wiping a new QSO
+    if (undoInfo) {
+      await setQSO(undoInfo.qso)
+      await setSelectedUUID(undoInfo.qso?.uuid)
+      await setOriginalQSO(undoInfo.originalQSO)
+      await setUndoInfo(undefined)
     }
-  }, [loggingState?.undoInfo, setQSO])
+  }, [setOriginalQSO, setQSO, setSelectedUUID, setUndoInfo, undoInfo])
 
-  const handleDelete = useCallback(() => { // Delete an existing QSO
+  const handleDelete = useCallback(async () => { // Delete an existing QSO
     if (!qso?._isNew) {
-      updateQSO({ _willBeDeleted: true }, { otherStateChanges: { undoInfo: { qso } } })
+      await updateQSO({ _willBeDeleted: true })
+      await setUndoInfo({ qso })
     }
-  }, [qso, updateQSO])
+  }, [qso, setUndoInfo, updateQSO])
 
-  const handleUndelete = useCallback(() => { // Undo changes to existing QSO
+  const handleUndelete = useCallback(async () => { // Undo changes to existing QSO
     if (qso?.deleted || qso?._willBeDeleted) {
-      updateQSO({ _willBeDeleted: false, deleted: false })
+      await updateQSO({ _willBeDeleted: false, deleted: false })
     }
   }, [qso, updateQSO])
 
@@ -446,10 +405,10 @@ export default function LoggingPanel ({
 
   const opMessage = useMemo(() => {
     if (operationError) return { text: operationError, icon: 'alert-circle', hideCallInfo: true }
-    if (loggingState.infoMessage) return { text: loggingState.infoMessage, icon: 'information', hideCallInfo: true }
+    if (infoMessage) return { text: infoMessage, icon: 'information', hideCallInfo: true }
     if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box', hideCallInfo: true }
     return undefined
-  }, [operationError, commandInfo?.message, loggingState.infoMessage])
+  }, [operationError, infoMessage, commandInfo?.message])
 
   const disableSubmit = useMemo(() => {
     return !((isValidQSO && isValidOperation) || commandInfo?.match)
@@ -468,7 +427,6 @@ export default function LoggingPanel ({
             vfo={vfo}
             settings={settings}
             navigation={navigation}
-            setQSO={setQSO}
             updateQSO={updateQSO}
             disabled={qso?.deleted || qso?._willBeDeleted}
             handleFieldChange={handleFieldChange}
@@ -494,6 +452,7 @@ export default function LoggingPanel ({
                 sections={sections}
                 vfo={vfo}
                 settings={settings}
+                setQSO={setQSO}
                 updateQSO={updateQSO}
               />
 
@@ -508,7 +467,6 @@ export default function LoggingPanel ({
                   themeColor={themeColor}
                   onSubmitEditing={handleSubmit}
                   handleFieldChange={handleFieldChange}
-                  setQSO={setQSO}
                   updateQSO={updateQSO}
                   mainFieldRef={mainFieldRef}
                   focusedRef={focusedRef}
@@ -526,7 +484,6 @@ export default function LoggingPanel ({
                   themeColor={themeColor}
                   onSubmitEditing={handleSubmit}
                   handleFieldChange={handleFieldChange}
-                  setQSO={setQSO}
                   updateQSO={updateQSO}
                   mainFieldRef={mainFieldRef}
                   focusedRef={focusedRef}
@@ -538,7 +495,7 @@ export default function LoggingPanel ({
             <View style={styles.actions.container}>
 
               {qso?._isNew ? (
-                loggingState?.undoInfo ? (
+                undoInfo ? (
                   <IconButton
                     icon={'undo'}
                     accessibilityLabel={t('screens.opLoggingTab.actions.undo-a11y', 'Undo')}
@@ -553,7 +510,7 @@ export default function LoggingPanel ({
                     icon={'backspace-outline'}
                     accessibilityLabel={t('screens.opLoggingTab.actions.erase-a11y', 'Erase')}
                     onPress={handleWipe}
-                    disabled={!loggingState?.hasChanges}
+                    disabled={!hasChanges}
                     size={styles.actions.button.size}
                     mode={styles.actions.button.mode}
                     iconColor={styles.actions.button.color}
@@ -561,15 +518,15 @@ export default function LoggingPanel ({
                   />
                 )
               ) : (
-                (qso?.deleted || qso?._willBeDeleted || loggingState?.undoInfo) ? (
+                (qso?.deleted || qso?._willBeDeleted || undoInfo) ? (
                   <IconButton
-                    icon={loggingState.undoInfo ? 'undo' : 'delete-restore'}
+                    icon={undoInfo ? 'undo' : 'delete-restore'}
                     accessibilityLabel={t('screens.opLoggingTab.actions.undo-a11y', 'Undo')}
                     size={styles.actions.button.size}
                     mode={styles.actions.button.mode}
                     iconColor={styles.actions.button.color}
                     containerColor={styles.actions.button.backgroundColor}
-                    onPress={loggingState?.undoInfo ? handleUnwipe : handleUndelete}
+                    onPress={undoInfo ? handleUnwipe : handleUndelete}
                   />
                 ) : (
                   <IconButton
@@ -766,65 +723,7 @@ function prepareStyles (themeStyles, { style, themeColor, leftieMode, isKeyboard
   }
 }
 
-function prepareNewQSO (operation, qsos, vfo, settings) {
-  const qso = {
-    uuid: UUID.v4(),
-    band: vfo.band,
-    freq: vfo.freq,
-    mode: vfo.mode,
-    power: vfo.power,
-    _isNew: true
-  }
-  if (operation.local?._nextManualTime) {
-    qso.startAtMillis = operation.local?._nextManualTime
-    qso._manualTime = true
-  }
-
-  const activityHooks = findHooks('activity')
-  activityHooks.forEach(activity => {
-    if (activity.prepareNewQSO) {
-      activity.prepareNewQSO({ qso, qsos, operation, vfo, settings })
-    }
-  })
-
-  return qso
-}
-
-function prepareExistingQSO (qso) {
-  const clone = cloneDeep(qso || {})
-  clone._isNew = false
-
-  return clone
-}
-
-function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
-  const clone = cloneDeep(qso || {})
-  clone._isNew = true
-  clone._isSuggested = true
-  clone.uuid = UUID.v4()
-
-  if (clone.freq) {
-    clone.band = bandForFrequency(clone.freq)
-    if (!clone.mode) {
-      clone.mode = modeForFrequency(clone.freq)
-    }
-  }
-
-  if (vfo.power) {
-    clone.power = vfo.power
-  }
-
-  const activityHooks = findHooks('activity')
-  activityHooks.forEach(activity => {
-    if (activity.prepareNewQSO) {
-      activity.prepareNewQSO({ qso, qsos, operation, vfo, settings })
-    }
-  })
-
-  return clone
-}
-
-const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
+const PanelSelector = ({ qso, opMessage, styles, setQSO, ...props }) => {
   const { t } = useTranslation()
 
   if (qso?.deleted || qso?._willBeDeleted) {
@@ -850,6 +749,7 @@ const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
         qso={qso}
         styles={styles}
         style={styles.callInfoPanel.container}
+        setQSO={setQSO}
         {...props}
       />
     )
@@ -868,7 +768,6 @@ const PanelSelector = ({ qso, opMessage, styles, ...props }) => {
 }
 
 const _convertRSTValues = ({ theirReport, ourReport, mode, originalMode }, { settings }) => {
-  console.log('conver rst values', theirReport, ourReport, mode, originalMode)
   if ((mode === 'CW' || mode === 'RTTY') && (originalMode === 'SSB' || originalMode === 'USB' || originalMode === 'LSB')) {
     if (theirReport) {
       const [readability, strength, ...extra] = theirReport.split('')

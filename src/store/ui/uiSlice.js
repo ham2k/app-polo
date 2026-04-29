@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -25,6 +25,13 @@ export const uiSlice = createSlice({
 
       if (DEBUG) console.log('-- set state to', component, state[component])
     },
+    setStateForComponentAndKey: (state, action) => {
+      const { component, key, value } = action.payload
+      if (DEBUG) console.log('setStateForComponentAndKey called with', component, key, value)
+      state[component] = state[component] || {}
+      state[component][key] = value
+      if (DEBUG) console.log('-- set state to', component, key, state[component][key])
+    },
     updateStateForComponent: (state, action) => {
       const { component, ...data } = action.payload
       if (DEBUG) console.log('updateStateForComponent called with', component, data)
@@ -40,6 +47,17 @@ export const uiSlice = createSlice({
       // }
       if (DEBUG) console.log('-- updated state', component, state[component])
     },
+    updateStateForComponentAndKey: (state, action) => {
+      const { component, key, value, defaultValue } = action.payload
+      state[component] = state[component] ?? {}
+      state[component][key] = state[component][key] ?? defaultValue
+      if (typeof value === 'object' && !Array.isArray(value)) {
+        // Only merge objects, not arrays or primitive values
+        deepMergeState(state[component][key], value)
+      } else {
+        state[component][key] = value
+      }
+    },
     setGlobalDialog: (state, action) => {
       state.globalDialog = { ...state.globalDialog, ...action.payload }
     },
@@ -49,33 +67,50 @@ export const uiSlice = createSlice({
   }
 })
 
-function deepMergeState(state, data, visited = undefined) {
+function deepMergeState (state, data, visited = undefined) {
   visited = visited || new Set()
   visited.add(data)
 
   // Then merge keys, recursively
-  for (const key of Object.keys(data || {})) {
+  for (const key of Object.keys(data ?? {})) {
     const value = data[key]
     if (typeof value === 'object' && !Array.isArray(value) && !visited.has(value)) {
-      if (Object.keys(value || {}).length === 0) {
+      if (Object.keys(value ?? {}).length === 0) {
+        // If given an explicit empty object, replace, not merge
         state[key] = {}
       } else {
-        state[key] = state[key] || {}
+        // Otherwise, merge recursively
+        state[key] = state[key] ?? {}
         deepMergeState(state[key], value)
       }
     } else {
+      // If the value is not an object, replace it
       state[key] = value
     }
   }
 }
 
 export const { actions } = uiSlice
-export const { setStateForComponent, updateStateForComponent, setGlobalDialog, resetGlobalDialog } = uiSlice.actions
+export const {
+  setStateForComponent,
+  setStateForComponentAndKey,
+  updateStateForComponent,
+  updateStateForComponentAndKey,
+  setGlobalDialog,
+  resetGlobalDialog
+} = uiSlice.actions
 
 export const selectStateForComponent = createSelector(
   (state, component) => state?.ui,
   (state, component) => component,
   (ui, component) => ui?.[component]
+)
+
+export const selectStateForComponentAndKey = createSelector(
+  (state, component, key) => state?.ui,
+  (state, component, key) => component,
+  (state, component, key) => key,
+  (ui, component, key) => ui?.[component]?.[key]
 )
 
 export const selectGlobalDialog = createSelector(

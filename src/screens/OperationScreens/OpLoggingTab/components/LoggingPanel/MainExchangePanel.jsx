@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -17,7 +17,7 @@ import { valueOrFunction } from '../../../../../tools/valueOrFunction'
 
 export const MainExchangePanel = ({
   qso, qsos, operation, vfo, settings, style, styles, themeColor, disabled,
-  onSubmitEditing, handleFieldChange, setQSO, updateQSO, mainFieldRef, focusedRef,
+  onSubmitEditing, handleFieldChange, updateQSO, mainFieldRef, focusedRef,
   allowSpacesInCallField
 }) => {
   const { t } = useTranslation()
@@ -173,7 +173,7 @@ export const MainExchangePanel = ({
   findHooks('activity').filter(activity => activity.mainExchangeForOperation && findRef(operation, activity.key)).forEach(activity => {
     fields = fields.concat(
       activity.mainExchangeForOperation(
-        { qso, qsos, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+        { qso, qsos, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
       ) || []
     )
   })
@@ -181,7 +181,7 @@ export const MainExchangePanel = ({
     if (activity) {
       fields = fields.concat(
         activity.mainExchangeForQSO(
-          { qso, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, setQSO, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
+          { qso, operation, vfo, settings, styles, themeColor, disabled, onSubmitEditing, updateQSO, onSpace: spaceHandler, refStack, focusedRef }
         ) || []
       )
     }

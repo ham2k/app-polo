@@ -17,6 +17,7 @@ import { selectSectionedQSOs } from '../../../store/qsos'
 import { useSelectorConditionally } from '../../components/useConditionally'
 
 import SpotsPanel from './components/SpotsPanel'
+import { manageNextQSO } from '../OpLoggingTab/components/LoggingPanel/loggingFunctions'
 
 export default function OpSpotsTab ({ navigation, route }) {
   const dispatch = useDispatch()
@@ -50,12 +51,12 @@ export default function OpSpotsTab ({ navigation, route }) {
       _suggestedKey: spot.key
     }
 
-    if (route?.params?.splitView) {
-      navigation.navigate('Operation', { ...route?.params, qso })
-    } else {
+    dispatch(manageNextQSO({ suggestedQSO: qso, qsos: operation?.qsos, operation, settings }))
+
+    if (!route?.params?.splitView) {
       navigation.navigate('OpLog', { qso })
     }
-  }, [navigation, route?.params, extraSpotInfoHooks, dispatch, online, settings])
+  }, [dispatch, operation, settings, route?.params?.splitView, extraSpotInfoHooks, online, navigation])
 
   return (
     <SpotsPanel operation={operation} qsos={qsos} sections={sections} onSelect={handleSelect} style={{ paddingBottom: safeArea.bottom, paddingRight: safeArea.right }} />

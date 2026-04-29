@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,11 +22,13 @@ import { selectVFO } from '../../../store/station/stationSlice'
 import { selectSectionedQSOs } from '../../../store/qsos'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { useSelectorConditionally, useUIStateConditionally } from '../../components/useConditionally'
+import { useSelectorConditionally } from '../../components/useConditionally'
 
 import QSOList from './components/QSOList'
 import LoggingPanel from './components/LoggingPanel'
 import { useAutoRespotting } from './components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
+import { manageNextQSO } from './components/LoggingPanel/loggingFunctions'
+import { useUIState } from '../../../store/ui'
 
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
@@ -38,7 +40,14 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   const styles = useThemedStyles()
 
   const isFocused = useIsFocused()
-  const operationSelector = useCallback((state) => selectOperation(state, route.params.operation.uuid), [route.params.operation.uuid])
+
+  const rootNavigator = (navigation?.getParent() ?? navigation)
+  const rootParams = useMemo(() => {
+    const rootRoute = rootNavigator.getState().routes.find(r => r.name === 'Operation')
+    return rootRoute?.params ?? {}
+  }, [rootNavigator])
+
+  const operationSelector = useCallback((state) => selectOperation(state, rootParams.uuid), [rootParams.uuid])
   const operation = useSelectorConditionally(isFocused, operationSelector)
   const vfoSelector = useCallback((state) => selectVFO(state), [])
   const vfo = useSelectorConditionally(isFocused, vfoSelector)
@@ -53,49 +62,19 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
     [operation?.uuid, settings.showDeletedQSOs]
   )
   const { sections, qsos, activeQSOs } = useSelectorConditionally(isFocused, sectionedQSOsSelector)
-  // console.log('OpLoggingTab -- render', qsos?.length)
-  // useEffect(() => {
-  //   console.log('OpLoggingTab -- qsos', qsos?.length)
-  // }, [qsos])
-
-  const [loggingState, setLoggingState, updateLoggingState] = useUIStateConditionally(isFocused, 'OpLoggingTab', 'loggingState', {})
-
-  // console.log('OpLoggingTab render')
-  // useEffect(() => console.log('-- OpLoggingTab navigation', navigation), [navigation])
-  // useEffect(() => console.log('-- OpLoggingTab route', route), [route])
-  // useEffect(() => console.log('-- OpLoggingTab operation', operation), [operation])
-  // useEffect(() => console.log('-- OpLoggingTab vfo', vfo), [vfo])
-  // useEffect(() => console.log('-- OpLoggingTab ourInfo', ourInfo), [ourInfo])
-  // useEffect(() => console.log('-- OpLoggingTab dispatch', dispatch), [dispatch])
-  // useEffect(() => console.log('-- OpLoggingTab styles', styles), [styles])
-  // useEffect(() => console.log('-- OpLoggingTab settings', settings), [settings])
-  // useEffect(() => console.log('-- OpLoggingTab online', online), [online])
-  // useEffect(() => console.log('-- OpLoggingTab sections', sections), [sections])
-  // useEffect(() => console.log('-- OpLoggingTab qsos', qsos), [qsos])
-  // useEffect(() => console.log('-- OpLoggingTab activeQSOs', activeQSOs), [activeQSOs])
-  // useEffect(() => console.log('-- OpLoggingTab loggingState', loggingState), [loggingState])
 
   useAutoRespotting({ t, operation, vfo, dispatch, settings })
 
-  useEffect(() => { // Reset logging state when operation changes
-    if (loggingState?.operationUUID !== operation?.uuid) {
-      setLoggingState({ operationUUID: operation?.uuid, selectedUUID: undefined })
-    }
-  }, [loggingState?.operationUUID, loggingState?.qso, operation?.uuid, setLoggingState])
+  const [lastUUID] = useUIState('OpLoggingTab', 'lastUUID')
+  const [selectedUUID] = useUIState('OpLoggingTab', 'selectedUUID')
+  const [currentOperationUUID, setCurrentOperationUUID] = useState()
 
-  useEffect(() => { // Inject suggested-qso when present
-    if (route?.params?.qso?._suggestedKey && loggingState?.suggestedQSO?._suggestedKey !== route.params.qso._suggestedKey && loggingState?.qso?._suggestedKey !== route.params.qso._suggestedKey) {
-      setLoggingState({ ...loggingState, selectedUUID: 'suggested-qso', suggestedQSO: route.params.qso })
-      if (route?.params?.splitView) {
-        navigation.navigate('Operation', { ...route?.params, qso: undefined })
-      } else {
-        navigation.navigate('OpLog', { qso: undefined })
-      }
-    } else if (route?.params?.selectedUUID) {
-      setLoggingState({ ...loggingState, selectedUUID: route.params.selectedUUID })
-      navigation.replace('Operation', { ...route?.params, selectedUUID: undefined })
+  useEffect(() => {
+    if (operation?.uuid !== currentOperationUUID) {
+      setCurrentOperationUUID(operation?.uuid)
+      dispatch(manageNextQSO({ qsos, operation, vfo, settings }))
     }
-  }, [loggingState, setLoggingState, navigation, route.params, operation.uuid])
+  }, [operation, currentOperationUUID, dispatch, qsos, vfo, settings])
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {
@@ -133,8 +112,8 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   }, [navigation, operation])
 
   const handleSelectQSO = useCallback((uuid) => {
-    updateLoggingState({ selectedUUID: uuid })
-  }, [updateLoggingState])
+    dispatch(manageNextQSO({ selectedUUID: uuid, qsos, operation, vfo, settings }))
+  }, [dispatch, qsos, operation, vfo, settings])
 
   return (
     <View style={flexOne}>
@@ -147,8 +126,8 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
         operation={operation}
         ourInfo={ourInfo}
         onHeaderPress={showOpInfo}
-        lastUUID={loggingState?.lastUUID}
-        selectedUUID={loggingState?.selectedUUID}
+        lastUUID={lastUUID}
+        selectedUUID={selectedUUID}
         onSelectQSO={handleSelectQSO}
       />
 
