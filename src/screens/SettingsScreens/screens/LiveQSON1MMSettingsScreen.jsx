@@ -44,6 +44,9 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
   const dispatch = useDispatch()
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
   const selectedNetworkPolicy = liveQSON1MMNetworkPolicyOption(n1mmSettings.networkPolicy)
+  const noURLConfigured = t('screens.liveQSOSettings.noURLConfigured')
+  const selectedPolicyTitle = t(`screens.liveQSON1MMSettings.networkPolicy.options.${selectedNetworkPolicy.value}.title`)
+  const selectedPolicyDescription = t(`screens.liveQSON1MMSettings.networkPolicy.options.${selectedNetworkPolicy.value}.description`)
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
   const [policyDialogVisible, setPolicyDialogVisible] = useState(false)
@@ -80,13 +83,13 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
       })
 
       Alert.alert(
-        t('screens.liveQSON1MMSettings.test.successTitle', 'N1MM test sent'),
-        t('screens.liveQSON1MMSettings.test.successBody', 'Done.')
+        t('screens.liveQSON1MMSettings.test.successTitle'),
+        t('screens.liveQSON1MMSettings.test.successBody')
       )
     } catch (error) {
       Alert.alert(
-        t('screens.liveQSON1MMSettings.test.errorTitle', 'Error sending N1MM test'),
-        error?.message ?? t('screens.liveQSON1MMSettings.test.errorBody', 'Unknown error')
+        t('screens.liveQSON1MMSettings.test.errorTitle'),
+        error?.message ?? t('screens.liveQSON1MMSettings.test.errorBody')
       )
     }
   }, [n1mmSettings, settings?.operatorCall, t])
@@ -96,8 +99,8 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
           <H2kListItem
-            title={t('screens.liveQSON1MMSettings.enabled.title', 'Enabled')}
-            description={n1mmSettings.enabled ? t('screens.liveQSON1MMSettings.enabled.descriptionOn', 'Send saved QSOs as N1MM-style UDP broadcast') : t('screens.liveQSON1MMSettings.enabled.descriptionOff', 'Do not send live QSOs as N1MM-style UDP broadcast')}
+            title={t('screens.liveQSON1MMSettings.enabled.title')}
+            description={n1mmSettings.enabled ? t('screens.liveQSON1MMSettings.enabled.descriptionOn') : t('screens.liveQSON1MMSettings.enabled.descriptionOff')}
             leftIcon="broadcast"
             rightSwitchValue={n1mmSettings.enabled}
             rightSwitchOnValueChange={(value) => mergeN1MMSettings({ enabled: value })}
@@ -105,22 +108,22 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSON1MMSettings.url.title', 'Set URL')}
-            description={summarizeLiveQSOUDPURL(n1mmSettings.url, { maxLength: 56 })}
+            title={t('screens.liveQSON1MMSettings.url.title')}
+            description={summarizeLiveQSOUDPURL(n1mmSettings.url, { maxLength: 56, empty: noURLConfigured })}
             leftIcon="webhook"
             onPress={() => setURLDialogVisible(true)}
           />
 
           <H2kListItem
-            title={t('screens.liveQSON1MMSettings.networkPolicy.title', 'Network policy')}
-            description={t('screens.liveQSON1MMSettings.networkPolicy.description', '{{title}} • {{detail}}', { title: selectedNetworkPolicy.title, detail: selectedNetworkPolicy.description })}
+            title={t('screens.liveQSON1MMSettings.networkPolicy.title')}
+            description={t('screens.liveQSON1MMSettings.networkPolicy.description', { title: selectedPolicyTitle, detail: selectedPolicyDescription })}
             leftIcon="network-outline"
             onPress={() => setPolicyDialogVisible(true)}
           />
 
           <H2kListItem
-            title={t('screens.liveQSON1MMSettings.sendEdits.title', 'Send edits')}
-            description={n1mmSettings.sendEdits ? t('screens.liveQSON1MMSettings.sendEdits.descriptionOn', 'Also send QSO edits as N1MM messages') : t('screens.liveQSON1MMSettings.sendEdits.descriptionOff', 'Do not send QSO edits')}
+            title={t('screens.liveQSON1MMSettings.sendEdits.title')}
+            description={n1mmSettings.sendEdits ? t('screens.liveQSON1MMSettings.sendEdits.descriptionOn') : t('screens.liveQSON1MMSettings.sendEdits.descriptionOff')}
             leftIcon="file-edit-outline"
             rightSwitchValue={n1mmSettings.sendEdits}
             rightSwitchOnValueChange={(value) => mergeN1MMSettings({ sendEdits: value })}
@@ -128,8 +131,8 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSON1MMSettings.sendDeletes.title', 'Send deletes')}
-            description={n1mmSettings.sendDeletes ? t('screens.liveQSON1MMSettings.sendDeletes.descriptionOn', 'Also send QSO deletes as N1MM messages') : t('screens.liveQSON1MMSettings.sendDeletes.descriptionOff', 'Do not send QSO deletes')}
+            title={t('screens.liveQSON1MMSettings.sendDeletes.title')}
+            description={n1mmSettings.sendDeletes ? t('screens.liveQSON1MMSettings.sendDeletes.descriptionOn') : t('screens.liveQSON1MMSettings.sendDeletes.descriptionOff')}
             leftIcon="delete-outline"
             rightSwitchValue={n1mmSettings.sendDeletes}
             rightSwitchOnValueChange={(value) => mergeN1MMSettings({ sendDeletes: value })}
@@ -137,8 +140,8 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSON1MMSettings.skipEmptyFields.title', 'Skip empty fields')}
-            description={n1mmSettings.skipEmptyFields ? t('screens.liveQSON1MMSettings.skipEmptyFields.descriptionOn', 'Send shorter messages') : t('screens.liveQSON1MMSettings.skipEmptyFields.descriptionOff', "Don't send shorter messages")}
+            title={t('screens.liveQSON1MMSettings.skipEmptyFields.title')}
+            description={n1mmSettings.skipEmptyFields ? t('screens.liveQSON1MMSettings.skipEmptyFields.descriptionOn') : t('screens.liveQSON1MMSettings.skipEmptyFields.descriptionOff')}
             leftIcon="code-tags"
             rightSwitchValue={n1mmSettings.skipEmptyFields}
             rightSwitchOnValueChange={(value) => mergeN1MMSettings({ skipEmptyFields: value })}
@@ -146,8 +149,8 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSON1MMSettings.test.title', 'Send test ADIF')}
-            description={t('screens.liveQSON1MMSettings.test.description', 'Sends a test QSO to the configured URL')}
+            title={t('screens.liveQSON1MMSettings.test.title')}
+            description={t('screens.liveQSON1MMSettings.test.description')}
             leftIcon="send-outline"
             onPress={sendTestMessage}
           />
@@ -157,14 +160,14 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
 
       {urlDialogVisible && (
         <H2kDialog visible={true} onDismiss={cancelURLDialog}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.url.dialogTitle', 'N1MM Broadcast Target')}</H2kDialogTitle>
+          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.url.dialogTitle')}</H2kDialogTitle>
           <H2kDialogContent>
-            <H2kText variant="bodyMedium">{t('screens.liveQSON1MMSettings.url.dialogBody', 'Use a .255 address to broadcast on a /24, or a host IP to send directly.')}</H2kText>
+            <H2kText variant="bodyMedium">{t('screens.liveQSON1MMSettings.url.dialogBody')}</H2kText>
             <H2kTextInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={draftURL}
-              label={t('screens.liveQSON1MMSettings.url.inputLabel', 'Target URL')}
-              placeholder={t('screens.liveQSON1MMSettings.url.placeholder', '192.168.1.255:12060')}
+              label={t('screens.liveQSON1MMSettings.url.inputLabel')}
+              placeholder={t('screens.liveQSON1MMSettings.url.placeholder')}
               keyboard="dumb"
               autoCapitalize="none"
               autoCorrect={false}
@@ -180,13 +183,13 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
 
       {policyDialogVisible && (
         <H2kDialog visible={true} onDismiss={() => setPolicyDialogVisible(false)}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.networkPolicy.dialogTitle', 'Network policy')}</H2kDialogTitle>
+          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.networkPolicy.dialogTitle')}</H2kDialogTitle>
           <H2kDialogContent>
             {LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS.map((option) => (
               <H2kListItem
                 key={option.value}
-                title={t(`screens.liveQSON1MMSettings.networkPolicy.options.${option.value}.title`, option.title)}
-                description={t(`screens.liveQSON1MMSettings.networkPolicy.options.${option.value}.description`, option.description)}
+                title={t(`screens.liveQSON1MMSettings.networkPolicy.options.${option.value}.title`)}
+                description={t(`screens.liveQSON1MMSettings.networkPolicy.options.${option.value}.description`)}
                 leftIcon={option.value === n1mmSettings.networkPolicy ? 'check-circle-outline' : 'circle-outline'}
                 onPress={() => selectNetworkPolicy(option.value)}
               />

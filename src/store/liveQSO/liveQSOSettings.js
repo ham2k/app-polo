@@ -17,14 +17,10 @@ export const LIVE_QSO_UDP_MESSAGE_FORMATS = {
 
 export const LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS = [
   {
-    value: LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF,
-    title: 'Raw ADIF',
-    description: 'Log4OM, HRD, GridTracker'
+    value: LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF
   },
   {
-    value: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible,
-    title: 'WSJT-X compatible',
-    description: 'DXKeeper, HRD, AC Log, MacLoggerDX'
+    value: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible
   }
 ]
 
@@ -36,19 +32,13 @@ export const LIVE_QSO_N1MM_NETWORK_POLICIES = {
 
 export const LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS = [
   {
-    value: LIVE_QSO_N1MM_NETWORK_POLICIES.always,
-    title: 'Always send',
-    description: 'Send on any network'
+    value: LIVE_QSO_N1MM_NETWORK_POLICIES.always
   },
   {
-    value: LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOnly,
-    title: 'Wi-Fi / Ethernet only',
-    description: 'Recommended for broadcast targets'
+    value: LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOnly
   },
   {
-    value: LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOrVPN,
-    title: 'Wi-Fi / Ethernet / VPN',
-    description: 'Allow VPN-backed home or shack networks'
+    value: LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOrVPN
   }
 ]
 

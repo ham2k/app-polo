@@ -384,22 +384,22 @@ function settingsScreensArray ({ t, includeMain, topLevelBack, splitView }) {
     />,
 
     <Stack.Screen name="LiveQSOSettings" key="LiveQSOSettings"
-      options={{ title: t('screens.liveQSOSettings.title', 'Live QSO logging'), leftAction: topLevelBack ? 'back' : 'none' }}
+      options={{ title: t('screens.liveQSOSettings.title'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={LiveQSOSettingsScreen}
     />,
 
     <Stack.Screen name="LiveQSOHTTPSettings" key="LiveQSOHTTPSettings"
-      options={{ title: t('screens.liveQSOHTTPSettings.title', 'HTTP Endpoint'), leftAction: topLevelBack ? 'back' : 'none' }}
+      options={{ title: t('screens.liveQSOHTTPSettings.title'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={LiveQSOHTTPSettingsScreen}
     />,
 
     <Stack.Screen name="LiveQSOSocketSettings" key="LiveQSOSocketSettings"
-      options={{ title: t('screens.liveQSOUDPSettings.title', 'UDP ADIF'), leftAction: topLevelBack ? 'back' : 'none' }}
+      options={{ title: t('screens.liveQSOUDPSettings.title'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={LiveQSOSocketSettingsScreen}
     />,
 
     <Stack.Screen name="LiveQSON1MMSettings" key="LiveQSON1MMSettings"
-      options={{ title: t('screens.liveQSON1MMSettings.title', 'N1MM Broadcast'), leftAction: topLevelBack ? 'back' : 'none' }}
+      options={{ title: t('screens.liveQSON1MMSettings.title'), leftAction: topLevelBack ? 'back' : 'none' }}
       component={LiveQSON1MMSettingsScreen}
     />
 
