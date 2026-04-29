@@ -98,11 +98,11 @@ class UDPModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMod
         val packet = DatagramPacket(bytes, bytes.size, address, port)
 
         socket = DatagramSocket()
-        socket.broadcast = broadcast
+        socket.broadcast = true
         socket.send(packet)
 
         val result = Arguments.createMap().apply {
-          putBoolean("broadcast", broadcast)
+          putBoolean("broadcast", true)
           putString("host", host)
           putInt("port", port)
           putInt("bytesSent", bytes.size)
