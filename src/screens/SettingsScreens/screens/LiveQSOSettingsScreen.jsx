@@ -8,7 +8,7 @@
 
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { ScrollView, View } from 'react-native'
+import { Platform, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -55,18 +55,22 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
             leftIcon="protocol"
             onPress={() => navigation.navigate('LiveQSOHTTPSettings')}
           />
-          <H2kListItem
-            title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
-            description={udpDescription}
-            leftIcon="lan"
-            onPress={() => navigation.navigate('LiveQSOSocketSettings')}
-          />
-          <H2kListItem
-            title={t('screens.liveQSOSettings.n1mmBroadcast.title', 'N1MM Broadcast')}
-            description={n1mmDescription}
-            leftIcon="broadcast"
-            onPress={() => navigation.navigate('LiveQSON1MMSettings')}
-          />
+          {Platform.OS === 'android' && (
+            <H2kListItem
+              title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
+              description={udpDescription}
+              leftIcon="lan"
+              onPress={() => navigation.navigate('LiveQSOSocketSettings')}
+            />
+          )}
+          {Platform.OS === 'android' && (
+            <H2kListItem
+              title={t('screens.liveQSOSettings.n1mmBroadcast.title', 'N1MM Broadcast')}
+              description={n1mmDescription}
+              leftIcon="broadcast"
+              onPress={() => navigation.navigate('LiveQSON1MMSettings')}
+            />
+          )}
         </H2kListSection>
 
         <View style={{ height: safeAreaInsets.bottom }} />
