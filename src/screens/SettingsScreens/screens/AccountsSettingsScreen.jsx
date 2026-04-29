@@ -60,8 +60,8 @@ export default function AccountsSettingsScreen ({ navigation, splitView }) {
 
         <H2kListSection title={t('screens.settings.accountsSettings.servicesSection', 'Services')}>
           <H2kListItem
-            title={t('screens.liveQSOSettings.title')}
-            description={t('screens.liveQSOSettings.description')}
+            title={t('screens.liveQSOSettings.title', 'Live QSO logging')}
+            description={t('screens.liveQSOSettings.description', 'HTTP endpoint and other live export transports')}
             onPress={() => navigation.navigate('Settings', { screen: 'LiveQSOSettings' })}
             leftIcon="broadcast"
           />

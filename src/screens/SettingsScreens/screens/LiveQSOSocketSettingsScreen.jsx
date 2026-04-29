@@ -46,9 +46,6 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
   const udpSettings = selectLiveQSOUDPSettings(settings)
   const selectedFormat = liveQSOUDPMessageFormatOption(udpSettings.messageFormat)
-  const noURLConfigured = t('screens.liveQSOSettings.noURLConfigured')
-  const selectedFormatTitle = t(`screens.liveQSOUDPSettings.messageFormat.options.${selectedFormat.value}.title`)
-  const selectedFormatDescription = t(`screens.liveQSOUDPSettings.messageFormat.options.${selectedFormat.value}.description`)
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
   const [formatDialogVisible, setFormatDialogVisible] = useState(false)
@@ -82,13 +79,13 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
       await sendLiveQSOUDPTest({ settings: udpSettings })
 
       Alert.alert(
-        t('screens.liveQSOUDPSettings.test.successTitle'),
-        t('screens.liveQSOUDPSettings.test.successBody')
+        t('screens.liveQSOUDPSettings.test.successTitle', 'UDP test sent'),
+        t('screens.liveQSOUDPSettings.test.successBody', 'Done.')
       )
     } catch (error) {
       Alert.alert(
-        t('screens.liveQSOUDPSettings.test.errorTitle'),
-        error?.message ?? t('screens.liveQSOUDPSettings.test.errorBody')
+        t('screens.liveQSOUDPSettings.test.errorTitle', 'Error sending UDP test'),
+        error?.message ?? t('screens.liveQSOUDPSettings.test.errorBody', 'Unknown error')
       )
     }
   }, [t, udpSettings])
@@ -98,8 +95,8 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
           <H2kListItem
-            title={t('screens.liveQSOUDPSettings.enabled.title')}
-            description={udpSettings.enabled ? t('screens.liveQSOUDPSettings.enabled.descriptionOn') : t('screens.liveQSOUDPSettings.enabled.descriptionOff')}
+            title={t('screens.liveQSOUDPSettings.enabled.title', 'Enabled')}
+            description={udpSettings.enabled ? t('screens.liveQSOUDPSettings.enabled.descriptionOn', 'Send saved QSOs to the configured UDP target') : t('screens.liveQSOUDPSettings.enabled.descriptionOff', 'Do not send live QSOs over UDP')}
             leftIcon="lan"
             rightSwitchValue={udpSettings.enabled}
             rightSwitchOnValueChange={(value) => mergeUDPSettings({ enabled: value })}
@@ -107,22 +104,22 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOUDPSettings.url.title')}
-            description={summarizeLiveQSOUDPURL(udpSettings.url, { maxLength: 56, empty: noURLConfigured })}
+            title={t('screens.liveQSOUDPSettings.url.title', 'Set URL')}
+            description={summarizeLiveQSOUDPURL(udpSettings.url, { maxLength: 56 })}
             leftIcon="webhook"
             onPress={() => setURLDialogVisible(true)}
           />
 
           <H2kListItem
-            title={t('screens.liveQSOUDPSettings.messageFormat.title')}
-            description={t('screens.liveQSOUDPSettings.messageFormat.description', { format: selectedFormatTitle, programs: selectedFormatDescription })}
+            title={t('screens.liveQSOUDPSettings.messageFormat.title', 'Message format')}
+            description={t('screens.liveQSOUDPSettings.messageFormat.description', '{{format}} • {{programs}}', { format: selectedFormat.title, programs: selectedFormat.description })}
             leftIcon="format-list-bulleted"
             onPress={() => setFormatDialogVisible(true)}
           />
 
           <H2kListItem
-            title={t('screens.liveQSOUDPSettings.test.title')}
-            description={t('screens.liveQSOUDPSettings.test.description')}
+            title={t('screens.liveQSOUDPSettings.test.title', 'Send test ADIF')}
+            description={t('screens.liveQSOUDPSettings.test.description', 'Sends a test QSO to the configured URL')}
             leftIcon="send-outline"
             onPress={sendTestMessage}
           />
@@ -132,14 +129,14 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
       {urlDialogVisible && (
         <H2kDialog visible={true} onDismiss={cancelURLDialog}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSOUDPSettings.url.dialogTitle')}</H2kDialogTitle>
+          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSOUDPSettings.url.dialogTitle', 'UDP ADIF Target')}</H2kDialogTitle>
           <H2kDialogContent>
-            <H2kText variant="bodyMedium">{t('screens.liveQSOUDPSettings.url.dialogBody')}</H2kText>
+            <H2kText variant="bodyMedium">{t('screens.liveQSOUDPSettings.url.dialogBody', 'Enter the UDP target that should receive live ADIF datagrams.')}</H2kText>
             <H2kTextInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={draftURL}
-              label={t('screens.liveQSOUDPSettings.url.inputLabel')}
-              placeholder={t('screens.liveQSOUDPSettings.url.placeholder')}
+              label={t('screens.liveQSOUDPSettings.url.inputLabel', 'Target URL')}
+              placeholder={t('screens.liveQSOUDPSettings.url.placeholder', 'example.local:2237')}
               keyboard="dumb"
               autoCapitalize="none"
               autoCorrect={false}
@@ -155,13 +152,13 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
       {formatDialogVisible && (
         <H2kDialog visible={true} onDismiss={() => setFormatDialogVisible(false)}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSOUDPSettings.messageFormat.dialogTitle')}</H2kDialogTitle>
+          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSOUDPSettings.messageFormat.dialogTitle', 'UDP ADIF message format')}</H2kDialogTitle>
           <H2kDialogContent>
             {LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS.map((option) => (
               <H2kListItem
                 key={option.value}
-                title={t(`screens.liveQSOUDPSettings.messageFormat.options.${option.value}.title`)}
-                description={t(`screens.liveQSOUDPSettings.messageFormat.options.${option.value}.description`)}
+                title={t(`screens.liveQSOUDPSettings.messageFormat.options.${option.value}.title`, option.title)}
+                description={t(`screens.liveQSOUDPSettings.messageFormat.options.${option.value}.description`, option.description)}
                 leftIcon={option.value === udpSettings.messageFormat ? 'check-circle-outline' : 'circle-outline'}
                 onPress={() => selectFormat(option.value)}
               />

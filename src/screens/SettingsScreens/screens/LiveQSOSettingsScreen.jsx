@@ -35,33 +35,29 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
   const udpFormatOption = liveQSOUDPMessageFormatOption(udpSettings.messageFormat)
   const n1mmNetworkPolicyOption = liveQSON1MMNetworkPolicyOption(n1mmSettings.networkPolicy)
-  const noURLConfigured = t('screens.liveQSOSettings.noURLConfigured')
-  const udpFormatTitle = t(`screens.liveQSOUDPSettings.messageFormat.options.${udpFormatOption.value}.title`)
-  const udpFormatDescription = t(`screens.liveQSOUDPSettings.messageFormat.options.${udpFormatOption.value}.description`)
-  const n1mmPolicyTitle = t(`screens.liveQSON1MMSettings.networkPolicy.options.${n1mmNetworkPolicyOption.value}.title`)
   const httpDescription = httpSettings.enabled
-    ? t('screens.liveQSOSettings.httpEnabledDescription', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34, empty: noURLConfigured }) })
-    : t('screens.liveQSOSettings.httpDisabledDescription', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34, empty: noURLConfigured }) })
+    ? t('screens.liveQSOSettings.httpEnabledDescription', 'Enabled • {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
+    : t('screens.liveQSOSettings.httpDisabledDescription', 'Disabled • {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
   const udpDescription = settings?.liveQSO?.udp?.messageFormat
-    ? t('screens.liveQSOSettings.udpSelectedDescription', { format: udpFormatTitle, programs: udpFormatDescription })
-    : t('screens.liveQSOSettings.udpDefaultDescription')
+    ? t('screens.liveQSOSettings.udpSelectedDescription', '{{format}} • {{programs}}', { format: udpFormatOption.title, programs: udpFormatOption.description })
+    : t('screens.liveQSOSettings.udpDefaultDescription', 'Live logging with Log4OM, DXKeeper, MacLoggerDX, HRD and more')
   const n1mmDescription = n1mmSettings.enabled
-    ? t('screens.liveQSOSettings.n1mmEnabledDescription', { policy: n1mmPolicyTitle })
-    : t('screens.liveQSOSettings.n1mmDisabledDescription')
+    ? t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled • {{policy}}', { policy: n1mmNetworkPolicyOption.title })
+    : t('screens.liveQSOSettings.n1mmDisabledDescription', 'Disabled • N1MM XML broadcast')
 
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
           <H2kListItem
-            title={t('screens.liveQSOSettings.httpEndpoint.title')}
+            title={t('screens.liveQSOSettings.httpEndpoint.title', 'HTTP Endpoint')}
             description={httpDescription}
             leftIcon="protocol"
             onPress={() => navigation.navigate('LiveQSOHTTPSettings')}
           />
           {Platform.OS === 'android' && (
             <H2kListItem
-              title={t('screens.liveQSOSettings.udpAdif.title')}
+              title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
               description={udpDescription}
               leftIcon="lan"
               onPress={() => navigation.navigate('LiveQSOSocketSettings')}
@@ -69,7 +65,7 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
           )}
           {Platform.OS === 'android' && (
             <H2kListItem
-              title={t('screens.liveQSOSettings.n1mmBroadcast.title')}
+              title={t('screens.liveQSOSettings.n1mmBroadcast.title', 'N1MM Broadcast')}
               description={n1mmDescription}
               leftIcon="broadcast"
               onPress={() => navigation.navigate('LiveQSON1MMSettings')}

@@ -27,7 +27,6 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
   const dispatch = useDispatch()
 
   const httpSettings = selectLiveQSOHTTPSettings(settings)
-  const noURLConfigured = t('screens.liveQSOSettings.noURLConfigured')
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
   const [draftURL, setDraftURL] = useState(httpSettings.url)
@@ -54,17 +53,17 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
     try {
       const result = await sendLiveQSOHTTPTest({ settings: httpSettings })
       const body = result.ok
-        ? t('screens.liveQSOHTTPSettings.test.successBodyOk', { status: result.status })
-        : t('screens.liveQSOHTTPSettings.test.successBodyStatus', { status: result.status })
+        ? t('screens.liveQSOHTTPSettings.test.successBodyOk', 'Done. Response = {{status}}\nSend successful!', { status: result.status })
+        : t('screens.liveQSOHTTPSettings.test.successBodyStatus', 'Done. Response = {{status}}', { status: result.status })
 
       Alert.alert(
-        t('screens.liveQSOHTTPSettings.test.successTitle'),
+        t('screens.liveQSOHTTPSettings.test.successTitle', 'HTTP test sent'),
         body
       )
     } catch (error) {
       Alert.alert(
-        t('screens.liveQSOHTTPSettings.test.errorTitle'),
-        error?.message ?? t('screens.liveQSOHTTPSettings.test.errorBody')
+        t('screens.liveQSOHTTPSettings.test.errorTitle', 'Error sending HTTP test'),
+        error?.message ?? t('screens.liveQSOHTTPSettings.test.errorBody', 'Unknown error')
       )
     }
   }, [httpSettings, t])
@@ -74,8 +73,8 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
           <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.enabled.title')}
-            description={httpSettings.enabled ? t('screens.liveQSOHTTPSettings.enabled.descriptionOn') : t('screens.liveQSOHTTPSettings.enabled.descriptionOff')}
+            title={t('screens.liveQSOHTTPSettings.enabled.title', 'Enabled')}
+            description={httpSettings.enabled ? t('screens.liveQSOHTTPSettings.enabled.descriptionOn', 'Send saved QSOs to the configured HTTP endpoint') : t('screens.liveQSOHTTPSettings.enabled.descriptionOff', 'Do not send live QSOs over HTTP')}
             leftIcon="protocol"
             rightSwitchValue={httpSettings.enabled}
             rightSwitchOnValueChange={(value) => mergeHTTPSettings({ enabled: value })}
@@ -83,15 +82,15 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.url.title')}
-            description={summarizeLiveQSOURL(httpSettings.url, { maxLength: 56, empty: noURLConfigured })}
+            title={t('screens.liveQSOHTTPSettings.url.title', 'Set URL')}
+            description={summarizeLiveQSOURL(httpSettings.url, { maxLength: 56 })}
             leftIcon="webhook"
             onPress={() => setURLDialogVisible(true)}
           />
 
           <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.individualRequests.title')}
-            description={httpSettings.individualRequests ? t('screens.liveQSOHTTPSettings.individualRequests.descriptionOn') : t('screens.liveQSOHTTPSettings.individualRequests.descriptionOff')}
+            title={t('screens.liveQSOHTTPSettings.individualRequests.title', 'Individual requests per QSO')}
+            description={httpSettings.individualRequests ? t('screens.liveQSOHTTPSettings.individualRequests.descriptionOn', 'Split multi-record ADIF into separate requests') : t('screens.liveQSOHTTPSettings.individualRequests.descriptionOff', 'Keep multi-record ADIF in one request')}
             leftIcon="call-split"
             rightSwitchValue={httpSettings.individualRequests}
             rightSwitchOnValueChange={(value) => mergeHTTPSettings({ individualRequests: value })}
@@ -99,8 +98,8 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.sendADIFHeader.title')}
-            description={httpSettings.sendADIFHeader ? t('screens.liveQSOHTTPSettings.sendADIFHeader.descriptionOn') : t('screens.liveQSOHTTPSettings.sendADIFHeader.descriptionOff')}
+            title={t('screens.liveQSOHTTPSettings.sendADIFHeader.title', 'Send ADIF header')}
+            description={httpSettings.sendADIFHeader ? t('screens.liveQSOHTTPSettings.sendADIFHeader.descriptionOn', 'Include ADIF header fields before records') : t('screens.liveQSOHTTPSettings.sendADIFHeader.descriptionOff', 'Send record lines only')}
             leftIcon="format-header-pound"
             rightSwitchValue={httpSettings.sendADIFHeader}
             rightSwitchOnValueChange={(value) => mergeHTTPSettings({ sendADIFHeader: value })}
@@ -108,8 +107,8 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.sendEdits.title')}
-            description={httpSettings.sendEdits ? t('screens.liveQSOHTTPSettings.sendEdits.descriptionOn') : t('screens.liveQSOHTTPSettings.sendEdits.descriptionOff')}
+            title={t('screens.liveQSOHTTPSettings.sendEdits.title', 'Send edits')}
+            description={httpSettings.sendEdits ? t('screens.liveQSOHTTPSettings.sendEdits.descriptionOn', 'Send edited QSOs with HTTP PUT') : t('screens.liveQSOHTTPSettings.sendEdits.descriptionOff', 'Do not send edited QSOs')}
             leftIcon="file-edit-outline"
             rightSwitchValue={httpSettings.sendEdits}
             rightSwitchOnValueChange={(value) => mergeHTTPSettings({ sendEdits: value })}
@@ -117,8 +116,8 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.sendDeletes.title')}
-            description={httpSettings.sendDeletes ? t('screens.liveQSOHTTPSettings.sendDeletes.descriptionOn') : t('screens.liveQSOHTTPSettings.sendDeletes.descriptionOff')}
+            title={t('screens.liveQSOHTTPSettings.sendDeletes.title', 'Send deletes')}
+            description={httpSettings.sendDeletes ? t('screens.liveQSOHTTPSettings.sendDeletes.descriptionOn', 'Send deleted QSOs with HTTP DELETE') : t('screens.liveQSOHTTPSettings.sendDeletes.descriptionOff', 'Do not send deleted QSOs')}
             leftIcon="delete-outline"
             rightSwitchValue={httpSettings.sendDeletes}
             rightSwitchOnValueChange={(value) => mergeHTTPSettings({ sendDeletes: value })}
@@ -126,8 +125,8 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOHTTPSettings.test.title')}
-            description={t('screens.liveQSOHTTPSettings.test.description')}
+            title={t('screens.liveQSOHTTPSettings.test.title', 'Send test ADIF')}
+            description={t('screens.liveQSOHTTPSettings.test.description', 'Sends a test QSO to the configured URL')}
             leftIcon="send-outline"
             onPress={sendTestMessage}
           />
@@ -138,14 +137,14 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
 
       {urlDialogVisible && (
         <H2kDialog visible={true} onDismiss={cancelURLDialog}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSOHTTPSettings.url.dialogTitle')}</H2kDialogTitle>
+          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSOHTTPSettings.url.dialogTitle', 'HTTP Endpoint URL')}</H2kDialogTitle>
           <H2kDialogContent>
-            <H2kText variant="bodyMedium">{t('screens.liveQSOHTTPSettings.url.dialogBody')}</H2kText>
+            <H2kText variant="bodyMedium">{t('screens.liveQSOHTTPSettings.url.dialogBody', 'Enter the URL that should receive live QSO ADIF requests.')}</H2kText>
             <H2kTextInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={draftURL}
-              label={t('screens.liveQSOHTTPSettings.url.inputLabel')}
-              placeholder={t('screens.liveQSOHTTPSettings.url.placeholder')}
+              label={t('screens.liveQSOHTTPSettings.url.inputLabel', 'Endpoint URL')}
+              placeholder={t('screens.liveQSOHTTPSettings.url.placeholder', 'http://example.org/live-qso')}
               keyboard="dumb"
               autoCapitalize="none"
               autoCorrect={false}
