@@ -103,7 +103,8 @@ export function selectLiveQSON1MMSettings (settings) {
     url: normalizeLiveQSOUDPURL(liveQSOSettings.url || DEFAULT_LIVE_QSO_N1MM_URL),
     networkPolicy: liveQSOSettings.networkPolicy || LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOnly,
     sendEdits: liveQSOSettings.sendEdits === true,
-    sendDeletes: liveQSOSettings.sendDeletes === true
+    sendDeletes: liveQSOSettings.sendDeletes === true,
+    skipEmptyFields: liveQSOSettings.skipEmptyFields !== false
   }
 }
 

@@ -8,7 +8,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -20,6 +20,7 @@ import {
   liveQSON1MMNetworkPolicyOption,
   LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS,
   normalizeLiveQSOUDPURL,
+  sendLiveQSON1MMTest,
   selectLiveQSON1MMSettings,
   summarizeLiveQSOUDPURL
 } from '../../../store/liveQSO'
@@ -71,6 +72,25 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
     setPolicyDialogVisible(false)
   }, [mergeN1MMSettings])
 
+  const sendTestMessage = useCallback(async () => {
+    try {
+      await sendLiveQSON1MMTest({
+        settings: n1mmSettings,
+        operatorCall: settings?.operatorCall
+      })
+
+      Alert.alert(
+        t('screens.liveQSON1MMSettings.test.successTitle', 'N1MM test sent'),
+        t('screens.liveQSON1MMSettings.test.successBody', 'Done.')
+      )
+    } catch (error) {
+      Alert.alert(
+        t('screens.liveQSON1MMSettings.test.errorTitle', 'Error sending N1MM test'),
+        error?.message ?? t('screens.liveQSON1MMSettings.test.errorBody', 'Unknown error')
+      )
+    }
+  }, [n1mmSettings, settings?.operatorCall, t])
+
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
@@ -117,9 +137,19 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
+            title={t('screens.liveQSON1MMSettings.skipEmptyFields.title', 'Skip empty fields')}
+            description={n1mmSettings.skipEmptyFields ? t('screens.liveQSON1MMSettings.skipEmptyFields.descriptionOn', 'Send shorter messages') : t('screens.liveQSON1MMSettings.skipEmptyFields.descriptionOff', "Don't send shorter messages")}
+            leftIcon="code-tags"
+            rightSwitchValue={n1mmSettings.skipEmptyFields}
+            rightSwitchOnValueChange={(value) => mergeN1MMSettings({ skipEmptyFields: value })}
+            onPress={() => mergeN1MMSettings({ skipEmptyFields: !n1mmSettings.skipEmptyFields })}
+          />
+
+          <H2kListItem
             title={t('screens.liveQSON1MMSettings.test.title', 'Send test ADIF')}
             description={t('screens.liveQSON1MMSettings.test.description', 'Sends a test QSO to the configured URL')}
             leftIcon="send-outline"
+            onPress={sendTestMessage}
           />
         </H2kListSection>
         <View style={{ height: safeAreaInsets.bottom }} />
@@ -129,7 +159,7 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
         <H2kDialog visible={true} onDismiss={cancelURLDialog}>
           <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.url.dialogTitle', 'N1MM Broadcast Target')}</H2kDialogTitle>
           <H2kDialogContent>
-            <H2kText variant="bodyMedium">{t('screens.liveQSON1MMSettings.url.dialogBody', 'Enter the target that should receive N1MM-style UDP messages.')}</H2kText>
+            <H2kText variant="bodyMedium">{t('screens.liveQSON1MMSettings.url.dialogBody', 'Use a .255 address to broadcast, or a host IP to send directly.')}</H2kText>
             <H2kTextInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={draftURL}
