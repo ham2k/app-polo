@@ -159,7 +159,7 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
         <H2kDialog visible={true} onDismiss={cancelURLDialog}>
           <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.url.dialogTitle', 'N1MM Broadcast Target')}</H2kDialogTitle>
           <H2kDialogContent>
-            <H2kText variant="bodyMedium">{t('screens.liveQSON1MMSettings.url.dialogBody', 'Use a .255 address to broadcast, or a host IP to send directly.')}</H2kText>
+            <H2kText variant="bodyMedium">{t('screens.liveQSON1MMSettings.url.dialogBody', 'Use a .255 address to broadcast on a /24, or a host IP to send directly.')}</H2kText>
             <H2kTextInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={draftURL}

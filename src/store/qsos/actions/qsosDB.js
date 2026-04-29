@@ -74,7 +74,7 @@ export const queryQSOs = async (query, params) => {
   return qsos
 }
 
-export const addQSO = ({ uuid, qso, synced = false, source, liveQSOAction }) => addQSOs({ uuid, qsos: [qso], synced, source, liveQSOAction })
+export const addQSO = ({ uuid, qso, synced = false, source, liveQSOAction, liveQSOContext }) => addQSOs({ uuid, qsos: [qso], synced, source, liveQSOAction, liveQSOContext })
 
 export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
   const qso = {
@@ -93,7 +93,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
 
 const DEBUG = false
 
-export const addQSOs = ({ uuid, qsos, synced = false, source, liveQSOAction }) => async (dispatch, getState) => {
+export const addQSOs = ({ uuid, qsos, synced = false, source, liveQSOAction, liveQSOContext }) => async (dispatch, getState) => {
   const now = Date.now()
 
   if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
@@ -154,7 +154,6 @@ export const addQSOs = ({ uuid, qsos, synced = false, source, liveQSOAction }) =
   }
   if (DEBUG) logTimer('addQSOs', 'done inserting')
 
-  const operationInfo = getState().operations.info[uuid]
   if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
@@ -168,7 +167,7 @@ export const addQSOs = ({ uuid, qsos, synced = false, source, liveQSOAction }) =
     setImmediate(() => {
       sendQSOsToSyncService({ dispatch, getState })
       if (source === 'logging-panel') {
-        enqueueLiveQSOPosts({ getState, uuid, qsos, action: liveQSOAction })
+        enqueueLiveQSOPosts({ getState, uuid, qsos, action: liveQSOAction, liveQSOContext })
       }
       if (DEBUG) logTimer('addQSOs', 'done updating operation')
     })
@@ -209,7 +208,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
-export async function markQSOsAsSynced(qsos) {
+export async function markQSOsAsSynced (qsos) {
   if (!qsos || qsos.length === 0) return
   await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `'${q.uuid}'`).join(',')})`, [])
 }
@@ -277,8 +276,4 @@ export const saveQSOsForOperation = (uuid, { qsos, synced } = {}) => async (disp
     ])
   }
   await dbExecuteBatch(sql)
-}
-
-function fingerprintQSOData(qso) {
-  return JSON.stringify(qso)
 }

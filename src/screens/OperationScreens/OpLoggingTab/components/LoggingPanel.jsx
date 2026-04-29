@@ -298,7 +298,13 @@ export default function LoggingPanel ({
       if (qso?._willBeDeleted !== undefined) {
         qso.deleted = qso._willBeDeleted
         delete qso._willBeDeleted
-        dispatch(addQSO({ uuid: operation.uuid, qso, source: 'logging-panel', liveQSOAction: qso.deleted ? 'delete' : 'update' }))
+        dispatch(addQSO({
+          uuid: operation.uuid,
+          qso,
+          source: 'logging-panel',
+          liveQSOAction: qso.deleted ? 'delete' : 'update',
+          liveQSOContext: { previousQSO: loggingState?.originalQSO }
+        }))
         updateLoggingState({
           qso: undefined,
           selectedUUID: undefined,
@@ -390,7 +396,13 @@ export default function LoggingPanel ({
           // But leave enough time for blur effects to take place before being overwritten by the new setQSO
           // Just 10ms did not seemed to be enough in tests, but 50ms is fine.
 
-          dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs, source: 'logging-panel', liveQSOAction: eventName === 'add_qso' ? 'create' : 'update' }))
+          dispatch(addQSOs({
+            uuid: operation.uuid,
+            qsos: multiQSOs,
+            source: 'logging-panel',
+            liveQSOAction: eventName === 'add_qso' ? 'create' : 'update',
+            liveQSOContext: eventName === 'add_qso' ? undefined : { previousQSO: loggingState?.originalQSO }
+          }))
           if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
           // Let queue management decide what to do next

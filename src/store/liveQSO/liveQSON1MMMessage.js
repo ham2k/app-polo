@@ -7,6 +7,7 @@
  */
 
 import UUID from 'react-native-uuid'
+import { fetch as fetchNetInfo } from '@react-native-community/netinfo'
 import { adifModeAndSubmodeForMode, frequencyForBand } from '@ham2k/lib-operation-data'
 
 import { filterRefs } from '../../tools/refTools'
@@ -45,6 +46,12 @@ const XOTA_PROGRAMS = [
   { label: 'TOTA', types: ['tota', 'totaActivation'] }
 ]
 
+const N1MM_ALLOWED_NETWORK_TYPES = {
+  always: null,
+  wifiEthernetOnly: new Set(['wifi', 'ethernet']),
+  wifiEthernetOrVPN: new Set(['wifi', 'ethernet', 'vpn'])
+}
+
 function escapeXML (value) {
   return `${value ?? ''}`
     .replaceAll('&', '&amp;')
@@ -55,12 +62,12 @@ function escapeXML (value) {
 }
 
 function formatN1MMTimestamp (date = new Date()) {
-  const year = date.getFullYear()
-  const month = `${date.getMonth() + 1}`.padStart(2, '0')
-  const day = `${date.getDate()}`.padStart(2, '0')
-  const hours = `${date.getHours()}`.padStart(2, '0')
-  const minutes = `${date.getMinutes()}`.padStart(2, '0')
-  const seconds = `${date.getSeconds()}`.padStart(2, '0')
+  const year = date.getUTCFullYear()
+  const month = `${date.getUTCMonth() + 1}`.padStart(2, '0')
+  const day = `${date.getUTCDate()}`.padStart(2, '0')
+  const hours = `${date.getUTCHours()}`.padStart(2, '0')
+  const minutes = `${date.getUTCMinutes()}`.padStart(2, '0')
+  const seconds = `${date.getUTCSeconds()}`.padStart(2, '0')
 
   return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
 }
@@ -168,6 +175,7 @@ function buildN1MMComment ({ qso, operation }) {
 export function buildN1MMContactInfoValuesForQSO ({
   qso,
   operation,
+  previousQSO,
   stationName = DEFAULT_STATION_NAME,
   contestname = 'DX',
   contestnr = '0',
@@ -178,6 +186,8 @@ export function buildN1MMContactInfoValuesForQSO ({
   const mycall = qso?.our?.call || operation?.stationCall || 'N0CALL'
   const operator = qso?.our?.operatorCall || operation?.local?.operatorCall || mycall
   const call = qso?.their?.call || 'N0CALL'
+  const oldTimestamp = formatN1MMTimestamp(new Date(previousQSO?.startAtMillis ?? qso?.startAtMillis ?? Date.now()))
+  const oldCall = previousQSO?.their?.call || call
   const comment = buildN1MMComment({ qso, operation })
   const xotaSummary = formatXOTASummary({ qso, operation })
 
@@ -227,16 +237,16 @@ export function buildN1MMContactInfoValuesForQSO ({
     StationName: stationName,
     ID: buildN1MMContactId(qso?.uuid),
     IsClaimedQso: '1',
-    oldtimestamp: timestamp,
-    oldcall: call,
+    oldtimestamp: oldTimestamp,
+    oldcall: oldCall,
     SentExchange: qso?.our?.exchange
   }
 }
 
-export function buildN1MMContactInfoXML (values = {}, options = {}) {
+function buildN1MMEnvelopeXML (rootTag, values = {}, options = {}) {
   return [
     '<?xml version="1.0" encoding="utf-8"?>',
-    '<contactinfo>',
+    `<${rootTag}>`,
     xmlEntriesToString([
       ['app', values.app ?? 'PoLo'],
       ['contestname', values.contestname ?? 'DX'],
@@ -287,7 +297,34 @@ export function buildN1MMContactInfoXML (values = {}, options = {}) {
       ['oldcall', values.oldcall ?? values.call ?? 'N0CALL'],
       ['SentExchange', values.SentExchange]
     ], options),
-    '</contactinfo>'
+    `</${rootTag}>`
+  ].join('\n')
+}
+
+export function buildN1MMContactInfoXML (values = {}, options = {}) {
+  return buildN1MMEnvelopeXML('contactinfo', values, options)
+}
+
+export function buildN1MMContactReplaceXML (values = {}, options = {}) {
+  return buildN1MMEnvelopeXML('contactreplace', values, options)
+}
+
+export function buildN1MMContactDeleteXML (values = {}, options = {}) {
+  const timestamp = values.timestamp ?? formatN1MMTimestamp()
+  return [
+    '<?xml version="1.0" encoding="utf-8"?>',
+    '<contactdelete>',
+    xmlEntriesToString([
+      ['app', values.app ?? 'PoLo'],
+      ['timestamp', timestamp],
+      ['mycall', values.mycall ?? 'N0CALL'],
+      ['band', values.band ?? '14'],
+      ['call', values.call ?? 'N0CALL'],
+      ['contestnr', values.contestnr ?? '0'],
+      ['StationName', values.StationName ?? DEFAULT_STATION_NAME],
+      ['ID', values.ID ?? buildN1MMContactId()]
+    ], options),
+    '</contactdelete>'
   ].join('\n')
 }
 
@@ -304,6 +341,68 @@ export function buildN1MMContactInfoXMLForQSO ({
   })
 
   return buildN1MMContactInfoXML(values, { skipEmptyFields })
+}
+
+export function buildN1MMContactReplaceXMLForQSO ({
+  qso,
+  operation,
+  previousQSO,
+  skipEmptyFields = true,
+  ...options
+}) {
+  const values = buildN1MMContactInfoValuesForQSO({
+    qso,
+    operation,
+    previousQSO,
+    ...options
+  })
+
+  return buildN1MMContactReplaceXML(values, { skipEmptyFields })
+}
+
+export function buildN1MMContactDeleteXMLForQSO ({
+  qso,
+  operation,
+  previousQSO,
+  skipEmptyFields = true,
+  ...options
+}) {
+  const baseQSO = previousQSO ?? qso
+  const values = buildN1MMContactInfoValuesForQSO({
+    qso: baseQSO,
+    operation,
+    previousQSO: baseQSO,
+    ...options
+  })
+
+  return buildN1MMContactDeleteXML(values, { skipEmptyFields })
+}
+
+export async function n1mmNetworkPolicyAllowsSend (settings = {}) {
+  const policy = settings?.networkPolicy ?? 'wifi-ethernet-only'
+  const allowedTypes = N1MM_ALLOWED_NETWORK_TYPES[policy]
+  const netInfo = await fetchNetInfo()
+  const networkType = netInfo?.type
+
+  if (!allowedTypes) {
+    return { allowed: true, networkType }
+  }
+
+  return { allowed: allowedTypes.has(networkType), networkType }
+}
+
+export async function sendLiveQSON1MMPacket ({ settings, payload }) {
+  const { allowed, networkType } = await n1mmNetworkPolicyAllowsSend(settings)
+
+  if (!allowed) {
+    throw new Error(`N1MM broadcast blocked by network policy on ${networkType ?? 'unknown'}`)
+  }
+
+  return sendUDPMessage({
+    url: settings?.url,
+    payload,
+    broadcast: false
+  })
 }
 
 export async function sendLiveQSON1MMTest ({ settings, operatorCall, date = new Date() }) {
@@ -332,9 +431,5 @@ export async function sendLiveQSON1MMTest ({ settings, operatorCall, date = new 
     skipEmptyFields: settings?.skipEmptyFields !== false
   })
 
-  return sendUDPMessage({
-    url: settings?.url,
-    payload,
-    broadcast: false
-  })
+  return sendLiveQSON1MMPacket({ settings, payload })
 }
