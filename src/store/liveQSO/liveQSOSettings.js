@@ -89,9 +89,7 @@ export function selectLiveQSOUDPSettings (settings) {
   return {
     enabled: liveQSOSettings.enabled === true,
     url: normalizeLiveQSOUDPURL(liveQSOSettings.url || DEFAULT_LIVE_QSO_UDP_URL),
-    messageFormat: liveQSOSettings.messageFormat || LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF,
-    sendEdits: liveQSOSettings.sendEdits === true,
-    sendDeletes: liveQSOSettings.sendDeletes === true
+    messageFormat: liveQSOSettings.messageFormat || LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF
   }
 }
 

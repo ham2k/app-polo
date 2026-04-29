@@ -118,15 +118,6 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
           />
 
           <H2kListItem
-            title={t('screens.liveQSOUDPSettings.sendEdits.title', 'Send edits')}
-            description={udpSettings.sendEdits ? t('screens.liveQSOUDPSettings.sendEdits.descriptionOn', 'Send edited QSOs over UDP') : t('screens.liveQSOUDPSettings.sendEdits.descriptionOff', 'Do not send edited QSOs')}
-            leftIcon="file-edit-outline"
-            rightSwitchValue={udpSettings.sendEdits}
-            rightSwitchOnValueChange={(value) => mergeUDPSettings({ sendEdits: value })}
-            onPress={() => mergeUDPSettings({ sendEdits: !udpSettings.sendEdits })}
-          />
-
-          <H2kListItem
             title={t('screens.liveQSOUDPSettings.test.title', 'Send test ADIF')}
             description={t('screens.liveQSOUDPSettings.test.description', 'Sends a test QSO to the configured URL')}
             leftIcon="send-outline"
