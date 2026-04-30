@@ -323,18 +323,19 @@ export function adifDatagramsForExport (entry, udpSettings) {
   })
 }
 
-export function buildLiveQSOTestADIF (date = new Date()) {
+export function buildLiveQSOTestADIF ({ operatorCall, date = new Date() } = {}) {
+  const originCall = `${operatorCall || 'N0CALL'}`
   return [
     'ADIF test from Ham2K PoLo',
     '<ADIF_VER:5>3.1.5',
     '<PROGRAMID:21>Ham2K Portable Logger',
     `<PROGRAMVERSION:${packageJson.version.length}>${packageJson.version}`,
     '<EOH>',
-    `<CALL:6>N0CALL <MODE:2>CW <BAND:3>20m <FREQ:9>14.069000 <QSO_DATE:8>${fmtADIFDate(date)} <TIME_ON:6>${fmtADIFTime(date)} <EOR>`
+    `<CALL:6>N0CALL <MODE:2>CW <BAND:3>20m <FREQ:9>14.069000 <QSO_DATE:8>${fmtADIFDate(date)} <TIME_ON:6>${fmtADIFTime(date)} <OPERATOR:${originCall.length}>${originCall} <EOR>`
   ].join('\n')
 }
 
-export async function sendLiveQSOHTTPTest ({ settings, date = new Date() }) {
+export async function sendLiveQSOHTTPTest ({ settings, operatorCall, date = new Date() }) {
   const response = await fetch(settings?.url, {
     method: 'POST',
     headers: {
@@ -342,7 +343,7 @@ export async function sendLiveQSOHTTPTest ({ settings, date = new Date() }) {
       'User-Agent': `Ham2K-PoLo/${packageJson.version}`,
       'X-Ham2K-Export-Type': 'full-adif'
     },
-    body: buildLiveQSOTestADIF(date)
+    body: buildLiveQSOTestADIF({ operatorCall, date })
   })
 
   return {
@@ -351,10 +352,10 @@ export async function sendLiveQSOHTTPTest ({ settings, date = new Date() }) {
   }
 }
 
-export async function sendLiveQSOUDPTest ({ settings, date = new Date() }) {
+export async function sendLiveQSOUDPTest ({ settings, operatorCall, date = new Date() }) {
   const datagrams = adifDatagramsForExport({
     exportType: 'full-adif',
-    body: buildLiveQSOTestADIF(date)
+    body: buildLiveQSOTestADIF({ operatorCall, date })
   }, settings)
 
   for (const datagram of datagrams) {

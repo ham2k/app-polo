@@ -76,7 +76,10 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
   const sendTestMessage = useCallback(async () => {
     try {
-      await sendLiveQSOUDPTest({ settings: udpSettings })
+      await sendLiveQSOUDPTest({
+        settings: udpSettings,
+        operatorCall: settings?.operatorCall
+      })
 
       Alert.alert(
         t('screens.liveQSOUDPSettings.test.successTitle', 'UDP test sent'),
@@ -88,7 +91,7 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
         error?.message ?? t('screens.liveQSOUDPSettings.test.errorBody', 'Unknown error')
       )
     }
-  }, [t, udpSettings])
+  }, [settings?.operatorCall, t, udpSettings])
 
   return (
     <ScreenContainer>
@@ -112,7 +115,7 @@ export default function LiveQSOSocketSettingsScreen ({ splitView }) {
 
           <H2kListItem
             title={t('screens.liveQSOUDPSettings.messageFormat.title', 'Message format')}
-            description={t('screens.liveQSOUDPSettings.messageFormat.description', '{{format}} • {{programs}}', { format: selectedFormat.title, programs: selectedFormat.description })}
+            description={t('screens.liveQSOUDPSettings.messageFormat.description', '{{format}} - {{programs}}', { format: selectedFormat.title, programs: selectedFormat.description })}
             leftIcon="format-list-bulleted"
             onPress={() => setFormatDialogVisible(true)}
           />

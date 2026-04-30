@@ -51,7 +51,10 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
 
   const sendTestMessage = useCallback(async () => {
     try {
-      const result = await sendLiveQSOHTTPTest({ settings: httpSettings })
+      const result = await sendLiveQSOHTTPTest({
+        settings: httpSettings,
+        operatorCall: settings?.operatorCall
+      })
       const body = result.ok
         ? t('screens.liveQSOHTTPSettings.test.successBodyOk', 'Done. Response = {{status}}\nSend successful!', { status: result.status })
         : t('screens.liveQSOHTTPSettings.test.successBodyStatus', 'Done. Response = {{status}}', { status: result.status })
@@ -66,7 +69,7 @@ export default function LiveQSOHTTPSettingsScreen ({ splitView }) {
         error?.message ?? t('screens.liveQSOHTTPSettings.test.errorBody', 'Unknown error')
       )
     }
-  }, [httpSettings, t])
+  }, [httpSettings, settings?.operatorCall, t])
 
   return (
     <ScreenContainer>

@@ -46,7 +46,15 @@ jest.mock('./liveQSOUDPNative', () => ({
   sendWSJTXLoggedADIFMessage: (...args) => mockSendWSJTXLoggedADIFMessage(...args)
 }))
 
-const { adifBodiesForRequest, adifDatagramsForExport, buildLiveQSOTestADIF, enqueueLiveQSOPosts, splitADIFBody } = require('./liveQSO')
+const {
+  adifBodiesForRequest,
+  adifDatagramsForExport,
+  buildLiveQSOTestADIF,
+  enqueueLiveQSOPosts,
+  sendLiveQSOHTTPTest,
+  sendLiveQSOUDPTest,
+  splitADIFBody
+} = require('./liveQSO')
 const { LIVE_QSO_UDP_MESSAGE_FORMATS } = require('./liveQSOSettings')
 
 describe('liveQSO', () => {
@@ -150,8 +158,11 @@ describe('liveQSO', () => {
   })
 
   describe('test ADIF generation', () => {
-    it('uses the standard sample QSO fields and UTC date/time', () => {
-      const adif = buildLiveQSOTestADIF(new Date('2026-04-30T00:30:15+03:00'))
+    it('uses the standard sample QSO fields, UTC date/time, and the provided operator call', () => {
+      const adif = buildLiveQSOTestADIF({
+        operatorCall: 'YO3GND',
+        date: new Date('2026-04-30T00:30:15+03:00')
+      })
 
       expect(adif).toContain('ADIF test from Ham2K PoLo')
       expect(adif).toContain('<CALL:6>N0CALL')
@@ -160,6 +171,56 @@ describe('liveQSO', () => {
       expect(adif).toContain('<FREQ:9>14.069000')
       expect(adif).toContain('<QSO_DATE:8>20260429')
       expect(adif).toContain('<TIME_ON:6>213015')
+      expect(adif).toContain('<OPERATOR:6>YO3GND')
+    })
+
+    it('threads the operator call through HTTP, raw UDP, and WSJT-X test sends', async () => {
+      global.fetch = jest.fn(async () => ({
+        ok: true,
+        status: 200
+      }))
+      mockSendUDPMessage.mockResolvedValue({})
+      mockSendWSJTXLoggedADIFMessage.mockResolvedValue({})
+
+      const date = new Date('2026-04-30T00:30:15+03:00')
+
+      await sendLiveQSOHTTPTest({
+        settings: { url: 'http://example.org/adif' },
+        operatorCall: 'YO3GND',
+        date
+      })
+
+      expect(global.fetch).toHaveBeenCalledWith('http://example.org/adif', expect.objectContaining({
+        body: expect.stringContaining('<OPERATOR:6>YO3GND')
+      }))
+
+      await sendLiveQSOUDPTest({
+        settings: {
+          url: 'udp://239.0.0.1:2237',
+          messageFormat: LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF
+        },
+        operatorCall: 'YO3GND',
+        date
+      })
+
+      expect(mockSendUDPMessage).toHaveBeenCalledWith(expect.objectContaining({
+        payload: expect.stringContaining('<OPERATOR:6>YO3GND')
+      }))
+
+      await sendLiveQSOUDPTest({
+        settings: {
+          url: 'udp://239.0.0.1:2237',
+          messageFormat: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible
+        },
+        operatorCall: 'YO3GND',
+        date
+      })
+
+      expect(mockSendWSJTXLoggedADIFMessage).toHaveBeenCalledWith(expect.objectContaining({
+        message: expect.objectContaining({
+          adifText: expect.stringContaining('<OPERATOR:6>YO3GND')
+        })
+      }))
     })
   })
 

@@ -19,7 +19,7 @@ export const LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS = [
   {
     value: LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF,
     title: 'Raw ADIF',
-    description: 'Log4OM, HRD, GridTracker'
+    description: 'N1MM, Log4OM, HRD, GridTracker'
   },
   {
     value: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible,

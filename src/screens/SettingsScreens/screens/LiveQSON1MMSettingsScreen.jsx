@@ -113,7 +113,7 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
 
           <H2kListItem
             title={t('screens.liveQSON1MMSettings.networkPolicy.title', 'Network policy')}
-            description={t('screens.liveQSON1MMSettings.networkPolicy.description', '{{title}} • {{detail}}', { title: selectedNetworkPolicy.title, detail: selectedNetworkPolicy.description })}
+            description={t('screens.liveQSON1MMSettings.networkPolicy.description', '{{title}} - {{detail}}', { title: selectedNetworkPolicy.title, detail: selectedNetworkPolicy.description })}
             leftIcon="network-outline"
             onPress={() => setPolicyDialogVisible(true)}
           />
