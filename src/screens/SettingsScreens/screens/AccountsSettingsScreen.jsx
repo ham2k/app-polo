@@ -58,15 +58,8 @@ export default function AccountsSettingsScreen ({ navigation, splitView }) {
           ))}
         </H2kListSection>
 
-        <H2kListSection title={t('screens.settings.accountsSettings.servicesSection', 'Services')}>
-          <H2kListItem
-            title={t('screens.liveQSOSettings.title', 'Live QSO logging')}
-            description={t('screens.liveQSOSettings.description', 'HTTP endpoint and other live export transports')}
-            onPress={() => navigation.navigate('Settings', { screen: 'LiveQSOSettings' })}
-            leftIcon="broadcast"
-          />
-
-          {settings.wavelogExperiments && (
+        {settings.wavelogExperiments && (
+          <H2kListSection title={t('screens.settings.accountsSettings.servicesSection', 'Services')}>
             <H2kListItem
               title={t('screens.settings.wavelogSettings.title', 'Wavelog Settings')}
               description={t('screens.settings.wavelogSettings.description', 'Configure Wavelog API connection')}
@@ -74,8 +67,8 @@ export default function AccountsSettingsScreen ({ navigation, splitView }) {
               leftIcon="cloud-upload-outline"
               leftIconColor={styles.colors.devMode}
             />
-          )}
-        </H2kListSection>
+          </H2kListSection>
+        )}
 
       </ScrollView>
     </ScreenContainer>

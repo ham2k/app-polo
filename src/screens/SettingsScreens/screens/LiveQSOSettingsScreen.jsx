@@ -53,14 +53,20 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
             title={t('screens.liveQSOSettings.httpEndpoint.title', 'HTTP Endpoint')}
             description={httpDescription}
             leftIcon="protocol"
-            onPress={() => navigation.navigate('LiveQSOHTTPSettings')}
+            onPress={() => navigation.push('ExtensionScreen', {
+              key: 'live-qso-http-settings',
+              title: t('screens.liveQSOHTTPSettings.title', 'HTTP Endpoint')
+            })}
           />
           {Platform.OS === 'android' && (
             <H2kListItem
               title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
               description={udpDescription}
               leftIcon="lan"
-              onPress={() => navigation.navigate('LiveQSOSocketSettings')}
+              onPress={() => navigation.push('ExtensionScreen', {
+                key: 'live-qso-udp-settings',
+                title: t('screens.liveQSOUDPSettings.title', 'UDP ADIF')
+              })}
             />
           )}
           {Platform.OS === 'android' && (
@@ -68,7 +74,10 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
               title={t('screens.liveQSOSettings.n1mmBroadcast.title', 'N1MM Broadcast')}
               description={n1mmDescription}
               leftIcon="broadcast"
-              onPress={() => navigation.navigate('LiveQSON1MMSettings')}
+              onPress={() => navigation.push('ExtensionScreen', {
+                key: 'live-qso-n1mm-settings',
+                title: t('screens.liveQSON1MMSettings.title', 'N1MM Broadcast')
+              })}
             />
           )}
         </H2kListSection>
