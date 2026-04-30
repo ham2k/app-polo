@@ -257,7 +257,7 @@ function buildLiveQSON1MMPayload ({ action, qso, operation, previousQSO, n1mmSet
   return undefined
 }
 
-function adifBodiesForRequest (body, httpSettings) {
+export function adifBodiesForRequest (body, httpSettings) {
   const { header, records } = splitADIFBody(body)
   if (records.length === 0) return body ? [body] : []
 
@@ -274,7 +274,7 @@ function adifBodiesForRequest (body, httpSettings) {
   return formattedRecords.map((record) => `${prefix}${record}`)
 }
 
-function splitADIFBody (body) {
+export function splitADIFBody (body) {
   const adif = `${body ?? ''}`
   const parts = adif.split(/<EOH>\s*/i)
 
@@ -296,7 +296,7 @@ function splitADIFBody (body) {
   return { header, records }
 }
 
-function adifDatagramsForExport (entry, udpSettings) {
+export function adifDatagramsForExport (entry, udpSettings) {
   const { body } = entry
   const { header, records } = splitADIFBody(body)
   if (records.length === 0) {
