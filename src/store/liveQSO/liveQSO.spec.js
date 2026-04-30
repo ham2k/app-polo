@@ -46,7 +46,7 @@ jest.mock('./liveQSOUDPNative', () => ({
   sendWSJTXLoggedADIFMessage: (...args) => mockSendWSJTXLoggedADIFMessage(...args)
 }))
 
-const { adifBodiesForRequest, adifDatagramsForExport, splitADIFBody } = require('./liveQSO')
+const { adifBodiesForRequest, adifDatagramsForExport, buildLiveQSOTestADIF, splitADIFBody } = require('./liveQSO')
 const { LIVE_QSO_UDP_MESSAGE_FORMATS } = require('./liveQSOSettings')
 
 describe('liveQSO', () => {
@@ -141,6 +141,20 @@ describe('liveQSO', () => {
 
       expect(wsjtDatagrams[0].wsjtxMessage.senderId).toEqual(repeatedDatagrams[0].wsjtxMessage.senderId)
       expect(wsjtDatagrams[1].wsjtxMessage.senderId).toEqual(repeatedDatagrams[1].wsjtxMessage.senderId)
+    })
+  })
+
+  describe('test ADIF generation', () => {
+    it('uses the standard sample QSO fields and UTC date/time', () => {
+      const adif = buildLiveQSOTestADIF(new Date('2026-04-30T00:30:15+03:00'))
+
+      expect(adif).toContain('ADIF test from Ham2K PoLo')
+      expect(adif).toContain('<CALL:6>N0CALL')
+      expect(adif).toContain('<MODE:2>CW')
+      expect(adif).toContain('<BAND:3>20m')
+      expect(adif).toContain('<FREQ:9>14.069000')
+      expect(adif).toContain('<QSO_DATE:8>20260429')
+      expect(adif).toContain('<TIME_ON:6>213015')
     })
   })
 })
