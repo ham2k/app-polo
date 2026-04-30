@@ -7,10 +7,8 @@
  */
 
 import {
-  LIVE_QSO_N1MM_NETWORK_POLICIES,
   LIVE_QSO_UDP_MESSAGE_FORMATS,
   displayLiveQSOUDPURL,
-  liveQSON1MMNetworkPolicyOption,
   liveQSOUDPMessageFormatOption,
   normalizeLiveQSOUDPURL,
   normalizeLiveQSOURL,
@@ -56,7 +54,6 @@ describe('liveQSOSettings', () => {
       expect(selectLiveQSON1MMSettings({})).toEqual({
         enabled: false,
         url: '',
-        networkPolicy: LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOnly,
         sendEdits: false,
         sendDeletes: false,
         skipEmptyFields: true
@@ -82,7 +79,6 @@ describe('liveQSOSettings', () => {
           n1mm: {
             enabled: true,
             url: '192.168.1.255:12060',
-            networkPolicy: LIVE_QSO_N1MM_NETWORK_POLICIES.always,
             sendEdits: true,
             sendDeletes: true,
             skipEmptyFields: false
@@ -108,7 +104,6 @@ describe('liveQSOSettings', () => {
       expect(selectLiveQSON1MMSettings(settings)).toEqual({
         enabled: true,
         url: 'udp://192.168.1.255:12060',
-        networkPolicy: LIVE_QSO_N1MM_NETWORK_POLICIES.always,
         sendEdits: true,
         sendDeletes: true,
         skipEmptyFields: false
@@ -119,7 +114,6 @@ describe('liveQSOSettings', () => {
   describe('option helpers', () => {
     it('falls back to default option values', () => {
       expect(liveQSOUDPMessageFormatOption('bogus').value).toEqual(LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF)
-      expect(liveQSON1MMNetworkPolicyOption('bogus').value).toEqual(LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOnly)
     })
   })
 })

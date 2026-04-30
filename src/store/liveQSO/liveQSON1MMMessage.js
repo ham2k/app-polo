@@ -7,10 +7,9 @@
  */
 
 import UUID from 'react-native-uuid'
-import { fetch as fetchNetInfo } from '@react-native-community/netinfo'
 import { adifModeAndSubmodeForMode, frequencyForBand } from '@ham2k/lib-operation-data'
 
-import { filterRefs } from '../../tools/refTools'
+import GLOBAL from '../../GLOBAL'
 import { sendUDPMessage } from './liveQSOUDPNative'
 
 const DEFAULT_STATION_NAME = 'Ham2K-PoLo'
@@ -33,23 +32,6 @@ const N1MM_BANDS = {
   '33cm': '902',
   '23cm': '1.2',
   '13cm': '2.3'
-}
-
-const XOTA_PROGRAMS = [
-  { label: 'POTA', types: ['pota', 'potaActivation'] },
-  { label: 'SOTA', types: ['sota', 'sotaActivation'] },
-  { label: 'WWFF', types: ['wwff', 'wwffActivation'] },
-  { label: 'WWBOTA', types: ['wwbota', 'wwbotaActivation'] },
-  { label: 'MOTA', types: ['mota', 'motaActivation'] },
-  { label: 'GMA', types: ['gma', 'gmaActivation'] },
-  { label: 'WCA', types: ['wcaActivation', 'bcaActivation', 'ecaActivation'] },
-  { label: 'TOTA', types: ['tota', 'totaActivation'] }
-]
-
-const N1MM_ALLOWED_NETWORK_TYPES = {
-  always: null,
-  wifiEthernetOnly: new Set(['wifi', 'ethernet']),
-  wifiEthernetOrVPN: new Set(['wifi', 'ethernet', 'vpn'])
 }
 
 function escapeXML (value) {
@@ -125,58 +107,11 @@ function numericExchangeValue (exchange) {
   return compact
 }
 
-function compactRefValues (refs = [], types = []) {
-  const uniqueRefs = new Set()
-
-  types.forEach((type) => {
-    filterRefs(refs, type).forEach((ref) => {
-      if (ref?.ref) uniqueRefs.add(ref.ref)
-    })
-  })
-
-  return [...uniqueRefs]
-}
-
-function formatXOTASummary ({ qso, operation }) {
-  const theirSections = XOTA_PROGRAMS
-    .map(({ label, types }) => {
-      const refs = compactRefValues(qso?.refs, types)
-      return refs.length > 0 ? `${label}: ${refs.join(' ')}` : ''
-    })
-    .filter(Boolean)
-
-  const ourSections = XOTA_PROGRAMS
-    .map(({ label, types }) => {
-      const refs = compactRefValues(operation?.refs, types)
-      return refs.length > 0 ? `${label}: ${refs.join(' ')}` : ''
-    })
-    .filter(Boolean)
-
-  if (theirSections.length > 0 && ourSections.length > 0) {
-    return `${theirSections.join('; ')}; My refs: ${ourSections.join('; ')}`
-  }
-
-  if (theirSections.length > 0) {
-    return theirSections.join('; ')
-  }
-
-  if (ourSections.length > 0) {
-    return `My refs: ${ourSections.join('; ')}`
-  }
-
-  return ''
-}
-
-function buildN1MMComment ({ qso, operation }) {
-  const xotaSummary = formatXOTASummary({ qso, operation })
-  return [compactXMLValue(qso?.notes), xotaSummary].filter(Boolean).join(' | ')
-}
-
 export function buildN1MMContactInfoValuesForQSO ({
   qso,
   operation,
   previousQSO,
-  stationName = DEFAULT_STATION_NAME,
+  stationName = GLOBAL.deviceName || DEFAULT_STATION_NAME,
   contestname = 'DX',
   contestnr = '0',
   app = 'PoLo'
@@ -188,8 +123,6 @@ export function buildN1MMContactInfoValuesForQSO ({
   const call = qso?.their?.call || 'N0CALL'
   const oldTimestamp = formatN1MMTimestamp(new Date(previousQSO?.startAtMillis ?? qso?.startAtMillis ?? Date.now()))
   const oldCall = previousQSO?.their?.call || call
-  const comment = buildN1MMComment({ qso, operation })
-  const xotaSummary = formatXOTASummary({ qso, operation })
 
   return {
     app,
@@ -212,11 +145,9 @@ export function buildN1MMContactInfoValuesForQSO ({
     gridsquare: qso?.their?.grid ?? qso?.their?.guess?.grid,
     exchangel: qso?.their?.exchange,
     section: qso?.their?.arrlSection,
-    comment,
     qth: qso?.their?.city ?? qso?.their?.guess?.city,
     name: qso?.their?.name ?? qso?.their?.guess?.name,
     power: qso?.power,
-    misctext: xotaSummary,
     zone: qso?.their?.cqZone ?? qso?.their?.guess?.cqZone,
     prec: '',
     ck: '',
@@ -375,26 +306,7 @@ export function buildN1MMContactDeleteXMLForQSO ({
   return buildN1MMContactDeleteXML(values, { skipEmptyFields })
 }
 
-export async function n1mmNetworkPolicyAllowsSend (settings = {}) {
-  const policy = settings?.networkPolicy ?? 'wifi-ethernet-only'
-  const allowedTypes = N1MM_ALLOWED_NETWORK_TYPES[policy]
-  const netInfo = await fetchNetInfo()
-  const networkType = netInfo?.type
-
-  if (!allowedTypes) {
-    return { allowed: true, networkType }
-  }
-
-  return { allowed: allowedTypes.has(networkType), networkType }
-}
-
 export async function sendLiveQSON1MMPacket ({ settings, payload }) {
-  const { allowed, networkType } = await n1mmNetworkPolicyAllowsSend(settings)
-
-  if (!allowed) {
-    throw new Error(`N1MM broadcast blocked by network policy on ${networkType ?? 'unknown'}`)
-  }
-
   return sendUDPMessage({
     url: settings?.url,
     payload,

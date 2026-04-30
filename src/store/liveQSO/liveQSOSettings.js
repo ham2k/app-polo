@@ -28,30 +28,6 @@ export const LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS = [
   }
 ]
 
-export const LIVE_QSO_N1MM_NETWORK_POLICIES = {
-  always: 'always',
-  wifiEthernetOnly: 'wifi-ethernet-only',
-  wifiEthernetOrVPN: 'wifi-ethernet-or-vpn'
-}
-
-export const LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS = [
-  {
-    value: LIVE_QSO_N1MM_NETWORK_POLICIES.always,
-    title: 'Always send',
-    description: 'Send on any network'
-  },
-  {
-    value: LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOnly,
-    title: 'Wi-Fi / Ethernet only',
-    description: 'Recommended for broadcast targets'
-  },
-  {
-    value: LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOrVPN,
-    title: 'Wi-Fi / Ethernet / VPN',
-    description: 'Allow VPN-backed home or shack networks'
-  }
-]
-
 export function normalizeLiveQSOURL (url) {
   const trimmed = (url || '').trim()
   if (!trimmed) return ''
@@ -99,7 +75,6 @@ export function selectLiveQSON1MMSettings (settings) {
   return {
     enabled: liveQSOSettings.enabled === true,
     url: normalizeLiveQSOUDPURL(liveQSOSettings.url || DEFAULT_LIVE_QSO_N1MM_URL),
-    networkPolicy: liveQSOSettings.networkPolicy || LIVE_QSO_N1MM_NETWORK_POLICIES.wifiEthernetOnly,
     sendEdits: liveQSOSettings.sendEdits === true,
     sendDeletes: liveQSOSettings.sendDeletes === true,
     skipEmptyFields: liveQSOSettings.skipEmptyFields !== false
@@ -108,10 +83,6 @@ export function selectLiveQSON1MMSettings (settings) {
 
 export function liveQSOUDPMessageFormatOption (messageFormat) {
   return LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS.find((option) => option.value === messageFormat) || LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS[0]
-}
-
-export function liveQSON1MMNetworkPolicyOption (policy) {
-  return LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS.find((option) => option.value === policy) || LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS[1]
 }
 
 export function summarizeLiveQSOURL (url, options = {}) {

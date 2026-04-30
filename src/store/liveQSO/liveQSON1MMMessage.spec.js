@@ -6,6 +6,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import GLOBAL from '../../GLOBAL'
 import {
   buildN1MMContactDeleteXMLForQSO,
   buildN1MMContactInfoValuesForQSO,
@@ -14,10 +15,6 @@ import {
 
 jest.mock('react-native-uuid', () => ({
   v4: jest.fn(() => '87654321-4321-4321-4321-ba0987654321')
-}))
-
-jest.mock('@react-native-community/netinfo', () => ({
-  fetch: jest.fn(async () => ({ type: 'wifi' }))
 }))
 
 jest.mock('@ham2k/lib-operation-data', () => ({
@@ -31,11 +28,7 @@ jest.mock('./liveQSOUDPNative', () => ({
 
 describe('liveQSON1MMMessage', () => {
   const operation = {
-    stationCall: 'YO3GND',
-    refs: [
-      { type: 'potaActivation', ref: 'RO-0100' },
-      { type: 'sotaActivation', ref: 'YO/EC-0001' }
-    ]
+    stationCall: 'YO3GND'
   }
 
   const qso = {
@@ -46,12 +39,6 @@ describe('liveQSON1MMMessage', () => {
     mode: 'CW',
     power: '5',
     notes: 'Worked from the park',
-    refs: [
-      { type: 'pota', ref: 'RO-1234' },
-      { type: 'pota', ref: 'RO-5678' },
-      { type: 'sota', ref: 'YO/EC-1234' },
-      { type: 'wwff', ref: 'YOFF-0252' }
-    ],
     their: {
       call: 'N0CALL',
       sent: '579',
@@ -80,17 +67,22 @@ describe('liveQSON1MMMessage', () => {
     }
   }
 
+  beforeEach(() => {
+    GLOBAL.deviceName = 'Samsung Note 7'
+  })
+
   describe('buildN1MMContactInfoValuesForQSO', () => {
-    it('uses UTC timestamps, DX contest mode and a stable ID', () => {
+    it('uses UTC timestamps, DX contest mode, device name and a stable ID', () => {
       const values = buildN1MMContactInfoValuesForQSO({ qso, operation, previousQSO })
 
       expect(values.contestname).toEqual('DX')
       expect(values.timestamp).toEqual('2026-04-29 09:34:56')
       expect(values.oldtimestamp).toEqual('2026-04-29 07:11:12')
       expect(values.ID).toEqual('12345678123456789ABCDEF012345678')
+      expect(values.StationName).toEqual('Samsung Note 7')
       expect(values.oldcall).toEqual('K1OLD')
-      expect(values.comment).toEqual('Worked from the park | POTA: RO-1234 RO-5678; SOTA: YO/EC-1234; WWFF: YOFF-0252; My refs: POTA: RO-0100; SOTA: YO/EC-0001')
-      expect(values.misctext).toEqual('POTA: RO-1234 RO-5678; SOTA: YO/EC-1234; WWFF: YOFF-0252; My refs: POTA: RO-0100; SOTA: YO/EC-0001')
+      expect(values.comment).toBeUndefined()
+      expect(values.misctext).toBeUndefined()
     })
   })
 
@@ -102,7 +94,6 @@ describe('liveQSON1MMMessage', () => {
         band: '20m',
         freq: 14069,
         mode: 'CW',
-        refs: [],
         their: {
           call: 'N0CALL',
           sent: '599'

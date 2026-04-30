@@ -17,8 +17,6 @@ import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { mergeSettings, selectSettings } from '../../../store/settings'
 import {
   displayLiveQSOUDPURL,
-  liveQSON1MMNetworkPolicyOption,
-  LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS,
   normalizeLiveQSOUDPURL,
   sendLiveQSON1MMTest,
   selectLiveQSON1MMSettings,
@@ -43,10 +41,8 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
-  const selectedNetworkPolicy = liveQSON1MMNetworkPolicyOption(n1mmSettings.networkPolicy)
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
-  const [policyDialogVisible, setPolicyDialogVisible] = useState(false)
   const [draftURL, setDraftURL] = useState(displayLiveQSOUDPURL(n1mmSettings.url))
 
   useEffect(() => {
@@ -66,11 +62,6 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
     setDraftURL(displayLiveQSOUDPURL(n1mmSettings.url))
     setURLDialogVisible(false)
   }, [n1mmSettings.url])
-
-  const selectNetworkPolicy = useCallback((value) => {
-    mergeN1MMSettings({ networkPolicy: value })
-    setPolicyDialogVisible(false)
-  }, [mergeN1MMSettings])
 
   const sendTestMessage = useCallback(async () => {
     try {
@@ -109,13 +100,6 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
             description={summarizeLiveQSOUDPURL(n1mmSettings.url, { maxLength: 56 })}
             leftIcon="webhook"
             onPress={() => setURLDialogVisible(true)}
-          />
-
-          <H2kListItem
-            title={t('screens.liveQSON1MMSettings.networkPolicy.title', 'Network policy')}
-            description={t('screens.liveQSON1MMSettings.networkPolicy.description', '{{title}} - {{detail}}', { title: selectedNetworkPolicy.title, detail: selectedNetworkPolicy.description })}
-            leftIcon="network-outline"
-            onPress={() => setPolicyDialogVisible(true)}
           />
 
           <H2kListItem
@@ -174,26 +158,6 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
           <H2kDialogActions>
             <H2kButton onPress={cancelURLDialog}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
             <H2kButton onPress={saveURL}>{t('general.buttons.ok', 'Ok')}</H2kButton>
-          </H2kDialogActions>
-        </H2kDialog>
-      )}
-
-      {policyDialogVisible && (
-        <H2kDialog visible={true} onDismiss={() => setPolicyDialogVisible(false)}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.networkPolicy.dialogTitle', 'Network policy')}</H2kDialogTitle>
-          <H2kDialogContent>
-            {LIVE_QSO_N1MM_NETWORK_POLICY_OPTIONS.map((option) => (
-              <H2kListItem
-                key={option.value}
-                title={t(`screens.liveQSON1MMSettings.networkPolicy.options.${option.value}.title`, option.title)}
-                description={t(`screens.liveQSON1MMSettings.networkPolicy.options.${option.value}.description`, option.description)}
-                leftIcon={option.value === n1mmSettings.networkPolicy ? 'check-circle-outline' : 'circle-outline'}
-                onPress={() => selectNetworkPolicy(option.value)}
-              />
-            ))}
-          </H2kDialogContent>
-          <H2kDialogActions>
-            <H2kButton onPress={() => setPolicyDialogVisible(false)}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
           </H2kDialogActions>
         </H2kDialog>
       )}

@@ -15,7 +15,6 @@ import { useTranslation } from 'react-i18next'
 import ScreenContainer from '../../components/ScreenContainer'
 import { selectSettings } from '../../../store/settings'
 import {
-  liveQSON1MMNetworkPolicyOption,
   liveQSOUDPMessageFormatOption,
   selectLiveQSOHTTPSettings,
   selectLiveQSON1MMSettings,
@@ -34,7 +33,6 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
   const udpSettings = selectLiveQSOUDPSettings(settings)
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
   const udpFormatOption = liveQSOUDPMessageFormatOption(udpSettings.messageFormat)
-  const n1mmNetworkPolicyOption = liveQSON1MMNetworkPolicyOption(n1mmSettings.networkPolicy)
   const httpDescription = httpSettings.enabled
     ? t('screens.liveQSOSettings.httpEnabledDescription', 'Enabled - {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
     : t('screens.liveQSOSettings.httpDisabledDescription', 'Disabled - {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
@@ -42,7 +40,7 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
     ? t('screens.liveQSOSettings.udpSelectedDescription', '{{format}} - {{programs}}', { format: udpFormatOption.title, programs: udpFormatOption.description })
     : t('screens.liveQSOSettings.udpDefaultDescription', 'Live logging with Log4OM, DXKeeper, MacLoggerDX, HRD and more')
   const n1mmDescription = n1mmSettings.enabled
-    ? t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled - {{policy}}', { policy: n1mmNetworkPolicyOption.title })
+    ? t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled - N1MM XML broadcast')
     : t('screens.liveQSOSettings.n1mmDisabledDescription', 'Disabled - N1MM XML broadcast')
 
   return (
