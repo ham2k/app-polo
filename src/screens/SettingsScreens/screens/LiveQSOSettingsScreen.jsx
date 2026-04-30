@@ -47,15 +47,6 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
-          <H2kListItem
-            title={t('screens.liveQSOSettings.httpEndpoint.title', 'HTTP Endpoint')}
-            description={httpDescription}
-            leftIcon="protocol"
-            onPress={() => navigation.push('ExtensionScreen', {
-              key: 'live-qso-http-settings',
-              title: t('screens.liveQSOHTTPSettings.title', 'HTTP Endpoint')
-            })}
-          />
           {Platform.OS === 'android' && (
             <H2kListItem
               title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
@@ -78,6 +69,15 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
               })}
             />
           )}
+          <H2kListItem
+            title={t('screens.liveQSOSettings.httpEndpoint.title', 'HTTP Endpoint')}
+            description={httpDescription}
+            leftIcon="protocol"
+            onPress={() => navigation.push('ExtensionScreen', {
+              key: 'live-qso-http-settings',
+              title: t('screens.liveQSOHTTPSettings.title', 'HTTP Endpoint')
+            })}
+          />
         </H2kListSection>
 
         <View style={{ height: safeAreaInsets.bottom }} />
