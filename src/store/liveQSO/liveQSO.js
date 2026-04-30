@@ -108,7 +108,7 @@ async function postLiveQSOUDPDatagram (datagram) {
     await sendWSJTXLoggedADIFMessage({
       url: datagram.url,
       message: datagram.wsjtxMessage,
-      broadcast: false
+      broadcast: true
     })
     return
   }
@@ -116,7 +116,7 @@ async function postLiveQSOUDPDatagram (datagram) {
   await sendUDPMessage({
     url: datagram.url,
     payload: datagram.payload,
-    broadcast: false
+    broadcast: true
   })
 }
 

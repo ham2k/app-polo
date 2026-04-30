@@ -9,6 +9,10 @@
 import { NativeModules, Platform } from 'react-native'
 
 const { UDPModule } = NativeModules
+// Always ask the kernel for broadcast permission. It does not change the UDP
+// packet itself, is harmless on unicast targets, and saves the user from
+// caring whether 192.168.0.127 is a /25 broadcast or just another host on a /24.
+const UDP_BROADCAST_PERMISSION = true
 
 export async function sendUDPMessage ({ url, payload, broadcast = false }) {
   if (Platform.OS !== 'android') {
@@ -21,7 +25,7 @@ export async function sendUDPMessage ({ url, payload, broadcast = false }) {
 
   const { host, port } = parseUDPURL(url)
 
-  return UDPModule.send(host, port, `${payload ?? ''}`, { broadcast })
+  return UDPModule.send(host, port, `${payload ?? ''}`, { broadcast: UDP_BROADCAST_PERMISSION || broadcast })
 }
 
 export async function sendWSJTXLoggedADIFMessage ({ url, message, broadcast = false }) {
@@ -43,7 +47,7 @@ export async function sendWSJTXLoggedADIFMessage ({ url, message, broadcast = fa
     message.messageType,
     `${message.senderId ?? ''}`,
     `${message.adifText ?? ''}`,
-    { broadcast }
+    { broadcast: UDP_BROADCAST_PERMISSION || broadcast }
   )
 }
 

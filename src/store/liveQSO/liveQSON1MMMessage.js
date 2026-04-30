@@ -398,7 +398,7 @@ export async function sendLiveQSON1MMPacket ({ settings, payload }) {
   return sendUDPMessage({
     url: settings?.url,
     payload,
-    broadcast: false
+    broadcast: true
   })
 }
 
