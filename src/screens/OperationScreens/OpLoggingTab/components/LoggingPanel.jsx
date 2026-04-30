@@ -301,9 +301,10 @@ export default function LoggingPanel ({
         dispatch(addQSO({
           uuid: operation.uuid,
           qso,
-          source: 'logging-panel',
-          liveQSOAction: qso.deleted ? 'delete' : 'update',
-          liveQSOContext: { previousQSO: loggingState?.originalQSO }
+          saveContext: {
+            origin: 'live-logging',
+            previousQSO: loggingState?.originalQSO
+          }
         }))
         updateLoggingState({
           qso: undefined,
@@ -317,7 +318,11 @@ export default function LoggingPanel ({
       } else if (qso?.event && !qso?.deleted) {
         // Events are just saved as-is, no extra processing needed.
         setTimeout(() => {
-          dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso], source: 'logging-panel', liveQSOAction: 'create' }))
+          dispatch(addQSOs({
+            uuid: operation.uuid,
+            qsos: [qso],
+            saveContext: { origin: 'live-logging' }
+          }))
           setQSO(undefined, { otherStateChanges: { lastUUID: qso.uuid } })
         }, 50)
       } else if (qso && isValidQSO && !qso?.deleted) {
@@ -399,9 +404,10 @@ export default function LoggingPanel ({
           dispatch(addQSOs({
             uuid: operation.uuid,
             qsos: multiQSOs,
-            source: 'logging-panel',
-            liveQSOAction: eventName === 'add_qso' ? 'create' : 'update',
-            liveQSOContext: eventName === 'add_qso' ? undefined : { previousQSO: loggingState?.originalQSO }
+            saveContext: {
+              origin: 'live-logging',
+              previousQSO: loggingState?.originalQSO
+            }
           }))
           if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 

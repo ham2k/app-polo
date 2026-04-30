@@ -74,7 +74,7 @@ export const queryQSOs = async (query, params) => {
   return qsos
 }
 
-export const addQSO = ({ uuid, qso, synced = false, source, liveQSOAction, liveQSOContext }) => addQSOs({ uuid, qsos: [qso], synced, source, liveQSOAction, liveQSOContext })
+export const addQSO = ({ uuid, qso, synced = false, saveContext }) => addQSOs({ uuid, qsos: [qso], synced, saveContext })
 
 export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
   const qso = {
@@ -93,7 +93,19 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
 
 const DEBUG = false
 
-export const addQSOs = ({ uuid, qsos, synced = false, source, liveQSOAction, liveQSOContext }) => async (dispatch, getState) => {
+function liveQSOEnqueueInfoForSaveContext ({ saveContext, qsos }) {
+  if (saveContext?.origin !== 'live-logging') return undefined
+
+  const previousQSO = saveContext?.previousQSO
+  const action = qsos.some((qso) => qso?.deleted) ? 'delete' : (previousQSO ? 'update' : 'create')
+
+  return {
+    action,
+    liveQSOContext: previousQSO ? { previousQSO } : undefined
+  }
+}
+
+export const addQSOs = ({ uuid, qsos, synced = false, saveContext }) => async (dispatch, getState) => {
   const now = Date.now()
 
   if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
@@ -166,8 +178,9 @@ export const addQSOs = ({ uuid, qsos, synced = false, source, liveQSOAction, liv
   if (!synced) {
     setImmediate(() => {
       sendQSOsToSyncService({ dispatch, getState })
-      if (source === 'logging-panel') {
-        enqueueLiveQSOPosts({ getState, uuid, qsos, action: liveQSOAction, liveQSOContext })
+      const liveQSOEnqueueInfo = liveQSOEnqueueInfoForSaveContext({ saveContext, qsos })
+      if (liveQSOEnqueueInfo) {
+        enqueueLiveQSOPosts({ getState, uuid, qsos, ...liveQSOEnqueueInfo })
       }
       if (DEBUG) logTimer('addQSOs', 'done updating operation')
     })
