@@ -19,6 +19,7 @@ const mockBuildN1MMContactReplaceXMLForQSO = jest.fn()
 const mockSendLiveQSON1MMPacket = jest.fn()
 const mockSendUDPMessage = jest.fn()
 const mockSendWSJTXLoggedADIFMessage = jest.fn()
+const mockSendWSJTXQSOLoggedMessage = jest.fn()
 
 jest.mock('../../tools/qsonToADIF', () => ({
   qsonToADIF: (...args) => mockQsonToADIF(...args)
@@ -43,7 +44,8 @@ jest.mock('./liveQSON1MMMessage', () => ({
 
 jest.mock('./liveQSOUDPNative', () => ({
   sendUDPMessage: (...args) => mockSendUDPMessage(...args),
-  sendWSJTXLoggedADIFMessage: (...args) => mockSendWSJTXLoggedADIFMessage(...args)
+  sendWSJTXLoggedADIFMessage: (...args) => mockSendWSJTXLoggedADIFMessage(...args),
+  sendWSJTXQSOLoggedMessage: (...args) => mockSendWSJTXQSOLoggedMessage(...args)
 }))
 
 const {
@@ -155,6 +157,72 @@ describe('liveQSO', () => {
       expect(wsjtDatagrams[0].wsjtxMessage.senderId).toEqual(repeatedDatagrams[0].wsjtxMessage.senderId)
       expect(wsjtDatagrams[1].wsjtxMessage.senderId).toEqual(repeatedDatagrams[1].wsjtxMessage.senderId)
     })
+
+    it('emits a WSJT-X type 5 packet with structured QSO fields', () => {
+      const qso = {
+        startAtMillis: Date.UTC(2026, 3, 29, 21, 30, 15),
+        endAtMillis: Date.UTC(2026, 3, 29, 21, 31, 45),
+        band: '20m',
+        freq: 14069,
+        mode: 'CW',
+        power: '5',
+        notes: 'test note',
+        their: {
+          call: 'N0CALL',
+          sent: '579',
+          grid: 'EM29',
+          name: 'Pat',
+          exchange: '123'
+        },
+        our: {
+          call: 'YO3GND',
+          operatorCall: 'YO3GND',
+          sent: '599',
+          exchange: '001'
+        }
+      }
+
+      const datagrams = adifDatagramsForExport({
+        exportType: 'full-adif',
+        body: multiRecordADIF
+      }, {
+        messageFormat: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxType5
+      }, {
+        qso,
+        operation: {
+          stationCall: 'YO3GND',
+          local: { operatorCall: 'YO3GND' }
+        },
+        ourInfo: {
+          call: 'YO3GND'
+        }
+      })
+
+      expect(datagrams).toEqual([{
+        wsjtxQSOLoggedMessage: expect.objectContaining({
+          magicNumber: 0xadbccbda,
+          schemaNumber: 3,
+          messageType: 5,
+          senderId: `Ham2K-PoLo/${packageJson.version}`,
+          dateTimeOnMillis: Date.UTC(2026, 3, 29, 21, 30, 15),
+          dateTimeOffMillis: Date.UTC(2026, 3, 29, 21, 31, 45),
+          dxCall: 'N0CALL',
+          dxGrid: 'EM29',
+          txFrequencyHz: 14069000,
+          mode: 'CW',
+          reportSent: '599',
+          reportReceived: '579',
+          txPower: '5',
+          comments: 'test note',
+          name: 'Pat',
+          operatorCall: 'YO3GND',
+          myCall: 'YO3GND',
+          myGrid: '',
+          exchangeSent: '001',
+          exchangeReceived: '123'
+        })
+      }])
+    })
   })
 
   describe('test ADIF generation', () => {
@@ -181,6 +249,7 @@ describe('liveQSO', () => {
       }))
       mockSendUDPMessage.mockResolvedValue({})
       mockSendWSJTXLoggedADIFMessage.mockResolvedValue({})
+      mockSendWSJTXQSOLoggedMessage.mockResolvedValue({})
 
       const date = new Date('2026-04-30T00:30:15+03:00')
 
@@ -219,6 +288,26 @@ describe('liveQSO', () => {
       expect(mockSendWSJTXLoggedADIFMessage).toHaveBeenCalledWith(expect.objectContaining({
         message: expect.objectContaining({
           adifText: expect.stringContaining('<OPERATOR:6>YO3GND')
+        })
+      }))
+
+      await sendLiveQSOUDPTest({
+        settings: {
+          url: 'udp://239.0.0.1:2237',
+          messageFormat: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxType5
+        },
+        operatorCall: 'YO3GND',
+        date
+      })
+
+      expect(mockSendWSJTXQSOLoggedMessage).toHaveBeenCalledWith(expect.objectContaining({
+        message: expect.objectContaining({
+          messageType: 5,
+          mode: 'CW',
+          operatorCall: 'YO3GND',
+          myCall: 'YO3GND',
+          exchangeSent: '001',
+          exchangeReceived: ''
         })
       }))
     })

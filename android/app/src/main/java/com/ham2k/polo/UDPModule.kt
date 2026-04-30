@@ -57,8 +57,77 @@ class UDPModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMod
       writer.writeInt(magicNumber.toLong().toInt())
       writer.writeInt(schemaNumber.toLong().toInt())
       writer.writeInt(messageType.toLong().toInt())
-      writeWSJTXUTF8(writer, senderId)
-      writeWSJTXUTF8(writer, adifText)
+      WSJTXWireFormat.writeUTF8(writer, senderId)
+      WSJTXWireFormat.writeUTF8(writer, adifText)
+      writer.flush()
+
+      sendDatagram(
+        host = host,
+        port = port,
+        bytes = packet.toByteArray(),
+        broadcast = broadcast,
+        promise = promise
+      )
+    } catch (error: Exception) {
+      promise.reject("ERR_UDP_WSJTX", error.message, error)
+    }
+  }
+
+  @ReactMethod
+  fun sendWSJTXQSOLogged(
+    host: String,
+    port: Int,
+    magicNumber: Double,
+    schemaNumber: Double,
+    messageType: Double,
+    senderId: String,
+    dateTimeOffMillis: Double,
+    dxCall: String,
+    dxGrid: String,
+    txFrequencyHz: Double,
+    mode: String,
+    reportSent: String,
+    reportReceived: String,
+    txPower: String,
+    comments: String,
+    name: String,
+    dateTimeOnMillis: Double,
+    operatorCall: String,
+    myCall: String,
+    myGrid: String,
+    exchangeSent: String,
+    exchangeReceived: String,
+    options: ReadableMap?,
+    promise: Promise
+  ) {
+    val broadcast = options?.let {
+      it.hasKey("broadcast") && !it.isNull("broadcast") && it.getBoolean("broadcast")
+    } ?: false
+
+    try {
+      val packet = ByteArrayOutputStream()
+      val writer = DataOutputStream(packet)
+
+      writer.writeInt(magicNumber.toLong().toInt())
+      writer.writeInt(schemaNumber.toLong().toInt())
+      writer.writeInt(messageType.toLong().toInt())
+      WSJTXWireFormat.writeUTF8(writer, senderId)
+      WSJTXWireFormat.writeQDateTime(writer, dateTimeOffMillis.toLong())
+      WSJTXWireFormat.writeUTF8(writer, dxCall)
+      WSJTXWireFormat.writeUTF8(writer, dxGrid)
+      writer.writeLong(txFrequencyHz.toLong())
+      WSJTXWireFormat.writeUTF8(writer, mode)
+      WSJTXWireFormat.writeUTF8(writer, reportSent)
+      WSJTXWireFormat.writeUTF8(writer, reportReceived)
+      WSJTXWireFormat.writeUTF8(writer, txPower)
+      WSJTXWireFormat.writeUTF8(writer, comments)
+      WSJTXWireFormat.writeUTF8(writer, name)
+      WSJTXWireFormat.writeQDateTime(writer, dateTimeOnMillis.toLong())
+      WSJTXWireFormat.writeUTF8(writer, operatorCall)
+      WSJTXWireFormat.writeUTF8(writer, myCall)
+      WSJTXWireFormat.writeUTF8(writer, myGrid)
+      WSJTXWireFormat.writeUTF8(writer, exchangeSent)
+      WSJTXWireFormat.writeUTF8(writer, exchangeReceived)
       writer.flush()
 
       sendDatagram(
@@ -115,16 +184,5 @@ class UDPModule(reactContext: ReactApplicationContext) : ReactContextBaseJavaMod
         socket?.close()
       }
     }.start()
-  }
-
-  private fun writeWSJTXUTF8(writer: DataOutputStream, value: String?) {
-    if (value == null) {
-      writer.writeInt(-1)
-      return
-    }
-
-    val bytes = value.toByteArray(Charsets.UTF_8)
-    writer.writeInt(bytes.size)
-    writer.write(bytes)
   }
 }

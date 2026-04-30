@@ -8,6 +8,7 @@
 
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Platform } from 'react-native'
 
 import { H2kListItem } from '../../ui'
 import LiveQSOHTTPSettingsScreen from '../../screens/SettingsScreens/screens/LiveQSOHTTPSettingsScreen'
@@ -26,15 +27,22 @@ export const Info = {
 
 function LiveQSOSettingItem ({ navigation }) {
   const { t } = useTranslation()
+  const isIOS = Platform.OS === 'ios'
+  const title = isIOS
+    ? t('screens.liveQSOSettings.httpOnlyMenu.title', 'Custom HTTP QSO endpoint')
+    : t('screens.liveQSOSettings.menu.title', 'Live QSO logging')
+  const description = isIOS
+    ? t('screens.liveQSOSettings.httpOnlyMenu.description', 'Send live QSOs to a custom web service')
+    : t('screens.liveQSOSettings.menu.description', 'HTTP endpoint and other live export transports')
 
   return (
     <H2kListItem
-      title={t('screens.liveQSOSettings.title', 'Live QSO logging')}
-      description={t('screens.liveQSOSettings.description', 'HTTP endpoint and other live export transports')}
+      title={title}
+      description={description}
       leftIcon="broadcast"
       onPress={() => navigation.navigate('ExtensionScreen', {
         key: 'live-qso-settings',
-        title: t('screens.liveQSOSettings.title', 'Live QSO logging')
+        title
       })}
     />
   )

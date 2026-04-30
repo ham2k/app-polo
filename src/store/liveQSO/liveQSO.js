@@ -18,16 +18,18 @@ import {
   buildN1MMContactReplaceXMLForQSO,
   sendLiveQSON1MMPacket
 } from './liveQSON1MMMessage'
-import { sendUDPMessage, sendWSJTXLoggedADIFMessage } from './liveQSOUDPNative'
+import { sendUDPMessage, sendWSJTXLoggedADIFMessage, sendWSJTXQSOLoggedMessage } from './liveQSOUDPNative'
 import { LIVE_QSO_UDP_MESSAGE_FORMATS, selectLiveQSOHTTPSettings, selectLiveQSON1MMSettings, selectLiveQSOUDPSettings } from './liveQSOSettings'
-import { WSJTXLoggedADIFMessage } from './liveQSOWSJTXMessage'
+import { WSJTXLoggedADIFMessage, WSJTXQSOLoggedMessage } from './liveQSOWSJTXMessage'
 
 const queue = []
 let processing = false
 const WSJTX_MAGIC_NUMBER = 0xadbccbda
 const WSJTX_SCHEMA_NUMBER = 3
+const WSJTX_QSO_LOGGED_TYPE = 5
 const WSJTX_LOGGED_ADIF_TYPE = 12
 const WSJTX_SENDER_ID = `Ham2K-PoLo/${packageJson.version}`
+const WSJTX_DEFAULT_FREQUENCY_HZ = 14069000
 
 function buildRequestVariants ({ baseRequest, httpSettings }) {
   const bodies = adifBodiesForRequest(baseRequest.body, httpSettings)
@@ -71,9 +73,9 @@ function buildLiveQSORequests ({ exports, httpSettings, method }) {
   }).flat()
 }
 
-function buildLiveQSOUDPDatagrams ({ exports, udpSettings }) {
+function buildLiveQSOUDPDatagrams ({ exports, udpSettings, qso, operation, ourInfo }) {
   return exports.map((entry) => {
-    return adifDatagramsForExport(entry, udpSettings).map((payload) => ({
+    return adifDatagramsForExport(entry, udpSettings, { qso, operation, ourInfo }).map((payload) => ({
       url: udpSettings.url,
       ...payload
     }))
@@ -104,6 +106,15 @@ async function postLiveQSORequest (request) {
 }
 
 async function postLiveQSOUDPDatagram (datagram) {
+  if (datagram.wsjtxQSOLoggedMessage) {
+    await sendWSJTXQSOLoggedMessage({
+      url: datagram.url,
+      message: datagram.wsjtxQSOLoggedMessage,
+      broadcast: true
+    })
+    return
+  }
+
   if (datagram.wsjtxMessage) {
     await sendWSJTXLoggedADIFMessage({
       url: datagram.url,
@@ -176,7 +187,10 @@ async function processQueue () {
         await runLiveQSOTask('UDP ADIF send failed', async () => {
           const datagrams = buildLiveQSOUDPDatagrams({
             exports,
-            udpSettings
+            udpSettings,
+            qso: work.qso,
+            operation,
+            ourInfo
           })
 
           for (const datagram of datagrams) {
@@ -296,8 +310,16 @@ export function splitADIFBody (body) {
   return { header, records }
 }
 
-export function adifDatagramsForExport (entry, udpSettings) {
+export function adifDatagramsForExport (entry, udpSettings, context = {}) {
+  const { qso, operation, ourInfo } = context
   const { body } = entry
+
+  if (udpSettings.messageFormat === LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxType5 && qso) {
+    return [{
+      wsjtxQSOLoggedMessage: buildWSJTXQSOLoggedMessageForQSO({ qso, operation, ourInfo })
+    }]
+  }
+
   const { header, records } = splitADIFBody(body)
   if (records.length === 0) {
     return body ? [{ payload: body }] : []
@@ -335,6 +357,86 @@ export function buildLiveQSOTestADIF ({ operatorCall, date = new Date() } = {}) 
   ].join('\n')
 }
 
+function wsjtModeForQSO (qso) {
+  const mode = `${qso?.mode ?? ''}`.toUpperCase()
+  if (mode === 'USB' || mode === 'LSB') return 'SSB'
+  return qso?.mode ?? 'CW'
+}
+
+function wsjtFrequencyForQSO (qso) {
+  const freq = Number(qso?.freq)
+  if (!freq) return WSJTX_DEFAULT_FREQUENCY_HZ
+  return Math.round(freq * 1000)
+}
+
+function buildWSJTXQSOLoggedMessageForQSO ({ qso, operation, ourInfo }) {
+  const dateTimeOnMillis = qso?.startAtMillis ?? Date.now()
+  const dateTimeOffMillis = qso?.endAtMillis ?? dateTimeOnMillis
+  const myCall = qso?.our?.call || operation?.stationCall || ourInfo?.call || 'N0CALL'
+
+  return new WSJTXQSOLoggedMessage({
+    magicNumber: WSJTX_MAGIC_NUMBER,
+    schemaNumber: WSJTX_SCHEMA_NUMBER,
+    messageType: WSJTX_QSO_LOGGED_TYPE,
+    senderId: WSJTX_SENDER_ID,
+    dateTimeOffMillis,
+    dxCall: qso?.their?.call || 'N0CALL',
+    dxGrid: qso?.their?.grid ?? qso?.their?.guess?.grid ?? '',
+    txFrequencyHz: wsjtFrequencyForQSO(qso),
+    mode: wsjtModeForQSO(qso),
+    reportSent: qso?.our?.sent ?? '',
+    reportReceived: qso?.their?.sent ?? '',
+    txPower: qso?.power ? `${qso.power}` : '',
+    comments: qso?.notes ?? '',
+    name: qso?.their?.name ?? qso?.their?.guess?.name ?? '',
+    dateTimeOnMillis,
+    operatorCall: qso?.our?.operatorCall || operation?.local?.operatorCall || myCall,
+    myCall,
+    myGrid: qso?.our?.grid ?? operation?.grid ?? ourInfo?.grid ?? '',
+    exchangeSent: qso?.our?.exchange ?? '',
+    exchangeReceived: qso?.their?.exchange ?? ''
+  })
+}
+
+function buildLiveQSOTestContext ({ operatorCall, date = new Date() }) {
+  const originCall = `${operatorCall || 'N0CALL'}`
+  const time = date.getTime()
+
+  return {
+    qso: {
+      uuid: 'wsjtx-test-qso',
+      startAtMillis: time,
+      endAtMillis: time,
+      band: '20m',
+      freq: 14069,
+      mode: 'CW',
+      their: {
+        call: 'N0CALL',
+        sent: '599',
+        grid: 'EM29',
+        name: 'Pat'
+      },
+      our: {
+        call: originCall,
+        operatorCall: originCall,
+        sent: '599',
+        exchange: '001'
+      }
+    },
+    operation: {
+      stationCall: originCall,
+      operatorCall: originCall,
+      local: {
+        operatorCall: originCall
+      }
+    },
+    ourInfo: {
+      call: originCall,
+      operatorCall: originCall
+    }
+  }
+}
+
 export async function sendLiveQSOHTTPTest ({ settings, operatorCall, date = new Date() }) {
   const response = await fetch(settings?.url, {
     method: 'POST',
@@ -353,10 +455,11 @@ export async function sendLiveQSOHTTPTest ({ settings, operatorCall, date = new 
 }
 
 export async function sendLiveQSOUDPTest ({ settings, operatorCall, date = new Date() }) {
+  const context = buildLiveQSOTestContext({ operatorCall, date })
   const datagrams = adifDatagramsForExport({
     exportType: 'full-adif',
     body: buildLiveQSOTestADIF({ operatorCall, date })
-  }, settings)
+  }, settings, context)
 
   for (const datagram of datagrams) {
     await postLiveQSOUDPDatagram({

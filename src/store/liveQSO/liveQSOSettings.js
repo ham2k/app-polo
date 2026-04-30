@@ -12,19 +12,25 @@ export const DEFAULT_LIVE_QSO_N1MM_URL = ''
 
 export const LIVE_QSO_UDP_MESSAGE_FORMATS = {
   rawADIF: 'raw-adif',
-  wsjtxCompatible: 'wsjt-x-compatible'
+  wsjtxCompatible: 'wsjt-x-compatible',
+  wsjtxType5: 'wsjt-x-compatible-type-5'
 }
 
 export const LIVE_QSO_UDP_MESSAGE_FORMAT_OPTIONS = [
   {
     value: LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF,
     title: 'Raw ADIF',
-    description: 'N1MM, Log4OM, HRD, GridTracker'
+    description: 'N1MM, HRD'
   },
   {
     value: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible,
-    title: 'WSJT-X compatible',
-    description: 'DXKeeper, HRD, AC Log, MacLoggerDX'
+    title: 'WSJT-X type 12 (common)',
+    description: 'N1MM, Log4OM, DXKeeper, HRD'
+  },
+  {
+    value: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxType5,
+    title: 'WSJT-X compatible type 5',
+    description: 'Swisslog, AC Log'
   }
 ]
 

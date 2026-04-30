@@ -51,6 +51,44 @@ export async function sendWSJTXLoggedADIFMessage ({ url, message, broadcast = fa
   )
 }
 
+export async function sendWSJTXQSOLoggedMessage ({ url, message, broadcast = false }) {
+  if (Platform.OS !== 'android') {
+    throw new Error('UDP sending is only available on Android')
+  }
+
+  if (!UDPModule?.sendWSJTXQSOLogged) {
+    throw new Error('WSJT-X UDP native method is not available')
+  }
+
+  const { host, port } = parseUDPURL(url)
+
+  return UDPModule.sendWSJTXQSOLogged(
+    host,
+    port,
+    message.magicNumber,
+    message.schemaNumber,
+    message.messageType,
+    `${message.senderId ?? ''}`,
+    message.dateTimeOffMillis,
+    `${message.dxCall ?? ''}`,
+    `${message.dxGrid ?? ''}`,
+    message.txFrequencyHz,
+    `${message.mode ?? ''}`,
+    `${message.reportSent ?? ''}`,
+    `${message.reportReceived ?? ''}`,
+    `${message.txPower ?? ''}`,
+    `${message.comments ?? ''}`,
+    `${message.name ?? ''}`,
+    message.dateTimeOnMillis,
+    `${message.operatorCall ?? ''}`,
+    `${message.myCall ?? ''}`,
+    `${message.myGrid ?? ''}`,
+    `${message.exchangeSent ?? ''}`,
+    `${message.exchangeReceived ?? ''}`,
+    { broadcast: UDP_BROADCAST_PERMISSION || broadcast }
+  )
+}
+
 export function parseUDPURL (url) {
   const trimmed = `${url ?? ''}`.trim()
   const normalized = /^[a-z]+:\/\//i.test(trimmed) ? trimmed : `udp://${trimmed}`

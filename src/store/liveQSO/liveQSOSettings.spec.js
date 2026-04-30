@@ -114,6 +114,11 @@ describe('liveQSOSettings', () => {
   describe('option helpers', () => {
     it('falls back to default option values', () => {
       expect(liveQSOUDPMessageFormatOption('bogus').value).toEqual(LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF)
+      expect(liveQSOUDPMessageFormatOption(LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible).title).toEqual('WSJT-X type 12 (common)')
+      expect(liveQSOUDPMessageFormatOption(LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxType5).title).toEqual('WSJT-X compatible type 5')
+      expect(liveQSOUDPMessageFormatOption(LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF).description).toEqual('N1MM, HRD')
+      expect(liveQSOUDPMessageFormatOption(LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible).description).toEqual('N1MM, Log4OM, DXKeeper, HRD')
+      expect(liveQSOUDPMessageFormatOption(LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxType5).description).toEqual('Swisslog, AC Log')
     })
   })
 })

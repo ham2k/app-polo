@@ -38,7 +38,7 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
     : t('screens.liveQSOSettings.httpDisabledDescription', 'Disabled - {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
   const udpDescription = settings?.liveQSO?.udp?.messageFormat
     ? t('screens.liveQSOSettings.udpSelectedDescription', '{{format}} - {{programs}}', { format: udpFormatOption.title, programs: udpFormatOption.description })
-    : t('screens.liveQSOSettings.udpDefaultDescription', 'Live logging with Log4OM, DXKeeper, MacLoggerDX, HRD and more')
+    : t('screens.liveQSOSettings.udpDefaultDescription', 'Live logging with N1MM, Log4OM, DXKeeper, HRD, Swisslog and AC Log')
   const n1mmDescription = n1mmSettings.enabled
     ? t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled - N1MM XML broadcast')
     : t('screens.liveQSOSettings.n1mmDisabledDescription', 'Disabled - N1MM XML broadcast')
