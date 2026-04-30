@@ -217,12 +217,7 @@ const ReferenceHandler = {
     const ref = findRef(operation, Info.key)
     const qp = qpData({ ref })
 
-    let ourLocations = ref?.location
-    if (ref?.location?.match(SLASH_OR_COMMA_REGEX)) {
-      ourLocations = ref.location.split(SLASH_OR_COMMA_REGEX, 2)
-    } else {
-      ourLocations = [ref?.location]
-    }
+    const ourLocations = qpSplitLocation(ref?.location)
 
     headers.push(['CONTEST', qp.cabrilloName])
     headers.push(['CALLSIGN', operation.stationCall || settings.operatorCall])
@@ -240,27 +235,15 @@ const ReferenceHandler = {
     const hasNumbers = (qp?.exchange?.find(field => field === 'Number') !== undefined)
     const hasNames = (qp?.exchange?.find(field => field.startsWith('Name')) !== undefined)
 
-    let ourLocations = ref?.location
-    let weAreInState
-    if (ref?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
-      ourLocations = ref.location.split(SLASH_OR_COMMA_REGEX, 2)
-      weAreInState = ref.location.split(SLASH_OR_COMMA_REGEX).every(c => qp.counties[c])
-    } else {
-      ourLocations = [ref?.location]
-      weAreInState = !!qp.counties[ref?.location]
-    }
+    const ourLocations = qpSplitLocation(ref?.location)
+    const weAreInState = ourLocations.find(loc => qpIsInState({ qp, location: loc }))
 
     const qsoRef = findRef(qso, Info.key)
 
-    let theirLocations
-    let theyAreInState
-    if (qsoRef?.location?.match(SLASH_OR_COMMA_REGEX) && qp.options?.countyLine) {
-      theirLocations = qsoRef?.location.split(SLASH_OR_COMMA_REGEX, 2)
-      theyAreInState = theirLocations.every(c => qp.counties[c])
-    } else if (qsoRef?.location) {
-      theirLocations = [qsoRef?.location]
-      theyAreInState = !!qp.counties[qsoRef?.location]
-    } else {
+    let theirLocations = qpSplitLocation(qsoRef?.location)
+    let theyAreInState = theirLocations.find(c => qp.counties[c])
+
+    if (theirLocations.length === 0) {
       if (qso?.their?.guess?.entityCode === 'K' || qso?.their?.guess?.entityCode === 'VE') {
         theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
       } else {
@@ -569,12 +552,8 @@ const ReferenceHandler = {
   summarizeScore: ({ score, operation, ref, section }) => {
     const qp = qpData({ ref })
 
-    let weAreInState = false
-    if (ref?.location?.match(SLASH_OR_COMMA_REGEX)) {
-      weAreInState = ref?.location?.split(SLASH_OR_COMMA_REGEX)?.every(c => qp.counties[c])
-    } else if (qp.counties[ref?.location]) {
-      weAreInState = true
-    }
+    const ourLocations = qpSplitLocation(ref?.location)
+    const weAreInState = ourLocations.every(loc => qp.counties[loc])
 
     if (!score.total) {
       score.summary = '0 pts'
@@ -859,18 +838,18 @@ function _suggestionsFor ({ qso, qp }) {
   const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
   if (prefix === 'K') {
     if (qp.options.entity !== 'VE') {
-      return Object.entries({ ...qp.counties, ...US_STATES })
+      return Object.entries({ ...qp.counties, ...US_STATES, ...(qp.otherQPCounties ?? {}) })
     } else {
       return Object.entries({ ...US_STATES })
     }
   } else if (prefix === 'VE') {
     if (qp.options.entity === 'VE') {
-      return Object.entries({ ...qp.counties, ...CANADIAN_PROVINCES })
+      return Object.entries({ ...qp.counties, ...CANADIAN_PROVINCES, ...(qp.otherQPCounties ?? {}) })
     } else {
       return Object.entries({ ...CANADIAN_PROVINCES })
     }
   } else if (prefix) return []
-  else return Object.entries({ ...qp.counties, ...US_STATES, ...CANADIAN_PROVINCES })
+  else return Object.entries({ ...qp.counties, ...US_STATES, ...CANADIAN_PROVINCES, ...(qp.otherQPCounties ?? {}) })
 }
 
 function _defaultLocationFor ({ qso, qp, qsos, operation }) {
@@ -917,9 +896,19 @@ function _nearDupesFor ({ qp, qso, qsos, operation, ourLocations, theirLocations
 
 const SLASH_OR_COMMA_REGEX = /[/,]/
 
-export function qpParseLocations ({ qp, location, qso, weAreInState, theyAreInState }) {
-  const locations = location?.split(SLASH_OR_COMMA_REGEX) ?? []
+export function qpSplitLocation (location) {
+  let locations = location?.split(SLASH_OR_COMMA_REGEX) ?? []
+
+  if (locations.length > 1 && locations[0].length > 4) {
+    const state = locations[0].substring(0, 2)
+    locations = locations.map(loc => loc.length < 4 ? state + loc : loc)
+  }
+
   return locations
+}
+
+export function qpParseLocations ({ qp, location, qso, weAreInState, theyAreInState }) {
+  return qpSplitLocation(location)
     .map(loc => qpNormalizeLocation({ qp, qso, location: loc, weAreInState, theyAreInState }))
     .filter(loc => loc)
     .map(loc => {
@@ -948,31 +937,37 @@ export function qpNormalizeLocation ({ qp, qso, location, weAreInState, theyAreI
     } else {
       return location
     }
-  } else if (location === 'DC' && qp.options.dcCountsAsMaryland) {
-    return 'MD'
-  } else if (location === 'MD' && qp.options.dcCountsAsMaryland) {
-    return 'DC'
-  } else if (location === 'DC' && !qp.options.dcCountsAsMaryland) {
-    return 'DC'
-  } else if (US_STATES[location]) {
-    return location
-  } else if (CANADIAN_PROVINCES[location]) {
-    return location
-  } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KL7') {
-    return 'AK'
-  } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KH6') {
-    return 'HI'
-  } else if (location === 'DX') {
-    return location
-  } else if (qp.options.dxEntityIsMultiplier) {
-    if (DXCC_BY_PREFIX[location]) {
-      return location
-    } else {
-      return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
-    }
   } else {
-    return ''
+    // For long locations, assume the state is the first two characters
+    if (location.length > 4) {
+      location = location.substring(0, 2)
+    }
+
+    if (location === 'DC' && qp.options.dcCountsAsMaryland) {
+      return 'MD'
+    } else if (location === 'MD' && qp.options.dcCountsAsMaryland) {
+      return 'DC'
+    } else if (location === 'DC' && !qp.options.dcCountsAsMaryland) {
+      return 'DC'
+    } else if (US_STATES[location]) {
+      return location
+    } else if (CANADIAN_PROVINCES[location]) {
+      return location
+    } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KL7') {
+      return 'AK'
+    } else if ((qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix) === 'KH6') {
+      return 'HI'
+    } else if (location === 'DX') {
+      return location
+    } else if (qp.options.dxEntityIsMultiplier) {
+      if (DXCC_BY_PREFIX[location]) {
+        return location
+      } else {
+        return qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+      }
+    }
   }
+  return ''
 }
 
 export function qpData ({ ref }) {
@@ -993,8 +988,10 @@ export function qpMultPrefix ({ qp, band, mode, weAreInState }) {
 
 export function qpNameForLocation ({ qp, location }) {
   location = location?.toUpperCase() || ''
-  if (qp.counties[location]) {
-    return qp.counties[location]
+  const county = qp.counties[location] || qp.otherQPCounties?.[location]
+
+  if (county) {
+    return county
   } else if (location === 'DC' && qp.options.dcCountsAsMaryland) {
     return 'Maryland & DC'
   } else if (location === 'MD' && qp.options.dcCountsAsMaryland) {
@@ -1023,8 +1020,9 @@ export function qpIsInState ({ qp, location }) {
 
 export function qpLabelForLocation ({ qp, location }) {
   location = location?.toUpperCase() || ''
-  if (qp.counties[location]) {
-    return `In-state: *${location}* ${qp.counties[location]}`
+  const county = qp.counties[location] || qp.otherQPCounties?.[location]
+  if (county) {
+    return `In-state: *${location}* ${county}`
   } else if (location === 'DC' && qp.options.dcCountsAsMaryland) {
     return 'Out-of-state: *DC* Maryland & DC'
   } else if (location === 'MD' && qp.options.dcCountsAsMaryland) {

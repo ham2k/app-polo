@@ -6,6 +6,14 @@
       "Performance and stability improvements"
     ]
   },
+  "26.2.10": {
+    "name": "February '26 (patch 10)",
+    "photoCaption": "HB9/OK1PTR/P at CH-0165",
+    "changes": [
+      "Allow more than two counties in QSO Party locations",
+      "Allow 7QP, NEQP and INQP to enter counties from the other QPs"
+    ]
+  },
   "26.2.9": {
     "name": "February '26 (patch 9)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",
