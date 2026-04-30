@@ -303,6 +303,7 @@ export default function LoggingPanel ({
           qso,
           saveContext: {
             origin: 'live-logging',
+            action: qso.deleted ? 'delete' : 'update',
             previousQSO: loggingState?.originalQSO
           }
         }))
@@ -321,7 +322,7 @@ export default function LoggingPanel ({
           dispatch(addQSOs({
             uuid: operation.uuid,
             qsos: [qso],
-            saveContext: { origin: 'live-logging' }
+            saveContext: { origin: 'live-logging', action: 'create' }
           }))
           setQSO(undefined, { otherStateChanges: { lastUUID: qso.uuid } })
         }, 50)
@@ -406,7 +407,8 @@ export default function LoggingPanel ({
             qsos: multiQSOs,
             saveContext: {
               origin: 'live-logging',
-              previousQSO: loggingState?.originalQSO
+              action: eventName === 'add_qso' ? 'create' : 'update',
+              previousQSO: eventName === 'add_qso' ? undefined : loggingState?.originalQSO
             }
           }))
           if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')

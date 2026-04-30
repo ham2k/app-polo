@@ -19,6 +19,7 @@ import { annotateQSO } from '../../../screens/OperationScreens/OpLoggingTab/comp
 import { selectSettings } from '../../settings'
 import { selectRuntimeOnline } from '../../runtime'
 import { enqueueLiveQSOPosts } from '../../liveQSO'
+import { liveQSOEnqueueInfoForSaveContext } from '../../liveQSO/liveQSOEnqueueInfo'
 
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
@@ -92,18 +93,6 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
 }
 
 const DEBUG = false
-
-function liveQSOEnqueueInfoForSaveContext ({ saveContext, qsos }) {
-  if (saveContext?.origin !== 'live-logging') return undefined
-
-  const previousQSO = saveContext?.previousQSO
-  const action = qsos.some((qso) => qso?.deleted) ? 'delete' : (previousQSO ? 'update' : 'create')
-
-  return {
-    action,
-    liveQSOContext: previousQSO ? { previousQSO } : undefined
-  }
-}
 
 export const addQSOs = ({ uuid, qsos, synced = false, saveContext }) => async (dispatch, getState) => {
   const now = Date.now()
