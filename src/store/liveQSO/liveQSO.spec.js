@@ -6,6 +6,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+const packageJson = require('../../../package.json')
+
 const mockQsonToADIF = jest.fn()
 const mockDataExportOptions = jest.fn()
 const mockSelectOperation = jest.fn()
@@ -44,7 +46,8 @@ jest.mock('./liveQSOUDPNative', () => ({
   sendWSJTXLoggedADIFMessage: (...args) => mockSendWSJTXLoggedADIFMessage(...args)
 }))
 
-const { adifBodiesForRequest, splitADIFBody } = require('./liveQSO')
+const { adifBodiesForRequest, adifDatagramsForExport, splitADIFBody } = require('./liveQSO')
+const { LIVE_QSO_UDP_MESSAGE_FORMATS } = require('./liveQSOSettings')
 
 describe('liveQSO', () => {
   const multiRecordADIF = [
@@ -95,6 +98,49 @@ describe('liveQSO', () => {
         '<CALL:6>N0CALL <EOR>\n',
         '<CALL:3>A1A <EOR>\n'
       ])
+    })
+  })
+
+  describe('UDP datagram shaping', () => {
+    it('emits raw datagrams or WSJT-X wrapped messages per ADIF record', () => {
+      const entry = {
+        exportType: 'full-adif',
+        body: multiRecordADIF
+      }
+
+      expect(adifDatagramsForExport(entry, {
+        messageFormat: LIVE_QSO_UDP_MESSAGE_FORMATS.rawADIF
+      })).toEqual([
+        { payload: 'ADIF test from Ham2K PoLo\n<EOH>\n<CALL:6>N0CALL <EOR>\n' },
+        { payload: 'ADIF test from Ham2K PoLo\n<EOH>\n<CALL:3>A1A <EOR>\n' }
+      ])
+
+      const wsjtDatagrams = adifDatagramsForExport(entry, {
+        messageFormat: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible
+      })
+
+      expect(wsjtDatagrams).toHaveLength(2)
+      expect(wsjtDatagrams[0].wsjtxMessage).toMatchObject({
+        magicNumber: 0xadbccbda,
+        schemaNumber: 3,
+        messageType: 12,
+        senderId: `Ham2K-PoLo/${packageJson.version}`,
+        adifText: 'ADIF test from Ham2K PoLo\n<EOH>\n<CALL:6>N0CALL <EOR>\n'
+      })
+      expect(wsjtDatagrams[1].wsjtxMessage).toMatchObject({
+        magicNumber: 0xadbccbda,
+        schemaNumber: 3,
+        messageType: 12,
+        senderId: `Ham2K-PoLo/${packageJson.version}`,
+        adifText: 'ADIF test from Ham2K PoLo\n<EOH>\n<CALL:3>A1A <EOR>\n'
+      })
+
+      const repeatedDatagrams = adifDatagramsForExport(entry, {
+        messageFormat: LIVE_QSO_UDP_MESSAGE_FORMATS.wsjtxCompatible
+      })
+
+      expect(wsjtDatagrams[0].wsjtxMessage.senderId).toEqual(repeatedDatagrams[0].wsjtxMessage.senderId)
+      expect(wsjtDatagrams[1].wsjtxMessage.senderId).toEqual(repeatedDatagrams[1].wsjtxMessage.senderId)
     })
   })
 })
