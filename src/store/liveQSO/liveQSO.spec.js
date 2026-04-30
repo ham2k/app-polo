@@ -46,7 +46,7 @@ jest.mock('./liveQSOUDPNative', () => ({
   sendWSJTXLoggedADIFMessage: (...args) => mockSendWSJTXLoggedADIFMessage(...args)
 }))
 
-const { adifBodiesForRequest, adifDatagramsForExport, buildLiveQSOTestADIF, splitADIFBody } = require('./liveQSO')
+const { adifBodiesForRequest, adifDatagramsForExport, buildLiveQSOTestADIF, enqueueLiveQSOPosts, splitADIFBody } = require('./liveQSO')
 const { LIVE_QSO_UDP_MESSAGE_FORMATS } = require('./liveQSOSettings')
 
 describe('liveQSO', () => {
@@ -55,6 +55,11 @@ describe('liveQSO', () => {
     '<EOH>',
     '<CALL:6>N0CALL <EOR>',
     '<CALL:3>A1A <EOR>'
+  ].join('\n')
+  const queueADIF = [
+    'ADIF test from Ham2K PoLo',
+    '<EOH>',
+    '<CALL:6>N0CALL <EOR>'
   ].join('\n')
 
   afterEach(() => {
@@ -155,6 +160,155 @@ describe('liveQSO', () => {
       expect(adif).toContain('<FREQ:9>14.069000')
       expect(adif).toContain('<QSO_DATE:8>20260429')
       expect(adif).toContain('<TIME_ON:6>213015')
+    })
+  })
+
+  describe('queue semantics', () => {
+    beforeEach(() => {
+      jest.useFakeTimers()
+
+      global.fetch = jest.fn(async () => ({
+        ok: true,
+        status: 200
+      }))
+      mockSelectSettings.mockImplementation((state) => state.settings)
+      mockSelectOperation.mockImplementation((state) => state.operation)
+      mockSelectOperationCallInfo.mockImplementation((state) => state.ourInfo)
+      mockDataExportOptions.mockReturnValue([
+        { format: 'adif', exportType: 'full-adif', handler: { key: 'core-adif' } }
+      ])
+      mockQsonToADIF.mockReturnValue(queueADIF)
+      mockSendUDPMessage.mockResolvedValue({})
+      mockBuildN1MMContactReplaceXMLForQSO.mockReturnValue('<contactreplace />')
+      mockSendLiveQSON1MMPacket.mockResolvedValue({})
+    })
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it('filters non-live entries for create and delete actions', async () => {
+      const baseQSO = {
+        uuid: 'qso-1',
+        deleted: false,
+        their: { call: 'N0CALL' }
+      }
+      const deletedQSO = {
+        uuid: 'qso-2',
+        deleted: true,
+        their: { call: 'K1OLD' }
+      }
+      const eventQSO = {
+        uuid: 'qso-3',
+        event: true,
+        their: { call: 'EVENT' }
+      }
+      const getState = () => ({
+        settings: {
+          liveQSO: {
+            udp: {
+              enabled: true,
+              url: '239.0.0.1:2237'
+            }
+          }
+        },
+        operation: {},
+        ourInfo: {}
+      })
+
+      enqueueLiveQSOPosts({
+        getState,
+        uuid: 'op-1',
+        qsos: [baseQSO, deletedQSO, eventQSO],
+        action: 'create'
+      })
+
+      await jest.runAllTimersAsync()
+
+      expect(mockSendUDPMessage).toHaveBeenCalledTimes(1)
+      expect(mockQsonToADIF).toHaveBeenCalledTimes(1)
+      expect(mockQsonToADIF.mock.calls[0][0].qsos).toEqual([baseQSO])
+
+      mockSendUDPMessage.mockClear()
+      mockQsonToADIF.mockClear()
+
+      const getDeleteState = () => ({
+        settings: {
+          liveQSO: {
+            http: {
+              enabled: true,
+              url: 'example.org/adif',
+              sendDeletes: true
+            }
+          }
+        },
+        operation: {},
+        ourInfo: {}
+      })
+
+      enqueueLiveQSOPosts({
+        getState: getDeleteState,
+        uuid: 'op-1',
+        qsos: [baseQSO, deletedQSO, eventQSO],
+        action: 'delete'
+      })
+
+      await jest.runAllTimersAsync()
+
+      expect(global.fetch).toHaveBeenCalledTimes(1)
+      expect(mockQsonToADIF).toHaveBeenCalledTimes(1)
+      expect(mockQsonToADIF.mock.calls[0][0].qsos).toEqual([{ ...deletedQSO, deleted: false }])
+    })
+
+    it('passes previous QSO context only to the matching update entry', async () => {
+      const firstQSO = {
+        uuid: 'match-me',
+        deleted: false,
+        their: { call: 'N0CALL' }
+      }
+      const secondQSO = {
+        uuid: 'other-qso',
+        deleted: false,
+        their: { call: 'K1OLD' }
+      }
+      const previousQSO = {
+        uuid: 'match-me',
+        their: { call: 'W1OLD' },
+        startAtMillis: Date.UTC(2026, 3, 30, 6, 0, 0)
+      }
+      const getState = () => ({
+        settings: {
+          liveQSO: {
+            n1mm: {
+              enabled: true,
+              url: '192.168.1.255:12060',
+              sendEdits: true
+            }
+          }
+        },
+        operation: {},
+        ourInfo: {}
+      })
+
+      enqueueLiveQSOPosts({
+        getState,
+        uuid: 'op-1',
+        qsos: [firstQSO, secondQSO],
+        action: 'update',
+        liveQSOContext: { previousQSO }
+      })
+
+      await jest.runAllTimersAsync()
+
+      expect(mockBuildN1MMContactReplaceXMLForQSO).toHaveBeenCalledTimes(2)
+      expect(mockBuildN1MMContactReplaceXMLForQSO.mock.calls[0][0]).toMatchObject({
+        qso: firstQSO,
+        previousQSO
+      })
+      expect(mockBuildN1MMContactReplaceXMLForQSO.mock.calls[1][0]).toMatchObject({
+        qso: secondQSO,
+        previousQSO: undefined
+      })
     })
   })
 })
