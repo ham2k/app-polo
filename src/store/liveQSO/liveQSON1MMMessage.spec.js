@@ -72,14 +72,22 @@ describe('liveQSON1MMMessage', () => {
   })
 
   describe('buildN1MMContactInfoValuesForQSO', () => {
-    it('uses UTC timestamps, DX contest mode, device name and a stable ID', () => {
+    it('uses UTC timestamps, DX contest mode, a normalized station name and a stable ID', () => {
       const values = buildN1MMContactInfoValuesForQSO({ qso, operation, previousQSO })
+      const longNameValues = buildN1MMContactInfoValuesForQSO({
+        qso,
+        operation,
+        previousQSO,
+        stationName: 'Portable Phone 001'
+      })
 
       expect(values.contestname).toEqual('DX')
       expect(values.timestamp).toEqual('2026-04-29 09:34:56')
       expect(values.oldtimestamp).toEqual('2026-04-29 07:11:12')
       expect(values.ID).toEqual('12345678123456789ABCDEF012345678')
-      expect(values.StationName).toEqual('Samsung Note 7')
+      expect(values.StationName).toEqual('Samsung-Note-7')
+      expect(longNameValues.StationName).toEqual('Portable-Phone')
+      expect(values.stationprefix).toEqual('YO3GND')
       expect(values.oldcall).toEqual('K1OLD')
       expect(values.comment).toBeUndefined()
       expect(values.misctext).toBeUndefined()
@@ -109,6 +117,7 @@ describe('liveQSON1MMMessage', () => {
       const fullXML = buildN1MMContactInfoXMLForQSO({ qso: minimalQSO, operation, skipEmptyFields: false })
 
       expect(compactXML).toContain('<contestname>DX</contestname>')
+      expect(compactXML).toContain('<stationprefix>YO3GND</stationprefix>')
       expect(compactXML).not.toContain('<section></section>')
       expect(fullXML).toContain('<section></section>')
     })

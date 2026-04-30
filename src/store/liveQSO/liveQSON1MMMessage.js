@@ -73,6 +73,19 @@ function compactXMLValue (value) {
   return `${value}`.trim()
 }
 
+function normalizeN1MMStationName (value) {
+  const rawStationName = compactXMLValue(value) || DEFAULT_STATION_NAME
+  const stationName = rawStationName
+    .replace(/\s+/g, '-')
+    .replace(/[^A-Za-z0-9.-]/g, '')
+    .replace(/^[-.]+|[-.]+$/g, '') || DEFAULT_STATION_NAME
+
+  // N1MM documents StationName as the sender computer's NetBIOS name and
+  // notes that Windows limits it to 15 characters.
+  // https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/
+  return stationName.slice(0, 15).replace(/^[-.]+|[-.]+$/g, '') || DEFAULT_STATION_NAME
+}
+
 function xmlEntriesToString (entries, { skipEmptyFields = true } = {}) {
   return entries
     .filter(([name, value]) => !skipEmptyFields || compactXMLValue(value) !== '')
@@ -112,6 +125,8 @@ export function buildN1MMContactInfoValuesForQSO ({
   operation,
   previousQSO,
   stationName = GLOBAL.deviceName || DEFAULT_STATION_NAME,
+  // N1MM is mostly a contest logger, but "DX" is its general-purpose,
+  // non-contest logging mode.
   contestname = 'DX',
   contestnr = '0',
   app = 'PoLo'
@@ -137,6 +152,7 @@ export function buildN1MMContactInfoValuesForQSO ({
     mode: n1mmModeForQSO(qso),
     call,
     countryprefix: qso?.their?.entityPrefix ?? qso?.their?.guess?.entityPrefix,
+    stationprefix: qso?.our?.call || operation?.stationCall || mycall,
     continent: qso?.their?.continent ?? qso?.their?.guess?.continent,
     snt: qso?.our?.sent || '599',
     sntnr: numericExchangeValue(qso?.our?.exchange),
@@ -163,7 +179,7 @@ export function buildN1MMContactInfoValuesForQSO ({
     IsOriginal: 'True',
     NetBiosName: '',
     IsRunQSO: '0',
-    StationName: stationName,
+    StationName: normalizeN1MMStationName(stationName),
     ID: buildN1MMContactId(qso?.uuid),
     IsClaimedQso: '1',
     oldtimestamp: oldTimestamp,
@@ -190,6 +206,7 @@ function buildN1MMEnvelopeXML (rootTag, values = {}, options = {}) {
       ['call', values.call ?? 'N0CALL'],
       ['countryprefix', values.countryprefix],
       ['wpxprefix', values.wpxprefix],
+      ['stationprefix', values.stationprefix],
       ['continent', values.continent],
       ['snt', values.snt ?? '599'],
       ['sntnr', values.sntnr],
@@ -218,7 +235,7 @@ function buildN1MMEnvelopeXML (rootTag, values = {}, options = {}) {
       ['IsOriginal', values.IsOriginal ?? 'True'],
       ['NetBiosName', values.NetBiosName],
       ['IsRunQSO', values.IsRunQSO ?? '0'],
-      ['StationName', values.StationName ?? DEFAULT_STATION_NAME],
+      ['StationName', normalizeN1MMStationName(values.StationName ?? DEFAULT_STATION_NAME)],
       ['ID', values.ID ?? buildN1MMContactId()],
       ['IsClaimedQso', values.IsClaimedQso ?? '1'],
       ['oldtimestamp', values.oldtimestamp ?? values.timestamp ?? formatN1MMTimestamp()],
@@ -249,7 +266,7 @@ export function buildN1MMContactDeleteXML (values = {}, options = {}) {
       ['band', values.band ?? '14'],
       ['call', values.call ?? 'N0CALL'],
       ['contestnr', values.contestnr ?? '0'],
-      ['StationName', values.StationName ?? DEFAULT_STATION_NAME],
+      ['StationName', normalizeN1MMStationName(values.StationName ?? DEFAULT_STATION_NAME)],
       ['ID', values.ID ?? buildN1MMContactId()]
     ], options),
     '</contactdelete>'
