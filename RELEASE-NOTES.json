@@ -6,6 +6,13 @@
       "Performance and stability improvements"
     ]
   },
+  "26.2.11": {
+    "name": "February '26 (patch 11)",
+    "photoCaption": "HB9/OK1PTR/P at CH-0165",
+    "changes": [
+      "QSO Party Hub and Mobile Tracker settings for 7QP, NEQP, IN and DE"
+    ]
+  },
   "26.2.10": {
     "name": "February '26 (patch 10)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",

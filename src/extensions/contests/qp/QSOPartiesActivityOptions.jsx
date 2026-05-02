@@ -54,10 +54,10 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
         timeDiff = 'Already happened'
         days = days + 1000
       } else if (days < -2) {
-        timeDiff = `Last weekend ${days}`
+        timeDiff = 'Last weekend'
         days = days = 14
       } else if (days >= -1 && days <= 2) {
-        timeDiff = `This weekend ${days}`
+        timeDiff = 'This weekend'
       } else if (days > 14) {
         timeDiff = fmtDateNice(date)
       } else if (days > 1) {

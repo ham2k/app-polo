@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>, 2025 Phillip Kessels <dl9pk@darc.de>
+ * Copyright ©️ 2025-2026 Sebastian Delmont <sd@ham2k.com>, 2025 Phillip Kessels <dl9pk@darc.de>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -19,7 +19,6 @@ import packageJson from '../../../../package.json'
 import { qpData, qpParseLocations } from './QSOPartiesExtension'
 import { Info } from './QSOPartiesInfo'
 import { latitudeInMinutes, longitudeInMinutes } from '../../../tools/geoTools'
-import { capitalizeString } from '../../../tools/capitalizeString'
 
 const DEBUG = false
 
@@ -33,8 +32,6 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
   const opRef = findRef(operation, Info.key)
   const qp = qpData({ ref: opRef })
   const counties = qpParseLocations({ qp, location: opRef?.location, qso: {} })
-
-  const state = getState()
 
   // console.log('QP Self Spotting', { opRef, operation })
 
@@ -71,12 +68,10 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
       })
 
       if (response.ok) {
-        const body = await response.text()
-        // console.log('-- Body', body)
+        await response.text()
       } else {
         console.log('Error reporting data:', response)
-        const body = await response.text()
-        // console.log('-- Body', body)
+        await response.text()
       }
     } catch (error) {
       console.log('Error reporting data:', error)
@@ -90,7 +85,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
       call = `${call}-${operation.local.multiIdentifier ?? '0'}`
     }
 
-    // console.log('-- spot to APRS')
+    console.log('-- spot to APRS')
 
     // See https://www.aprs-is.net/SendOnlyPorts.aspx and https://ham.packet-radio.net/packet/aprs-wb2osz/Understanding-APRS-Packets.pdf
 
@@ -105,11 +100,11 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
       command = [
         '!',
         latInfo.degrees.toString().padStart(2, '0'),
-        latInfo.fractionalMinutes.toFixed(2),
+        latInfo.fractionalMinutes.toFixed(2).toString().padStart(5, '0'),
         latInfo.direction,
         '/',
         lonInfo.degrees.toString().padStart(3, '0'),
-        lonInfo.fractionalMinutes.toFixed(2),
+        lonInfo.fractionalMinutes.toFixed(2).toString().padStart(5, '0'),
         lonInfo.direction,
         '(', // Symbol for car with antenna
         message
@@ -121,7 +116,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
     // console.log('-- command', command)
 
     try {
-      const response = await fetchWithTimeout(APRS_SERVER, {
+      await fetchWithTimeout(APRS_SERVER, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/octet-stream',
@@ -131,8 +126,6 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
         },
         body: `${call}>APRS,TCPIP*:${command}`
       })
-      // console.log('-- Posted to APRS', header, message)
-      // console.log(response)
     } catch (error) {
       console.log('Error reporting data:', error)
       return false
@@ -172,8 +165,8 @@ export const SpotsHook = {
           if (DEBUG) console.log('-- Data', data)
           const rawSpots = data.features.map(feature => {
             const { properties } = feature
-            const { call, frequency, text, county, countyCode } = properties ?? {}
-            const cleanText = text.replace(/^${qp.short} [\d\.]+/, '')
+            const { call, frequency, text, countyCode } = properties ?? {}
+            const cleanText = text.replace(/^${qp.short} [\d.]+/, '')
             return {
               their: { call },
               freq: parseFloat(frequency) * 1000,

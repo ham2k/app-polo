@@ -6,6 +6,8 @@
   "secondStart": "2026-5-3 13:00Z",
   "secondEnd": "2026-5-3 23:59Z",
   "short": "NEQP",
+  "aprsShort": "NEWE",
+  "qsoPartyHubName": "in7qpne_de",
   "url": "https://www.neqp.org/",
   "cabrilloName": "NEQP",
   "notes": "You can also enter counties for Indiana and 7th Call Area QSO Parties.\n\nContributed by W1GRL & W1BOY",
