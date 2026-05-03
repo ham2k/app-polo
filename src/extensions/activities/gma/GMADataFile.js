@@ -26,7 +26,7 @@ export function registerGMADataFile() {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'https://www.cqgma.org/gma_summits.csv'
+      const url = 'https://www.cqgma.org/download/summits.csv'
 
       return fetchAndProcessURL({
         ...args,

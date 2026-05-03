@@ -136,7 +136,7 @@ const ReferenceHandler = {
       info = annotateFromCountryFile(info)
       const [lat, lon] = gridToLocation(operation.grid)
 
-      let nearby = await motaFindAllByLocation(info.entityPrefix, lat, lon, 0.25)
+      let nearby = await motaFindAllByLocation(lat, lon, 0.25)
       nearby = nearby.map(result => ({
         ...result,
         distance: distanceOnEarth(result, { lat, lon })
