@@ -45,7 +45,7 @@ const SpotCommandHook = {
   ...Info,
   extension: Extension,
   key: 'commands-misc-spot',
-  match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY)(|[ /][\s\w\d!,.-_]*)$/i,
+  match: /^(SPOT|SPOTME|SPME|SELFSPOT|QRV|QRT|QSY|QRX)(|[ /][\s\w\d!,.-_]*)$/i,
   allowSpaces: true,
   describeCommand: (match, { t, vfo, operation }) => {
     if (!vfo || !operation) return
@@ -54,7 +54,7 @@ const SpotCommandHook = {
 
     if (!vfo.freq) return t?.('extensions.commands-misc.spot.cannotSelfSpotWithoutFrequency', 'Cannot self-spot without frequency') || 'Cannot self-spot without frequency'
 
-    if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
+    if (['QRV', 'QRT', 'QSY', 'QRX'].indexOf(match[1]) >= 0) {
       comments = [match[1], comments].filter(x => x).join(' ')
       if (!comments.match(/QRT/i) && operation?.stationCallPlusArray?.length > 0) {
         comments += ` (${operation?.stationCallPlusArray?.length + 1} ops)`
@@ -75,7 +75,7 @@ const SpotCommandHook = {
 
     if (!vfo.freq) return t?.('extensions.commands-misc.spot.cannotSelfSpotWithoutFrequency', 'Cannot self-spot without frequency') || 'Cannot self-spot without frequency'
 
-    if (['QRV', 'QRT', 'QSY'].indexOf(match[1]) >= 0) {
+    if (['QRV', 'QRT', 'QSY', 'QRX'].indexOf(match[1]) >= 0) {
       comments = [match[1], comments].filter(x => x).join(' ')
       if (!comments.match(/QRT/i) && operation?.stationCallPlusArray?.length > 0) {
         comments += ` (${operation?.stationCallPlusArray?.length + 1} ops)`
