@@ -66,6 +66,7 @@ Relevant `"options"`:
 
 - `entity`: Defaults to `K` for US States. Set to `VE` for Canadian events.
 - `stateCountsForInState`: If true, an in-state station gets the state as a multiplier when working any other station in the state. This is usually implied in the rules if in-state multipliers lists 50 states. If it says 49 states, then this option should be false.
+- `countiesAreMultForInState`: If false, in-state stations do not get counties as multipliers. (NEQP)
 - `dcCountsAsMaryland`: If true, the District of Columbia will be counted as Maryland. If the rules say "50 states" and no mention of DC, then this option should be true. If the rules mention DC explicitly, then this option should be false.
 - `alaskaAndHawaiiAreDX`: If true, Alaska and Hawaii are counted as DX and not US States. (NEQP)
 - `selfCountsForCounty`: If true, a station can count itself as a multiplier for the county of operation. (NC, VA). Some QPs require a minimum number of QSOs, but we don't support this variation yet.
