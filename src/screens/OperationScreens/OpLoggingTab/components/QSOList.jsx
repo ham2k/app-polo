@@ -363,15 +363,18 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       },
       freqMHz: {
         ...commonStyles,
+        ...themeStyles.text.numbers,
         fontWeight: '600',
         textAlign: 'right'
       },
       freqKHz: {
         ...commonStyles,
+        ...themeStyles.text.numbers,
         textAlign: 'right'
       },
       freqHz: {
         ...commonStyles,
+        ...themeStyles.text.numbers,
         textAlign: 'right',
         fontWeight: '400',
         fontSize: normalFontSize * 0.7

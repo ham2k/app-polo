@@ -179,16 +179,17 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
       numbers: {
         fontVariant: ['tabular-nums'],
         fontFamily: 'Roboto Mono',
-        fontWeight: 'regular'
+        fontWeight: 'normal'
       },
       callsign: {
         fontVariant: ['tabular-nums'],
         fontFamily: 'Roboto Mono',
-        fontWeight: 'regular'
+        fontWeight: 'normal'
       },
       callsignBold: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono Bold'
+        fontFamily: 'Roboto Mono',
+        fontWeight: 'bold'
       },
       bold: {
         fontWeight: 'bold'
