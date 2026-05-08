@@ -154,7 +154,12 @@ const SpotsHook = {
     if (online) {
       const response = await fetch('https://www.parksnpeaks.org/api/ALL', {
         method: 'GET',
-        headers: { 'User-Agent': `Ham2K Portable Logger/${packageJson.version}` }
+        headers: {
+          'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          Pragma: 'no-cache',
+          Expires: '0'
+        }
       })
       spots = await response.json()
       CACHE.spots = [...spots]
