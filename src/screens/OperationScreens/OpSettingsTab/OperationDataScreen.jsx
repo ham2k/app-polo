@@ -112,7 +112,7 @@ export default function OperationDataScreen (props) {
       if (exports?.length > 0) {
         const shareOptions = {
           urls: exports.map(e => e.uri),
-          mimeType: 'text/plain',
+          type: 'text/plain',
           showAppsToView: true
         }
         if (useDataURIs) {
