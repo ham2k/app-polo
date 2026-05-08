@@ -6,11 +6,9 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react'
-import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
 import { useTranslation } from 'react-i18next'
 
-import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
@@ -23,9 +21,6 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
-
-  const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation?.uuid), [operation?.uuid])
-  const ourInfo = useSelector(ourInfoSelector)
 
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
@@ -75,19 +70,19 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
   useEffect(() => {
     setTimeout(async () => {
       if (location?.lat && location?.lon) {
-        const newResults = await motaFindAllByLocation(ourInfo?.entityPrefix, location.lat, location.lon, NEARBY_DEGREES)
+        const newResults = await motaFindAllByLocation(location.lat, location.lon, NEARBY_DEGREES)
         setNearbyResults(newResults.map(result => ({
           ...result,
           distance: distanceOnEarth(result, location, { units: settings.distanceUnits })
         })).sort((a, b) => (a.distance ?? 9999999999) - (b.distance ?? 9999999999)))
       }
     })
-  }, [ourInfo, location, settings.distanceUnits])
+  }, [location, settings.distanceUnits])
 
   useEffect(() => {
     setTimeout(async () => {
       if (search?.length > 2) {
-        let newResults = await motaFindAllByName(ourInfo?.entityPrefix, search.toLowerCase())
+        let newResults = await motaFindAllByName(search.toLowerCase())
         if (location?.lat && location?.lon) {
           newResults = newResults.map(result => ({
             ...result,
@@ -120,7 +115,7 @@ export function MOTAActivityOptions ({ styles, operation, settings, refs: allRef
         else setResultsMessage(t('extensions.mota.activityOptions.nearbyMills', 'Nearby mills'))
       }
     })
-  }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
+  }, [search, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((ref) => {
     setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== ref), { type: Info.activationType, ref }]))
