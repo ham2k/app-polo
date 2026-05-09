@@ -62,7 +62,7 @@ const LoggingControl = {
   optionType: 'optional'
 }
 
-function mainExchangeForQSO(props) {
+function mainExchangeForQSO (props) {
   const { qso, updateQSO, styles, refStack, disabled, themeColor } = props
   const fields = []
 
@@ -77,7 +77,6 @@ function mainExchangeForQSO(props) {
         textStyle={styles.text.callsign}
         label={'Grid'}
         placeholder={qso?.their?.guess?.grid || ''}
-        mode={'flat'}
         value={qso?.their?.grid || ''}
         disabled={disabled}
         onChangeText={(text) => updateQSO({

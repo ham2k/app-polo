@@ -14,7 +14,9 @@ import { useDispatch } from 'react-redux'
 
 export function H2kTextInputWithSuggestions (props) {
   const {
-    value, suggestions, minimumLengthForSuggestions, fieldId, innerRef, onFocus, onBlur, onSpace, onChange, onChangeText
+    value, suggestions, minimumLengthForSuggestions, fieldId, innerRef,
+    onFocus, onBlur, onSpace, onChange, onChangeText,
+    ...moreProps
   } = props
   const dispatch = useDispatch()
 
@@ -49,7 +51,7 @@ export function H2kTextInputWithSuggestions (props) {
 
   useEffect(() => {
     if (isFocused) {
-      const directMatch = suggestions.find(item => item[0] === value)
+      const directMatch = suggestions?.find(item => item[0] === value)
 
       if (directMatch) {
         // const suggestionsMessage = `**${directMatch[0]}**: ${directMatch[1]}`
@@ -93,11 +95,15 @@ export function H2kTextInputWithSuggestions (props) {
 
   return (
     <H2kTextInput
-      {...props}
+      {...moreProps}
+      value={value}
+      fieldId={fieldId}
+      innerRef={actualInnerRef}
       onFocus={handleFocus}
       onBlur={handleBlur}
       onSpace={handleSpace}
-      innerRef={actualInnerRef}
+      onChangeText={onChangeText}
+      onChange={onChange}
     />
   )
 }

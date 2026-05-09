@@ -106,7 +106,6 @@ export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.wfd.activityOptions.classLabel', 'Class')}
-            mode={'flat'}
             uppercase={true}
             noSpaces={true}
             value={activityRef?.class || ''}
@@ -118,7 +117,6 @@ export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.wfd.activityOptions.locationLabel', 'Location')}
-            mode={'flat'}
             uppercase={true}
             noSpaces={true}
             value={activityRef?.location || ''}

@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { TextInput as NativeTextInput, PixelRatio, Platform, StyleSheet, View } from 'react-native'
+import { TextInput as NativeTextInput, PixelRatio, Platform, Pressable, StyleSheet, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import { Text } from 'react-native-paper'
 
@@ -26,7 +26,7 @@ const DEBUG = false
 
 export function H2kTextInput (props) {
   const {
-    style, textStyle, themeColor, disabled,
+    style, textStyle, themeColor, disabled, mode,
     label, placeholder, value, error,
     onChangeText, onChange, onSubmitEditing, onSpace, onFocus, onBlur,
     innerRef, focusedRef,
@@ -173,14 +173,13 @@ export function H2kTextInput (props) {
           text = text.replace(NOT_NUMBER_WITH_SIGNS_AND_PERIODS_REGEX, '').replace(SIGN_AFTER_A_DIGIT_REGEX, '$1')
         }
         if (rst) {
-          console.log('RST input', text)
           text = text.toUpperCase().replace(NOT_RST_WITH_SIGNS_REGEX, '')
         }
 
         if (textTransformer) {
           text = textTransformer(text)
         }
-        console.log('RST input after', text)
+
         if (DEBUG) console.log(`H2KTextInput(${fieldId}) handleChange after transformations`, text)
         if (trackSelection && text.length !== stringValue.length) {
           if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) handleChange length changed?`, selectionRef?.current?.start, selectionRef?.current?.end, text, stringValue, { lastChange: lastChangeRef.current })
@@ -240,6 +239,10 @@ export function H2kTextInput (props) {
     textTransformer, onChangeText, onChange, onSpace, trackSelection
   ])
 
+  const handleOuterPress = useCallback(() => {
+    actualInnerRef.current?.focus()
+  }, [actualInnerRef])
+
   // BEGIN VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 2
   // If this input is focused, we update `focusedRef` to provide a callback that can be used
   // by virtual numeric keys to insert a number at the current cursor position.
@@ -284,20 +287,20 @@ export function H2kTextInput (props) {
   // END VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 2
 
   const keyboardOptions = useMemo(() => {
-    let keyboardOpts = {}
+    let _keyboardOptions = {}
 
     if (multiline || keyboard === 'normal' || !keyboard) {
-      keyboardOpts = {
+      _keyboardOptions = {
         autoCapitalize: 'sentences',
         inputMode: 'text'
       }
     } else if (keyboard === 'code') {
-      keyboardOpts = {
+      _keyboardOptions = {
         autoCapitalize: 'none',
         keyboardType: 'ascii-capable'
       }
     } else if (keyboard === 'dumb' || keyboard === 'numbers') {
-      keyboardOpts = {
+      _keyboardOptions = {
         autoComplete: 'off',
         autoCorrect: false,
         disableFullScreenUI: false, // Android only
@@ -307,45 +310,50 @@ export function H2kTextInput (props) {
         keyboardType: Platform.OS === 'android' ? 'visible-password' : 'default'
       }
       if (keyboard === 'numbers') {
-        keyboardOpts.keyboardType = Platform.OS === 'android' ? 'visible-password' : 'numbers-and-punctuation'
-        keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
+        _keyboardOptions.keyboardType = Platform.OS === 'android' ? 'visible-password' : 'numbers-and-punctuation'
+        _keyboardOptions.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
       }
     } else if (keyboard === 'email') {
-      keyboardOpts = {
+      _keyboardOptions = {
         autoCompleteType: 'email',
         keyboardType: 'email-address',
         autoCapitalize: 'none'
       }
     }
 
-    // if (uppercase) keyboardOpts.autoCapitalize = Platform.OS === 'android' ? 'none' : 'characters' // Android does not support autoCapitalize on visible-password
-    if (uppercase) keyboardOpts.autoCapitalize = 'characters'
-
-    keyboardOpts.autoFocus = false
-    keyboardOpts.importantForAutofill = 'no' // Android only
-    keyboardOpts.disableFullScreenUI = true // Android only
-
-    keyboardOpts.enterKeyHint = 'send'
-
-    // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
-    keyboardOpts.keyboardAppearance = (styles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
-
-    if (settings.smartKeyboard === false) {
-      if (keyboardOpts.keyboardType === 'visible-password') {
-        keyboardOpts.keyboardType = 'default'
-        keyboardOpts.autoCapitalize = 'characters'
+    if (uppercase) {
+      if (Platform.OS === 'android' && _keyboardOptions.keyboardType === 'visible-password') {
+        _keyboardOptions.autoCapitalize = 'none'
+      } else {
+        _keyboardOptions.autoCapitalize = 'characters'
       }
     }
 
-    return keyboardOpts
-  }, [keyboard, styles.isDarkMode, uppercase, multiline, settings.smartKeyboard])
+    _keyboardOptions.autoFocus = false
+    _keyboardOptions.importantForAutofill = 'no' // Android only
+    _keyboardOptions.disableFullScreenUI = true // Android only
+
+    _keyboardOptions.enterKeyHint = 'send'
+
+    // Try to match the keyboard appearance to the theme, but not on iPad because there seems to be a bug there.
+    _keyboardOptions.keyboardAppearance = (styles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
+
+    if (settings.smartKeyboard === false) {
+      if (_keyboardOptions.keyboardType === 'visible-password') {
+        _keyboardOptions.keyboardType = 'default'
+        _keyboardOptions.autoCapitalize = 'characters'
+      }
+    }
+
+    return _keyboardOptions
+  }, [multiline, keyboard, uppercase, styles.isDarkMode, settings.smartKeyboard])
 
   if (DEBUG && fieldId === 'theirCall') console.log(`H2KTextInput(${fieldId}) renderInput`, { stringValue, start: selectionRef?.current?.start, end: selectionRef?.current?.end, lastChange: lastChangeRef.current, trackSelection })
 
   const valueAsChild = !(numeric || decimal || rst)
 
   return (
-    <View style={isFocused ? styles.focusedRoot : styles.root}>
+    <Pressable style={isFocused ? styles.focusedRoot : styles.root} onPress={handleOuterPress}>
       <Text style={styles.label}>{label}</Text>
 
       <View style={styles.inputContainer}>
@@ -378,7 +386,7 @@ export function H2kTextInput (props) {
         {right || null}
       </View>
 
-    </View>
+    </Pressable>
   )
 }
 

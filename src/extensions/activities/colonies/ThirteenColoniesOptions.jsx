@@ -34,7 +34,6 @@ export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, set
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.colonies.activityOptions.year', 'Year')}
-            mode={'flat'}
             uppercase={true}
             noSpaces={true}
             disabled={true}

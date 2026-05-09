@@ -719,8 +719,9 @@ const ReferenceHandler = {
 }
 
 function mainExchangeForOperation (props) {
-  const { qso, qsos, operation, updateQSO, styles, disabled, refStack } = props
+  const { qso, qsos, operation, updateQSO, styles, disabled, refStack, settings, suggestions, vfo, ...moreProps } = props
 
+  console.log('mainExchangeForOperation', moreProps)
   const qsoRef = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
   const opRef = findRef(operation, Info.key)
   const qp = qpData({ ref: opRef })
@@ -732,7 +733,7 @@ function mainExchangeForOperation (props) {
   if (hasNumbers) {
     fields.push(
       <H2kTextInput
-        {...props}
+        {...moreProps}
         key={`${Info.key}/ourNumber`}
         // innerRef={refStack.shift()}   // Don't use a `ref` so that this input cannot be focused using the space key
         skipFocus={true}
@@ -753,7 +754,7 @@ function mainExchangeForOperation (props) {
 
     fields.push(
       <H2kTextInput
-        {...props}
+        {...moreProps}
         key={`${Info.key}/theirNumber`}
         innerRef={refStack.shift()}
         style={[styles?.text?.numbers, { minWidth: styles.oneSpace * 5.7, flex: 1 }]}
@@ -775,7 +776,7 @@ function mainExchangeForOperation (props) {
   if (hasNames) {
     fields.push(
       <H2kTextInput
-        {...props}
+        {...moreProps}
         key={`${Info.key}/theirName`}
         innerRef={refStack.shift()}
         style={[styles.input, { minWidth: styles.oneSpace * 10, flex: 1 }]}
@@ -797,17 +798,18 @@ function mainExchangeForOperation (props) {
 
   fields.push(
     <H2kTextInputWithSuggestions
-      {...props}
+      {...moreProps}
       key={`${Info.key}/location`}
+      fieldId={'refs[qp].location'}
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * (qp.options?.countyLine ? 9 : 7), flex: 1 }]}
       textStyle={styles.text.callsign}
       label={'Location'}
       placeholder={''}
-      mode={'flat'}
       keyboard={'dumb'}
       uppercase={true}
       noSpaces={true}
+      periodToSlash={true}
       value={qsoRef?.location ?? _defaultLocationFor({ qp, qso, qsos, operation }) ?? ''}
       error={qsoRef?.location && !qpNormalizeLocation({ qp, qso, location: qsoRef.location })}
       suggestions={_suggestionsFor({ qso, qp })}
