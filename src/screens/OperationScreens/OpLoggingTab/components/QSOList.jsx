@@ -277,7 +277,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
       borderBottomWidth: 2,
       borderTopColor: colors.onBackgroundLight,
       borderBottomColor: colors.onBackgroundLight,
-      paddingTop: PixelRatio.roundToNearestPixel(oneSpace * 0.2)
+      paddingTop: PixelRatio.roundToNearestPixel(oneSpace * (isIOS ? 0.4 : 0.6))
     },
     eventRow: {
       backgroundColor: 'rgb(252, 244, 167)',
@@ -343,6 +343,7 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         flex: 0,
         minWidth: oneSpace * sized({ xs: 7, lg: 10 }),
         marginLeft: oneSpace,
+        fontSize: isIOS ? normalFontSize : normalFontSize * 0.95,
         textAlign: 'right'
       },
       freq: {
@@ -358,18 +359,20 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
           lg: hasFrequencyDecimals ? 10 : 8
         })),
         marginLeft: oneSpace * sized({ xs: 1, lg: 2 }),
-        marginTop: PixelRatio.roundToNearestPixel(oneSpace * 0.1),
+        // marginTop: PixelRatio.roundToNearestPixel(oneSpace * (isIOS ? -0.1 : 0.4)),
+        fontSize: isIOS ? normalFontSize : normalFontSize * 0.95,
         textAlign: 'right'
       },
       freqMHz: {
         ...commonStyles,
-        ...themeStyles.text.numbers,
-        fontWeight: '600',
+        ...themeStyles.text.numbersBold,
+        fontSize: isIOS ? normalFontSize : normalFontSize * 0.95,
         textAlign: 'right'
       },
       freqKHz: {
         ...commonStyles,
         ...themeStyles.text.numbers,
+        fontSize: isIOS ? normalFontSize : normalFontSize * 0.95,
         textAlign: 'right'
       },
       freqHz: {
@@ -377,11 +380,10 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
         ...themeStyles.text.numbers,
         textAlign: 'right',
         fontWeight: '400',
-        fontSize: normalFontSize * 0.7
+        fontSize: normalFontSize * 0.8
       },
       call: {
         ...commonStyles,
-        ...themeStyles.text.callsign,
         ...themeStyles.text.callsignBold,
         flex: 0,
         minWidth: oneSpace * sized({

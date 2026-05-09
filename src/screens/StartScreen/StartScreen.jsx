@@ -215,14 +215,14 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       textAlign: 'center'
     },
     credits: {
-      fontSize: baseTheme.normalFontSize * 1.3,
+      fontSize: baseTheme.normalFontSize * 1.5,
       width: '100%',
       height: baseTheme.oneSpace * 5,
-      fontWeight: 400,
+      // fontWeight: 600,
       textShadowColor: topHaloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace * 1, // 1.5,
-      fontFamily: 'Roboto Slab',
+      fontFamily: 'Roboto Slab Black',
       color: topTextColor,
       textAlign: 'center',
       alignSelf: 'center',
@@ -255,8 +255,8 @@ function prepareStyles (baseTheme, height, dialogVisible) {
       textShadowColor: bottomHaloColor,
       textShadowOffset: { width: 0, height: 0 },
       textShadowRadius: baseTheme.oneSpace,
-      fontSize: baseTheme.normalFontSize * 1.125,
-      fontWeight: 'normal',
+      fontSize: baseTheme.normalFontSize * 1.4,
+      fontWeight: 'bold',
       textAlign: 'center',
       padding: baseTheme.oneSpace
     },

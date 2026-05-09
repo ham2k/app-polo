@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -22,7 +22,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   theme = theme ?? DEFAULT_THEME
 
   const sizeInfo = theme.sizes
-  const { size, sized, fontScale, fontScaleAdjustment, pixelScaleAdjustment } = sizeInfo
+  const { size, sized, fontScale, fontScaleAdjustment } = sizeInfo
 
   // Fonts are specificed in their "natural" sizes, and the OS scales them up or down
   // based on the fontScale.
@@ -42,9 +42,7 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
   const maybeCondensedFontFamily = size === 'xs' || size === 'sm' ? 'Roboto Condensed' : 'Roboto'
   const monospacedFontFamily = 'Roboto Mono'
 
-  const baseSpace = normalFontSize / 2 // Guesstimage of the width of an 'm' in the base (root) font size
-
-  const oneSpace = PixelRatio.roundToNearestPixel(normalFontSize / 2 * fontScale) //normalFontSize / 2)
+  const oneSpace = PixelRatio.roundToNearestPixel(normalFontSize / 2 * fontScale)
   const halfSpace = PixelRatio.roundToNearestPixel(oneSpace / 2)
 
   const styles = StyleSheet.create({
@@ -178,18 +176,23 @@ export const prepareGlobalStyles = ({ theme, colorScheme, width, height }) => {
     text: {
       numbers: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono',
+        fontFamily: isIOS ? 'Roboto Mono' : 'Roboto Mono Medium',
         fontWeight: 'normal'
+      },
+      numbersBold: {
+        fontVariant: ['tabular-nums'],
+        fontFamily: isIOS ? 'Roboto Mono' : 'Roboto Mono Bold',
+        fontWeight: isIOS ? 'bold' : 'normal'
       },
       callsign: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono',
+        fontFamily: isIOS ? 'Roboto Mono' : 'Roboto Mono Medium',
         fontWeight: 'normal'
       },
       callsignBold: {
         fontVariant: ['tabular-nums'],
-        fontFamily: 'Roboto Mono',
-        fontWeight: 'bold'
+        fontFamily: isIOS ? 'Roboto Mono' : 'Roboto Mono Bold',
+        fontWeight: isIOS ? 'bold' : 'normal'
       },
       bold: {
         fontWeight: 'bold'
