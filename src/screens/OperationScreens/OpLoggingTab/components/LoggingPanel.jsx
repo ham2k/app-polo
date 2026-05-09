@@ -46,9 +46,6 @@ import { useUIState } from '../../../../store/ui'
 
 const DEBUG = false
 
-let commandInfoTimeout
-let submitTimeout
-
 export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
 }) {
@@ -142,12 +139,13 @@ export default function LoggingPanel ({
   }, [qso?.their?.call, qso?.event])
 
   const [commandInfo, actualSetCommandInfo] = useState()
+  const commandInfoTimeoutRef = useRef()
   const setCommandInfo = useCallback((info) => {
-    if (commandInfoTimeout) {
-      clearTimeout(commandInfoTimeout)
+    if (commandInfoTimeoutRef.current) {
+      clearTimeout(commandInfoTimeoutRef.current)
     }
     if (info?.timeout) {
-      commandInfoTimeout = setTimeout(() => {
+      commandInfoTimeoutRef.current = setTimeout(() => {
         actualSetCommandInfo(undefined)
       }, info.timeout)
     }
@@ -220,12 +218,15 @@ export default function LoggingPanel ({
   // But we can't just use a timeout, because we need the function to bind to the latest values.
   // So we use a state variable and a callback function to set it and an effect to actually submit..
   const [doSubmit, setDoSubmit] = useState(false)
-
+  const submitTimeoutRef = useRef()
   const handleSubmit = useCallback(() => { //
-    if (submitTimeout) clearTimeout(submitTimeout)
+    if (submitTimeoutRef.current) {
+      clearTimeout(submitTimeoutRef.current)
+    }
+
     if (!qso) return
 
-    submitTimeout = setTimeout(() => {
+    submitTimeoutRef.current = setTimeout(() => {
       setDoSubmit(true)
     }, 50)
   }, [setDoSubmit, qso])
@@ -357,7 +358,7 @@ export default function LoggingPanel ({
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
   }, [qso, operation, vfo, qsos, dispatch, settings, i18n, t, online, ourInfo, updateQSO, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, doSubmit, handleSubmit, originalQSO, setLastUUID, setCallStack])
 
-  const undoTimeout = useRef()
+  const undoTimeoutRef = useRef()
 
   const handleWipe = useCallback(() => { // Wipe a new QSO
     if (qso?._isNew) {
@@ -367,11 +368,13 @@ export default function LoggingPanel ({
         setUndoInfo({ qso, originalQSO })
         dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
       }
-      if (undoTimeout.current) clearTimeout(undoTimeout.current)
-      undoTimeout.current = setTimeout(() => {
+      if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current)
+      undoTimeoutRef.current = setTimeout(() => {
         setUndoInfo(undefined)
-      }, 10 * 1000) // Undo will clear after 10 seconds
-      return () => clearTimeout(undoTimeout.current)
+      }, 5 * 1000) // Undo will clear after 5 seconds
+      return () => {
+        if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current)
+      }
     }
   }, [qso, dispatch, operation, vfo, settings, setUndoInfo, originalQSO])
 
