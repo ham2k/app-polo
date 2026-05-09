@@ -145,8 +145,11 @@ const POPULAR_EXTENSIONS = [
   'wwff',
   'sota',
   // 'naqp',
+  'fd',
   'qp',
-  'stateparks'
+  'naqp',
+  'colonies'
+  // 'stateparks'
 ]
 
 function groupAndSortExtensions (extensions, devMode = false) {
