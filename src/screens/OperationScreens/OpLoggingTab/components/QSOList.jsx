@@ -31,10 +31,11 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
   const safeAreaInsets = useSafeAreaInsets()
 
-  const [componentWidth, setComponentWidth] = useState()
+  const [componentLayout, setComponentLayout] = useState()
   const handleLayout = useCallback((event) => {
-    setComponentWidth(event?.nativeEvent?.layout?.width)
-  }, [setComponentWidth])
+    const layout = event?.nativeEvent?.layout
+    setComponentLayout({ width: Math.round(layout?.width ?? 0), height: Math.round(layout?.height ?? 0) })
+  }, [])
 
   const { hasFrequencyDecimals, hasLongCall } = useMemo(() => {
     const _hasDecimals = qsos.find(qso => (qso?.freq || 0) % 1 !== 0)
@@ -47,7 +48,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
 
   const styles = useThemedStyles(
     _prepareStyles,
-    { componentWidth: componentWidth ?? width, safeArea: safeAreaInsets, hasFrequencyDecimals, hasLongCall }
+    { componentWidth: componentLayout?.width ?? width, safeArea: safeAreaInsets, hasFrequencyDecimals, hasLongCall }
   )
 
   const listRef = useRef()
@@ -78,6 +79,33 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       listRef.current?.scrollToEnd({ animated: true })
     }
   }, [listRef, lastUUID, selectedUUID, sections])
+
+  const prevListHeightRef = useRef(undefined)
+
+  useEffect(() => {
+    if (!componentLayout?.height) return
+
+    const prevHeight = prevListHeightRef.current
+    prevListHeightRef.current = componentLayout.height
+
+    if (selectedUUID == null || !sections?.length) return
+    if (prevHeight === undefined) return
+    if (prevHeight === componentLayout.height) return
+
+    const index = _flatIndexForUUID(sections, selectedUUID)
+    if (index >= 0) {
+      listRef.current?.scrollToIndex({ index, animated: true, viewPosition: 0.35 })
+    } else {
+      listRef.current?.scrollToEnd({ animated: false })
+    }
+  }, [componentLayout?.height, selectedUUID, sections])
+
+  const handleScrollToIndexFailed = useCallback((info) => {
+    const retry = () => {
+      listRef.current?.scrollToIndex({ index: info.index, animated: true, viewPosition: 0.35 })
+    }
+    setTimeout(retry, 100)
+  }, [])
 
   const refHandlers = useMemo(() => {
     const types = {}
@@ -193,6 +221,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       windowSize={2}
       maxToRenderPerBatch={30}
       updateCellsBatchingPeriod={100}
+      onScrollToIndexFailed={handleScrollToIndexFailed}
     />
   )
 })
@@ -459,6 +488,19 @@ function _prepareStyles (themeStyles, { componentWidth: width, safeArea, hasFreq
   }
 
   return styles
+}
+
+function _flatIndexForUUID (sections, uuid) {
+  if (!uuid || !sections?.length) return -1
+  let flatIndex = 0
+  for (const section of sections) {
+    flatIndex++
+    for (const qso of section.data) {
+      if (qso.uuid === uuid) return flatIndex
+      flatIndex++
+    }
+  }
+  return -1
 }
 
 export default QSOList
