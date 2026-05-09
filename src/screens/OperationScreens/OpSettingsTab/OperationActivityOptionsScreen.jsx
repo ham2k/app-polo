@@ -78,10 +78,10 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
             <H2kListItem
               title={t('screens.operationActivityOptions.removeActivity', 'Remove {{activity}} from this operation',
                 {
-                  activity: t(`extensions.${activity.key}.shortName`, '') ||
-                            activity.shortName ||
-                            t(`extensions.${activity.key}.name`, '') ||
-                            activity.name
+                  activity: t(`extensions.${activity?.key || 'defaultActivity'}.shortName`, '') ||
+                            activity?.shortName ||
+                            t(`extensions.${activity?.key || 'defaultActivity'}.name`, '') ||
+                            activity?.name || 'Activity'
                 }
               )}
               titleStyle={{ color: styles.theme.colors.error }}
