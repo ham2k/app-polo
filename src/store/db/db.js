@@ -14,8 +14,6 @@ import { fmtTimestamp } from '../../tools/timeFormats'
 import { Platform } from 'react-native'
 
 const DB_NAME = 'polo.sqlite'
-const DB_DISPLAY_NAME = 'Ham2K Portable Logger Database'
-const DB_ESTIMATED_SIZE = 1000
 
 let GLOBAL_DB = null
 
@@ -59,7 +57,11 @@ export function dbExecute (sql, params, options = {}) {
     txn.execute(sql, params ?? []).then(results => {
       resolve(results)
     }).catch(error => {
-      console.error(`Error in dbExecute: ${error.message}`, sql, params, error)
+      if (error.message.indexOf('no such table: version') >= 0) {
+        // No need to warn about this
+      } else {
+        console.error(`Error in dbExecute: ${error.message}`, sql, params, error)
+      }
       if (options.ignoreError && error.message.indexOf(options.ignoreError) >= 0) {
         resolve(false)
       } else {
@@ -122,21 +124,23 @@ export async function dbSelectOne (sql, params, { db, transaction, row } = {}) {
 }
 
 export function database () {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (GLOBAL_DB) {
       resolve(GLOBAL_DB)
     } else {
-      await backupOldDatabase()
+      backupOldDatabase().then(() => {
+        GLOBAL_DB = sqliteOpen({
+          name: DB_NAME,
+          location: directoryForDatabase()
+        })
 
-      GLOBAL_DB = sqliteOpen({
-        name: DB_NAME,
-        location: directoryForDatabase()
-      })
-
-      createTables({ db: GLOBAL_DB }).then(() => {
-        resolve(GLOBAL_DB)
+        createTables({ db: GLOBAL_DB }).then(() => {
+          resolve(GLOBAL_DB)
+        }).catch(e => {
+          // reportError('Error opening database', e)
+          reject(e)
+        })
       }).catch(e => {
-        // reportError('Error opening database', e)
         reject(e)
       })
     }

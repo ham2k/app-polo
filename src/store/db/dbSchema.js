@@ -16,7 +16,7 @@ import { queryOperations } from '../operations'
 
 const CURRENT_VERSION = 10
 
-export async function createTables(dbParams = {}) {
+export async function createTables (dbParams = {}) {
   let version
   try {
     const row = await dbSelectOne('SELECT version FROM version ORDER BY version DESC LIMIT 1', [], dbParams)
@@ -246,9 +246,9 @@ export async function createTables(dbParams = {}) {
 
       const qsosIndex = await dbSelectAll("SELECT name FROM sqlite_master WHERE type='index' AND name IN ('sqlite_autoindex_qsos_1', 'replacement_autoindex_qsos_1')")
       if (qsosIndex.length === 0) {
-        const dupeIds = await dbSelectAll("SELECT uuid FROM qsos GROUP BY uuid HAVING COUNT(*) > 1")
+        const dupeIds = await dbSelectAll('SELECT uuid FROM qsos GROUP BY uuid HAVING COUNT(*) > 1')
         for (const dupeId of dupeIds) {
-          const rows = await dbSelectAll("SELECT * FROM qsos WHERE uuid = ?", [dupeId.uuid], dbParams)
+          const rows = await dbSelectAll('SELECT * FROM qsos WHERE uuid = ?', [dupeId.uuid], dbParams)
           // Sort rows based on the `updatedAtMillis` attribute in the JSON `data` column
           // The row with the highest `updatedAtMillis` is assumed to be the most recent,
           // so we will preserve only the latest record.
@@ -266,9 +266,9 @@ export async function createTables(dbParams = {}) {
 
       const operationsIndex = await dbSelectAll("SELECT name FROM sqlite_master WHERE type='index' AND name IN ('sqlite_autoindex_operations_1', 'replacement_autoindex_operations_1')")
       if (operationsIndex.length === 0) {
-        const dupeIds = await dbSelectAll("SELECT uuid FROM operations GROUP BY uuid HAVING COUNT(*) > 1")
+        const dupeIds = await dbSelectAll('SELECT uuid FROM operations GROUP BY uuid HAVING COUNT(*) > 1')
         for (const dupeId of dupeIds) {
-          const rows = await dbSelectAll("SELECT * FROM operations WHERE uuid = ?", [dupeId.uuid], dbParams)
+          const rows = await dbSelectAll('SELECT * FROM operations WHERE uuid = ?', [dupeId.uuid], dbParams)
           rows.sort((a, b) => {
             const aUpdated = (() => { try { return JSON.parse(a.data)?.updatedAtMillis ?? 0 } catch { return 0 } })()
             const bUpdated = (() => { try { return JSON.parse(b.data)?.updatedAtMillis ?? 0 } catch { return 0 } })()
