@@ -33,6 +33,10 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
   const udpSettings = selectLiveQSOUDPSettings(settings)
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
   const udpFormatOption = liveQSOUDPMessageFormatOption(udpSettings.messageFormat)
+  const isIOS = Platform.OS === 'ios'
+  const n1mmTitle = isIOS
+    ? t('screens.liveQSOSettings.n1mmMessage.title', 'N1MM Message')
+    : t('screens.liveQSOSettings.n1mmBroadcast.title', 'N1MM Broadcast')
   const httpDescription = httpSettings.enabled
     ? t('screens.liveQSOSettings.httpEnabledDescription', 'Enabled - {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
     : t('screens.liveQSOSettings.httpDisabledDescription', 'Disabled - {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
@@ -40,35 +44,37 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
     ? t('screens.liveQSOSettings.udpSelectedDescription', '{{format}} - {{programs}}', { format: udpFormatOption.title, programs: udpFormatOption.description })
     : t('screens.liveQSOSettings.udpDefaultDescription', 'Live logging with N1MM, Log4OM, DXKeeper, HRD, Swisslog and AC Log')
   const n1mmDescription = n1mmSettings.enabled
-    ? t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled - N1MM XML broadcast')
-    : t('screens.liveQSOSettings.n1mmDisabledDescription', 'Disabled - N1MM XML broadcast')
+    ? isIOS
+      ? t('screens.liveQSOSettings.n1mmEnabledDescriptionIOS', 'Enabled - N1MM XML message')
+      : t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled - N1MM XML broadcast')
+    : isIOS
+      ? t('screens.liveQSOSettings.n1mmDisabledDescriptionIOS', 'Disabled - N1MM XML message')
+      : t('screens.liveQSOSettings.n1mmDisabledDescription', 'Disabled - N1MM XML broadcast')
 
   return (
     <ScreenContainer>
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
-          {Platform.OS === 'android' && (
-            <H2kListItem
-              title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
-              description={udpDescription}
-              leftIcon="lan"
-              onPress={() => navigation.push('ExtensionScreen', {
-                key: 'live-qso-udp-settings',
-                title: t('screens.liveQSOUDPSettings.title', 'UDP ADIF')
-              })}
-            />
-          )}
-          {Platform.OS === 'android' && (
-            <H2kListItem
-              title={t('screens.liveQSOSettings.n1mmBroadcast.title', 'N1MM Broadcast')}
-              description={n1mmDescription}
-              leftIcon="broadcast"
-              onPress={() => navigation.push('ExtensionScreen', {
-                key: 'live-qso-n1mm-settings',
-                title: t('screens.liveQSON1MMSettings.title', 'N1MM Broadcast')
-              })}
-            />
-          )}
+          <H2kListItem
+            title={t('screens.liveQSOSettings.udpAdif.title', 'UDP ADIF')}
+            description={udpDescription}
+            leftIcon="lan"
+            onPress={() => navigation.push('ExtensionScreen', {
+              key: 'live-qso-udp-settings',
+              title: t('screens.liveQSOUDPSettings.title', 'UDP ADIF')
+            })}
+          />
+          <H2kListItem
+            title={n1mmTitle}
+            description={n1mmDescription}
+            leftIcon="broadcast"
+            onPress={() => navigation.push('ExtensionScreen', {
+              key: 'live-qso-n1mm-settings',
+              title: isIOS
+                ? t('screens.liveQSON1MMSettings.titleIOS', 'N1MM Message')
+                : t('screens.liveQSON1MMSettings.title', 'N1MM Broadcast')
+            })}
+          />
           <H2kListItem
             title={t('screens.liveQSOSettings.httpEndpoint.title', 'HTTP Endpoint')}
             description={httpDescription}

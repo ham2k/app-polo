@@ -1,0 +1,165 @@
+diff --git a/node_modules/react-native-udp/android/src/main/java/com/tradle/react/UdpSockets.java b/node_modules/react-native-udp/android/src/main/java/com/tradle/react/UdpSockets.java
+index 93ab3a8..2bb83e2 100644
+--- a/node_modules/react-native-udp/android/src/main/java/com/tradle/react/UdpSockets.java
++++ b/node_modules/react-native-udp/android/src/main/java/com/tradle/react/UdpSockets.java
+@@ -2,9 +2,9 @@ package com.tradle.react;
+ 
+ import android.content.Context;
+ import android.net.wifi.WifiManager;
+-
+ import android.util.SparseArray;
+ 
++import android.util.Base64;
+ import com.facebook.common.logging.FLog;
+ import com.facebook.react.bridge.Arguments;
+ import com.facebook.react.bridge.Callback;
+@@ -17,6 +17,9 @@ import com.facebook.react.bridge.WritableMap;
+ import com.facebook.react.modules.core.DeviceEventManagerModule;
+ 
+ import java.io.IOException;
++import java.net.DatagramPacket;
++import java.net.DatagramSocket;
++import java.net.InetAddress;
+ import java.net.SocketException;
+ import java.net.UnknownHostException;
+ import java.util.concurrent.ExecutorService;
+@@ -227,6 +230,49 @@ public final class UdpSockets extends ReactContextBaseJavaModule
+         }));
+     }
+ 
++    /**
++     * Sends a single udp datagram without creating a long-lived socket client.
++     */
++    @ReactMethod
++    public void sendDirect(final String base64String, final Integer port, final String address,
++                     final @Nullable ReadableMap options,
++                     final Callback callback) {
++        executorService.execute(new Thread(new Runnable() {
++            @Override
++            public void run() {
++                DatagramSocket socket = null;
++                try {
++                    final byte[] data = Base64.decode(base64String, Base64.NO_WRAP);
++                    final boolean broadcast = options != null
++                            && options.hasKey("broadcast")
++                            && !options.isNull("broadcast")
++                            && options.getBoolean("broadcast");
++
++                    socket = new DatagramSocket();
++
++                    if (broadcast) {
++                        socket.setBroadcast(true);
++                    }
++
++                    socket.send(new DatagramPacket(
++                            data,
++                            data.length,
++                            InetAddress.getByName(address),
++                            port
++                    ));
++
++                    callback.invoke();
++                } catch (Exception exception) {
++                    callback.invoke((UdpErrorUtil.getError(UdpErrorCodes.sendError.name(), exception.getMessage())));
++                } finally {
++                    if (socket != null && !socket.isClosed()) {
++                        socket.close();
++                    }
++                }
++            }
++        }));
++    }
++
+     /**
+      * Closes a specific client's socket, and removes it from the list of known clients.
+      */
+diff --git a/node_modules/react-native-udp/lib/types/index.d.ts b/node_modules/react-native-udp/lib/types/index.d.ts
+index 93a3112..3300baf 100644
+--- a/node_modules/react-native-udp/lib/types/index.d.ts
++++ b/node_modules/react-native-udp/lib/types/index.d.ts
+@@ -21,6 +21,12 @@ declare class UdpSockets {
+         reusePort?: boolean;
+         debug?: boolean;
+     }, callback?: ((msg: Buffer) => void) | undefined): UdpSocket;
++    /**
++     * Sends a single datagram without creating a long-lived bound socket.
++     */
++    static sendDirect(type: "udp4" | "udp6", msg: string | Buffer | Uint8Array | Array<any>, port: number, address: string, options?: {
++        broadcast?: boolean;
++    } | undefined, callback?: ((error?: Error | undefined) => void) | undefined): void;
+     static Socket: typeof UdpSocket;
+ }
+ import UdpSocket from "./UdpSocket";
+diff --git a/node_modules/react-native-udp/src/index.js b/node_modules/react-native-udp/src/index.js
+index 4f78622..23b45e1 100644
+--- a/node_modules/react-native-udp/src/index.js
++++ b/node_modules/react-native-udp/src/index.js
+@@ -1,4 +1,29 @@
+ import UdpSocket from './UdpSocket'
++import { Buffer } from 'buffer'
++import { NativeModules } from 'react-native'
++
++const Sockets = NativeModules.UdpSockets
++
++function normalizeError(err) {
++  if (!err) return undefined
++  if (err instanceof Error) return err
++
++  const error = new Error(err.message || String(err))
++  if (err.code) error.code = err.code
++  return error
++}
++
++function generateSendBuffer(msg, encoding = 'utf-8') {
++  if (typeof msg === 'string') {
++    return Buffer.from(msg, encoding)
++  } else if (Buffer.isBuffer(msg)) {
++    return msg
++  } else if (msg instanceof Uint8Array || Array.isArray(msg)) {
++    return Buffer.from(/** @type {any[]} */ (msg))
++  } else {
++    throw new TypeError(`Invalid type for msg, found ${typeof msg}`)
++  }
++}
+ 
+ /**
+  * @typedef {import('buffer').Buffer} Buffer
+@@ -22,6 +47,38 @@ class UdpSockets {
+     return new UdpSocket(options)
+   }
+ 
++  /**
++   * Sends a single datagram without creating a long-lived bound socket.
++   *
++   * @param {'udp4' | 'udp6'} type
++   * @param {string | Buffer | Uint8Array | Array<any>} msg
++   * @param {number} port
++   * @param {string} address
++   * @param {{ broadcast?: boolean }} [options]
++   * @param {(error?: Error) => void} [callback]
++   */
++  static sendDirect(type, msg, port, address, options = {}, callback) {
++    if (type !== 'udp4' && type !== 'udp6') {
++      throw new Error('invalid udp socket type')
++    }
++    if (port === undefined || address === undefined) {
++      throw new Error('sendDirect(): address and port parameters must be provided')
++    }
++
++    const generatedBuffer = generateSendBuffer(msg)
++    const str = generatedBuffer.toString('base64')
++
++    Sockets.sendDirect(str, port, address, options, (/** @type {any} */ err) => {
++      err = normalizeError(err)
++      if (err) {
++        if (callback) callback(err)
++        else console.error(err)
++      } else if (callback) {
++        callback()
++      }
++    })
++  }
++
+   static Socket = UdpSocket
+ }
+ 

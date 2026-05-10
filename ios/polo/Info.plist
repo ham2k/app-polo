@@ -58,6 +58,8 @@
 	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location will be used to determine your Maidenhead Grid Square to include in your own logs.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Local network access is used to send live QSO UDP messages to nearby logging software.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Photos are not used in this app, but a third party library might use them when sharing to Instagram.</string>
 	<key>RCTNewArchEnabled</key>

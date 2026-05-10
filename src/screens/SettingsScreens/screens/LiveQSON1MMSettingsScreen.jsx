@@ -8,7 +8,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Alert, ScrollView, View } from 'react-native'
+import { Alert, Platform, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -41,6 +41,23 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
+  const isIOS = Platform.OS === 'ios'
+  const enabledDescription = n1mmSettings.enabled
+    ? isIOS
+      ? t('screens.liveQSON1MMSettings.enabled.descriptionOnIOS', 'Send saved QSOs as N1MM-style UDP messages')
+      : t('screens.liveQSON1MMSettings.enabled.descriptionOn', 'Send saved QSOs as N1MM-style UDP broadcast')
+    : isIOS
+      ? t('screens.liveQSON1MMSettings.enabled.descriptionOffIOS', 'Do not send live QSOs as N1MM-style UDP messages')
+      : t('screens.liveQSON1MMSettings.enabled.descriptionOff', 'Do not send live QSOs as N1MM-style UDP broadcast')
+  const urlDialogTitle = isIOS
+    ? t('screens.liveQSON1MMSettings.url.dialogTitleIOS', 'N1MM Message Target')
+    : t('screens.liveQSON1MMSettings.url.dialogTitle', 'N1MM Broadcast Target')
+  const urlDialogBody = isIOS
+    ? t('screens.liveQSON1MMSettings.url.dialogBodyIOS', 'Enter the device IP and port that should receive N1MM-style UDP messages.')
+    : t('screens.liveQSON1MMSettings.url.dialogBody', 'Use a .255 address to broadcast on a /24, or a host IP to send directly.')
+  const urlPlaceholder = isIOS
+    ? t('screens.liveQSON1MMSettings.url.placeholderIOS', '192.168.1.42:12060')
+    : t('screens.liveQSON1MMSettings.url.placeholder', '192.168.1.255:12060')
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
   const [draftURL, setDraftURL] = useState(displayLiveQSOUDPURL(n1mmSettings.url))
@@ -88,7 +105,7 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
         <H2kListSection>
           <H2kListItem
             title={t('screens.liveQSON1MMSettings.enabled.title', 'Enabled')}
-            description={n1mmSettings.enabled ? t('screens.liveQSON1MMSettings.enabled.descriptionOn', 'Send saved QSOs as N1MM-style UDP broadcast') : t('screens.liveQSON1MMSettings.enabled.descriptionOff', 'Do not send live QSOs as N1MM-style UDP broadcast')}
+            description={enabledDescription}
             leftIcon="broadcast"
             rightSwitchValue={n1mmSettings.enabled}
             rightSwitchOnValueChange={(value) => mergeN1MMSettings({ enabled: value })}
@@ -141,14 +158,14 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
 
       {urlDialogVisible && (
         <H2kDialog visible={true} onDismiss={cancelURLDialog}>
-          <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.liveQSON1MMSettings.url.dialogTitle', 'N1MM Broadcast Target')}</H2kDialogTitle>
+          <H2kDialogTitle style={{ textAlign: 'center' }}>{urlDialogTitle}</H2kDialogTitle>
           <H2kDialogContent>
-            <H2kText variant="bodyMedium">{t('screens.liveQSON1MMSettings.url.dialogBody', 'Use a .255 address to broadcast on a /24, or a host IP to send directly.')}</H2kText>
+            <H2kText variant="bodyMedium">{urlDialogBody}</H2kText>
             <H2kTextInput
               style={[styles.input, { marginTop: styles.oneSpace }]}
               value={draftURL}
               label={t('screens.liveQSON1MMSettings.url.inputLabel', 'Target URL')}
-              placeholder={t('screens.liveQSON1MMSettings.url.placeholder', '192.168.1.255:12060')}
+              placeholder={urlPlaceholder}
               keyboard="dumb"
               autoCapitalize="none"
               autoCorrect={false}
