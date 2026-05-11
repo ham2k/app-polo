@@ -16,6 +16,7 @@ import H2kEmailInput from '../../../ui/react-native/H2kEmailInput'
 import { Alert, View } from 'react-native'
 import { getSyncCounts } from '../../../store/operations'
 import { selectFiveSecondsTick } from '../../../store/time'
+import QRCode from 'react-native-qrcode-svg'
 
 export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDialogDone }) {
   const { t } = useTranslation()
@@ -34,6 +35,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   const [email, setEmail] = useState('')
   const [errors, setErrors] = useState({})
   const [mode, setMode] = useState('email')
+  const [qrCodeLinkInfo, setQrCodeLinkInfo] = useState(null)
 
   useEffect(() => {
     if (lofiData?.pending_link_email && lofiData?.pending_link_email !== lofiData?.account?.email) {
@@ -57,26 +59,26 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   useEffect(() => {
     let close = false
+
     if (mode === 'pending_email') {
       if (!lofiData?.account?.pending_email) {
-        console.log('closing due to pending_email', lofiData.account?.pending_email)
         close = true
       } else if (lofiData?.pending_email === lofiData?.account?.email) {
-        console.log('closing due to pending_email 2', lofiData.account?.pending_email)
         close = true
       }
-    } else if (mode === 'pending_link' || mode === 'pending_link_email') {
+    } else if (mode === 'pending_link' || mode === 'pending_link_with_email') {
       if (!lofiData?.pending_link_email) {
-        console.log('closing due to pending_link', lofiData?.pending_link_email)
         close = true
       } else if (lofiData?.pending_link_email === lofiData?.account?.email) {
-        console.log('closing due to pending_link 2', lofiData?.pending_link_email)
+        close = true
+      }
+    } else if (mode === 'link_via_qr') {
+      if (qrCodeLinkInfo?.currentAccount && lofiData?.account?.uuid !== qrCodeLinkInfo?.currentAccount) {
         close = true
       }
     }
 
     if (close) {
-      console.log('closing due to pending_email', lofiData.account?.pending_email)
       setEmail(lofiData.account?.email)
       dispatch(setLocalExtensionData({
         key: 'ham2k-lofi',
@@ -88,17 +90,24 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       setDialogVisible(false)
       onDialogDone && onDialogDone()
     }
-  }, [mode, lofiData.account?.pending_email, lofiData?.pending_link_email, onDialogDone, lofiData.account?.email, dispatch, lofiData?.pending_email]
-  )
+  }, [
+    mode,
+    lofiData.account?.uuid, lofiData.account?.pending_email, lofiData.account?.email,
+    lofiData?.pending_email, lofiData?.pending_link_email,
+    qrCodeLinkInfo?.currentAccount,
+    dispatch, onDialogDone
+  ])
+
   const fiveSecondTick = useSelector(selectFiveSecondsTick)
 
   useEffect(() => { // Update account every 5 seconds to check for changes
-    if (mode === 'pending_email' || mode === 'pending_link' || mode === 'pending_link_with_email') {
+    if (mode === 'pending_email' || mode === 'pending_link' || mode === 'pending_link_with_email' || mode === 'link_via_qr') {
       setImmediate(async () => {
-        const account = await dispatch(syncHook.getAccountData())
-        console.log('account', account)
-        console.log('--', lofiData.pending_link_email)
-        console.log('--', lofiData.account?.email)
+        await dispatch(syncHook.getAccountData())
+        // const account = await dispatch(syncHook.getAccountData())
+        // console.log('account', account)
+        // console.log('--', lofiData.pending_link_email)
+        // console.log('--', lofiData.account?.email)
       })
     }
   }, [dispatch, fiveSecondTick, syncHook, t, mode, lofiData.pending_link_email, lofiData.account?.email])
@@ -123,6 +132,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
   const handleRevertLink = useCallback(async () => {
     setMode('link')
     setErrors({})
+    setQrCodeLinkInfo(null)
     await dispatch(setLocalExtensionData({
       key: 'ham2k-lofi',
       pending_email: undefined,
@@ -200,14 +210,16 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
       }))
       setMode('pending_link')
     } else {
-      const newErrors = {}
+      const _errors = {}
       if (linkResult.json.error) {
-        newErrors.default = [{ error: linkResult.json.error }]
+        _errors.default = [{ error: linkResult.json.error }]
       }
-      if (Object.keys(newErrors).length === 0) {
-        newErrors.default = [{ error: t('general.errors.generic', 'Something went wrong. Please try again later.') }]
+      if (linkResult.status === 404) {
+        _errors.linkEmail = [{ error: t('screens.syncSettings.syncAccountDialog.accountNotFound', 'Account not found.') }]
+      } else if (Object.keys(_errors).length === 0) {
+        _errors.default = [{ error: t('general.errors.generic', 'Something went wrong. Please try again later.') }]
       }
-      setErrors(newErrors)
+      setErrors(_errors)
     }
   }, [email, lofiData?.account?.email, dispatch, syncHook, onDialogDone, t])
 
@@ -288,6 +300,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
 
   const handleRevert = useCallback(async () => {
     await dispatch(syncHook.setAccountData({ pending_email: '' }))
+    setQrCodeLinkInfo(null)
     dispatch(setLocalExtensionData({
       key: 'ham2k-lofi',
       pending_email: undefined,
@@ -302,9 +315,36 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
     }
   }, [dispatch, mode, syncHook])
 
+  const handleSwitchToLinkViaQR = useCallback(async () => {
+    const counts = await getSyncCounts()
+    if (counts?.qsos?.pending > 0 || counts?.operations?.pending > 0) {
+      const alertResponse = await new Promise((resolve) => {
+        Alert.alert(
+          t('screens.syncSettings.syncAccountDialog.potentialForDataLoss', 'Potential for data loss!!!'),
+          t('screens.syncSettings.syncAccountDialog.potentialForDataLossDescription',
+            'You have not synced all the data in this device.\n\n' +
+            'If you link this device to a new account, ' +
+            'you will be asked if you want to replace its data with that from the new account.\n\n' +
+            'If this is the case, you might not be able to recover any existing activity ' +
+            'that has not been synced yet.\n\n' +
+            'We suggest you complete syncing this device first!'),
+          [
+            { text: t('screens.syncSettings.syncAccountDialog.syncFirstButton', 'Go back and complete syncing first'), style: 'cancel', onPress: () => resolve('cancel') },
+            { text: t('screens.syncSettings.syncAccountDialog.continueAnywayButton', 'I know what I\'m doing! Continue Anyway'), style: 'destructive', onPress: () => resolve('replace') }
+          ]
+        )
+      })
+      if (alertResponse === 'cancel') {
+        return
+      }
+    }
+    setEmail('')
+    setMode('link_via_qr')
+    setQrCodeLinkInfo(null)
+  }, [t])
+
   const handleSwitchToLink = useCallback(async () => {
     const counts = await getSyncCounts()
-    console.log('linking with pending data', counts)
     if (counts?.qsos?.pending > 0 || counts?.operations?.pending > 0) {
       const alertResponse = await new Promise((resolve) => {
         Alert.alert(
@@ -328,11 +368,32 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
     }
     setEmail('')
     setMode('link')
+    setQrCodeLinkInfo(null)
   }, [t])
+
+  useEffect(() => {
+    if (mode === 'link_via_qr' && (!qrCodeLinkInfo?.expiresAtMillis || qrCodeLinkInfo?.expiresAtMillis < new Date().getTime())) {
+      setImmediate(async () => {
+        const permissionRequest = await dispatch(syncHook.prepareBlankPermission())
+        console.log('permissionRequest', permissionRequest)
+        if (permissionRequest.ok) {
+          const url = `com.ham2k:///link_client?id=${permissionRequest.json.permission.client}&token=${permissionRequest.json.permission.challenge_token}`
+          setQrCodeLinkInfo({
+            ...permissionRequest.json.permission,
+            expiresAtMillis: new Date(permissionRequest.json.permission.challenge_expires_at).getTime(),
+            url,
+            currentAccount: lofiData?.account?.uuid
+          })
+          console.log('QR code link', url)
+        }
+      })
+    }
+  }, [dispatch, mode, qrCodeLinkInfo, syncHook, lofiData?.account?.uuid])
 
   const handleSwitchToEmail = useCallback(() => {
     setEmail(lofiData?.account?.email)
     setMode('email')
+    setQrCodeLinkInfo(null)
   }, [lofiData?.account?.email])
 
   return (
@@ -371,16 +432,11 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
                 Email {errors.pending_email.map(e => e?.error || e).join(', ')}
               </Text>
             )}
-            {errors?.default?.length > 0 && (
-              <Text style={{ color: 'red', textAlign: 'center', marginTop: styles.oneSpace }}>
-                {errors.default.map(e => e?.error || e).join(', ')}
-              </Text>
-            )}
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
               <H2kButton style={{ flex: 0 }} onPress={handleRevertEmail} disabled={email === lofiData?.account?.email}>{t('general.buttons.revert', 'Revert')}</H2kButton>
               <H2kButton style={{ flex: 0 }} onPress={handleEmailSubmit} disabled={email === lofiData?.account?.email}>{t('general.buttons.apply', 'Apply')}</H2kButton>
             </View>
-            <H2kButton onPress={handleSwitchToLink} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.linkWithOtherButton', 'Or… connect with an existing account')}</H2kButton>
+            <H2kButton onPress={handleSwitchToLinkViaQR} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.linkWithOtherButton', 'Or… connect with an existing account')}</H2kButton>
             <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
           </H2kDialogContent>
         </>
@@ -408,6 +464,32 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
         </>
       )}
 
+      {mode === 'link_via_qr' && (
+        <>
+          <H2kDialogContent>
+            <View style={{ alignItems: 'center', marginBottom: styles.oneSpace }}>
+              {qrCodeLinkInfo?.url ? (
+                <QRCode
+                  value={qrCodeLinkInfo.url}
+                  size={200}
+                  backgroundColor={styles.colors.elevation.level3}
+                />
+              ) : (
+                <View style={{ height: 200, width: 200, backgroundColor: styles.colors.elevation.level3 }}>
+                  <Text>Preparing QR code...</Text>
+                </View>
+              )}
+            </View>
+            <Text variant="bodyMedium" style={{ textAlign: 'center', marginTop: styles.oneSpace }}>
+              {t('screens.syncSettings.syncAccountDialog.linkViaQRAccountText', 'Scan this QR code from a device with an existing Ham2K LoFi Account')}
+            </Text>
+            <H2kButton onPress={handleSwitchToLink} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.connectViaEmailButton', 'Or… connect via email')}</H2kButton>
+            <H2kButton onPress={handleSwitchToEmail} style={{ alignSelf: 'flex-end' }}>{t('screens.syncSettings.syncAccountDialog.keepExistingAccountButton', 'Or… keep existing account')}</H2kButton>
+            <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
+          </H2kDialogContent>
+        </>
+      )}
+
       {mode === 'link' && (
         <>
           <H2kDialogContent>
@@ -423,15 +505,16 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
               onChangeText={onChangeEmail}
               onSubmitEditing={handleLinkSubmit}
             />
-            {errors?.default?.length > 0 && (
+            {errors?.linkEmail?.length > 0 && (
               <Text style={{ color: 'red', textAlign: 'center', marginTop: styles.oneSpace }}>
-                {errors.default.map(e => e?.error || e).join(', ')}
+                {errors.linkEmail.map(e => e?.error || e).join(', ')}
               </Text>
             )}
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
               <H2kButton style={{ flex: 0 }} onPress={handleLinkSubmit} disabled={!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)}>{t('general.buttons.connect', 'Connect')}</H2kButton>
             </View>
-            <H2kButton onPress={handleSwitchToEmail} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.keepExistingAccountButton', 'Or… keep existing account')}</H2kButton>
+            <H2kButton onPress={handleSwitchToLinkViaQR} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.linkViaQRButton', 'Or… connect via QR code')}</H2kButton>
+            <H2kButton onPress={handleSwitchToEmail} style={{ alignSelf: 'flex-end' }}>{t('screens.syncSettings.syncAccountDialog.keepExistingAccountButton', 'Or… keep existing account')}</H2kButton>
             <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
           </H2kDialogContent>
         </>

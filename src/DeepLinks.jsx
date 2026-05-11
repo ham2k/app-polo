@@ -18,7 +18,7 @@
  *   `com.ham2k://qso?our.call=K2HRC&their.call=N0CALL&frequency=7200&mode=CW`
  *
  * # Link a Client
- *   `com.ham2k://link_client?confirmation_token=1234...`
+ *   `com.ham2k://link_client?id=1234&token=ABC...`
  */
 
 import { useCallback, useEffect, useRef } from 'react'
@@ -83,8 +83,12 @@ export function DeepLinks ({ navigationRef }) {
         }
       })
     } else if (path === '/link_client') {
-      const { confirmationToken } = params
-      if (DEBUG) console.log('🔗 Deep Link to Link Client:', confirmationToken)
+      const { id, token } = params
+      if (DEBUG) console.log('🔗 Deep Link to Link Client:', token)
+
+      _onceNavigationIsReady(navigationRef, async () => {
+        navigationRef.current.navigate('Settings', { screen: 'SyncSettings', params: { linkClientId: id, linkToken: token } })
+      })
     }
   }, [dispatch, navigationRef])
 

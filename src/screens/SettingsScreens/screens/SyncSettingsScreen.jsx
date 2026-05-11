@@ -37,7 +37,7 @@ const LOFI_SERVER_LABELS = {
   'https://lofi.ham2k.net': 'Ham2K LoFi (Official)'
 }
 
-export default function SyncSettingsScreen ({ navigation, splitView }) {
+export default function SyncSettingsScreen ({ navigation, splitView, route }) {
   const { t } = useTranslation()
 
   const styles = useThemedStyles()
@@ -142,9 +142,9 @@ export default function SyncSettingsScreen ({ navigation, splitView }) {
 
   const serverLabel = useMemo(() => {
     if (lofiData?.server) {
-      return t([`screens.syncSettings.serverLabels.${lofiData.server}`, LOFI_SERVER_LABELS[lofiData.server] || 'screens.syncSettings.customServer'], 'Custom ({{server}})', { server: lofiData.server })
+      return t(`screens.syncSettings.serverLabels.${lofiData.server}`, LOFI_SERVER_LABELS[lofiData.server]) || t('screens.syncSettings.customServer', 'Custom ({{server}})', { server: lofiData.server })
     } else {
-      return t([`screens.syncSettings.serverLabels.${DEFAULT_LOFI_SERVER}`, LOFI_SERVER_LABELS[DEFAULT_LOFI_SERVER]], DEFAULT_LOFI_SERVER)
+      return t(`screens.syncSettings.serverLabels.${DEFAULT_LOFI_SERVER}`, LOFI_SERVER_LABELS[DEFAULT_LOFI_SERVER]) || DEFAULT_LOFI_SERVER
     }
   }, [lofiData.server, t])
 
@@ -219,8 +219,23 @@ Please try again later.`, { error: linkResult.json.error })
     }
   }, [dispatch, lofiData.previousAccount?.email, syncHook, t])
 
+  const [linkInfo, setLinkInfo] = useState(null)
+  useEffect(() => {
+    if (route?.params?.linkClientId && route?.params?.linkToken) {
+      setLinkInfo({ clientId: route?.params?.linkClientId, token: route?.params?.linkToken })
+      navigation.setParams({ linkClientId: undefined, linkToken: undefined })
+    }
+  }, [navigation, route?.params])
+
+  useEffect(() => {
+    if (linkInfo?.clientId && linkInfo?.token) {
+      setCurrentDialog('linkAccount')
+    }
+  }, [linkInfo?.clientId, linkInfo?.token])
+
   const handleDialogDone = useCallback(() => {
     setCurrentDialog('')
+    setLinkInfo(null)
     setImmediate(async () => {
       setCounts(await getSyncCounts())
       if (syncHook && syncEnabled) {
@@ -283,15 +298,17 @@ Please try again later.`, { error: linkResult.json.error })
               titleStyle={{ color: styles.colors.important }}
               descriptionStyle={{ color: styles.colors.important }}
             />
-            {currentDialog === 'linkAccount' && (
-              <SyncLinkingDialog
-                styles={styles}
-                visible={true}
-                syncHook={syncHook}
-                onDialogDone={handleDialogDone}
-              />
-            )}
           </>
+        )}
+        {currentDialog === 'linkAccount' && (
+          <SyncLinkingDialog
+            styles={styles}
+            visible={true}
+            syncHook={syncHook}
+            onDialogDone={handleDialogDone}
+            linkClientId={linkInfo?.clientId}
+            linkToken={linkInfo?.token}
+          />
         )}
 
         {askAboutMergingAccounts && (

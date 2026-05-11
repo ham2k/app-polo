@@ -497,7 +497,13 @@
         "custom": "Custom"
       },
       "syncLinkingDialog": {
-        "description": "Enter the code displayed on the other device to link it to this account."
+        "title": "Ham2K Log Filer Sync Service",
+        "enterCode": "Enter the code displayed on the other device to link it to this account.",
+        "linkExpired": "The request has expired. Please try again.",
+        "areYouSure-md": "Are you sure you want to link \"**{{device}}**\" with this account?",
+        "requestNotFound": "Request not found. Please try again.",
+        "buttonCancel": "No, cancel",
+        "buttonProcees": "Yes, link it!"
       },
       "deviceNotLinked": "Device not linked! ({{id}})",
       "anonymousAccount": "Anonymous Account (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Development)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Official)",
         "custom": "Custom ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "The code was not found. Please try again.",
-        "areYouSure-md": "Are you sure you want to link \"**{{device}}**\" with this account?",
-        "buttonCancel": "No, cancel",
-        "buttonProcees": "Yes, link it!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "This device was last synced with a different account (#{{id}}).\n\nIn order to continue syncing, you need to decide between the following options:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Please look for it and follow the instructions.",
         "confirmLink-md": "Open the app on a device already linked with **{{email}}** and confirm this request by entering the following code:",
         "confirmLinkPost-md": "If you don't have access to another device linked to this account, you can:",
+        "accountNotFound": "Account not found.",
+        "connectViaEmailButton": "Or… connect via email",
+        "linkViaQRAccountText": "Scan this QR code from a device with an existing Ham2K LoFi Account",
+        "linkViaQRButton": "Or… connect via QR code",
         "confirmViaEmailButton": "Confirm via email",
         "changeAccountButton": "Change Account",
         "resendButton": "Send email again",

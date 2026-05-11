@@ -86,10 +86,25 @@ const SyncHook = {
     return results
   },
 
+  getPermission: (params) => async (dispatch, getState) => {
+    const { account } = selectLocalExtensionData(getState(), Info.key) || {}
+    const { id, ...otherParams } = params
+    const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}/permissions/${id}`, method: 'GET', params: otherParams })
+
+    return results
+  },
+
   updatePermission: (permissionId, data) => async (dispatch, getState) => {
     const { account } = selectLocalExtensionData(getState(), Info.key) || {}
     const body = JSON.stringify(data)
     const results = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}/permissions/${permissionId}`, method: 'PATCH', body })
+
+    return results
+  },
+
+  prepareBlankPermission: (data) => async (dispatch, getState) => {
+    const body = JSON.stringify(data)
+    const results = await requestWithAuth({ dispatch, getState, url: 'v1/client/permissions', method: 'POST', body })
 
     return results
   },
@@ -103,7 +118,7 @@ const SyncHook = {
     const results = await requestWithAuth({ dispatch, getState, url: 'v1/accounts', method: 'GET' })
 
     if (results.ok) {
-      console.log('getAccountData', results.json)
+      // console.log('getAccountData', results.json)
 
       const currentData = selectLocalExtensionData(getState(), Info.key) || {}
 
