@@ -38,6 +38,7 @@ import Ham2KLoFiSyncExtension from './data/ham2k-lofi-sync/Ham2KLoFiSyncExtensio
 import HamDBExtension from './data/hamdb/HamDBExtension'
 import HamQTHExtension from './data/hamqth/HamQTHExtension'
 import QRZExtension from './data/qrz/QRZExtension'
+import QRZCALLExtension from './data/qrzcall/QRZCALLExtension'
 import SpotDiscordExtension from './data/spot-discord/SpotDiscordExtension'
 import SpotHistoryExtension from './data/spot-history/SpotHistoryExtension'
 import SpotParksnPeaksExtension from './data/spot-parksnpeaks/SpotParksnPeaksExtension'
@@ -118,6 +119,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(SpotParksnPeaksExtension)
 
   registerExtension(QRZExtension)
+  registerExtension(QRZCALLExtension)
   registerExtension(HamDBExtension)
   registerExtension(HamQTHExtension)
 
