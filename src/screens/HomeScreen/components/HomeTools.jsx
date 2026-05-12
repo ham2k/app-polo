@@ -128,7 +128,7 @@ export default function HomeTools ({ settings, styles, style }) {
   const handleSubmit = useCallback((event) => {
     const commandResult = checkAndProcessCommands(search, { dispatch, settings, t, i18n, online, setCommandInfo, updateQSO: () => setSearch('') })
     if (commandResult) {
-      trackEvent('command', { command: search })
+      trackEvent('command_executed', { command: search })
       setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
     }
   }, [search, dispatch, settings, t, i18n, online, setCommandInfo])

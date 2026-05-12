@@ -1,14 +1,14 @@
 /*
- * Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2025-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber } from "@ham2k/lib-format-tools"
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import { filterNearDupes } from "../../tools/qsonTools"
-import { filterRefs } from "../../tools/refTools"
+import { filterNearDupes } from '../../tools/qsonTools'
+import { filterRefs } from '../../tools/refTools'
 
 const DEBUG = false
 const DEBUG_ACTIVITIES = ['SOTA']
@@ -26,7 +26,7 @@ export const generateActivityScorer = ({ info }) => {
   return ({ qso, qsos, operation, ref: scoredRef }) => {
     const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName) && DEBUG_CALLS.includes(qso?.their?.call)
 
-    const { band, mode, uuid, startAtMillis } = qso
+    const { band, mode } = qso
 
     if (DEBUG_THIS_ONE) console.log(`🧮 ${shortName} scoringForQSO`, { ...operation }, { ...scoredRef })
 
@@ -127,8 +127,6 @@ export const generateActivityDailyAccumulator = ({ info }) => {
   const shortName = info.shortName ?? info.name
 
   return ({ qsoScore, score, operation, ref: scoredRef }) => {
-    const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName)
-
     if (!score?.key || score.key !== key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
       key,
@@ -170,8 +168,6 @@ export const generateActivityOperationAccumulator = ({ info }) => {
   const shortName = info.shortName ?? info.name
 
   return ({ qsoScore, score, operation, ref: scoredRef }) => {
-    const DEBUG_THIS_ONE = DEBUG && DEBUG_ACTIVITIES.includes(shortName)
-
     if (!score?.key || score.key !== key) score = undefined // Reset if score doesn't have the right shape
     score = score ?? {
       key,
@@ -229,7 +225,7 @@ export const generateActivitySumarizer = ({ info }) => {
         summaryParts.push(`${minMissing}/${qsosToActivate}`)
         score.activated = false
       } else if (activatedRefKeys.length < 6) {
-        summaryParts.push(`✓`.repeat(activatedRefKeys.length))
+        summaryParts.push('✓'.repeat(activatedRefKeys.length))
         score.activated = true
       } else {
         summaryParts.push(`✓ x ${activatedRefKeys.length}`)
@@ -240,8 +236,8 @@ export const generateActivitySumarizer = ({ info }) => {
       const count = Object.keys(score.huntedRefs).length
       if (activatedRefKeys.length > 0) {
         summaryParts.push(t(
-          [`extensions.${info.key}.scoring.ref2refRefsCount`, "extensions.shared.scoring.ref2refRefsCount"],
-          "{{fmtCount}} refs",
+          [`extensions.${info.key}.scoring.ref2refRefsCount`, 'extensions.shared.scoring.ref2refRefsCount'],
+          '{{fmtCount}} refs',
           {
             count,
             fmtCount: fmtNumber(count)
@@ -249,8 +245,8 @@ export const generateActivitySumarizer = ({ info }) => {
         ))
       } else {
         summaryParts.push(t(
-          [`extensions.${info.key}.scoring.huntedRefsCount`, "extensions.shared.scoring.huntedRefsCount"],
-          "{{fmtCount}} refs",
+          [`extensions.${info.key}.scoring.huntedRefsCount`, 'extensions.shared.scoring.huntedRefsCount'],
+          '{{fmtCount}} refs',
           {
             count,
             fmtCount: fmtNumber(count)
@@ -266,8 +262,8 @@ export const generateActivitySumarizer = ({ info }) => {
     const qsoCounts = []
     if (activatedRefKeys?.length > 0) {
       qsoCounts.push(t(
-        [`extensions.${info.key}.scoring.activatorQSOsCount`, "extensions.shared.scoring.activatorQSOsCount"],
-        "{{fmtCount}} QSOs",
+        [`extensions.${info.key}.scoring.activatorQSOsCount`, 'extensions.shared.scoring.activatorQSOsCount'],
+        '{{fmtCount}} QSOs',
         {
           count: score.activatedQSOs,
           fmtCount: fmtNumber(score.activatedQSOs)
@@ -277,16 +273,16 @@ export const generateActivitySumarizer = ({ info }) => {
     if (score?.huntedQSOs > 0) {
       if (activatedRefKeys?.length > 0) {
         qsoCounts.push(t(
-          [`extensions.${info.key}.scoring.ref2refQSOsCount`, "extensions.shared.scoring.ref2refQSOsCount"],
-          "{{fmtCount}} QSOs",
+          [`extensions.${info.key}.scoring.ref2refQSOsCount`, 'extensions.shared.scoring.ref2refQSOsCount'],
+          '{{fmtCount}} QSOs',
           {
             count: score.huntedQSOs, fmtCount: fmtNumber(score.huntedQSOs)
           }
         ))
       } else {
         qsoCounts.push(t(
-          [`extensions.${info.key}.scoring.huntedQSOsCount`, "extensions.shared.scoring.huntedQSOsCount"],
-          "{{fmtCount}} QSOs",
+          [`extensions.${info.key}.scoring.huntedQSOsCount`, 'extensions.shared.scoring.huntedQSOsCount'],
+          '{{fmtCount}} QSOs',
           {
             count: score.huntedQSOs,
             fmtCount: fmtNumber(score.huntedQSOs)
@@ -296,8 +292,8 @@ export const generateActivitySumarizer = ({ info }) => {
     }
     if (score?.dupes > 0) {
       qsoCounts.push(t(
-        [`extensions.${info.key}.scoring.dupesCount`, "extensions.shared.scoring.dupesCount"],
-        "{{fmtCount}} dupes",
+        [`extensions.${info.key}.scoring.dupesCount`, 'extensions.shared.scoring.dupesCount'],
+        '{{fmtCount}} dupes',
         {
           count: score.dupes,
           fmtCount: fmtNumber(score.dupes)
@@ -319,8 +315,8 @@ export const generateActivitySumarizer = ({ info }) => {
 
     if (allSectionScores?.length > 1) {
       const refTotals = allSectionScores.reduce((totals, sectionScore) => {
-        Object.keys(sectionScore.activatedRefs).forEach(key => {
-          if (sectionScore?.activatedRefs?.[key] ?? 0 >= qsosToActivate) {
+        Object.keys(sectionScore?.activatedRefs ?? {}).forEach(key => {
+          if ((sectionScore?.activatedRefs?.[key] ?? 0) >= qsosToActivate) {
             totals.activated += 1
           } else {
             totals.missed += 1
@@ -330,16 +326,16 @@ export const generateActivitySumarizer = ({ info }) => {
         return totals
       }, { activated: 0, hunted: 0, missed: 0 })
       if (refTotals.activated > 0 || refTotals.hunted > 0 || refTotals.missed > 0) {
-        score.longSummary += `\n\n---\n\n### ${t([`extensions.${info.key}.scoring.operationTotals`, "extensions.shared.scoring.operationTotals"], "Operation Totals:")}\n `
+        score.longSummary += `\n\n---\n\n### ${t([`extensions.${info.key}.scoring.operationTotals`, 'extensions.shared.scoring.operationTotals'], 'Operation Totals:')}\n `
         const totalsParts = []
         if (refTotals.activated > 0) {
-          totalsParts.push(`**${t([`extensions.${info.key}.scoring.referencesActivatedCount`, "extensions.shared.scoring.referencesActivatedCount"], "{{fmtCount}} refs activated", { count: refTotals.activated, fmtCount: fmtNumber(refTotals.activated) })}**`)
+          totalsParts.push(`**${t([`extensions.${info.key}.scoring.referencesActivatedCount`, 'extensions.shared.scoring.referencesActivatedCount'], '{{fmtCount}} refs activated', { count: refTotals.activated, fmtCount: fmtNumber(refTotals.activated) })}**`)
         }
         if (refTotals.missed > 0) {
-          totalsParts.push(`${t([`extensions.${info.key}.scoring.referencesMissedCount`, "extensions.shared.scoring.referencesMissedCount"], "{{fmtCount}} refs missed", { count: refTotals.missed, fmtCount: fmtNumber(refTotals.missed) })}`)
+          totalsParts.push(`${t([`extensions.${info.key}.scoring.referencesMissedCount`, 'extensions.shared.scoring.referencesMissedCount'], '{{fmtCount}} refs missed', { count: refTotals.missed, fmtCount: fmtNumber(refTotals.missed) })}`)
         }
         if (refTotals.hunted > 0) {
-          totalsParts.push(`**${t([`extensions.${info.key}.scoring.referencesHuntedCount`, "extensions.shared.scoring.referencesHuntedCount"], "{{fmtCount}} refs hunted", { count: refTotals.hunted, fmtCount: fmtNumber(refTotals.hunted) })}**`)
+          totalsParts.push(`**${t([`extensions.${info.key}.scoring.referencesHuntedCount`, 'extensions.shared.scoring.referencesHuntedCount'], '{{fmtCount}} refs hunted', { count: refTotals.hunted, fmtCount: fmtNumber(refTotals.hunted) })}**`)
         }
         score.longSummary += totalsParts.join('\n')
       }

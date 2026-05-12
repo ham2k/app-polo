@@ -5,6 +5,7 @@
   "start": "2026-5-2 17:00Z",
   "end": "2026-5-3 23:59Z",
   "cabrilloName": "DE-QSO-PARTY",
+  "qsoPartyHubName": "in7qpne_de",
   "internalNotes": "Power multiplier needs to be implemented, DE stations no county multipliers",
   "lastUpdated": "2026-04-21 12:00Z",
   "status": "Updated for 2026, but not verified",

@@ -515,7 +515,7 @@
         "custom": "カスタム ({{server}})"
       },
       "askAboutLinkingAccounts": {
-        "codeNotFound": "コードが見つかりませんでした。もう一度お試しください。",
+        "codeNotFound": "コードが見つかりませんでした。もう一度やり直してください。",
         "areYouSure-md": "本当に\"**{{device}}**\"をこのアカウントにリンクしますか？",
         "buttonCancel": "いいえ、キャンセルします",
         "buttonProcees": "はい、リンクします！"

@@ -284,16 +284,16 @@ export default function LoggingPanel ({
         const command = qso?.their?.call
         const commandResult = checkAndProcessCommands(command, { qso, originalQSO: loggingState?.originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, updateQSO, updateLoggingState, handleFieldChange, handleSubmit, setCommandInfo })
         if (commandResult) {
-          trackEvent('command', { command })
+          trackEvent('command_executed', { command })
           setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
           return
         }
       }
 
-      let eventName = 'edit_qso'
-      if (qso?._willBeDeleted) eventName = 'delete_qso'
-      else if (qso?._isNew) eventName = 'add_qso'
-      else if (qso?._willBeDeleted === false && qso?.deleted === false) eventName = 'undelete_qso'
+      let eventName = 'qso_edited'
+      if (qso?._willBeDeleted) eventName = 'qso_deleted'
+      else if (qso?._isNew) eventName = 'qso_added'
+      else if (qso?._willBeDeleted === false && qso?.deleted === false) eventName = 'qso_undeleted'
 
       if (qso?._willBeDeleted !== undefined) {
         qso.deleted = qso._willBeDeleted

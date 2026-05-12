@@ -10,7 +10,6 @@ import RNFetchBlob from 'react-native-blob-util'
 import RNRestart from 'react-native-restart'
 
 import { createTables } from './dbSchema'
-import { logRemotely } from '../../distro'
 import { fmtTimestamp } from '../../tools/timeFormats'
 import { Platform } from 'react-native'
 
@@ -42,7 +41,7 @@ const transactionWrapper = (params = {}) => (wrappedFunction) => {
   }
 }
 
-export async function dbTransaction(code, options = {}) {
+export async function dbTransaction (code, options = {}) {
   await transactionWrapper(options)(async transaction => {
     try {
       const result = await code(transaction)
@@ -53,7 +52,7 @@ export async function dbTransaction(code, options = {}) {
   })
 }
 
-export function dbExecute(sql, params, options = {}) {
+export function dbExecute (sql, params, options = {}) {
   if (sql.indexOf('"') >= 0) console.error('SQL has double quotes', { sql, params })
 
   return transactionWrapper(options.transaction)(({ txn, resolve, reject }) => {
@@ -70,7 +69,7 @@ export function dbExecute(sql, params, options = {}) {
   })
 }
 
-export function dbExecuteFast(sql, params, options = {}) {
+export function dbExecuteFast (sql, params, options = {}) {
   return transactionWrapper(options.transaction)(({ txn, db, resolve, reject }) => {
     db.executeWithHostObjects(sql, params ?? []).then(results => {
       resolve(results)
@@ -85,7 +84,7 @@ export function dbExecuteFast(sql, params, options = {}) {
   })
 }
 
-export function dbExecuteBatch(statements, options = {}) {
+export function dbExecuteBatch (statements, options = {}) {
   if (statements.length === 0 || !statements) return false
 
   return transactionWrapper(options.transaction)(({ txn, db, resolve, reject }) => {
@@ -102,7 +101,7 @@ export function dbExecuteBatch(statements, options = {}) {
   })
 }
 
-export async function dbSelectAll(sql, params, { transaction, row } = {}) {
+export async function dbSelectAll (sql, params, { transaction, row } = {}) {
   const results = await dbExecute(sql, params, { transaction })
 
   if (row) {
@@ -112,7 +111,7 @@ export async function dbSelectAll(sql, params, { transaction, row } = {}) {
   }
 }
 
-export async function dbSelectOne(sql, params, { db, transaction, row } = {}) {
+export async function dbSelectOne (sql, params, { db, transaction, row } = {}) {
   const results = await dbExecute(sql, params, { transaction })
 
   if (row) {
@@ -122,7 +121,7 @@ export async function dbSelectOne(sql, params, { db, transaction, row } = {}) {
   }
 }
 
-export function database() {
+export function database () {
   return new Promise(async (resolve, reject) => {
     if (GLOBAL_DB) {
       resolve(GLOBAL_DB)
@@ -131,7 +130,7 @@ export function database() {
 
       GLOBAL_DB = sqliteOpen({
         name: DB_NAME,
-        location: directoryForDatabase(),
+        location: directoryForDatabase()
       })
 
       createTables({ db: GLOBAL_DB }).then(() => {
@@ -144,31 +143,31 @@ export function database() {
   })
 }
 
-export function directoryForDatabase() {
+export function directoryForDatabase () {
   if (Platform.OS === 'ios') return `${RNFetchBlob.fs.dirs.DocumentDir}/../Library/NoCloud`
   else if (Platform.OS === 'android') return `${RNFetchBlob.fs.dirs.DocumentDir}`
   else return null
 }
 
-export function pathForDatabase(name = DB_NAME) {
+export function pathForDatabase (name = DB_NAME) {
   const directory = directoryForDatabase()
   if (directory) return `${directoryForDatabase()}/${name}`
   else return null
 }
 
-async function backupOldDatabase() {
+async function backupOldDatabase () {
   const path = pathForDatabase(DB_NAME)
 
-  if (! await RNFetchBlob.fs.exists(path + ".old")) {
+  if (!await RNFetchBlob.fs.exists(path + '.old')) {
     if (await RNFetchBlob.fs.exists(path)) {
-      await RNFetchBlob.fs.cp(path, path + ".old")
+      await RNFetchBlob.fs.cp(path, path + '.old')
     } else {
-      await RNFetchBlob.fs.writeFile(path + ".old", "")
+      await RNFetchBlob.fs.writeFile(path + '.old', '')
     }
   }
 }
 
-export async function backupDatabase(tag) {
+export async function backupDatabase (tag) {
   const path = pathForDatabase(DB_NAME)
 
   tag = tag || fmtTimestamp(Date.now())
@@ -178,7 +177,7 @@ export async function backupDatabase(tag) {
   await RNFetchBlob.fs.cp(path, backupPath)
 }
 
-export async function replaceDatabase(newPath) {
+export async function replaceDatabase (newPath) {
   const path = pathForDatabase(DB_NAME)
 
   const backupName = DB_NAME.replace('.sqlite', `.${fmtTimestamp(Date.now())}.sqlite`)
@@ -189,7 +188,7 @@ export async function replaceDatabase(newPath) {
   closeDatabaseAndRestart()
 }
 
-export async function resetDatabase() {
+export async function resetDatabase () {
   const path = pathForDatabase(DB_NAME)
 
   const backupName = DB_NAME.replace('.sqlite', `.${fmtTimestamp(Date.now())}.sqlite`)
@@ -199,7 +198,7 @@ export async function resetDatabase() {
   closeDatabaseAndRestart()
 }
 
-export async function closeDatabaseAndRestart() {
+export async function closeDatabaseAndRestart () {
   await GLOBAL_DB.close()
   GLOBAL_DB = null
   RNRestart.restart()

@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 
 import { selectOperatorCallInfo, selectSettings } from '../../../store/settings'
 import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
-import { fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'
+import { fmtDateNice, fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'
 import { findRef, replaceRef } from '../../../tools/refTools'
 
 import { Info } from './QSOPartiesInfo'
@@ -52,11 +52,14 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
       let timeDiff
       if (days < -14) {
         timeDiff = 'Already happened'
-        days = days + 365
+        days = days + 1000
       } else if (days < -2) {
         timeDiff = 'Last weekend'
-      } else if (days >= -1 && days <= 1) {
+        days = days = 14
+      } else if (days >= -1 && days <= 2) {
         timeDiff = 'This weekend'
+      } else if (days > 14) {
+        timeDiff = fmtDateNice(date)
       } else if (days > 1) {
         timeDiff = `in ${days} days`
       }

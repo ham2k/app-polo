@@ -26,7 +26,7 @@ export function registerMOTADataFile() {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'https://www.cqgma.org/gma_mills.csv'
+      const url = 'https://www.cqgma.org/download/mills.csv'
 
       return fetchAndProcessURL({
         ...args,
@@ -49,16 +49,16 @@ export function registerMOTADataFile() {
             const sql = []
             for (const line of batch) {
               const row = parseMOTACSVRow(line, { headers })
-              if (row.valid_to === '21991231') {
+              if (row['valid to'] === '21991231') {
                 const lon = Number.parseFloat(row.Longitude)
                 const lat = Number.parseFloat(row.Latitude)
-                const grid = !row.Locator ? locationToGrid6(lat, lon) : row.Locator.replace(/[A-Z]{2}$/, x => x.toLowerCase())
+                const grid = !row['Maidenhead Locator'] ? locationToGrid6(lat, lon) : row['Maidenhead Locator'].replace(/[A-Z]{2}$/, x => x.toLowerCase())
                 const data = {
                   ref: row.Reference.toUpperCase(),
-                  prefix: row.Prefix,
+                  district: row.District,
                   name: row.Name,
                   grid,
-                  type: row.Type !== 'unknown' ? row.Type : undefined,
+                  type: row.Function || undefined,
                   lat,
                   lon
                 }
@@ -76,8 +76,8 @@ export function registerMOTADataFile() {
                       `,
                   [
                     'mota',
-                    data.prefix, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1,
-                    data.prefix, data.name, JSON.stringify(data), data.lat, data.lon, 1
+                    data.district, data.ref, data.name, JSON.stringify(data), data.lat, data.lon, 1,
+                    data.district, data.name, JSON.stringify(data), data.lat, data.lon, 1
                   ]
                 ])
               }
@@ -117,19 +117,19 @@ export async function motaFindOneByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['mota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function motaFindAllByName(entityPrefix, name) {
+export async function motaFindAllByName(name) {
   const results = await dbSelectAll(
-    'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
-    ['mota', entityPrefix, `%${name}%`, `%${name}%`],
+    'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
+    ['mota', `%${name}%`, `%${name}%`],
     { row: row => row?.data ? JSON.parse(row.data) : {} }
   )
   return results
 }
 
-export async function motaFindAllByLocation(entityPrefix, lat, lon, delta = 1) {
+export async function motaFindAllByLocation(lat, lon, delta = 1) {
   const results = await dbSelectAll(
-    'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
-    ['mota', entityPrefix, lat - delta, lat + delta, lon - delta, lon + delta],
+    'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
+    ['mota', lat - delta, lat + delta, lon - delta, lon + delta],
     { row: row => row?.data ? JSON.parse(row.data) : {} }
   )
   return results

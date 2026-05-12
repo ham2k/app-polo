@@ -15,7 +15,7 @@ import { deleteOperation } from '../../../../store/operations'
 import { trackEvent } from '../../../../distro'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../../ui'
 
-export function DeleteOperationDialog({ operation, visible, settings, styles, onDialogDone }) {
+export function DeleteOperationDialog ({ operation, visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const navigation = useNavigation()
@@ -32,7 +32,7 @@ export function DeleteOperationDialog({ operation, visible, settings, styles, on
     dispatch(deleteOperation(operation.uuid)).then(() => {
       navigation.popTo('Home')
     })
-    trackEvent('delete_operation', {})
+    trackEvent('operation_deleted')
     onDialogDone && onDialogDone()
   }, [operation, dispatch, onDialogDone, navigation])
 

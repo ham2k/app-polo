@@ -6,7 +6,7 @@
  */
 
 import RNFetchBlob from 'react-native-blob-util'
-import base64 from 'react-native-base64'
+import base64 from 'react-native-quick-base64'
 
 import { qsonToADIF } from '../../../../tools/qsonToADIF'
 import { qsonToCabrillo } from '../../../../tools/qsonToCabrillo'
@@ -25,8 +25,8 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
     const operationData = thisExport.operation || operation
 
     if (DEBUG) console.log('💾 This Export', { ...thisExport })
-    let operationRefs = operationData.refs
-    let includeQSOs = true
+    const operationRefs = operationData.refs
+    const includeQSOs = true
 
     let qsos = state.qsos.qsos[uuid].map(qso => {
       return { ...qso, our: { ...qso.our, call: operationData.stationCall } }

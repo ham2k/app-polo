@@ -20,45 +20,8 @@ export function reportError (error, ...extra) {
   if (extra && extra[0]?.stack) console.error(extra[0].stack)
 }
 
-const WATCHED_CALLS = []
-let logSequence = 0
-export function logRemotely (payload) {
-  try {
-    if (GLOBAL.consentAppData) {
-      if (WATCHED_CALLS.indexOf(GLOBAL.operatorCall) >= 0) {
-        reportData({
-          call: GLOBAL.operatorCall,
-          time: new Date().toISOString(),
-          sequence: logSequence++,
-          log: payload
-        })
-      }
-    }
-  } catch (error) {
-    console.error('Error logging remotely')
-  }
-}
-
-export function reportData (payload) {
-  payload.version = packageJson.version
-  // console.info('DATA', payload)
-}
-
-export function trackSettings ({ settings, action, actionData }) {
-  if (settings.consentAppData) {
-    reportData({ call: settings.operatorCall, settings: { ...settings, accounts: undefined }, action, actionData })
-  } else {
-    reportData({
-      call: `ANON-${hashCode(settings.operatorCall)}`,
-      settings: { consentAppData: settings.consentAppData, consentOpData: settings.consentOpData }
-    })
-  }
-}
-
-export function trackOperation ({ operation, settings, action, actionData }) {
-  if (settings.consentAppData) {
-    reportData({ call: settings.operatorCall, operation: { ...operation, consentOpData: settings.consentOpData }, action, actionData })
-  }
+export function trackAppStarted (settings) {
+  // Do nothing
 }
 
 export function trackNavigation () {
@@ -66,6 +29,10 @@ export function trackNavigation () {
 }
 
 export function trackEvent () {
+  // Do nothing
+}
+
+export function globalSetupForDistribution () {
   // Do nothing
 }
 

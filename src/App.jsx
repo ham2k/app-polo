@@ -34,7 +34,7 @@ import { selectFeatureFlags } from './store/system'
 import { hotReloadSequence } from './store/runtime/actions/startupSequence'
 import { selectGlobalDialog } from './store/ui'
 
-import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution, onNavigationReadyForDistribution } from './distro'
+import { AppWrappedForDistribution, trackNavigation, useConfigForDistribution, onNavigationReadyForDistribution, globalSetupForDistribution } from './distro'
 
 import RootErrorBoundary from './screens/components/RootErrorBoundary'
 import HeaderBar from './screens/components/HeaderBar'
@@ -70,6 +70,8 @@ if (module.hot) {
     _appHotReloaded = true
   })
 }
+
+globalSetupForDistribution()
 
 function MainApp ({ navigationTheme }) {
   const [appState, setAppState] = useState('starting')

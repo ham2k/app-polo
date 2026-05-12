@@ -6,7 +6,7 @@
  */
 
 import { Icon as PaperIcon } from 'react-native-paper'
-import FontAwesome6Icon from '@react-native-vector-icons/fontawesome6'
+import FontAwesomeIcon from '@react-native-vector-icons/fontawesome6'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 
 export function H2kIcon ({ ...props }) {
@@ -22,7 +22,7 @@ export function H2kIcon ({ ...props }) {
   if (name?.startsWith && name.startsWith('fa-')) {
     // default to onSurface if no color is provided, same as PaperIcon
     const color = props.color || styles.colors.onSurface
-    return <FontAwesome6Icon {...props} name={name.slice(3)} iconStyle="solid" color={color} />
+    return <FontAwesomeIcon {...props} name={name.slice(3)} iconStyle="solid" color={color} />
   } else {
     return <PaperIcon source={name} {...props} />
   }

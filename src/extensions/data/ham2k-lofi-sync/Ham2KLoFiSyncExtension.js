@@ -221,11 +221,9 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
           token = json.token
           GLOBAL.syncLoFiToken = token
         } else if (response.status === 401) {
-          // logRemotely({ message: '-- Ham2K LoFi Authentication failed', server, token, secret, url, body })
           if (DEBUG) console.log('-- auth failed')
           throw new Error('Authentication Failed')
         } else {
-          // logRemotely({ message: `-- Ham2K LoFi Server Error ${response.status}`, server, token, secret, url, body })
           if (DEBUG) console.log('-- auth failed')
           throw new Error(`Server Error ${response.status}`)
         }

@@ -115,7 +115,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   const cloneOperation = useCallback(async () => {
     const template = getOperationTemplate({ operation, settings })
     const newOperation = await dispatch(addNewOperation({ template, _useTemplates: false }))
-    trackEvent('create_operation')
+    trackEvent('operation_created')
 
     navigation.popTo('Home')
     setTimeout(() => {

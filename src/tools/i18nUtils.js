@@ -6,34 +6,42 @@
  */
 
 const DEFAULT_MONTHS = {
-  '1': 'January',
-  '2': 'February',
-  '3': 'March',
-  '4': 'April',
-  '5': 'May',
-  '6': 'June',
-  '7': 'July',
-  '8': 'August',
-  '9': 'September',
-  '10': 'October',
-  '11': 'November',
-  '12': 'December'
+  1: 'January',
+  2: 'February',
+  3: 'March',
+  4: 'April',
+  5: 'May',
+  6: 'June',
+  7: 'July',
+  8: 'August',
+  9: 'September',
+  10: 'October',
+  11: 'November',
+  12: 'December'
 }
 
 export const translatedVersionName = ({ t, version }) => {
   const [major, minor, patch] = version.split('.')
+  const [basePatch, patchSuffix] = patch.split('-')
+  let translatedPatch = ''
+
+  if (basePatch !== '0') {
+    translatedPatch = t('general.version.patch', 'patch {{patch}}', { patch })
+  }
+  if (patchSuffix) {
+    translatedPatch += ` (${patchSuffix})`
+  }
 
   return {
     general: t('general.version.general', '{{month}} \'{{year}}', {
       month: t(`general.formatting.month.${minor}`, DEFAULT_MONTHS[minor]),
       year: major
     }),
-    patch: patch !== '0' ? t('general.version.patch', 'patch {{patch}}', { patch }) : '',
+    patch: translatedPatch,
     full: t('general.version.specific', '{{month}} \'{{year}} {{patch}}', {
       month: t(`general.formatting.month.${minor}`, DEFAULT_MONTHS[minor]),
       year: major,
-      patch: patch !== '0' ? t('general.version.patch', 'patch {{patch}}', { patch }) : ''
-    }).trim(),
+      patch: translatedPatch
+    }).trim()
   }
 }
-
