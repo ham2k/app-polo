@@ -69,6 +69,7 @@ export default function AccountsSettingsScreen ({ navigation, splitView }) {
             />
           </H2kListSection>
         )}
+
       </ScrollView>
     </ScreenContainer>
   )

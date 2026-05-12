@@ -370,7 +370,7 @@ function settingsScreensArray ({ t, includeMain, topLevelBack, splitView }) {
     />,
 
     <Stack.Screen name="ExtensionScreen" key="ExtensionScreen"
-      options={{ title: t('screens.extensionSettings.title', 'Extension') }}
+      options={({ route }) => ({ title: route?.params?.title ?? t('screens.extensionSettings.title', 'Extension') })}
       component={ExtensionScreen}
     />,
 

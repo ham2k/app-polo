@@ -11,6 +11,7 @@ import { activateEnabledExtensions, registerExtension } from './registry'
 import CountryFilesExtension from './core/countryFiles'
 import DevModeExtension from './core/devMode'
 import ADIFExtension from './core/adif'
+import LiveQSOExtension from './core/LiveQSOExtension'
 
 import BLHAExtension from './activities/blha/BLHAExtension'
 import CustomExtension from './activities/custom/CustomExtension'
@@ -72,6 +73,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   dispatch(addRuntimeMessage(GLOBAL.t('screens.start.Loading Extensions', 'Loading Extensions')))
   registerExtension(ADIFExtension)
   registerExtension(CountryFilesExtension)
+  registerExtension(LiveQSOExtension)
 
   // registerExtension(BCAExtension)
   // registerExtension(ECAExtension)

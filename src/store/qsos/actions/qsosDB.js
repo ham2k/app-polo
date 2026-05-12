@@ -18,6 +18,8 @@ import { logTimer } from '../../../tools/perfTools'
 import { annotateQSO } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 import { selectSettings } from '../../settings'
 import { selectRuntimeOnline } from '../../runtime'
+import { enqueueLiveQSOPosts } from '../../liveQSO'
+import { liveQSOEnqueueInfoForSaveContext } from '../../liveQSO/liveQSOEnqueueInfo'
 
 export const prepareQSORow = (row) => {
   const data = JSON.parse(row.data)
@@ -73,7 +75,7 @@ export const queryQSOs = async (query, params) => {
   return qsos
 }
 
-export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
+export const addQSO = ({ uuid, qso, synced = false, saveContext }) => addQSOs({ uuid, qsos: [qso], synced, saveContext })
 
 export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
   const qso = {
@@ -84,7 +86,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
     freq: 0,
     band: 'event',
     mode: event.event ?? 'event',
-    event,
+    event
   }
 
   return addQSOs({ uuid, qsos: [qso], synced })
@@ -92,7 +94,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
 
 const DEBUG = false
 
-export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
+export const addQSOs = ({ uuid, qsos, synced = false, saveContext }) => async (dispatch, getState) => {
   const now = Date.now()
 
   if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
@@ -153,7 +155,6 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
   }
   if (DEBUG) logTimer('addQSOs', 'done inserting')
 
-  const operationInfo = getState().operations.info[uuid]
   if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
@@ -166,6 +167,10 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
   if (!synced) {
     setImmediate(() => {
       sendQSOsToSyncService({ dispatch, getState })
+      const liveQSOEnqueueInfo = liveQSOEnqueueInfoForSaveContext({ saveContext, qsos })
+      if (liveQSOEnqueueInfo) {
+        enqueueLiveQSOPosts({ getState, uuid, qsos, ...liveQSOEnqueueInfo })
+      }
       if (DEBUG) logTimer('addQSOs', 'done updating operation')
     })
   }
@@ -205,7 +210,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
-export async function markQSOsAsSynced(qsos) {
+export async function markQSOsAsSynced (qsos) {
   if (!qsos || qsos.length === 0) return
   await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `'${q.uuid}'`).join(',')})`, [])
 }
@@ -273,8 +278,4 @@ export const saveQSOsForOperation = (uuid, { qsos, synced } = {}) => async (disp
     ])
   }
   await dbExecuteBatch(sql)
-}
-
-function fingerprintQSOData(qso) {
-  return JSON.stringify(qso)
 }
