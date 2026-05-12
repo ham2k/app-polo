@@ -8,7 +8,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Alert, Platform, ScrollView, View } from 'react-native'
+import { Alert, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -41,23 +41,15 @@ export default function LiveQSON1MMSettingsScreen ({ splitView }) {
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
-  const isIOS = Platform.OS === 'ios'
   const enabledDescription = n1mmSettings.enabled
-    ? isIOS
-      ? t('screens.liveQSON1MMSettings.enabled.descriptionOnIOS', 'Send saved QSOs as N1MM-style UDP messages')
-      : t('screens.liveQSON1MMSettings.enabled.descriptionOn', 'Send saved QSOs as N1MM-style UDP broadcast')
-    : isIOS
-      ? t('screens.liveQSON1MMSettings.enabled.descriptionOffIOS', 'Do not send live QSOs as N1MM-style UDP messages')
-      : t('screens.liveQSON1MMSettings.enabled.descriptionOff', 'Do not send live QSOs as N1MM-style UDP broadcast')
-  const urlDialogTitle = isIOS
-    ? t('screens.liveQSON1MMSettings.url.dialogTitleIOS', 'N1MM Message Target')
-    : t('screens.liveQSON1MMSettings.url.dialogTitle', 'N1MM Broadcast Target')
-  const urlDialogBody = isIOS
-    ? t('screens.liveQSON1MMSettings.url.dialogBodyIOS', 'Enter the device IP and port that should receive N1MM-style UDP messages.')
-    : t('screens.liveQSON1MMSettings.url.dialogBody', 'Use a .255 address to broadcast on a /24, or a host IP to send directly.')
-  const urlPlaceholder = isIOS
-    ? t('screens.liveQSON1MMSettings.url.placeholderIOS', '192.168.1.42:12060')
-    : t('screens.liveQSON1MMSettings.url.placeholder', '192.168.1.255:12060')
+    ? t('screens.liveQSON1MMSettings.enabled.descriptionOn', 'Send saved QSOs as N1MM-style UDP messages')
+    : t('screens.liveQSON1MMSettings.enabled.descriptionOff', 'Do not send live QSOs as N1MM-style UDP messages')
+  const urlDialogTitle = t('screens.liveQSON1MMSettings.url.dialogTitle', 'N1MM Message Target')
+  const urlDialogBody = t(
+    'screens.liveQSON1MMSettings.url.dialogBody',
+    'Enter the IP and port that should receive N1MM-style UDP messages. On Android, a .255 address can also broadcast on a /24.'
+  )
+  const urlPlaceholder = t('screens.liveQSON1MMSettings.url.placeholder', '192.168.1.42:12060')
 
   const [urlDialogVisible, setURLDialogVisible] = useState(false)
   const [draftURL, setDraftURL] = useState(displayLiveQSOUDPURL(n1mmSettings.url))

@@ -8,7 +8,7 @@
 
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { Platform, ScrollView, View } from 'react-native'
+import { ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -33,10 +33,7 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
   const udpSettings = selectLiveQSOUDPSettings(settings)
   const n1mmSettings = selectLiveQSON1MMSettings(settings)
   const udpFormatOption = liveQSOUDPMessageFormatOption(udpSettings.messageFormat)
-  const isIOS = Platform.OS === 'ios'
-  const n1mmTitle = isIOS
-    ? t('screens.liveQSOSettings.n1mmMessage.title', 'N1MM Message')
-    : t('screens.liveQSOSettings.n1mmBroadcast.title', 'N1MM Broadcast')
+  const n1mmTitle = t('screens.liveQSOSettings.n1mmMessage.title', 'N1MM Message')
   const httpDescription = httpSettings.enabled
     ? t('screens.liveQSOSettings.httpEnabledDescription', 'Enabled - {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
     : t('screens.liveQSOSettings.httpDisabledDescription', 'Disabled - {{url}}', { url: summarizeLiveQSOURL(httpSettings.url, { maxLength: 34 }) })
@@ -44,12 +41,8 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
     ? t('screens.liveQSOSettings.udpSelectedDescription', '{{format}} - {{programs}}', { format: udpFormatOption.title, programs: udpFormatOption.description })
     : t('screens.liveQSOSettings.udpDefaultDescription', 'Live logging with N1MM, Log4OM, DXKeeper, HRD, Swisslog and AC Log')
   const n1mmDescription = n1mmSettings.enabled
-    ? isIOS
-      ? t('screens.liveQSOSettings.n1mmEnabledDescriptionIOS', 'Enabled - N1MM XML message')
-      : t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled - N1MM XML broadcast')
-    : isIOS
-      ? t('screens.liveQSOSettings.n1mmDisabledDescriptionIOS', 'Disabled - N1MM XML message')
-      : t('screens.liveQSOSettings.n1mmDisabledDescription', 'Disabled - N1MM XML broadcast')
+    ? t('screens.liveQSOSettings.n1mmEnabledDescription', 'Enabled - N1MM XML message')
+    : t('screens.liveQSOSettings.n1mmDisabledDescription', 'Disabled - N1MM XML message')
 
   return (
     <ScreenContainer>
@@ -70,9 +63,7 @@ export default function LiveQSOSettingsScreen ({ navigation, splitView }) {
             leftIcon="broadcast"
             onPress={() => navigation.push('ExtensionScreen', {
               key: 'live-qso-n1mm-settings',
-              title: isIOS
-                ? t('screens.liveQSON1MMSettings.titleIOS', 'N1MM Message')
-                : t('screens.liveQSON1MMSettings.title', 'N1MM Broadcast')
+              title: t('screens.liveQSON1MMSettings.title', 'N1MM Message')
             })}
           />
           <H2kListItem
