@@ -9,8 +9,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { XMLParser } from 'fast-xml-parser'
 
 import packageJson from '../../../../package.json'
-import { capitalizeString } from '../../../tools/capitalizeString'
 import { setAccountInfo } from '../../settings'
+import { parseQRZCALLXml } from './parseQRZCALLXml'
 
 /**
 
@@ -155,48 +155,9 @@ export const apiQRZCALL = createApi({
         }
 
         if (response.data) {
-          const xml = response.data
-          const errorTag = xml?.QRZCALLDatabase?.Error
-          if (errorTag) {
-            if (typeof errorTag === 'string' && errorTag.toLowerCase().includes('not found')) {
-              return { error: `${call} not found`, data: undefined }
-            }
-            return { ...response, error: errorTag, data: undefined }
-          }
-
-          const callsignInfo = xml?.QRZCALLDatabase?.Callsign || {}
-
-          return {
-            ...response,
-            error: undefined,
-            data: {
-              name: [
-                capitalizeString(callsignInfo.fname, { content: 'name', force: false }),
-                callsignInfo.nickname ? `“${capitalizeString(callsignInfo.nickname, { content: 'name', force: false })}”` : undefined,
-                capitalizeString(callsignInfo.name, { content: 'name', force: false })
-              ].filter(x => x).join(' '),
-              call: castString(callsignInfo.call),
-              allCalls: [castString(callsignInfo.call)].concat(castString(callsignInfo.xref).split(',')).filter(x => x),
-              firstName: castString(callsignInfo.fname),
-              lastName: castString(callsignInfo.name),
-              tz: castString(callsignInfo.TimeZone),
-              gmtOffset: castNumber(callsignInfo.GMTOffset),
-              city: capitalizeString(callsignInfo.addr2, { content: 'address', force: false }),
-              state: castString(callsignInfo.state),
-              country: capitalizeString(callsignInfo.country, { force: false }),
-              postal: castString(callsignInfo.zip),
-              county: capitalizeString(callsignInfo.county, { force: false }),
-              grid: castString(callsignInfo.grid),
-              cqZone: castNumber(callsignInfo.cqzone),
-              ituZone: castNumber(callsignInfo.ituzone),
-              dxccCode: castNumber(callsignInfo.dxcc),
-              lat: castNumber(callsignInfo.lat),
-              lon: castNumber(callsignInfo.lon),
-              image: castString(callsignInfo.image),
-              imageInfo: []
-            },
-            meta: response.meta
-          }
+          const parsed = parseQRZCALLXml(response.data, call)
+          if (parsed.error) return { ...response, error: parsed.error, data: undefined }
+          return { ...response, error: undefined, data: parsed.data, meta: response.meta }
         } else {
           return response
         }
@@ -205,17 +166,8 @@ export const apiQRZCALL = createApi({
   })
 })
 
-function castString (value) {
-  if (value === undefined || value === null) return ''
-  return String(value)
-}
-
-function castNumber (value) {
-  if (value === undefined || value === null) return null
-  const number = Number(value)
-  if (isNaN(number)) return null
-  return number
-}
+// XML→record mapping + `cast*` helpers live in ./parseQRZCALLXml so they
+// can be unit-tested without instantiating RTK Query / Redux.
 
 export const { actions } = apiQRZCALL
 
