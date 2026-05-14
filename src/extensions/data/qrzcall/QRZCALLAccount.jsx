@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { Linking, View } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
@@ -17,15 +17,25 @@ import { apiQRZCALL } from '../../../store/apis/apiQRZCALL'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kMarkdown, H2kText, H2kTextInput } from '../../../ui'
 import { resetCallLookupCache } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
+const TOKEN_PORTAL_URL = 'https://qrzcall.eu/'
+
 export function QRZCALLAccountSetting ({ settings, styles }) {
   const { t } = useTranslation()
 
   const [currentDialog, setCurrentDialog] = useState()
+
+  // Show "Token configured" with the prefix (first 12 chars) for identification,
+  // never the full secret.
+  const configured = !!settings?.accounts?.qrzcall?.token
+  const tokenPrefix = configured ? String(settings.accounts.qrzcall.token).slice(0, 12) : ''
+
   return (
     <>
       <H2kListItem
         title={t('extensions.qrzcall.account.title', 'QRZCALL.EU (for callsign lookups)')}
-        description={settings?.accounts?.qrzcall ? t('extensions.qrzcall.account.description', 'Login: {{login}}', { login: settings.accounts.qrzcall.login }) : t('extensions.qrzcall.account.noAccount', 'No account')}
+        description={configured
+          ? t('extensions.qrzcall.account.descriptionToken', 'Token: {{prefix}}…', { prefix: tokenPrefix })
+          : t('extensions.qrzcall.account.noAccount', 'No token configured')}
         leftIcon={'web'}
         onPress={() => setCurrentDialog('accountsQRZCALL')}
       />
@@ -48,13 +58,8 @@ function AccountsQRZCALLDialog ({ visible, settings, styles, onDialogDone }) {
 
   const [dialogVisible, setDialogVisible] = useState(false)
 
-  const [originalValues] = useState({
-    login: settings?.accounts?.qrzcall?.login || '',
-    password: settings?.accounts?.qrzcall?.password || ''
-  })
-
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
+  const [originalToken] = useState(settings?.accounts?.qrzcall?.token || '')
+  const [token, setToken] = useState('')
   const [testResult, setTestResult] = useState(null)
 
   useEffect(() => {
@@ -62,24 +67,24 @@ function AccountsQRZCALLDialog ({ visible, settings, styles, onDialogDone }) {
   }, [visible])
 
   useEffect(() => {
-    setLogin(settings?.accounts?.qrzcall?.login || '')
-    setPassword(settings?.accounts?.qrzcall?.password || '')
+    setToken(settings?.accounts?.qrzcall?.token || '')
   }, [settings])
 
-  const onChangeLogin = useCallback((text) => {
-    setLogin(text)
+  const onChangeToken = useCallback((text) => {
+    // Whitespace creep is the #1 paste error — strip it eagerly.
+    setToken(String(text || '').trim())
     setTestResult(null)
-  }, [setLogin])
+  }, [setToken])
 
-  const onChangePassword = useCallback((text) => {
-    setPassword(text)
-    setTestResult(null)
-  }, [setPassword])
+  const openTokenPortal = useCallback(() => {
+    Linking.openURL(TOKEN_PORTAL_URL).catch(() => {})
+  }, [])
 
   const handleTest = useCallback(async () => {
     const callInfo = parseCallsign(settings?.operatorCall)
-    // Clear session so the next call triggers a fresh /auth/login.php
-    await dispatch(setAccountInfo({ qrzcall: { login, password, session: undefined } }))
+
+    // Persist the token so the next call sees it in the redux state.
+    await dispatch(setAccountInfo({ qrzcall: { token } }))
 
     const promise = await dispatch(apiQRZCALL.endpoints.lookupCall.initiate({ call: callInfo.baseCall }, { forceRefetch: true }))
     await Promise.all(dispatch(apiQRZCALL.util.getRunningQueriesThunk()))
@@ -91,51 +96,53 @@ function AccountsQRZCALLDialog ({ visible, settings, styles, onDialogDone }) {
     } else if (lookup?.data?.name) {
       setTestResult(`✅ ${settings?.operatorCall}: ${lookup?.data?.name}`)
     } else {
-      setTestResult(`✅ ${settings?.operatorCall}: logged in (callsign profile is empty)`)
+      setTestResult(`✅ ${settings?.operatorCall}: token accepted (callsign profile is empty)`)
     }
-  }, [dispatch, login, password, settings?.operatorCall])
+  }, [dispatch, token, settings?.operatorCall])
 
   const handleAccept = useCallback(() => {
-    dispatch(setAccountInfo({ qrzcall: { login, password, session: undefined } }))
+    dispatch(setAccountInfo({ qrzcall: { token } }))
     dispatch(resetCallLookupCache())
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [login, password, dispatch, onDialogDone])
+  }, [token, dispatch, onDialogDone])
 
   const handleCancel = useCallback(() => {
-    dispatch(setAccountInfo({ qrzcall: originalValues }))
-    setLogin(originalValues.login || '')
-    setPassword(originalValues.password || '')
+    dispatch(setAccountInfo({ qrzcall: { token: originalToken } }))
+    setToken(originalToken || '')
     setDialogVisible(false)
     onDialogDone && onDialogDone()
-  }, [originalValues, dispatch, onDialogDone])
+  }, [originalToken, dispatch, onDialogDone])
 
   return (
     <H2kDialog visible={dialogVisible} onDismiss={handleCancel}>
       <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.qrzcall.account.dialogTitle', 'QRZCALL.EU Account')}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kText variant="bodyMedium">{t('extensions.qrzcall.account.pleaseEnterDetails', 'Please enter the details for your QRZCALL.EU account (Data or Extra subscription required for callsign data):')}</H2kText>
+        <H2kText variant="bodyMedium">
+          {t('extensions.qrzcall.account.pleaseEnterToken',
+            'Paste a Personal Access Token from your QRZCALL.EU account. Generate one at qrzcall.eu → My Profile → Account → API Tokens (requires a Data or Extra subscription).')}
+        </H2kText>
         <H2kTextInput
-          style={[styles.input, { marginTop: styles.oneSpace }]}
-          value={login}
-          label={t('extensions.qrzcall.account.callsignLabel', 'Callsign')}
-          placeholder={t('extensions.qrzcall.account.callsignPlaceholder', 'your account callsign')}
-          onChangeText={onChangeLogin}
+          style={[styles.input, { marginTop: styles.oneSpace, fontFamily: 'monospace' }]}
+          value={token}
+          label={t('extensions.qrzcall.account.tokenLabel', 'API Token')}
+          autoComplete="off"
+          autoCorrect={false}
+          autoCapitalize="none"
+          spellCheck={false}
+          secureTextEntry={false}
+          placeholder={'pat_…'}
+          onChangeText={onChangeToken}
         />
-        <H2kTextInput
-          style={[styles.input, { marginTop: styles.oneSpace }]}
-          value={password}
-          label={t('extensions.qrzcall.account.passwordLabel', 'Password')}
-          autoComplete="current-password"
-          keyboardType="default"
-          textContentType="password"
-          secureTextEntry={true}
-          autoCapitalize={'none'}
-          placeholder={t('extensions.qrzcall.account.passwordPlaceholder', 'your password')}
-          onChangeText={onChangePassword}
-        />
-        <View style={{ marginTop: styles.oneSpace, flexDirection: 'row' }}>
-          {!testResult && <H2kButton onPress={handleTest}>{t('extensions.qrzcall.account.checkCredentials', 'Check Credentials')}</H2kButton>}
+        <View style={{ marginTop: styles.oneSpace, flexDirection: 'row', flexWrap: 'wrap' }}>
+          <H2kButton onPress={openTokenPortal} mode="text">
+            {t('extensions.qrzcall.account.openPortal', 'Open qrzcall.eu')}
+          </H2kButton>
+          {!testResult && token && (
+            <H2kButton onPress={handleTest}>
+              {t('extensions.qrzcall.account.checkCredentials', 'Check Token')}
+            </H2kButton>
+          )}
           {testResult && <H2kMarkdown style={{ flex: 1, marginTop: styles.oneSpace * 0.6 }}>{testResult}</H2kMarkdown>}
         </View>
       </H2kDialogContent>

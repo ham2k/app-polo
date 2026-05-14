@@ -9,7 +9,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { XMLParser } from 'fast-xml-parser'
 
 import packageJson from '../../../../package.json'
-import { setAccountInfo } from '../../settings'
 import { parseQRZCALLXml } from './parseQRZCALLXml'
 
 /**
@@ -17,31 +16,43 @@ import { parseQRZCALLXml } from './parseQRZCALLXml'
   QRZCALL.EU Premium XML API
   https://qrzcall.eu/
 
-  - POST  /v1/auth/login.php       { callsign, password } → { token, expires_in }
-  - GET   /v1/pub/callsign_xml.php  Authorization: Bearer <jwt>
-            Returns a QRZ-compatible <QRZCALLDatabase> document.
+  Authentication: a single long-lived Personal Access Token (PAT) the user
+  generates at https://qrzcall.eu/ → My Profile → Account → API Tokens. The
+  token is shaped `pat_<32 chars>`; PoLo stores it in
+  settings.accounts.qrzcall.token and sends it as `Authorization: Bearer <token>`
+  on every lookup.
 
-  Required: a Data or Extra subscription on QRZCALL.EU.
+  - GET /v1/pub/callsign_xml.php?callsign=PA4R
+        Authorization: Bearer pat_…
+        → <QRZCALLDatabase> with QRZ-compatible field names
+
+  Required tier: Data or Extra subscription on QRZCALL.EU (the upstream
+  endpoint enforces this and returns 401/403 if the token's owner is on the
+  Free tier).
+
+  Why a PAT instead of callsign+password?
+    - The user's QRZCALL.EU password never leaves the SPA where it's set
+    - Each PoLo install (phone, tablet, laptop) gets its own revocable token
+    - Revoking a single token doesn't break the user's other clients
 
  */
 
 const DEBUG = false
 
 const BASE_URL = 'https://api.qrzcall.eu/v1'
-const AUTH_PATH = '/auth/login.php'
 const XML_PATH = '/pub/callsign_xml.php'
 
 const API_TIMEOUT = 5000 // 5 seconds
 
 // 404 is a valid response (callsign not in database). Treat it as ok so the
-// XML parser can process the body (or so we can return a clean "not found"
-// from the queryFn below). 401 stays an error → triggers re-auth.
+// XML parser / queryFn below can produce a friendly "not found" instead of
+// surfacing a network error to the caller.
 const baseQueryXml = fetchBaseQuery({
   baseUrl: `${BASE_URL}${XML_PATH}`,
   timeout: API_TIMEOUT,
   validateStatus: (response) => response.status === 200 || response.status === 404,
   prepareHeaders: (headers, { getState }) => {
-    const token = getState().settings?.accounts?.qrzcall?.session
+    const token = getState().settings?.accounts?.qrzcall?.token
     if (token) headers.set('Authorization', `Bearer ${token}`)
     headers.set('User-Agent', `ham2k-polo-${packageJson.version}`)
     return headers
@@ -62,70 +73,14 @@ const baseQueryXml = fetchBaseQuery({
   }
 })
 
-/**
- * Wraps the XML query with automatic JWT re-issuance.  If the XML endpoint
- * returns 401 (expired/invalid JWT) or the JWT is absent, we POST to
- * /auth/login.php with the stored callsign + password, store the new JWT,
- * and retry the original call once.
- */
-const baseQueryWithReauth = async (args, api, extraOptions) => {
-  if (DEBUG) console.log('QRZCALL reauth first call', { args })
-  let result = await baseQueryXml(args, api, extraOptions)
-
-  const needsAuth = result.error?.status === 401 || !api.getState().settings?.accounts?.qrzcall?.session
-
-  if (needsAuth) {
-    const { login, password } = api.getState().settings?.accounts?.qrzcall ?? {}
-    if (!login || !password) {
-      return { error: 'QRZCALL.EU credentials not configured', meta: result.meta }
-    }
-
-    if (DEBUG) console.log('QRZCALL fetching new JWT')
-    let authResponse
-    try {
-      authResponse = await fetch(`${BASE_URL}${AUTH_PATH}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': `ham2k-polo-${packageJson.version}`
-        },
-        body: JSON.stringify({ callsign: String(login).toUpperCase(), password })
-      })
-    } catch (err) {
-      return { error: `QRZCALL.EU network error: ${err.message}`, meta: result.meta }
-    }
-
-    if (authResponse.status !== 200) {
-      let body
-      try { body = await authResponse.json() } catch { body = {} }
-      await api.dispatch(setAccountInfo({ qrzcall: { ...api.getState().settings?.accounts?.qrzcall, session: undefined } }))
-      const msg = body?.error || `HTTP ${authResponse.status}`
-      return { error: `QRZCALL.EU login failed: ${msg}`, meta: result.meta }
-    }
-
-    const authJson = await authResponse.json()
-    const token = authJson?.token
-    if (!token) {
-      await api.dispatch(setAccountInfo({ qrzcall: { ...api.getState().settings?.accounts?.qrzcall, session: undefined } }))
-      return { error: 'QRZCALL.EU returned no token', meta: result.meta }
-    }
-
-    if (DEBUG) console.log('QRZCALL got new JWT, retrying')
-    await api.dispatch(setAccountInfo({ qrzcall: { ...api.getState().settings?.accounts?.qrzcall, session: token } }))
-    result = await baseQueryXml(args, api, extraOptions)
-  }
-
-  return result
-}
-
 export const apiQRZCALL = createApi({
   reducerPath: 'apiQRZCALL',
-  baseQuery: baseQueryWithReauth,
+  baseQuery: baseQueryXml,
   endpoints: builder => ({
 
     // Lookup a callsign
     //   GET https://api.qrzcall.eu/v1/pub/callsign_xml.php?callsign=PA4R
-    //   Authorization: Bearer <jwt>
+    //   Authorization: Bearer pat_…
 
     lookupCall: builder.query({
       keepUnusedDataFor: 60 * 60 * 12, // 12 hours
@@ -133,15 +88,28 @@ export const apiQRZCALL = createApi({
         const { call } = args
         if (!call || call.length < 3) return { data: {} }
 
+        const token = api.getState().settings?.accounts?.qrzcall?.token
+        if (!token) {
+          return { error: 'QRZCALL.EU API token not configured', data: undefined }
+        }
+
         const response = await baseQuery({
           url: '',
           params: { callsign: call }
         }, api, extraOptions)
 
         if (response.error) {
-          // 401 means reauth failed (handled in baseQueryWithReauth already returned an error).
-          // 429 means rate-limited. Anything else is unexpected.
+          // 401  = invalid or revoked token
+          // 403  = subscription required (token's owner has no Data/Extra tier)
+          // 429  = rate-limited
+          // 5xx  = upstream broken
           const status = response.error?.status
+          if (status === 401) {
+            return { error: 'QRZCALL.EU token is invalid or has been revoked. Generate a new one in your account settings.', data: undefined }
+          }
+          if (status === 403) {
+            return { error: 'QRZCALL.EU subscription required (Data or Extra tier).', data: undefined }
+          }
           const detail = response.error?.data?.error || response.error?.error || JSON.stringify(response.error)
           return { error: `QRZCALL HTTP ${status || '???'}: ${detail}`, data: undefined }
         }
