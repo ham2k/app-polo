@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (Identificare VK/ZL)",
         "dialogTitle": "Cont ParksnPeaks",
-        "description": "Nume utilizator: {{username}}",
+        "description": "Cont: {{username}}",
         "noAccount": "Fără cont",
         "pleaseEnterDetails": "Te rog introduceți detaliile pentru contul tău ParksnPeaks:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "Parcuri pe Picoare (monitorizare SiOTA)",
         "dialogTitle": "Cont ParksnPeaks",
-        "description": "Nume utilizator: {{username}}",
+        "description": "Cont: {{username}}",
         "noAccount": "Niciun cont",
         "pleaseEnterDetails": "Vă rugăm să introduceți detaliile contului dumneavoastră ParksnPeaks:",
         "usernameLabel": "Nume utilizator (nu indicativ de apel)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (pentru autodepistare SOTAWatch)",
         "dialogTitle": "Cont SOTA",
-        "description": "Autentificat ca {{callsign}}",
+        "description": "Cont: {{callsign}}",
         "noAccount": "Niciun cont",
         "error": "Eroare la obținerea detaliilor contului",
         "connect": "Conectează-ți contul SOTA"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (monitorizare ZLOTA)",
         "dialogTitle": "Cont ZLOTA",
-        "description": "Indicativ: {{callsign}}",
+        "description": "Cont: {{callsign}}",
         "noAccount": "Niciun cont",
         "pleaseEnterDetails": "Vă rugăm să introduceți detaliile contului dumneavoastră ZLOTA:",
         "callsignLabel": "Indicativ de apel",

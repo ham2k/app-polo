@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (VK/ZL spotting)",
         "dialogTitle": "ParksnPeaks Account",
-        "description": "Username: {{username}}",
+        "description": "Account: {{username}}",
         "noAccount": "No account",
         "pleaseEnterDetails": "Please enter the details for your ParksnPeaks account:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (SiOTA spotting)",
         "dialogTitle": "ParksnPeaks Account",
-        "description": "Username: {{username}}",
+        "description": "Account: {{username}}",
         "noAccount": "No account",
         "pleaseEnterDetails": "Please enter the details for your ParksnPeaks account:",
         "usernameLabel": "Username (not callsign)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (for SOTAWatch self-spotting)",
         "dialogTitle": "SOTA Account",
-        "description": "Logged in as {{callsign}}",
+        "description": "Account: {{callsign}}",
         "noAccount": "No account",
         "error": "Error fetching account details",
         "connect": "Connect your SOTA account"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (ZLOTA spotting)",
         "dialogTitle": "ZLOTA Account",
-        "description": "Callsign: {{callsign}}",
+        "description": "Account: {{callsign}}",
         "noAccount": "No account",
         "pleaseEnterDetails": "Please enter the details for your ZLOTA account:",
         "callsignLabel": "Callsign",

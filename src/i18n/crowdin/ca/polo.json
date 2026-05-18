@@ -497,7 +497,13 @@
         "custom": "Personalitzat"
       },
       "syncLinkingDialog": {
-        "description": "Introduïu el codi que es mostra a l'altre dispositiu per vincular-lo amb aquest compte."
+        "title": "Servei de sincronització de fitxers de registre Ham2K",
+        "enterCode": "Introduïu el codi que es mostra a l'altre dispositiu per vincular-lo amb aquest compte.",
+        "linkExpired": "La sol·licitud ha caducat. Si us plau, torneu-ho a intentar.",
+        "areYouSure-md": "Esteu segur que voleu vincular \"**{{device}}**\" amb aquest compte?",
+        "requestNotFound": "No s'ha trobat la sol·licitud. Si us plau, torneu-ho a intentar.",
+        "buttonCancel": "No, cancel·la",
+        "buttonProcees": "Sí, vincula-ho!"
       },
       "deviceNotLinked": "Dispositiu no vinculat! ({{id}})",
       "anonymousAccount": "Compte anònim (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Desenvolupament)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Oficial)",
         "custom": "Personalitzat ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "No s'ha trobat el codi. Si us plau, torneu-ho a intentar.",
-        "areYouSure-md": "Esteu segur que voleu vincular \"**{{device}}**\" amb aquest compte?",
-        "buttonCancel": "No, cancel·la",
-        "buttonProcees": "Sí, vincula-ho!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Aquest dispositiu va ser sincronitzat per última vegada amb un compte diferent (#{{id}}).\n\nPer continuar sincronitzant, cal decidir entre les següents opcions:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Si us plau, busqueu-lo i seguiu les instruccions.",
         "confirmLink-md": "Obriu l'aplicació en un dispositiu ja vinculat amb **{{email}}** i confirmeu aquesta sol·licitud introduint el codi següent:",
         "confirmLinkPost-md": "Si no teniu accés a un altre dispositiu vinculat a aquest compte, podeu:",
+        "accountNotFound": "No s'ha trobat el compte.",
+        "connectViaEmailButton": "O… connecta't per correu electrònic",
+        "linkViaQRAccountText": "Escaneja aquest codi QR des d'un dispositiu amb un compte de Ham2K LoFi existent",
+        "linkViaQRButton": "O… connecta't mitjançant codi QR",
         "confirmViaEmailButton": "Confirma a través de correu electrònic",
         "changeAccountButton": "Canvia de compte",
         "resendButton": "Torna a enviar el correu electrònic",
@@ -749,7 +753,7 @@
       "infoTab-a11y": "Pestanya d'informació",
       "operationInfo-a11y": "Informació d'operació",
       "spotsTab": "Anuncis",
-      "spotsTab-a11y": "Pestanya d'observacions",
+      "spotsTab-a11y": "Pestanya d’anuncis",
       "mapTab": "Mapa",
       "mapTab-a11y": "Pestanya de mapa",
       "settingsTab": "Operació",
@@ -831,7 +835,7 @@
       "hideMostSecondaryControls-a11y": "Amaga la majoria de controls secundaris",
       "showAllSecondaryControls-a11y": "Mostra tots els controls secundaris",
       "spotting": {
-        "selfSpottingAt": "Autoanunciant-se a {{freq}}",
+        "selfSpottingAt": "Autoanunciar-se a {{freq}}",
         "stopAutoRespotting": "Atura l'autoanunci",
         "setFrequencyFirst": "Primer selecciona una freqüència per anunciar.",
         "reSpotEvery": "Torna a anunciar cada {{minutes}} min",
@@ -840,7 +844,7 @@
         "spotAt": "Anunciat {{call}} a {{freq}}",
         "tooLateToSpot": "Massa tard per anunciar {{call}}",
         "nothingToSpot": "Res a anunciar",
-        "selfSpottingLabel": "Autoanunciant-se",
+        "selfSpottingLabel": "Autoanunciar-se",
         "selfSpottingControls-a11y": "Controls d'Autoanunci",
         "spottingLabel": "Anunciant-se",
         "spottingControls-a11y": "Controls d'Anunci",
@@ -854,8 +858,8 @@
       "manyNoLocation": "Molts d'aquests QSOs no tenen una ubicació precisa.\n\nPotser necessiteu un compte de pagament en QRZ.com per a les consultes d'ubicació."
     },
     "opSpotsTab": {
-      "noSpots": "Sense observacions",
-      "spotsCount_zero": "Sense observacions",
+      "noSpots": "Sense Anuncis",
+      "spotsCount_zero": "Sense Anuncis",
       "spotsCount_one": "1 Observació",
       "spotsCount_other": "{{fmtCount}} Anuncis",
       "showingSpots": "Mostrant {{count}} de {{total}}",
@@ -886,7 +890,7 @@
       "filtersSorting": "Ordenació",
       "filtersSortByTime": "Per hora de l'observació",
       "filtersSortByFrequency": "Per freqüència",
-      "filtersGroupSpecialSpots": "Agrupar observacions especials primer",
+      "filtersGroupSpecialSpots": "Agrupar anuncis especials primer",
       "filtersGroupCallsWithNotes": "Agrupa indicatius amb notes",
       "filtersSpotSources": "Fonts d'anuncis",
       "filtersFilterByContinent": "Filtra per continent",

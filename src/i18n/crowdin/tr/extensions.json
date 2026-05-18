@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (VK/ZL önizleme)",
         "dialogTitle": "ParksnPeaks Hesabı",
-        "description": "Kullanıcı Adı: {{username}}",
+        "description": "Hesap: {{username}}",
         "noAccount": "Hesap yok",
         "pleaseEnterDetails": "Lütfen ParksnPeaks hesabınız için bilgileri girin:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (SiOTA Önizleme)",
         "dialogTitle": "ParksnPeaks Hesabı",
-        "description": "Kullanıcı Adı: {{username}}",
+        "description": "Hesap: {{username}}",
         "noAccount": "Hesap yok",
         "pleaseEnterDetails": "Lütfen ParksnPeaks hesabınız için bilgileri girin:",
         "usernameLabel": "Kullanıcı Adı (çağrı işareti değil)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (SOTAwatch kendi kendine noktalama için)",
         "dialogTitle": "SOTA Hesabı",
-        "description": "{{callsign}} olarak giriş yaptınız",
+        "description": "Hesap: {{callsign}}",
         "noAccount": "Hesap yok",
         "error": "Hesap detayları alınırken hata oluştu",
         "connect": "SOTA hesabınızı bağlayın"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (ZLOTA noktalama)",
         "dialogTitle": "ZLOTA Hesabı",
-        "description": "Çağrı İşareti: {{callsign}}",
+        "description": "Hesap: {{callsign}}",
         "noAccount": "Hesap yok",
         "pleaseEnterDetails": "ZLOTA hesabınızın ayrıntılarını giriniz:",
         "callsignLabel": "Çağrı İşareti",

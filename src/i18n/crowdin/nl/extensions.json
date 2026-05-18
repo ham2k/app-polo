@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (VK/ZL-spotting)",
         "dialogTitle": "ParksnPeaks Account",
-        "description": "Gebruikersnaam: {{username}}",
+        "description": "Account: {{username}}",
         "noAccount": "Geen account",
         "pleaseEnterDetails": "Voer de gegevens van uw ParksnPeaks-account in:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (SiOTA-spotting)",
         "dialogTitle": "ParksnPeaks Account",
-        "description": "Gebruikersnaam: {{username}}",
+        "description": "Account: {{username}}",
         "noAccount": "Geen account",
         "pleaseEnterDetails": "Voer de gegevens van uw ParksnPeaks-account in:",
         "usernameLabel": "Gebruikersnaam (niet roepletter)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (voor SOTAWatch self-spotting)",
         "dialogTitle": "SOTA Account",
-        "description": "Ingelogd als {{callsign}}",
+        "description": "Account: {{callsign}}",
         "noAccount": "Geen account",
         "error": "Fout bij ophalen accountgegevens",
         "connect": "Verbind met uw SOTA-account"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (ZLOTA-spotting)",
         "dialogTitle": "ZLOTA Account",
-        "description": "Roepnaam: {{callsign}}",
+        "description": "Account: {{callsign}}",
         "noAccount": "Geen account",
         "pleaseEnterDetails": "Voer de gegevens van uw ZLOTA account in:",
         "callsignLabel": "Roepnaam",

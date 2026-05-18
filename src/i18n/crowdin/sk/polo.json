@@ -497,7 +497,13 @@
         "custom": "Vlastný"
       },
       "syncLinkingDialog": {
-        "description": "Zadajte kód zobrazený na druhom zariadení, ak ho chcete prepojiť s týmto účtom."
+        "title": "Služba synchronizácie súborov Ham2K Log Filer",
+        "enterCode": "Zadajte kód zobrazený na druhom zariadení, aby ste ho prepojili s týmto účtom.",
+        "linkExpired": "Požiadavka vypršala. Skúste to znova.",
+        "areYouSure-md": "Ste si istí, že chcete prepojiť „**{{device}}**“ s týmto účtom?",
+        "requestNotFound": "Požiadavka nebola nájdená. Skúste to znova.",
+        "buttonCancel": "Nie, zrušiť",
+        "buttonProcees": "Áno, prepojiť!"
       },
       "deviceNotLinked": "Zariadenie nie je prepojené! ({{id}})",
       "anonymousAccount": "Anonymný účet (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (vývoj)",
         "https://lofi.ham2k.net": "Ham2K LoFi (oficiálne)",
         "custom": "Vlastné ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "Kód nebol nájdený. Skúste to prosím znova.",
-        "areYouSure-md": "Ste si istí, že chcete prepojiť \"**{{device}}**\" s týmto účtom?",
-        "buttonCancel": "Nie, zrušiť",
-        "buttonProcees": "Áno, prepojiť!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Toto zariadenie bolo naposledy synchronizované s iným účtom (#{{id}}).\n\nAby ste mohli pokračovať v synchronizácii, musíte sa rozhodnúť medzi nasledujúcimi možnosťami:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Prosím, vyhľadajte ho a postupujte podľa pokynov.",
         "confirmLink-md": "Otvorte aplikáciu na zariadení, ktoré je už prepojené s **{{email}}** a potvrďte túto žiadosť zadaním nasledujúceho kódu:",
         "confirmLinkPost-md": "Ak nemáte prístup k inému zariadeniu prepojenému s týmto účtom, môžete:",
+        "accountNotFound": "Účet nebol nájdený.",
+        "connectViaEmailButton": "Alebo... pripojte sa cez email",
+        "linkViaQRAccountText": "Naskenujte tento QR kód zo zariadenia s existujúcim účtom Ham2K LoFi",
+        "linkViaQRButton": "Alebo... pripojte sa cez QR kód",
         "confirmViaEmailButton": "Potvrdiť cez email",
         "changeAccountButton": "Zmeniť účet",
         "resendButton": "Poslať email znovu",

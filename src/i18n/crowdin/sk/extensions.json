@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (VK/ZL spottingu)",
         "dialogTitle": "Účet ParksnPeaks",
-        "description": "Používateľské meno: {{username}}",
+        "description": "Účet: {{username}}",
         "noAccount": "Žiadny účet",
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ParksnPeaks:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (nájdenie SiOTA)",
         "dialogTitle": "Účet ParksnPeaks",
-        "description": "Používateľské meno: {{username}}",
+        "description": "Účet: {{username}}",
         "noAccount": "Bez účtu",
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ParksnPeaks:",
         "usernameLabel": "Používateľské meno (nie volací znak)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (pre samo-nájsť SOTAWatch)",
         "dialogTitle": "Účet SOTA",
-        "description": "Prihlásený ako {{callsign}}",
+        "description": "Účet: {{callsign}}",
         "noAccount": "Bez účtu",
         "error": "Chyba pri získavaní údajov o účte",
         "connect": "Pripojte si svoj účet SOTA"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (spotting ZLOTA)",
         "dialogTitle": "Účet ZLOTA",
-        "description": "Volací znak: {{callsign}}",
+        "description": "Účet: {{callsign}}",
         "noAccount": "Bez účtu",
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ZLOTA:",
         "callsignLabel": "Volací znak",

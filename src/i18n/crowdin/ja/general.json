@@ -294,7 +294,7 @@
         "core": "基本機能",
         "locationBased": "位置情報ベースのアクティビティ",
         "contestsAndFieldOps": "コンテスト & フィールドオペレーション",
-        "lookup": "データ検索",
+        "lookup": "データ検索 & スポッティング",
         "devmode": "開発者モード",
         "other": "その他の機能"
       }

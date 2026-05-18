@@ -497,7 +497,13 @@
         "custom": "Personnalisé"
       },
       "syncLinkingDialog": {
-        "description": "Entrez le code affiché sur l'autre appareil pour le lier à ce compte."
+        "title": "Service de Synchronisation Ham2K Log Filer",
+        "enterCode": "Entrez le code affiché sur l'autre appareil pour le lier à ce compte.",
+        "linkExpired": "La demande a expiré. Veuillez réessayer.",
+        "areYouSure-md": "Êtes-vous sûr de vouloir lier \"**{{device}}**\" à ce compte ?",
+        "requestNotFound": "Demande non trouvée. Veuillez réessayer.",
+        "buttonCancel": "Non, annuler",
+        "buttonProcees": "Oui, liez-le !"
       },
       "deviceNotLinked": "Appareil non lié ! ({{id}})",
       "anonymousAccount": "Compte anonyme (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Développement)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Officiel)",
         "custom": "Personnalisé ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "Le code n'a pas été trouvé. Veuillez réessayer.",
-        "areYouSure-md": "Êtes-vous sûr de vouloir lier \"**{{device}}**\" à ce compte ?",
-        "buttonCancel": "Non, annuler",
-        "buttonProcees": "Oui, liez-le !"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Cet appareil a été synchronisé pour la dernière fois avec un compte différent (#{{id}}).\n\nPour continuer la synchronisation, vous devez choisir entre les options suivantes :",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Veuillez le rechercher et suivre les instructions.",
         "confirmLink-md": "Ouvrez l'application sur un appareil déjà lié avec **{{email}}** et confirmez cette demande en entrant le code suivant :",
         "confirmLinkPost-md": "Si vous n'avez pas accès à un autre appareil lié à ce compte, vous pouvez :",
+        "accountNotFound": "Compte non trouvé.",
+        "connectViaEmailButton": "Ou… connectez-vous via email",
+        "linkViaQRAccountText": "Scannez ce code QR à partir d'un appareil disposant d'un compte Ham2K LoFi existant",
+        "linkViaQRButton": "Ou… connectez-vous via un code QR",
         "confirmViaEmailButton": "Confirmer par email",
         "changeAccountButton": "Changer de compte",
         "resendButton": "Renvoyer l'email",

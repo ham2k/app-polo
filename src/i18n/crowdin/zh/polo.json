@@ -497,7 +497,13 @@
         "custom": "自定义"
       },
       "syncLinkingDialog": {
-        "description": "输入其他设备上显示的代码以将其链接到此帐户。"
+        "title": "Ham2K 日志归档同步服务",
+        "enterCode": "输入其他设备上显示的代码以将其链接到此帐户。",
+        "linkExpired": "请求已过期。请重试。",
+        "areYouSure-md": "您确定要将“**{{device}}**”与此帐户链接吗？",
+        "requestNotFound": "未找到请求。请重试。",
+        "buttonCancel": "不，取消",
+        "buttonProcees": "是的，链接它！"
       },
       "deviceNotLinked": "设备未链接！({{id}})",
       "anonymousAccount": "匿名账户 (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi（开发）",
         "https://lofi.ham2k.net": "Ham2K LoFi（官方）",
         "custom": "自定义（{{server}}）"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "未找到代码。请重试。",
-        "areYouSure-md": "您确定要将\"**{{device}}**\"与此帐户链接吗？",
-        "buttonCancel": "不，取消",
-        "buttonProcees": "是的，链接它！"
       },
       "askAboutMergingAccounts": {
         "warning-md": "此设备最后一次与不同的账户 (#{{id}}) 同步。\n\n要继续同步，您需要在以下选项中做出决定：",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "请查找并按照指示操作。",
         "confirmLink-md": "在已经与**{{email}}**连接的设备上打开应用程序，并输入以下代码以确认此请求：",
         "confirmLinkPost-md": "如果您无法访问链接到此帐户的其他设备，您可以：",
+        "accountNotFound": "未找到帐户。",
+        "connectViaEmailButton": "或者…通过电子邮件连接",
+        "linkViaQRAccountText": "从具有现有 Ham2K LoFi 帐户的设备扫描此二维码",
+        "linkViaQRButton": "或者…通过二维码连接",
         "confirmViaEmailButton": "通过电子邮件确认",
         "changeAccountButton": "更换账户",
         "resendButton": "再次发送电子邮件",

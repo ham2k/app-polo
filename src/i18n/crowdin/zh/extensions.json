@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks（VK/ZL 发现）",
         "dialogTitle": "ParksnPeaks 账户",
-        "description": "用户名：{{username}}",
+        "description": "账户: {{username}}",
         "noAccount": "无账户",
         "pleaseEnterDetails": "请输入您的 ParksnPeaks 帐户信息："
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (SiOTA 发现)",
         "dialogTitle": "ParksnPeaks 账户",
-        "description": "用户名：{{username}}",
+        "description": "账户: {{username}}",
         "noAccount": "无账户",
         "pleaseEnterDetails": "请输入您的 ParksnPeaks 帐户信息：",
         "usernameLabel": "用户名（不是呼号）",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (用于 SOTAWatch 自我发现)",
         "dialogTitle": "SOTA 账户",
-        "description": "已登录为 {{callsign}}",
+        "description": "账户: {{callsign}}",
         "noAccount": "无账户",
         "error": "获取账户详情时出错",
         "connect": "连接您的 SOTA 账户"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (ZLOTA 发现)",
         "dialogTitle": "ZLOTA 账户",
-        "description": "呼号：{{callsign}}",
+        "description": "账户: {{callsign}}",
         "noAccount": "无账户",
         "pleaseEnterDetails": "请输入您的 ZLOTA 帐户信息：",
         "callsignLabel": "呼号",

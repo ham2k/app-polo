@@ -497,7 +497,13 @@
         "custom": "Özel"
       },
       "syncLinkingDialog": {
-        "description": "Bu hesabı bağlamak için diğer cihazda gösterilen kodu girin."
+        "title": "Ham2K Log Filer Senkronizasyon Servisi",
+        "enterCode": "Bu hesabı bağlamak için diğer cihazda görüntülenen kodu girin.",
+        "linkExpired": "Talep süresi doldu. Lütfen tekrar deneyin.",
+        "areYouSure-md": "\"**{{device}}**\" cihazını bu hesapla bağlamak istediğinizden emin misiniz?",
+        "requestNotFound": "Talep bulunamadı. Lütfen tekrar deneyin.",
+        "buttonCancel": "Hayır, vazgeç",
+        "buttonProcees": "Evet, bağla!"
       },
       "deviceNotLinked": "Cihaz bağlı değil! ({{id}})",
       "anonymousAccount": "Anonim Hesap (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Geliştirme)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Resmi)",
         "custom": "Özel ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "Kod bulunamadı. Lütfen tekrar deneyin.",
-        "areYouSure-md": "\"**{{device}}**\" bu hesapla bağlantı kurmak istediğinizden emin misiniz?",
-        "buttonCancel": "Hayır, Vazgeç",
-        "buttonProcees": "Evet, Bağla!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Bu cihaz en son farklı bir hesapla senkronize edildi (#{{id}}).\n\nSenkronizasyona devam edebilmek için şu seçeneklerden birini seçmelisiniz:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Lütfen bulup talimatları takip edin.",
         "confirmLink-md": "**{{email}}** ile zaten bağlı bir cihazda uygulamayı açın ve aşağıdaki kodu girerek bu isteği onaylayın:",
         "confirmLinkPost-md": "Bu hesaba bağlı başka bir cihaza erişiminiz yoksa şunları yapabilirsiniz:",
+        "accountNotFound": "Hesap bulunamadı.",
+        "connectViaEmailButton": "Veya… e-posta ile bağlan",
+        "linkViaQRAccountText": "Bu QR kodunu mevcut bir Ham2K LoFi Hesabına sahip cihazdan tarayın",
+        "linkViaQRButton": "Veya… QR kodu ile bağlan",
         "confirmViaEmailButton": "E-posta ile onayla",
         "changeAccountButton": "Hesabı Değiştir",
         "resendButton": "E-postayı tekrar gönder",

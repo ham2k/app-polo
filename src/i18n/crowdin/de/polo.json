@@ -497,7 +497,13 @@
         "custom": "Benutzerdefiniert"
       },
       "syncLinkingDialog": {
-        "description": "Geben Sie den Code ein, der auf dem anderen Gerät angezeigt wird, um es mit diesem Konto zu verknüpfen."
+        "title": "Ham2K Log-Filer Sync-Dienst",
+        "enterCode": "Geben Sie den auf dem anderen Gerät angezeigten Code ein, um es mit diesem Konto zu verknüpfen.",
+        "linkExpired": "Die Anfrage ist abgelaufen. Bitte versuchen Sie es erneut.",
+        "areYouSure-md": "Sind Sie sicher, dass Sie \"**{{device}}**\" mit diesem Konto verknüpfen möchten?",
+        "requestNotFound": "Anfrage nicht gefunden. Bitte versuchen Sie es erneut.",
+        "buttonCancel": "Nein, Abbrechen",
+        "buttonProcees": "Ja, verknüpfen!"
       },
       "deviceNotLinked": "Gerät nicht verknüpft! ({{id}})",
       "anonymousAccount": "Anonymes Konto (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Entwicklung)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Offiziell)",
         "custom": "Benutzerdefiniert ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "Der Code wurde nicht gefunden. Bitte versuchen Sie es erneut.",
-        "areYouSure-md": "Sind Sie sicher, dass Sie \"**{{device}}**\" mit diesem Konto verknüpfen möchten?",
-        "buttonCancel": "Nein, Abbrechen",
-        "buttonProcees": "Ja, verbinde es!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Dieses Gerät wurde zuletzt mit einem anderen Konto (#{{id}}) synchronisiert.\n\nUm weiter zu synchronisieren, musst du zwischen den folgenden Optionen entscheiden:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Bitte suchen Sie danach und folgen Sie den Anweisungen.",
         "confirmLink-md": "Öffnen Sie die App auf einem Gerät, das bereits mit **{{email}}** verknüpft ist, und bestätigen Sie diese Anforderung, indem Sie den folgenden Code eingeben:",
         "confirmLinkPost-md": "Wenn Sie keinen Zugriff auf ein anderes mit diesem Konto verbundenes Gerät haben, können Sie:",
+        "accountNotFound": "Konto nicht gefunden.",
+        "connectViaEmailButton": "Oder… per E-Mail verbinden",
+        "linkViaQRAccountText": "Scannen Sie diesen QR-Code von einem Gerät mit einem bestehenden Ham2K LoFi-Konto",
+        "linkViaQRButton": "Oder… per QR-Code verbinden",
         "confirmViaEmailButton": "Bestätigen Sie per E-Mail",
         "changeAccountButton": "Konto ändern",
         "resendButton": "E-Mail erneut senden",

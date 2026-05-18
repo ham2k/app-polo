@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (Repérage VK/ZL)",
         "dialogTitle": "Compte ParksnPeaks",
-        "description": "Nom d'utilisateur : {{username}}",
+        "description": "Compte : {{username}}",
         "noAccount": "Pas de compte",
         "pleaseEnterDetails": "Veuillez entrer les détails de votre compte ParksnPeaks :"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (spot SiOTA)",
         "dialogTitle": "Compte ParksnPeaks",
-        "description": "Nom d'utilisateur : {{username}}",
+        "description": "Compte : {{username}}",
         "noAccount": "Pas de compte",
         "pleaseEnterDetails": "Veuillez entrer les détails de votre compte ParksnPeaks :",
         "usernameLabel": "Nom d'utilisateur (pas l'indicatif)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (pour auto-spotting SOTAWatch)",
         "dialogTitle": "Compte SOTA",
-        "description": "Connecté en tant que {{callsign}}",
+        "description": "Compte : {{callsign}}",
         "noAccount": "Pas de compte",
         "error": "Erreur lors de la récupération des détails du compte",
         "connect": "Connectez votre compte SOTA"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (spotting ZLOTA)",
         "dialogTitle": "Compte ZLOTA",
-        "description": "Indicatif : {{callsign}}",
+        "description": "Compte : {{callsign}}",
         "noAccount": "Pas de compte",
         "pleaseEnterDetails": "Veuillez entrer les détails de votre compte ZLOTA :",
         "callsignLabel": "Indicatif",

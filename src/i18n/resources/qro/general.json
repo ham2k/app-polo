@@ -204,8 +204,14 @@
       "accept-a11y": "ACCEPT CHANGES",
       "revert": "REVERT",
       "revert-a11y": "REVERT CHANGES",
+      "apply": "APPLY",
+      "connect": "CONNECT",
       "save": "SAVE",
       "export": "EXPORT"
+    },
+    "errors": {
+      "generic": "SOMETHING WENT WRONG. PLEASE TRY AGAIN LATER.",
+      "genericShort": "SOMETHING WENT WRONG."
     },
     "version": {
       "general": "{{month}} '{{year}}",
@@ -235,7 +241,7 @@
         "Staging": "UNSTABLE",
         "Development": "BLEEDING EDGE"
       },
-      "versionIsAvailable-md": "VERSION {{versionName}} IS AVAILABLE.",
+      "versionIsAvailable-md": "UPDATE TO {{versionName}} IS AVAILABLE.",
       "updateNow": "UPDATE NOW",
       "newVersionAvailable-md": "A NEW VERSION OF POLO IS AVAILABLE!"
     },
@@ -288,7 +294,7 @@
         "core": "CORE FEATURES",
         "locationBased": "LOCATION-BASED ACTIVITIES",
         "contestsAndFieldOps": "CONTESTS & FIELD OPS",
-        "lookup": "DATA LOOKUP",
+        "lookup": "DATA LOOKUP & SPOTTING",
         "devmode": "DEVELOPER MODE",
         "other": "OTHER FEATURES"
       }
@@ -300,6 +306,58 @@
       "NA": "NORTH AMERICA",
       "SA": "SOUTH AMERICA",
       "OC": "OCEANIA"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "SINGLE SIDEBAND",
+        "USB": "USB",
+        "USB-a11y": "UPPER SIDEBAND",
+        "LSB": "LSB",
+        "LSB-a11y": "LOWER SIDEBAND",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "RITTY",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "OTHER",
+        "other-a11y": "OTHER MODE"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 METERS",
+        "80m-a11y": "80 METERS",
+        "60m-a11y": "60 METERS",
+        "40m-a11y": "40 METERS",
+        "30m-a11y": "30 METERS",
+        "20m-a11y": "20 METERS",
+        "17m-a11y": "17 METERS",
+        "15m-a11y": "15 METERS",
+        "12m-a11y": "12 METERS",
+        "11m-a11y": "11 METERS",
+        "10m-a11y": "10 METERS",
+        "6m-a11y": "6 METERS",
+        "2m-a11y": "2 METERS",
+        "70cm-a11y": "70 CENTIMETERS",
+        "23cm-a11y": "23 CENTIMETERS",
+        "13cm-a11y": "13 CENTIMETERS",
+        "9cm-a11y": "9 CENTIMETERS",
+        "6cm-a11y": "6 CENTIMETERS",
+        "3cm-a11y": "3 CENTIMETERS",
+        "1-25cm-a11y": "1.25 CENTIMETERS",
+        "6mm-a11y": "6 MILLIMETERS",
+        "4mm-a11y": "4 MILLIMETERS",
+        "2-5mm-a11y": "2.5 MILLIMETERS",
+        "2mm-a11y": "2 MILLIMETERS",
+        "1mm-a11y": "1 MILLIMETERS",
+        "submm-a11y": "SUBMILLIMETER",
+        "other": "OTHER",
+        "other-a11y": "OTHER BAND"
+      }
     },
     "misc": {
       "placeholderCallsign": "N0CALL"

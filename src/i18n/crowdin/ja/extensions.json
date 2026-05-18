@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (VK/ZL スポット)",
         "dialogTitle": "ParksnPeaks アカウント",
-        "description": "ユーザー名: {{username}}",
+        "description": "アカウント: {{username}}",
         "noAccount": "アカウントなし",
         "pleaseEnterDetails": "ParksnPeaks アカウントの詳細を入力してください:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (SiOTA スポット)",
         "dialogTitle": "ParksnPeaks アカウント",
-        "description": "ユーザー名: {{username}}",
+        "description": "アカウント: {{username}}",
         "noAccount": "アカウントなし",
         "pleaseEnterDetails": "ParksnPeaks アカウントの詳細を入力してください:",
         "usernameLabel": "ユーザー名 (コールサインではありません)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (SOTAWatch でのスポット)",
         "dialogTitle": "SOTA アカウント",
-        "description": "{{callsign}} でログイン中",
+        "description": "アカウント: {{callsign}}",
         "noAccount": "アカウントなし",
         "error": "アカウント詳細の取得に失敗しました",
         "connect": "SOTA アカウントに接続してください"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (ZLOTA スポット)",
         "dialogTitle": "ZLOTA アカウント",
-        "description": "コールサイン: {{callsign}}",
+        "description": "アカウント: {{callsign}}",
         "noAccount": "アカウントなし",
         "pleaseEnterDetails": "ZLOTA アカウントの詳細を入力してください:",
         "callsignLabel": "コールサイン",

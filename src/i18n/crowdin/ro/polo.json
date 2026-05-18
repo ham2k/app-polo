@@ -497,7 +497,13 @@
         "custom": "Personalizat"
       },
       "syncLinkingDialog": {
-        "description": "Introduceți codul afişat pe celălalt dispozitiv pentru a-l conecta la acest cont."
+        "title": "Serviciul de Sincronizare a Înregistrărilor Ham2K",
+        "enterCode": "Introduceți codul afișat pe celălalt dispozitiv pentru a-l conecta la acest cont.",
+        "linkExpired": "Cererea a expirat. Vă rugăm să încercați din nou.",
+        "areYouSure-md": "Ești sigur că vrei să conectezi \"**{{device}}**\" cu acest cont?",
+        "requestNotFound": "Cererea nu a fost găsită. Vă rugăm să încercați din nou.",
+        "buttonCancel": "Nu, anulează",
+        "buttonProcees": "Da, conectează-l!"
       },
       "deviceNotLinked": "Dispozitiv neconectat! ({{id}})",
       "anonymousAccount": "Cont Anonim (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Dezvoltare)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Oficial)",
         "custom": "Personalizat ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "Codul nu a fost găsit. Vă rugăm să încercați din nou.",
-        "areYouSure-md": "Ești sigur că dorești să conectezi „**{{device}}**” la acest cont?",
-        "buttonCancel": "Nu, Anulează",
-        "buttonProcees": "Da, Conectează-l!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Acest dispozitiv a fost sincronizat ultima dată cu un cont diferit (#{{id}}).\n\nPentru a continua sincronizarea, trebuie să alegeți între următoarele opțiuni:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Vă rugăm să îl căutați și să urmați instrucțiunile.",
         "confirmLink-md": "Deschideți aplicația pe un dispozitiv deja conectat cu **{{email}}** și confirmați această solicitare introducând codul următor:",
         "confirmLinkPost-md": "Dacă nu aveți acces la alt dispozitiv conectat cu acest cont, puteți:",
+        "accountNotFound": "Contul nu a fost găsit.",
+        "connectViaEmailButton": "Sau... conectează-te prin email",
+        "linkViaQRAccountText": "Scanează acest cod QR de pe un dispozitiv cu un Cont Ham2K LoFi existent",
+        "linkViaQRButton": "Sau... conectează-te prin cod QR",
         "confirmViaEmailButton": "Confirmați prin email",
         "changeAccountButton": "Schimbați Contul",
         "resendButton": "Trimiteți emailul din nou",

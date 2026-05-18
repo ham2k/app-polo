@@ -497,7 +497,13 @@
         "custom": "カスタム"
       },
       "syncLinkingDialog": {
-        "description": "このアカウントにリンクするために、他のデバイスに表示されているコードを入力してください。"
+        "title": "Ham2K ログファイラー 同期サービス",
+        "enterCode": "このアカウントにリンクするために、他のデバイスに表示されているコードを入力してください。",
+        "linkExpired": "リクエストが期限切れです。もう一度お試しください。",
+        "areYouSure-md": "本当に\"**{{device}}**\"をこのアカウントにリンクしますか？",
+        "requestNotFound": "リクエストが見つかりませんでした。もう一度お試しください。",
+        "buttonCancel": "いいえ、キャンセルします",
+        "buttonProcees": "はい、リンクします！"
       },
       "deviceNotLinked": "デバイスがリンクされていません！({{id}})",
       "anonymousAccount": "匿名アカウント (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (開発版)",
         "https://lofi.ham2k.net": "Ham2K LoFi (正式版)",
         "custom": "カスタム ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "コードが見つかりませんでした。もう一度やり直してください。",
-        "areYouSure-md": "本当に\"**{{device}}**\"をこのアカウントにリンクしますか？",
-        "buttonCancel": "いいえ、キャンセルします",
-        "buttonProcees": "はい、リンクします！"
       },
       "askAboutMergingAccounts": {
         "warning-md": "このデバイスは最後に別のアカウント (#{{id}}) と同期しました。\n\n同期を続行するには、次のオプションから選択する必要があります:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "指示に従ってください。",
         "confirmLink-md": "**{{email}}**ですでにリンクされているデバイスでアプリを開き、次のコードを入力してこのリクエストを確認してください：",
         "confirmLinkPost-md": "このアカウントにリンクされた他のデバイスにアクセスできない場合は、次の操作を行います：",
+        "accountNotFound": "アカウントが見つかりません。",
+        "connectViaEmailButton": "または…メールで接続する",
+        "linkViaQRAccountText": "存在するHam2K LoFiアカウントのあるデバイスからこのQRコードをスキャンしてください",
+        "linkViaQRButton": "または…QRコードで接続する",
         "confirmViaEmailButton": "メールで確認",
         "changeAccountButton": "アカウントを変更",
         "resendButton": "再度メールを送信",

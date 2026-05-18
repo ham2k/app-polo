@@ -204,8 +204,14 @@
       "accept-a11y": "accept changes",
       "revert": "revert",
       "revert-a11y": "revert changes",
+      "apply": "apply",
+      "connect": "connect",
       "save": "save",
       "export": "export"
+    },
+    "errors": {
+      "generic": "something went wrong. please try again later.",
+      "genericShort": "something went wrong."
     },
     "version": {
       "general": "{{month}} '{{year}}",
@@ -235,7 +241,7 @@
         "Staging": "unstable",
         "Development": "bleeding edge"
       },
-      "versionIsAvailable-md": "version {{versionName}} is available.",
+      "versionIsAvailable-md": "update to {{versionName}} is available.",
       "updateNow": "update now",
       "newVersionAvailable-md": "a new version of polo is available!"
     },
@@ -288,7 +294,7 @@
         "core": "core features",
         "locationBased": "location-based activities",
         "contestsAndFieldOps": "contests & field ops",
-        "lookup": "data lookup",
+        "lookup": "data lookup & spotting",
         "devmode": "developer mode",
         "other": "other features"
       }
@@ -300,6 +306,58 @@
       "NA": "north america",
       "SA": "south america",
       "OC": "oceania"
+    },
+    "modes": {
+      "names": {
+        "SSB": "ssb",
+        "SSB-a11y": "single sideband",
+        "USB": "usb",
+        "USB-a11y": "upper sideband",
+        "LSB": "lsb",
+        "LSB-a11y": "lower sideband",
+        "RTTY": "rtty",
+        "RTTY-a11y": "ritty",
+        "CW": "cw",
+        "CW-a11y": "c.w.",
+        "FM": "fm",
+        "FM-a11y": "f.m.",
+        "AM": "am",
+        "AM-a11y": "a.m.",
+        "other": "other",
+        "other-a11y": "other mode"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 meters",
+        "80m-a11y": "80 meters",
+        "60m-a11y": "60 meters",
+        "40m-a11y": "40 meters",
+        "30m-a11y": "30 meters",
+        "20m-a11y": "20 meters",
+        "17m-a11y": "17 meters",
+        "15m-a11y": "15 meters",
+        "12m-a11y": "12 meters",
+        "11m-a11y": "11 meters",
+        "10m-a11y": "10 meters",
+        "6m-a11y": "6 meters",
+        "2m-a11y": "2 meters",
+        "70cm-a11y": "70 centimeters",
+        "23cm-a11y": "23 centimeters",
+        "13cm-a11y": "13 centimeters",
+        "9cm-a11y": "9 centimeters",
+        "6cm-a11y": "6 centimeters",
+        "3cm-a11y": "3 centimeters",
+        "1-25cm-a11y": "1.25 centimeters",
+        "6mm-a11y": "6 millimeters",
+        "4mm-a11y": "4 millimeters",
+        "2-5mm-a11y": "2.5 millimeters",
+        "2mm-a11y": "2 millimeters",
+        "1mm-a11y": "1 millimeters",
+        "submm-a11y": "submillimeter",
+        "other": "other",
+        "other-a11y": "other band"
+      }
     },
     "misc": {
       "placeholderCallsign": "n0call"

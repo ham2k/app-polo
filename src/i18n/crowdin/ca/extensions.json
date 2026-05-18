@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (anuncis VK/ZL)",
         "dialogTitle": "Compte de ParksnPeaks",
-        "description": "Nom d'usuari: {{username}}",
+        "description": "Compte: {{username}}",
         "noAccount": "Sense compte",
         "pleaseEnterDetails": "Si us plau, introdueix les dades per al teu compte de ParksnPeaks:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (anuncis SiOTA)",
         "dialogTitle": "Compte ParksnPeaks",
-        "description": "Nom d'usuari: {{username}}",
+        "description": "Compte: {{username}}",
         "noAccount": "Cap compte",
         "pleaseEnterDetails": "Introduïu els detalls del vostre compte ParksnPeaks:",
         "usernameLabel": "Nom d'usuari (no indicatiu)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (per l'autoanunci de SOTAWatch)",
         "dialogTitle": "Compte SOTA",
-        "description": "Connectat com {{callsign}}",
+        "description": "Compte: {{callsign}}",
         "noAccount": "Cap compte",
         "error": "Error en obtenir detalls del compte",
         "connect": "Connecta el teu compte SOTA"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (senyalització ZLOTA)",
         "dialogTitle": "Compte ZLOTA",
-        "description": "Indicatiu: {{callsign}}",
+        "description": "Compte: {{callsign}}",
         "noAccount": "Cap compte",
         "pleaseEnterDetails": "Introduïu els detalls del vostre compte ZLOTA:",
         "callsignLabel": "Indicatiu",

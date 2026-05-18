@@ -294,7 +294,7 @@
         "core": "核心功能",
         "locationBased": "基于位置的活动",
         "contestsAndFieldOps": "竞赛和现场操作",
-        "lookup": "数据查找",
+        "lookup": "数据查询与发现",
         "devmode": "开发者模式",
         "other": "其他功能"
       }

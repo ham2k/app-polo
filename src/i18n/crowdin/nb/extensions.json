@@ -423,7 +423,7 @@
       "account": {
         "title": "ParksnPeaks (VK/ZL spotting)",
         "dialogTitle": "ParksnPeaks-konto",
-        "description": "Brukernavn: {{username}}",
+        "description": "Konto: {{username}}",
         "noAccount": "Ingen konto",
         "pleaseEnterDetails": "Vennligst oppgi detaljene for din ParksnPeaks-konto:"
       },
@@ -515,7 +515,7 @@
       "account": {
         "title": "ParksnPeaks (SiOTA spotting)",
         "dialogTitle": "ParksnPeaks-konto",
-        "description": "Brukernavn: {{username}}",
+        "description": "Konto: {{username}}",
         "noAccount": "Ingen konto",
         "pleaseEnterDetails": "Vennligst oppgi detaljene for din ParksnPeaks-konto:",
         "usernameLabel": "Brukernavn (ikke kallesignal)",
@@ -550,7 +550,7 @@
       "account": {
         "title": "SOTA (for SOTAWatch selvspotting)",
         "dialogTitle": "SOTA-konto",
-        "description": "Innlogget som {{callsign}}",
+        "description": "Konto: {{callsign}}",
         "noAccount": "Ingen konto",
         "error": "Feil ved henting av kontodetaljer",
         "connect": "Koble til din SOTA-konto"
@@ -855,7 +855,7 @@
       "account": {
         "title": "ZLOTA (ZLOTA spotting)",
         "dialogTitle": "ZLOTA-konto",
-        "description": "Kallesignal: {{callsign}}",
+        "description": "Konto: {{callsign}}",
         "noAccount": "Ingen konto",
         "pleaseEnterDetails": "Vennligst oppgi detaljene for din ZLOTA-konto:",
         "callsignLabel": "Kallesignal",

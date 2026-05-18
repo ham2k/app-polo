@@ -223,6 +223,10 @@
         "title": "sync settings",
         "description": "cloud sync and backup"
       },
+      "accountsSettings": {
+        "title": "accounts & services",
+        "description": "qrz.com and other services"
+      },
       "appFeatures": {
         "title": "app features",
         "description": "manage features like pota, sota, etc"
@@ -230,23 +234,6 @@
       "developerSettings": {
         "title": "developer settings",
         "description": "here be dragons"
-      },
-      "accountsQRZ": {
-        "title": "qrz (for callsign lookups)",
-        "description": "login: {{login}}",
-        "noAccount": "no account",
-        "errorEmail": "don't use your email for login.",
-        "dialogTitle": "qrz.com account",
-        "pleaseEnterDetails": "please enter the details for your qrz.com account:",
-        "loginLabel": "login (your callsign)",
-        "loginPlaceholder": "your login",
-        "passwordLabel": "password",
-        "passwordPlaceholder": "your password",
-        "checkCredentials": "check credentials"
-      },
-      "wavelogSettings": {
-        "title": "wavelog settings",
-        "description": "configure wavelog api connection"
       },
       "contribute": {
         "isASupporter": "{{callsign}} is a supporter of ham2k",
@@ -469,18 +456,64 @@
       "recordsCount_one": "1 record",
       "recordsCount_other": "{{fmtCount}} records"
     },
+    "accountsSettings": {
+      "title": "accounts & services",
+      "description": "qrz.com and other services",
+      "accountsSection": "credentials",
+      "servicesSection": "services",
+      "accountsQRZ": {
+        "title": "qrz (for callsign lookups)",
+        "description": "login: {{login}}",
+        "noAccount": "no account",
+        "errorEmail": "don't use your email for login.",
+        "dialogTitle": "qrz.com account",
+        "pleaseEnterDetails": "please enter the details for your qrz.com account:",
+        "loginLabel": "login (your callsign)",
+        "loginPlaceholder": "your login",
+        "passwordLabel": "password",
+        "passwordPlaceholder": "your password",
+        "checkCredentials": "check credentials"
+      }
+    },
+    "wavelogSettings": {
+      "title": "wavelog settings",
+      "description": "configure wavelog api connection",
+      "noStationsFoundOrInvalidResponse": "no stations found or invalid response",
+      "errorFetchingStations": "error fetching stations: {{message}}",
+      "fetchStations": "fetch stations",
+      "selectStation": "select station",
+      "selectedStation": "selected station: {{station}}"
+    },
     "syncSettings": {
       "title": "sync settings",
       "description": "ham2k lofi offers a reliable sync service between all your devices and provides a backup for your operation data in the cloud.",
+      "activePlan": "active plan: {{plan}}",
+      "noActivePlan": "no active plan",
       "syncService": "sync service",
       "syncService.enabled": "enabled",
       "syncService.disabled": "disabled",
+      "syncServiceDialog": {
+        "title": "ham2k log filer sync service",
+        "custom": "custom"
+      },
+      "syncLinkingDialog": {
+        "title": "ham2k log filer sync service",
+        "enterCode": "enter the code displayed on the other device to link it to this account.",
+        "linkExpired": "the request has expired. please try again.",
+        "areYouSure-md": "are you sure you want to link \"**{{device}}**\" with this account?",
+        "requestNotFound": "request not found. please try again.",
+        "buttonCancel": "no, cancel",
+        "buttonProcees": "yes, link it!"
+      },
       "deviceNotLinked": "device not linked! ({{id}})",
       "anonymousAccount": "anonymous account (#{{id}})",
       "enableSyncToLinkDevice": "enable sync to link this device",
+      "pendingChallenges": "connection requests",
+      "pendingChallengesDescription": "there are pending requests to connect other devices to this account.",
       "checkEmailInboxForConfirmation": "(check your email inbox for confirmation)",
       "accountNumber": "account #{{id}}",
       "pendingEmailConfirmation": "(pending email confirmation)",
+      "accountPendingConfirmation": "(pending confirmation)",
       "tapToConfigure": "tap to configure",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "ham2k lofi (development)",
@@ -504,6 +537,7 @@
         "title": "combine local data?",
         "text": "are you sure you want to combine these operations and qsos with the new account?\n\nthis will combine qsos on this device with what's already in the sync service for the new account, and can accidentally result in mixing unrelated logs!\n\nthis operation cannot be undone.",
         "buttonCancel": "no, cancel",
+        "buttonText": "yes, i'll take the risk! combine them!",
         "buttonProcees": "yes, i'll take the risk! combine them!"
       },
       "replaceDataAlert": {
@@ -519,9 +553,24 @@
       },
       "syncAccountDialog": {
         "title": "ham2k lofi account",
+        "changeEmailText": "change the recovery email for this account:",
+        "setEmailText": "set an email for your account. it can be used to identify it and make it easier to recover later.",
         "emailAddressLabel": "email address",
-        "resendButton": "resend",
-        "revertButton": "revert",
+        "linkWithOtherButton": "or… connect with an existing account",
+        "linkAccountText": "connect with an existing account:",
+        "keepExistingAccountButton": "or… keep existing account",
+        "pendingEmailTextPre": "an email has been sent to",
+        "pendingEmailTextPost": "please look for it and follow the instructions.",
+        "confirmLink-md": "open the app on a device already linked with **{{email}}** and confirm this request by entering the following code:",
+        "confirmLinkPost-md": "if you don't have access to another device linked to this account, you can:",
+        "accountNotFound": "account not found.",
+        "connectViaEmailButton": "or… connect via email",
+        "linkViaQRAccountText": "scan this qr code from a device with an existing ham2k lofi account",
+        "linkViaQRButton": "or… connect via qr code",
+        "confirmViaEmailButton": "confirm via email",
+        "changeAccountButton": "change account",
+        "resendButton": "send email again",
+        "revertButton": "change email",
         "syncFirstButton": "go back and complete syncing first",
         "continueAnywayButton": "i know what i'm doing! continue anyway",
         "potentialForDataLoss": "potential for data loss!!!",
@@ -649,52 +698,13 @@
       "bands": {
         "title": "bands",
         "showCommonBands": "show common bands",
-        "showAllBands": "show all bands",
-        "names": {
-          "160m-a11y": "160 meters",
-          "80m-a11y": "80 meters",
-          "60m-a11y": "60 meters",
-          "40m-a11y": "40 meters",
-          "30m-a11y": "30 meters",
-          "20m-a11y": "20 meters",
-          "17m-a11y": "17 meters",
-          "15m-a11y": "15 meters",
-          "12m-a11y": "12 meters",
-          "11m-a11y": "11 meters",
-          "10m-a11y": "10 meters",
-          "6m-a11y": "6 meters",
-          "2m-a11y": "2 meters",
-          "70cm-a11y": "70 centimeters",
-          "23cm-a11y": "23 centimeters",
-          "13cm-a11y": "13 centimeters",
-          "9cm-a11y": "9 centimeters",
-          "6cm-a11y": "6 centimeters",
-          "3cm-a11y": "3 centimeters",
-          "1-25cm-a11y": "1.25 centimeters",
-          "6mm-a11y": "6 millimeters",
-          "4mm-a11y": "4 millimeters",
-          "2-5mm-a11y": "2.5 millimeters",
-          "2mm-a11y": "2 millimeters",
-          "1mm-a11y": "1 millimeters",
-          "submm-a11y": "submillimeter",
-          "other": "other",
-          "other-a11y": "other band"
-        }
+        "showAllBands": "show all bands"
       },
       "modes": {
         "title": "modes",
         "showMoreModes": "show more modes",
         "showEvenMoreModes": "show even more modes",
-        "showFewerModes": "show fewer modes",
-        "names": {
-          "SSB-a11y": "single sideband",
-          "USB-a11y": "upper sideband",
-          "LSB-a11y": "lower sideband",
-          "RTTY-a11y": "ritty",
-          "CW-a11y": "c.w.",
-          "other": "other",
-          "other-a11y": "other mode"
-        }
+        "showFewerModes": "show fewer modes"
       }
     },
     "exportSettings": {
@@ -734,14 +744,6 @@
     },
     "extensionSettings": {
       "title": "extension"
-    },
-    "wavelogSettings": {
-      "title": "wavelog settings",
-      "noStationsFoundOrInvalidResponse": "no stations found or invalid response",
-      "errorFetchingStations": "error fetching stations: {{message}}",
-      "fetchStations": "fetch stations",
-      "selectStation": "select station",
-      "selectedStation": "selected station: {{station}}"
     },
     "operationScreen": {
       "paneSeparator-a11y": "pane separator",

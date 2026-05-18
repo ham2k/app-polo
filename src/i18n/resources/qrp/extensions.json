@@ -337,6 +337,62 @@
         "unknownSummit": "unknown summit"
       }
     },
+    "llota": {
+      "name": "llota: lakes and lagoons on the air",
+      "shortName": "llota",
+      "exportName": "llota activation",
+      "activityOptions": {
+        "title_zero": "no lakes selected for activation",
+        "title_one": "activating 1 lake",
+        "title_other": "activating {{count}} lakes",
+        "noLakesFound": "no lakes found",
+        "nearestMatches": "nearest {{limit}} of {{count}} matches",
+        "matchingRefs_zero": "no matching lakes",
+        "matchingRefs_one": "1 matching lake",
+        "matchingRefs_other": "{{count}} matching lakes",
+        "searchForRefs": "search for some lakes to activate!",
+        "noRefsNearby": "no lakes nearby",
+        "nearbyRefs": "nearby lakes",
+        "searchPlaceholder": "name or reference…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "no l2ls",
+        "ref2refCount_one": "1 l2l",
+        "ref2refCount_other": "{{fmtCount}} l2ls",
+        "huntedRefsCount_zero": "no lakes hunted",
+        "huntedRefsCount_one": "1 lake hunted",
+        "huntedRefsCount_other": "{{fmtCount}} lakes hunted",
+        "activatorQSOsCount_zero": "no activator qsos",
+        "activatorQSOsCount_one": "1 activator qso",
+        "activatorQSOsCount_other": "{{fmtCount}} activator qsos",
+        "ref2refQSOsCount_zero": "no l2l qsos",
+        "ref2refQSOsCount_one": "1 l2l qso",
+        "ref2refQSOsCount_other": "{{fmtCount}} l2l qsos",
+        "huntedQSOsCount_zero": "no hunted qsos",
+        "huntedQSOsCount_one": "1 hunted qso",
+        "huntedQSOsCount_other": "{{fmtCount}} hunted qsos",
+        "operationTotals": "operation totals",
+        "referencesActivatedCount_zero": "no lakes activated",
+        "referencesActivatedCount_one": "1 lake activated",
+        "referencesActivatedCount_other": "{{fmtCount}} lakes activated",
+        "referencesMissedCount_zero": "no incomplete lakes",
+        "referencesMissedCount_one": "1 incomplete lake",
+        "referencesMissedCount_other": "{{fmtCount}} incomplete lakes",
+        "referencesHuntedCount_zero": "no lakes hunted",
+        "referencesHuntedCount_one": "1 lake hunted",
+        "referencesHuntedCount_other": "{{fmtCount}} lakes hunted"
+      },
+      "loggingControl": {
+        "theirRefLabel": "their llota"
+      },
+      "postSpotAPI": {
+        "error": "error posting llota spot",
+        "serverResponse": "server responded with error {{status}}: {{body}}"
+      },
+      "exampleRefName": "example lake",
+      "unknownRefName": "unknown lake",
+      "noRefsNearby": "no lakes nearby!"
+    },
     "mota": {
       "name": "mills on the air",
       "shortName": "mota",
@@ -359,6 +415,22 @@
       "loggingControl": {
         "theirRefLabel": "their mill"
       }
+    },
+    "parksnpeaks": {
+      "name": "parksnpeaks spotting",
+      "description": "used mostly in vk and zl",
+      "shortName": "pnp",
+      "account": {
+        "title": "parksnpeaks (vk/zl spotting)",
+        "dialogTitle": "parksnpeaks account",
+        "description": "account: {{username}}",
+        "noAccount": "no account",
+        "pleaseEnterDetails": "please enter the details for your parksnpeaks account:"
+      },
+      "usernameLabel": "username (not callsign)",
+      "usernamePlaceholder": "your account username",
+      "apiKeyLabel": "api key (not password)",
+      "apiKeyPlaceholder": "your api key"
     },
     "pga": {
       "name": "polish gmina award",
@@ -443,7 +515,7 @@
       "account": {
         "title": "parksnpeaks (siota spotting)",
         "dialogTitle": "parksnpeaks account",
-        "description": "username: {{username}}",
+        "description": "account: {{username}}",
         "noAccount": "no account",
         "pleaseEnterDetails": "please enter the details for your parksnpeaks account:",
         "usernameLabel": "username (not callsign)",
@@ -478,7 +550,7 @@
       "account": {
         "title": "sota (for sotawatch self-spotting)",
         "dialogTitle": "sota account",
-        "description": "logged in as {{callsign}}",
+        "description": "account: {{callsign}}",
         "noAccount": "no account",
         "error": "error fetching account details",
         "connect": "connect your sota account"
@@ -538,6 +610,60 @@
       "exampleRefName": "example summit",
       "unknownRefName": "unknown summit",
       "noRefsNearby": "no summits nearby!"
+    },
+    "tota": {
+      "activityOptions": {
+        "title_zero": "no towers selected for activation",
+        "title_one": "activating 1 tower",
+        "title_other": "activating {{count}} towers",
+        "noTowersFound": "no towers found",
+        "nearestMatches": "nearest {{limit}} of {{count}} matches",
+        "matchingTowers_zero": "no matching towers",
+        "matchingTowers_one": "1 matching tower",
+        "matchingTowers_other": "{{count}} matching towers",
+        "searchForTowers": "search for some towers to activate!",
+        "noTowersNearby": "no towers nearby",
+        "nearbyTowers": "nearby towers",
+        "searchPlaceholder": "name or reference…",
+        "unknownTower": "unknown tower"
+      },
+      "scoring": {
+        "ref2refCount_zero": "no r2r",
+        "ref2refCount_one": "1 r2r",
+        "ref2refCount_other": "{{fmtCount}} r2r",
+        "huntedRefsCount_zero": "no towers hunted",
+        "huntedRefsCount_one": "1 tower hunted",
+        "huntedRefsCount_other": "{{fmtCount}} towers hunted",
+        "activatorQSOsCount_zero": "no activator qsos",
+        "activatorQSOsCount_one": "1 activator qso",
+        "activatorQSOsCount_other": "{{fmtCount}} activator qsos",
+        "ref2refQSOsCount_zero": "no r2r qsos",
+        "ref2refQSOsCount_one": "1 r2r qso",
+        "ref2refQSOsCount_other": "{{fmtCount}} r2r qsos",
+        "huntedQSOsCount_zero": "no hunted qsos",
+        "huntedQSOsCount_one": "1 hunted qso",
+        "huntedQSOsCount_other": "{{fmtCount}} hunted qsos",
+        "operationTotals": "operation totals",
+        "referencesActivatedCount_zero": "no towers activated",
+        "referencesActivatedCount_one": "1 tower activated",
+        "referencesActivatedCount_other": "{{fmtCount}} towers activated",
+        "referencesMissedCount_zero": "no incomplete towers",
+        "referencesMissedCount_one": "1 incomplete tower",
+        "referencesMissedCount_other": "{{fmtCount}} incomplete towers",
+        "referencesHuntedCount_zero": "no towers hunted",
+        "referencesHuntedCount_one": "1 tower hunted",
+        "referencesHuntedCount_other": "{{fmtCount}} towers hunted"
+      },
+      "loggingControl": {
+        "theirRefLabel": "their tower"
+      },
+      "exampleRefName": "example tower",
+      "unknownRefName": "unknown tower",
+      "noRefsNearby": "no towers nearby!",
+      "postSpotAPI": {
+        "error": "error posting tota spot",
+        "serverResponse": "server responded with status {{status}} {{message}}"
+      }
     },
     "usStates": {
       "statesCount_zero": "no us states",
@@ -729,7 +855,7 @@
       "account": {
         "title": "zlota (zlota spotting)",
         "dialogTitle": "zlota account",
-        "description": "callsign: {{callsign}}",
+        "description": "account: {{callsign}}",
         "noAccount": "no account",
         "pleaseEnterDetails": "please enter the details for your zlota account:",
         "callsignLabel": "callsign",
@@ -762,6 +888,9 @@
     },
     "shared": {
       "scoring": {
+        "dupesCount_zero": "no dupes",
+        "dupesCount_one": "1 dupe",
+        "dupesCount_other": "{{fmtCount}} dupes",
         "ref2refCount_zero": "no ref2refs",
         "ref2refCount_one": "1 ref2ref",
         "ref2refCount_other": "{{fmtCount}} ref2refs",

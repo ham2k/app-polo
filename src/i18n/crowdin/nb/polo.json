@@ -497,7 +497,13 @@
         "custom": "Tilpasset"
       },
       "syncLinkingDialog": {
-        "description": "Skriv inn koden som vises på den andre enheten for å koble den til denne kontoen."
+        "title": "Ham2K Loggfil Synkroniseringstjeneste",
+        "enterCode": "Skriv inn koden som vises på den andre enheten for å koble den til denne kontoen.",
+        "linkExpired": "Forespørselen er utløpt. Vennligst prøv igjen.",
+        "areYouSure-md": "Er du sikker på at du vil koble \"**{{device}}**\" til denne kontoen?",
+        "requestNotFound": "Forespørsel ikke funnet. Vennligst prøv igjen.",
+        "buttonCancel": "Nei, avbryt",
+        "buttonProcees": "Ja, koble den!"
       },
       "deviceNotLinked": "Enhet ikke linket! ({{id}})",
       "anonymousAccount": "Anonym konto (#{{id}})",
@@ -513,12 +519,6 @@
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (Utvikling)",
         "https://lofi.ham2k.net": "Ham2K LoFi (Offisiell)",
         "custom": "Tilpasset ({{server}})"
-      },
-      "askAboutLinkingAccounts": {
-        "codeNotFound": "Koden ble ikke funnet. Vennligst prøv igjen.",
-        "areYouSure-md": "Er du sikker på at du vil koble \"**{{device}}**\" med denne kontoen?",
-        "buttonCancel": "Nei, avbryt",
-        "buttonProcees": "Ja, koble den!"
       },
       "askAboutMergingAccounts": {
         "warning-md": "Denne enheten ble sist synkronisert med en annen konto (#{{id}}).\n\nFor å fortsette synkronisering må du velge mellom følgende alternativer:",
@@ -563,6 +563,10 @@
         "pendingEmailTextPost": "Vennligst se etter den og følg instruksjonene.",
         "confirmLink-md": "Åpne appen på en enhet allerede koblet til **{{email}}** og bekreft denne forespørselen ved å oppgi følgende kode:",
         "confirmLinkPost-md": "Hvis du ikke har tilgang til en annen enhet koblet til denne kontoen, kan du:",
+        "accountNotFound": "Konto ikke funnet.",
+        "connectViaEmailButton": "Eller… koble via e-post",
+        "linkViaQRAccountText": "Skann denne QR-koden fra en enhet med en eksisterende Ham2K LoFi-konto",
+        "linkViaQRButton": "Eller… koble via QR-kode",
         "confirmViaEmailButton": "Bekreft via e-post",
         "changeAccountButton": "Bytt konto",
         "resendButton": "Send e-post igjen",

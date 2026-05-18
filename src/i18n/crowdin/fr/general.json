@@ -294,7 +294,7 @@
         "core": "Fonctionnalités Principales",
         "locationBased": "Activités basées sur la localisation",
         "contestsAndFieldOps": "Concours & opérations sur le terrain",
-        "lookup": "Recherche de données",
+        "lookup": "Recherche de données et repérage",
         "devmode": "Mode développeur",
         "other": "Autres fonctionnalités"
       }
