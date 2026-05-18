@@ -337,7 +337,6 @@ const ReferenceHandler = {
   originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
-    const { uuid, startAtMillis } = qso
     const theirRef = findRef(qso, Info.huntingType)
     const refCount = theirRef ? 1 : 0
     const points = refCount

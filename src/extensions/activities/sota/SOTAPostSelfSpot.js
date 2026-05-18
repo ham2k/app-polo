@@ -25,7 +25,7 @@ export const SOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (disp
 
   let activatorCallsign = operation.stationCall || state.settings.operatorCall
   if (operation.local?.isMultiStation) {
-    activatorCallsign = `${mainCall}/M${operation.local.multiIdentifier ?? "0"}`
+    activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? '0'}`
   }
 
   const ref = findRef(operation, 'sotaActivation')

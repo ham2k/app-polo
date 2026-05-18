@@ -70,6 +70,12 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   const [spotsState, , updateSpotsState] = useUIStateConditionally(isFocused, 'OpSpotsTab', 'spotsState', { spots: {}, lastFetched: 0, loading: false })
   // The keys used to get this state are also referenced in `SpotHistoryExtension`
 
+  console.log('SpotsPanel render', isFocused)
+  useEffect(() => {
+    console.log('SpotsPanel')
+    console.log('-- spotsState', { ...spotsState })
+  }, [spotsState])
+
   const allOperations = useSelectorConditionally(isFocused, selectAllOperations)
 
   const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation.uuid), [operation.uuid])
@@ -102,6 +108,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
   useEffect(() => { // Ensure we refresh if we've been offline for too long
     if (spotsState.lastFetched - Date.now() > 1000 * 2 * REFRESH_INTERVAL_IN_SECONDS) {
+      console.log('SpotsPanel reset last fetched')
       updateSpotsState({ lastFetched: 0 })
     }
   }, [spotsState.lastFetched, updateSpotsState])
@@ -111,7 +118,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   }, [updateSpotsState])
 
   useEffect(() => {
-    if (spotsState.lastFetched === 0) {
+    if (spotsState.lastFetched === 0 && !spotsState.loading) {
+      console.log('SpotsPanel do refresh')
       updateSpotsState({ loading: true })
       setTimeout(async () => {
         await Promise.all(
@@ -128,6 +136,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
                 annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, mode: 'spots' }))
               }
+              console.log('SpotsPanel fetched', hook.key, annotatedSpots)
               updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
             })
           })
@@ -137,7 +146,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     }
   }, [
     allOperations, spotsHooks, online, settings, dispatch,
-    operation, spotsState.lastFetched, updateSpotsState,
+    operation, spotsState.lastFetched, spotsState.loading, updateSpotsState,
     filterState.sources, ourInfo, t
   ])
 

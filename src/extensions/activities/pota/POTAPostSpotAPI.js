@@ -7,7 +7,6 @@
  */
 
 import { Alert } from 'react-native'
-import { useTranslation } from 'react-i18next'
 
 import packageJson from '../../../../package.json'
 import GLOBAL from '../../../GLOBAL'

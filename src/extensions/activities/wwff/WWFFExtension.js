@@ -262,8 +262,6 @@ const ReferenceHandler = {
     if (nearDupes.length === 0) {
       return { value: 1, refCount: 0, type: Info.activationType }
     } else {
-      const thisQSOTime = qso.startAtMillis ?? Date.now()
-
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
       const sameMode = nearDupes.filter(q => q.mode === mode).length !== 0
       const sameBandMode = nearDupes.filter(q => q.band === band && q.mode === mode).length !== 0

@@ -5,8 +5,6 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 
@@ -193,8 +191,6 @@ const ReferenceHandler = {
 
   updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
-      let info = parseCallsign(operation.stationCall || '')
-      info = annotateFromCountryFile(info)
       const [lat, lon] = gridToLocation(operation.grid)
 
       let nearby = await totaFindAllByLocation(lat, lon, 0.25)
@@ -241,5 +237,5 @@ const ReferenceHandler = {
 
   scoringForQSO: generateActivityScorer({ info: Info }),
   accumulateScoreForOperation: generateActivityOperationAccumulator({ info: Info }),
-  summarizeScore: generateActivitySumarizer({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info })
 }

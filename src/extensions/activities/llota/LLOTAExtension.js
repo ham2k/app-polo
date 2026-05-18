@@ -23,7 +23,6 @@ import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import GLOBAL from '../../../GLOBAL'
-import { filterNearDupes, filterQSOsWithSectionRefs } from '../../../tools/qsonTools'
 import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
@@ -118,7 +117,6 @@ const SpotsHook = {
     if (online) {
       const spotRef = findRef(spot, Info.huntingType)
       if (spotRef) {
-        const args = { call: spot.their.call, ref: spotRef.ref }
         const spotComments = spot.sourceInfo?.comments || []
 
         const filteredSpotComment = spotComments.find(x =>
@@ -297,116 +295,6 @@ const ReferenceHandler = {
 
   scoringForQSO: generateActivityScorer({ info: Info }),
   accumulateScoreForDay: generateActivityDailyAccumulator({ info: Info }),
-  summarizeScore: generateActivitySumarizer({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info })
 
-  originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
-    const { band, mode, uuid, startAtMillis } = qso
-
-    const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
-
-    const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
-    const refCount = refs.length
-    let value
-    let type
-    if (scoredRef?.ref) {
-      type = Info.activationType
-      value = refCount || 1
-    } else {
-      type = Info.huntingType
-      value = refCount
-    }
-
-    if (value === 0) return { value: 0 } // If not activating, only counts if other QSO has a LLOTA ref
-
-    const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
-    if (DEBUG) console.log('-- nearDupes', qso.uuid, qso.key, nearDupes)
-
-    if (nearDupes.length === 0) {
-      if (DEBUG) console.log('-- no dupes', { value, refCount, type })
-      return { value, refCount, type }
-    } else {
-      const thisQSOTime = qso.startAtMillis ?? Date.now()
-      const day = thisQSOTime - (thisQSOTime % TWENTY_FOUR_HOURS_IN_MILLIS)
-
-      const sameDayDupes = nearDupes.filter(q => (q.startAtMillis - (q.startAtMillis % TWENTY_FOUR_HOURS_IN_MILLIS)) === day)
-
-      const sameDay = sameDayDupes.length !== 0
-      const sameBand = sameDayDupes.filter(q => q.band === band).length !== 0
-      const sameMode = sameDayDupes.filter(q => q.mode === mode).length !== 0
-      const sameBandMode = sameDayDupes.filter(q => q.band === band && q.mode === mode).length !== 0
-      const sameRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
-      const dupesHadRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).length !== 0).length !== 0
-
-      if (DEBUG) console.log('-- ', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
-
-      if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
-        if (DEBUG) console.log('-- duplicate', qso.uuid, { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
-        if (refs.length === 0 && dupesHadRefs && !qso.uuid) return { value: 0, refCount, notices: ['maybeDupe'], type }
-        return { value: 0, refCount, alerts: ['duplicate'], type }
-      } else {
-        const notices = []
-        if (refs.length > 0 && !sameRefs) notices.push('newRef') // only if at new ref
-        if (!sameDay) notices.push('newDay')
-        if (!sameMode) notices.push('newMode')
-        if (!sameBand) notices.push('newBand')
-
-        if (DEBUG) console.log('-- near duplicate', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
-        return { value, refCount, notices, type }
-      }
-    }
-  },
-
-  originalAccumulateScoreForDay: ({ qsoScore, score, operation, ref }) => {
-    if (!ref?.ref) return score // No scoring if not activating
-    if (!score?.key) score = undefined // Reset if score doesn't have the right shape
-    score = score ?? {
-      key: ref?.type,
-      icon: Info.icon,
-      label: Info.shortName,
-      value: 0,
-      refCount: 0,
-      extraRefs: 0,
-      refs: {},
-      primaryRef: undefined,
-      for: 'day'
-    }
-
-    if (!score.refs[ref.ref]) { // Track how many references we're activating
-      score.refs[ref.ref] = 1
-      score.primaryRef = score.primaryRef || ref.ref
-    } else {
-      score.refs[ref.ref] += 1
-    }
-
-    if (score.primaryRef === ref.ref) { // Only do scoring for the primary ref
-      score.value = score.value + qsoScore.value
-      score.refCount = score.refCount + qsoScore.refCount
-      if (qsoScore.refCount > 1) score.extraRefs = score.extraRefs + qsoScore.refCount - 1
-    }
-
-    return score
-  },
-
-  originalSummarizeScore: ({ score, operation, ref, section }) => {
-    score.activated = score.value >= 10
-
-    if (score.activated) {
-      score.summary = '✓'
-    } else {
-      score.summary = `${score.value}/10`
-    }
-
-    if (score.refCount > 0) {
-      const label = score.primaryRef ? 'P2P' : 'P'
-      if (score.extraRefs > 0) {
-        score.summary = [score.summary, `${score.refCount - score.extraRefs}+${score.extraRefs} ${label}`].filter(x => x).join(' • ')
-      } else {
-        score.summary = [score.summary, `${score.refCount} ${label}`].filter(x => x).join(' • ')
-      }
-    }
-    score.longSummary = [score.summary, `${score.value} Contacts`].filter(x => x).join(' • ')
-
-    return score
-  }
 }
-
