@@ -21,7 +21,7 @@ export function ZLOTAAccountSetting ({ settings, styles }) {
     <>
       <H2kListItem
         title={t('extensions.zlota.account.title', 'ZLOTA (ZLOTA spotting)')}
-        description={settings?.accounts?.zlota?.userId ? t('extensions.zlota.account.description', 'Callsign: {{callsign}}', { callsign: settings.accounts.zlota.userId }) : t('extensions.zlota.account.noAccount', 'No account')}
+        description={settings?.accounts?.zlota?.userId ? t('extensions.zlota.account.description', 'Account: {{callsign}}', { callsign: settings.accounts.zlota.userId }) : t('extensions.zlota.account.noAccount', 'No account')}
         leftIcon={'web'}
         onPress={() => setCurrentDialog('accountsZLOTA')}
       />

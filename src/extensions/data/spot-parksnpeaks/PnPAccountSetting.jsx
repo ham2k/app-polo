@@ -21,7 +21,7 @@ export function PnPAccountSetting ({ settings, styles }) {
     <React.Fragment>
       <H2kListItem
         title={t('extensions.spots.parksnpeaks.account.title', 'ParksnPeaks (VK/ZL spotting)')}
-        description={settings?.accounts?.parksnpeaks?.userId ? t('extensions.spots.parksnpeaks.account.description', 'Username: {{username}}', { username: settings.accounts.parksnpeaks.userId }) : t('extensions.spots.parksnpeaks.account.noAccount', 'No account')}
+        description={settings?.accounts?.parksnpeaks?.userId ? t('extensions.spots.parksnpeaks.account.description', 'Account: {{username}}', { username: settings.accounts.parksnpeaks.userId }) : t('extensions.spots.parksnpeaks.account.noAccount', 'No account')}
         leftIcon="web"
         onPress={() => setCurrentDialog('accountsPnP')}
       />

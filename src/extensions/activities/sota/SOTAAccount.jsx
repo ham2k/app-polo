@@ -25,7 +25,7 @@ export function SOTAAccountSetting ({ settings, styles }) {
       <H2kListItem
         title={t('extensions.sota.account.title', 'SOTA (for SOTAWatch self-spotting)')}
         description={settings?.accounts?.sota?.idToken
-          ? t('extensions.sota.account.description', 'Logged in as {{callsign}}', { callsign: accountQueryResults.data?.attributes?.Callsign?.[0] || '…' })
+          ? t('extensions.sota.account.description', 'Account: {{callsign}}', { callsign: accountQueryResults.data?.attributes?.Callsign?.[0] || '…' })
           : t('extensions.sota.account.noAccount', 'No account')
         }
         leftIcon="web"

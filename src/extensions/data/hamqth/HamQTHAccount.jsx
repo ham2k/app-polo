@@ -26,7 +26,7 @@ export function HamQTHAccountSetting ({ settings, styles }) {
     <>
       <H2kListItem
         title={t('extensions.hamqth.account.title', 'HamQTH (for callsign lookups)')}
-        description={settings?.accounts?.hamqth ? t('extensions.hamqth.account.description', 'Login: {{login}}', { login: settings.accounts.hamqth.login }) : t('extensions.hamqth.account.noAccount', 'No account')}
+        description={settings?.accounts?.hamqth ? t('extensions.hamqth.account.description', 'Account: {{login}}', { login: settings.accounts.hamqth.login }) : t('extensions.hamqth.account.noAccount', 'No account')}
         leftIcon={'web'}
         onPress={() => setCurrentDialog('accountsHamQTH')}
       />

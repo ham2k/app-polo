@@ -40,7 +40,7 @@ export default function AccountsSettingsScreen ({ navigation, splitView }) {
         <H2kListSection title={t('screens.accountsSettings.accountsSection', 'Credentials')}>
           <H2kListItem
             title={t('screens.accountsSettings.accountsQRZ.title', 'QRZ (for callsign lookups)')}
-            description={settings?.accounts?.qrz ? t('screens.accountsSettings.accountsQRZ.description', 'Login: {{login}}', { login: settings.accounts.qrz.login }) : t('screens.accountsSettings.accountsQRZ.noAccount', 'No account')}
+            description={settings?.accounts?.qrz ? t('screens.accountsSettings.accountsQRZ.description', 'Account: {{login}}', { login: settings.accounts.qrz.login }) : t('screens.accountsSettings.accountsQRZ.noAccount', 'No account')}
             leftIcon="web"
             onPress={() => setCurrentDialog('accountsQRZ')}
           />
