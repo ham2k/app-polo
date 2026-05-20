@@ -44,7 +44,8 @@ import EventEditingPanel from './LoggingPanel/EventEditingPanel/EventEditingPane
 import { manageNextQSO } from './LoggingPanel/loggingFunctions'
 import { useUIState } from '../../../../store/ui'
 
-const DEBUG = false
+const DEBUG = true
+// const DEBUG = false
 
 export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
@@ -59,7 +60,7 @@ export default function LoggingPanel ({
   const [qso, setQSO, updateQSO] = useUIState('OpLoggingTab', 'qso')
   const [originalQSO, setOriginalQSO] = useUIState('OpLoggingTab', 'originalQSO')
   const [hasChanges, setHasChanges] = useUIState('OpLoggingTab', 'hasChanges')
-  const [undoInfo, setUndoInfo] = useUIState('OpLoggingTab', 'undoInfo')
+  const [undoInfo, setUndoInfo] = useState('OpLoggingTab', 'undoInfo')
   const [, setSelectedUUID] = useUIState('OpLoggingTab', 'selectedUUID')
   const [, setLastUUID] = useUIState('OpLoggingTab', 'lastUUID')
   const [, setCallStack] = useUIState('OpLoggingTab', 'callStack')
@@ -75,7 +76,7 @@ export default function LoggingPanel ({
     if (qso?.uuid && qso?.uuid !== originalQSO?.uuid) {
       setOriginalQSO(cloneDeep(qso))
       setHasChanges(!!qso?._isSuggested)
-      // setUndoInfo(undefined)
+      setUndoInfo(undefined)
     } else {
       setHasChanges(!!qso?._isSuggested || JSON.stringify(qso) !== JSON.stringify(originalQSO))
     }
@@ -150,6 +151,13 @@ export default function LoggingPanel ({
       }, info.timeout)
     }
     actualSetCommandInfo(info)
+
+    return () => {
+      if (commandInfoTimeoutRef.current) {
+        actualSetCommandInfo(undefined)
+        clearTimeout(commandInfoTimeoutRef.current)
+      }
+    }
   }, [actualSetCommandInfo])
 
   const handleFieldChange = useCallback((event) => { // Handle form fields and update QSO info
@@ -259,12 +267,14 @@ export default function LoggingPanel ({
         qso.deleted = qso._willBeDeleted
         delete qso._willBeDeleted
         await dispatch(addQSO({ uuid: operation.uuid, qso }))
+        await setUndoInfo(undefined)
         await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
         trackEvent(eventName, { their_prefix: qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
       } else if (qso?.event && !qso?.deleted) {
         // Events are just saved as-is, no extra processing needed.
         await setLastUUID(qso.uuid)
         await dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
+        await setUndoInfo(undefined)
         await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
       } else if (qso && isValidQSO && !qso?.deleted) {
         setCurrentSecondaryControl(undefined)
@@ -342,13 +352,14 @@ export default function LoggingPanel ({
           // But leave enough time for blur effects to take place before being overwritten by the new setQSO
           // Just 10ms did not seemed to be enough in tests, but 50ms is fine.
 
-          await dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
+          dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
           if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
           // Let queue management decide what to do next
-          await setLastUUID(lastUUID)
-          await setCallStack(callStack)
-          await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+          setLastUUID(lastUUID)
+          setCallStack(callStack)
+          setUndoInfo(undefined)
+          dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
         }, 50)
 
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
@@ -369,10 +380,14 @@ export default function LoggingPanel ({
         dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
       }
       if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current)
+      console.log('timeout for undo')
       undoTimeoutRef.current = setTimeout(() => {
+        console.log('clear undo on timeout')
         setUndoInfo(undefined)
       }, 5 * 1000) // Undo will clear after 5 seconds
       return () => {
+        console.log('clear undo on unmount')
+        setUndoInfo(undefined)
         if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current)
       }
     }
