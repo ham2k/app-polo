@@ -780,7 +780,7 @@ function mainExchangeForOperation (props) {
         innerRef={refStack.shift()}
         style={[styles.input, { minWidth: styles.oneSpace * 10, flex: 1 }]}
         textStyle={styles.text.callsign}
-        label={'Name'}
+        label={'QP Name'}
         placeholder={'Name'}
         keyboard="dumb"
         uppercase={true}
@@ -803,7 +803,7 @@ function mainExchangeForOperation (props) {
       innerRef={refStack.shift()}
       style={[styles.input, { minWidth: styles.oneSpace * (qp.options?.countyLine ? 9 : 7), flex: 1 }]}
       textStyle={styles.text.callsign}
-      label={'Location'}
+      label={'QP Location'}
       placeholder={''}
       keyboard={'dumb'}
       uppercase={true}

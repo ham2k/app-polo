@@ -379,31 +379,31 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       </Text>
       <Menu.Item
         leadingIcon="signal"
-        trailingIcon={_iconForTernarySetting(settings.showRSTFields)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: _nextTernaryValue(settings.showRSTFields) }))) }}
+        trailingIcon={_iconForBinarySetting(settings.showRSTFields, true)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: _nextBinaryValue(settings.showRSTFields, true) }))) }}
         title={t('screens.operationScreen.menu.rstFields', 'RST Fields')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
 
       <Menu.Item
         leadingIcon="selection-marker"
-        trailingIcon={_iconForTernarySetting(settings.showStateField)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: _nextTernaryValue(settings.showStateField) }))) }}
+        trailingIcon={_iconForBinarySetting(settings.showStateField, true)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: _nextBinaryValue(settings.showStateField, true) }))) }}
         title={t('screens.operationScreen.menu.stateField', 'State Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
 
       <Menu.Item
         leadingIcon="select-marker"
-        trailingIcon={_iconForTernarySetting(settings.showGridField)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showGridField: _nextTernaryValue(settings.showGridField) }))) }}
+        trailingIcon={_iconForBinarySetting(settings.showGridField, false)}
+        onPress={() => { hideAndRun(() => dispatch(setSettings({ showGridField: _nextBinaryValue(settings.showGridField, false) }))) }}
         title={t('screens.operationScreen.menu.gridField', 'Grid Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
 
       <Menu.Item
         leadingIcon="delete-off-outline"
-        trailingIcon={settings.showDeletedQSOs === false ? 'circle-outline' : 'check-circle-outline'}
+        trailingIcon={_iconForBinarySetting(settings.showDeletedQSOs)}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ showDeletedQSOs: settings.showDeletedQSOs === false }))) }}
         title={t('screens.operationScreen.menu.showDeletedQSOs', 'Show Deleted QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
@@ -411,7 +411,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
 
       <Menu.Item
         leadingIcon="numeric"
-        trailingIcon={settings.showNumbersRow === false ? 'circle-outline' : 'check-circle-outline'}
+        trailingIcon={_iconForBinarySetting(settings.showNumbersRow)}
         onPress={() => { hideAndRun(() => dispatch(setSettings({ showNumbersRow: settings.showNumbersRow === false }))) }}
         title={t('screens.operationScreen.menu.numbersRow', 'Numbers Row')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
@@ -442,22 +442,44 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
   )
 }
 
-function _iconForTernarySetting (value) {
+function _iconForBinarySetting (value, defaultValue) {
   if (value === true) {
     return 'check-circle-outline'
   } else if (value === false) {
     return 'circle-outline'
+  } else if (defaultValue === true) {
+    return 'check-circle-outline'
   } else {
-    return 'alpha-a-circle-outline'
+    return 'circle-outline'
   }
 }
 
-function _nextTernaryValue (value) {
-  if (value === true) {
-    return false
-  } else if (value === false) {
-    return ''
-  } else {
+function _nextBinaryValue (value, defaultValue) {
+  if (value === false) {
     return true
+  } else if (value === true) {
+    return false
+  } else {
+    return !defaultValue
   }
 }
+
+// function _iconForTernarySetting (value) {
+//   if (value === true) {
+//     return 'check-circle-outline'
+//   } else if (value === false) {
+//     return 'circle-outline'
+//   } else {
+//     return 'alpha-a-circle-outline'
+//   }
+// }
+
+// function _nextTernaryValue (value) {
+//   if (value === true) {
+//     return false
+//   } else if (value === false) {
+//     return ''
+//   } else {
+//     return true
+//   }
+// }
