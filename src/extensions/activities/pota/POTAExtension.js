@@ -205,7 +205,7 @@ const ReferenceHandler = {
         shortLabel: `${Info.shortName} ${ref.ref}`,
         program: Info.shortName
       }
-      console.log('pota db lookup', data)
+      // console.log('pota db lookup', data)
       if (data?.location?.indexOf(',') < 0) {
         result.accuracy = LOCATION_ACCURACY.REASONABLE
         result.grid = data.grid
@@ -446,7 +446,7 @@ const ReferenceHandler = {
   }
 }
 
-function _simplifyPOTAStates(locationDesc) {
+function _simplifyPOTAStates (locationDesc) {
   if (!locationDesc) return ''
   const states = locationDesc.split(',')
   const oneState = states[0].split('-', 2)[1]?.trim()

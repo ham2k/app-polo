@@ -26,7 +26,7 @@ import { Linking } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { selectLatestOperation } from './store/operations'
 
-const DEBUG = true
+const DEBUG = false
 
 export function DeepLinks ({ navigationRef }) {
   const dispatch = useDispatch()

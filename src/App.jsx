@@ -65,9 +65,9 @@ const paperSettings = {
 
 let _appHotReloaded = false
 if (module.hot) {
-  console.log('app module hot')
+  // console.log('app module hot')
   module.hot.accept(() => {
-    console.log('app hot reloaded')
+    // console.log('app hot reloaded')
     _appHotReloaded = true
   })
 }

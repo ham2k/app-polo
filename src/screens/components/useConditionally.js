@@ -33,6 +33,6 @@ export function useUIStateConditionally (condition, component, key, defaultValue
   if (condition) {
     dataRef.current = freshData
   }
-  console.log('useUIStateConditionally ', condition, ' dataRef for', component, key, 'is', dataRef.current)
+  // console.log('useUIStateConditionally ', condition, ' dataRef for', component, key, 'is', dataRef.current)
   return [dataRef.current, setter, updater]
 }
