@@ -721,7 +721,6 @@ const ReferenceHandler = {
 function mainExchangeForOperation (props) {
   const { qso, qsos, operation, updateQSO, styles, disabled, refStack, settings, suggestions, vfo, ...moreProps } = props
 
-  console.log('mainExchangeForOperation', moreProps)
   const qsoRef = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
   const opRef = findRef(operation, Info.key)
   const qp = qpData({ ref: opRef })

@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -84,13 +84,14 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
     freq: 0,
     band: 'event',
     mode: event.event ?? 'event',
-    event,
+    event
   }
 
   return addQSOs({ uuid, qsos: [qso], synced })
 }
 
 const DEBUG = false
+// const DEBUG = true
 
 export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
   const now = Date.now()
@@ -153,7 +154,6 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
   }
   if (DEBUG) logTimer('addQSOs', 'done inserting')
 
-  const operationInfo = getState().operations.info[uuid]
   if (getState().qsos.qsos[uuid]) { // QSOs are for an operation that's currently in memory
     for (const qso of qsos) {
       dispatch(actions.addQSO({ uuid, qso }))
@@ -205,7 +205,7 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
   return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
-export async function markQSOsAsSynced(qsos) {
+export async function markQSOsAsSynced (qsos) {
   if (!qsos || qsos.length === 0) return
   await dbExecute(`UPDATE qsos SET synced = true WHERE uuid IN (${qsos.map(q => `'${q.uuid}'`).join(',')})`, [])
 }
@@ -273,8 +273,4 @@ export const saveQSOsForOperation = (uuid, { qsos, synced } = {}) => async (disp
     ])
   }
   await dbExecuteBatch(sql)
-}
-
-function fingerprintQSOData(qso) {
-  return JSON.stringify(qso)
 }
