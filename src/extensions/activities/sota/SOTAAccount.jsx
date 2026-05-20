@@ -8,7 +8,7 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { authorize, logout } from 'react-native-app-auth'
+import { authorize, logout, prefetchConfiguration } from 'react-native-app-auth'
 
 import { setAccountInfo } from '../../../store/settings'
 import { SOTASSOConfig, useAccountQuery } from '../../../store/apis/apiSOTA'
@@ -20,6 +20,7 @@ export function SOTAAccountSetting ({ settings, styles }) {
 
   const [currentDialog, setCurrentDialog] = useState()
   const accountQueryResults = useAccountQuery(undefined, { skip: !settings?.accounts?.sota?.idToken })
+
   return (
     <React.Fragment>
       <H2kListItem
@@ -52,6 +53,15 @@ export function AccountsSOTADialog ({ visible, settings, styles, onDialogDone })
 
   useEffect(() => {
     setDialogVisible(visible)
+  }, [visible])
+
+  useEffect(() => {
+    if (visible) {
+      prefetchConfiguration({
+        ...SOTASSOConfig,
+        warmAndPrefetchChrome: true
+      })
+    }
   }, [visible])
 
   const handleClose = useCallback(() => {

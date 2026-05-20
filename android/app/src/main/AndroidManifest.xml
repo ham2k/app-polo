@@ -36,14 +36,20 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
-        <intent-filter>
+        <intent-filter android:label="Ham2K Portable Logger">
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
             <category android:name="android.intent.category.BROWSABLE" />
             <data android:scheme="com.ham2k" />
             <data android:scheme="com.ham2k.polo" />
-            <data android:scheme="com.ham2k.polo.auth" />
         </intent-filter>
+        <!-- Something similar to the next intent-filter is added by default by react-native-app-auth -->
+        <!-- <intent-filter>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="com.ham2k.polo.auth" />
+        </intent-filter> -->
       </activity>
       <provider
         android:name="androidx.core.content.FileProvider"
