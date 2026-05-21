@@ -10,7 +10,7 @@
       "total": "Total {{count}}"
     },
     "bca": {
-      "name": "Castelos e Fortalezas da Bélgica",
+      "name": "BCA: Castelos e Fortalezas da Bélgica",
       "shortName": "BCA",
       "exportName": "Ativação BCA",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Faróis e Navios-Farois Belgas",
+      "name": "BLHA: Faróis e Navios-Farois Belgas",
       "shortName": "BLHA",
       "exportName": "Ativação BLHA",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} faróis caçados"
       }
     },
+    "call-history": {
+      "name": "Histórico de Chamadas",
+      "description": "Carregar ADIF histórico e utilizar para pesquisas offline"
+    },
     "call-notes": {
       "name": "Anotações de indicativo",
+      "description": "Armazene notas de indicativo de chamada em um arquivo e use para consultas offline",
       "description-md_zero": "Nenhuma nota carregada.",
       "description-md_one": "{{fmtCount}} {{type}} carregado(s).",
       "description-md_other": "{{fmtCount}} {{type}} carregado(s).",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} Entidades DXCC"
     },
     "eca": {
-      "name": "Diplomas de Castelos Ingleses",
+      "name": "ECA: Diplomas de Castelos Ingleses",
       "shortName": "ECA",
       "exportName": "Ativação ECA",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "Diplomas de Faróis Ingleses",
+      "name": "ELA: Diplomas de Faróis Ingleses",
       "shortName": "ELA",
       "exportName": "Ativação ELA",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Atividade Global de Montanha",
+      "name": "GMA: Atividade Global de Montanha",
       "shortName": "GMA",
       "exportName": "Ativação GMA",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Nome ou referência...",
         "unknownSummit": "Pico desconhecido"
       }
+    },
+    "hamdb": {
+      "name": "Consultas de Indicativo HamDB.org",
+      "description": "Serviço gratuito, mas limitado a chamadas nos EUA, Canadá e Alemanha"
+    },
+    "hamqth": {
+      "name": "Consultas de Indicativo HamQTH.com",
+      "description": "Requer uma conta gratuita para consultas"
     },
     "llota": {
       "name": "LLOTA: Lagos e Lagoas no Ar",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Nenhum lago por perto!"
     },
     "mota": {
-      "name": "Moinhos no Ar",
+      "name": "MOTA: Moinhos no Ar",
       "shortName": "MOTA",
       "exportName": "Ativação MOTA",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Parque Desconhecido",
       "noRefsNearby": "Nenhum parque nas proximidades!"
     },
+    "qrz": {
+      "name": "Consultas de Indicativo QRZ.com",
+      "description": "Requer conta gratuita para nomes e conta paga para localizações"
+    },
+    "sats": {
+      "name": "Operações de Satélite"
+    },
     "siota": {
-      "name": "Silos no Ar",
+      "name": "SiOTA: Silos no Ar",
       "shortName": "SIOTA",
       "exportName": "Ativação SIOTA",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Cumes no Ar",
       "account": {
         "title": "SOTA (para spots do SOTAWatch)",
         "dialogTitle": "Conta SOTA",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Nenhum pico nas proximidades!"
     },
     "tota": {
+      "name": "TOTA: Torres no Ar",
       "activityOptions": {
         "title_zero": "Nenhuma torre selecionada para ativação",
         "title_one": "Ativando 1 torre",
@@ -682,7 +704,7 @@
       "noSquareSet": "Nenhum square definido"
     },
     "wca": {
-      "name": "Diploma Castelos do Mundo",
+      "name": "WCA: Diploma Castelos do Mundo",
       "shortName": "WCA",
       "exportName": "Ativação WCA",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL no Ar",
       "account": {
         "title": "ZLOTA (spots do ZLOTA)",
         "dialogTitle": "Conta ZLOTA",

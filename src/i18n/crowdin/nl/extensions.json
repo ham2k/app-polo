@@ -10,7 +10,7 @@
       "total": "Totaal {{count}}"
     },
     "bca": {
-      "name": "Belgische kastelen & Forten",
+      "name": "BCA: Belgische kastelen & Forten",
       "shortName": "BCA",
       "exportName": "BCA Activatie",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Belgische Vuurtorens en Lichtschepen",
+      "name": "BLHA: Belgische Vuurtorens en Lichtschepen",
       "shortName": "BLHA",
       "exportName": "BLHA Activatie",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} vuurtorens gelogd"
       }
     },
+    "call-history": {
+      "name": "Gesprekken Geschiedenis",
+      "description": "Upload historische ADIF en gebruik voor offline zoekopdrachten"
+    },
     "call-notes": {
       "name": "Roepnaam notities",
+      "description": "Opslaan van roepnaamnotities in een bestand en deze gebruiken voor offline opzoekingen",
       "description-md_zero": "Geen notities geladen.",
       "description-md_one": "{{fmtCount}} {{type}} Geladen.",
       "description-md_other": "{{fmtCount}} {{type}} geladen.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} DXCC-entiteiten"
     },
     "eca": {
-      "name": "English Castle Awards",
+      "name": "ECA: English Castle Awards",
       "shortName": "ECA",
       "exportName": "ECA Activatie",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "English Lighthouse Awards",
+      "name": "ELA: Engelse Vuurtoren Awards",
       "shortName": "ELA",
       "exportName": "ELA Activatie",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Global Mountain Activity",
+      "name": "GMA: Globale Bergactiviteiten",
       "shortName": "GMA",
       "exportName": "GMA Activatie",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Naam of referentie…",
         "unknownSummit": "Onbekende summit"
       }
+    },
+    "hamdb": {
+      "name": "HamDB.org Roepnaam Opzoekingen",
+      "description": "Gratis service, maar beperkt tot VS, Canada en Duitsland"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Roepnaam Opzoekingen",
+      "description": "Vereist een gratis account voor opzoekingen"
     },
     "llota": {
       "name": "LLOTA: Meren en Lagunes in de Lucht",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Geen meren in de buurt!"
     },
     "mota": {
-      "name": "Mills on the Air",
+      "name": "MOTA: Molens in de Ether",
       "shortName": "MOTA",
       "exportName": "MOTA Activatie",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Onbekend Park",
       "noRefsNearby": "Geen parken in de buurt!"
     },
+    "qrz": {
+      "name": "QRZ.com Roepnaam Opzoekingen",
+      "description": "Vereist een gratis account voor namen, en een betaald account voor locaties"
+    },
+    "sats": {
+      "name": "Satellietoperaties"
+    },
     "siota": {
-      "name": "Silos in de lucht",
+      "name": "SiOTA: Silos in de Ether",
       "shortName": "SIOTA",
       "exportName": "SIOTA Activering",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Bergen in de Ether",
       "account": {
         "title": "SOTA (voor SOTAWatch self-spotting)",
         "dialogTitle": "SOTA Account",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Geen toppen in de buurt!"
     },
     "tota": {
+      "name": "TOTA: Torens in de Ether",
       "activityOptions": {
         "title_zero": "Geen torens geselecteerd voor activering",
         "title_one": "1 toren activeren",
@@ -682,7 +704,7 @@
       "noSquareSet": "Geen vierkant ingesteld"
     },
     "wca": {
-      "name": "World Castle Awards",
+      "name": "WCA: World Castle Awards",
       "shortName": "WCA",
       "exportName": "WCA Activatie",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL in de Ether",
       "account": {
         "title": "ZLOTA (ZLOTA-spotting)",
         "dialogTitle": "ZLOTA Account",

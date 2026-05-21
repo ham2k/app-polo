@@ -10,7 +10,7 @@
       "total": "Total {{count}}"
     },
     "bca": {
-      "name": "Belgium Castles & Fortresses",
+      "name": "BCA: Belgium Castles & Fortresses",
       "shortName": "BCA",
       "exportName": "BCA Activation",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Belgian Lighthouses and Lightships",
+      "name": "BLHA: Belgian Lighthouses and Lightships",
       "shortName": "BLHA",
       "exportName": "BLHA Activation",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} lighthouses hunted"
       }
     },
+    "call-history": {
+      "name": "Call History",
+      "description": "Upload historic ADIF and use for offline lookups"
+    },
     "call-notes": {
       "name": "Callsign Notes",
+      "description": "Store callsign notes in a file and use for offline lookups",
       "description-md_zero": "No notes loaded.",
       "description-md_one": "{{fmtCount}} {{type}} loaded.",
       "description-md_other": "{{fmtCount}} {{type}} loaded.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} DXCC Entities"
     },
     "eca": {
-      "name": "English Castles Awards",
+      "name": "ECA: English Castles Awards",
       "shortName": "ECA",
       "exportName": "ECA Activation",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "English Lighthouse Awards",
+      "name": "ELA: English Lighthouse Awards",
       "shortName": "ELA",
       "exportName": "ELA Activation",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Global Mountain Activity",
+      "name": "GMA: Global Mountain Activity",
       "shortName": "GMA",
       "exportName": "GMA Activation",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Name or reference…",
         "unknownSummit": "Unknown summit"
       }
+    },
+    "hamdb": {
+      "name": "HamDB.org Callsign Loookups",
+      "description": "Free service, but limited to USA, Canada and Germany calls"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Callsign Lookups",
+      "description": "Requires free account for lookups"
     },
     "llota": {
       "name": "LLOTA: Lakes and Lagoons on the Air",
@@ -394,7 +407,7 @@
       "noRefsNearby": "No lakes nearby!"
     },
     "mota": {
-      "name": "Mills on the Air",
+      "name": "MOTA: Mills on the Air",
       "shortName": "MOTA",
       "exportName": "MOTA Activation",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Unknown Park",
       "noRefsNearby": "No parks nearby!"
     },
+    "qrz": {
+      "name": "QRZ.com Callsign Lookups",
+      "description": "Requires free account for names, and paid account for locations"
+    },
+    "sats": {
+      "name": "Satellite Operations"
+    },
     "siota": {
-      "name": "Silos on the Air",
+      "name": "SiOTA: Silos on the Air",
       "shortName": "SIOTA",
       "exportName": "SIOTA Activation",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Summits on the Air",
       "account": {
         "title": "SOTA (for SOTAWatch self-spotting)",
         "dialogTitle": "SOTA Account",
@@ -612,6 +633,7 @@
       "noRefsNearby": "No summits nearby!"
     },
     "tota": {
+      "name": "TOTA: Towers on the Air",
       "activityOptions": {
         "title_zero": "No towers selected for activation",
         "title_one": "Activating 1 tower",
@@ -682,7 +704,7 @@
       "noSquareSet": "No square set"
     },
     "wca": {
-      "name": "World Castles Awards",
+      "name": "WCA: World Castles Awards",
       "shortName": "WCA",
       "exportName": "WCA Activation",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL on the Air",
       "account": {
         "title": "ZLOTA (ZLOTA spotting)",
         "dialogTitle": "ZLOTA Account",

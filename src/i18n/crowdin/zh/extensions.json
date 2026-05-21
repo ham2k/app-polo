@@ -10,7 +10,7 @@
       "total": "共 {{count}}"
     },
     "bca": {
-      "name": "比利时 COTA（城堡与要塞）",
+      "name": "比利时城堡与要塞",
       "shortName": "BCA",
       "exportName": "BCA（比利时城堡与要塞）激活",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "猎取了{{fmtCount}}座灯塔"
       }
     },
+    "call-history": {
+      "name": "通话记录",
+      "description": "上传历史ADIF并用于离线查询"
+    },
     "call-notes": {
       "name": "呼号备注",
+      "description": "将呼号笔记存储在文件中用于离线查找",
       "description-md_zero": "未加载备注。",
       "description-md_one": "已加载 {{fmtCount}} {{type}}。",
       "description-md_other": "已加载 {{fmtCount}} {{type}}。",
@@ -337,6 +342,14 @@
         "unknownSummit": "未知山峰"
       }
     },
+    "hamdb": {
+      "name": "HamDB.org 呼号查询",
+      "description": "免费服务，但仅限于美国、加拿大和德国的呼叫"
+    },
+    "hamqth": {
+      "name": "HamQTH.com 呼号查询",
+      "description": "需要免费的账户来进行查询"
+    },
     "llota": {
       "name": "LLOTA：空中的湖泊和泻湖",
       "shortName": "LLOTA",
@@ -394,7 +407,7 @@
       "noRefsNearby": "附近没有湖泊！"
     },
     "mota": {
-      "name": "空中磨坊",
+      "name": "MOTA: 空中磨坊",
       "shortName": "MOTA",
       "exportName": "MOTA 激活",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "未知的公园",
       "noRefsNearby": "附近没有公园！"
     },
+    "qrz": {
+      "name": "QRZ.com 呼号查询",
+      "description": "需要免费账户以获取名称，付费账户以获取位置"
+    },
+    "sats": {
+      "name": "卫星操作"
+    },
     "siota": {
-      "name": "空气中的筒仓",
+      "name": "SiOTA: 空中筒仓",
       "shortName": "SiOTA",
       "exportName": "SiOTA 激活",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: 空中山顶",
       "account": {
         "title": "SOTA (用于 SOTAWatch 自我发现)",
         "dialogTitle": "SOTA 账户",
@@ -612,6 +633,7 @@
       "noRefsNearby": "附近没有山峰！"
     },
     "tota": {
+      "name": "TOTA: 空中塔楼",
       "activityOptions": {
         "title_zero": "未选择塔进行激活",
         "title_one": "激活 1 座塔",
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL的空中",
       "account": {
         "title": "ZLOTA (ZLOTA 发现)",
         "dialogTitle": "ZLOTA 账户",

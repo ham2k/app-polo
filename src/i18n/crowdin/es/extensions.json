@@ -10,7 +10,7 @@
       "total": "Total {{count}}"
     },
     "bca": {
-      "name": "Castillos y Fortalezas de Bélgica",
+      "name": "BCA: Castillos y Fortalezas de Bélgica",
       "shortName": "BCA",
       "exportName": "Activación BCA",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Faros y Barcos-faro Belgas",
+      "name": "BLHA: Faros y Barcos-faro Belgas",
       "shortName": "BLHA",
       "exportName": "Activación BLHA",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} faros cazados"
       }
     },
+    "call-history": {
+      "name": "Historial de Llamadas",
+      "description": "Subir ADIF histórico y usar para búsquedas offline"
+    },
     "call-notes": {
       "name": "Notas del operador",
+      "description": "Almacenar notas de indicativo en un archivo y usar para búsquedas sin conexión",
       "description-md_zero": "No se han cargado ningunas notas",
       "description-md_one": "{{fmtCount}} {{type}} cargadas.",
       "description-md_other": "{{fmtCount}} {{type}} cargadas.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} entidades DXCC"
     },
     "eca": {
-      "name": "English Castles Awards",
+      "name": "ECA: Premios de Castillos Ingleses",
       "shortName": "ECA",
       "exportName": "Activación ECA",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "English Lighthouse Awards",
+      "name": "ELA: Premios de Faros Ingleses",
       "shortName": "ELA",
       "exportName": "Activación ELA",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Global Mountain Activity",
+      "name": "GMA: Actividad de Montaña Global",
       "shortName": "GMA",
       "exportName": "Activación GMA",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Nombre o referencia…",
         "unknownSummit": "Cumbre desconocida"
       }
+    },
+    "hamdb": {
+      "name": "Búsquedas de indicativo en HamDB.org",
+      "description": "Servicio gratuito, pero limitado a llamadas de EE.UU., Canadá y Alemania"
+    },
+    "hamqth": {
+      "name": "Búsquedas de indicativo en HamQTH.com",
+      "description": "Requiere una cuenta gratuita para búsquedas"
     },
     "llota": {
       "name": "LLOTA: Lagos y Lagunas en el Aire",
@@ -394,7 +407,7 @@
       "noRefsNearby": "¡No hay lagos cercanos!"
     },
     "mota": {
-      "name": "Molinos en el Aire",
+      "name": "MOTA: Molinos en el Aire",
       "shortName": "MOTA",
       "exportName": "Activación MOTA",
       "activityOptions": {
@@ -508,6 +521,13 @@
       "unknownRefName": "Parque desconocido",
       "noRefsNearby": "¡No hay parques cercanos!"
     },
+    "qrz": {
+      "name": "Búsquedas de indicativo en QRZ.com",
+      "description": "Requiere cuenta gratuita para nombres, y cuenta de pago para ubicaciones"
+    },
+    "sats": {
+      "name": "Operaciones Satelitales"
+    },
     "siota": {
       "name": "SiOTA: Silos en el Aire",
       "shortName": "SIOTA",
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Cumbres en el Aire",
       "account": {
         "title": "SOTA (para spots en SOTAWatch)",
         "dialogTitle": "Cuenta SOTA",
@@ -612,6 +633,7 @@
       "noRefsNearby": "¡No hay cumbres cercanas!"
     },
     "tota": {
+      "name": "TOTA: Torres en el Aire",
       "activityOptions": {
         "title_zero": "No se seleccionaron torres para activar",
         "title_one": "Activando 1 torre",
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL en el Aire",
       "account": {
         "title": "Cuenta ZLOTA (para spots)",
         "dialogTitle": "Cuenta ZLOTA",

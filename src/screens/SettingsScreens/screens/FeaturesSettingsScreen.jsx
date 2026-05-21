@@ -95,7 +95,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
                 ))}
                 {popular.length > 0 && (
                   <H2kListItem
-                    title={t(`screens.featuresSettings.fewerOf.${label}`, 'Fewer {{category}}...', { category: t(`general.extensions.categories.${category}`, label) })}
+                    title={t([`screens.featuresSettings.fewerOf.${category}`, 'screens.featuresSettings.fewerOf'], 'Fewer {{category}}...', { category: t(`general.extensions.categories.${category}`, label) })}
                     left={() => <View style={{ width: styles.oneSpace * 5 }} />}
                     onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: false })}
                   />
@@ -107,7 +107,7 @@ export default function FeaturesSettingsScreen ({ navigation, splitView }) {
                   <FeatureItem key={extension.key} extension={extension} settings={settings} styles={styles} onChange={(value) => handleChange(extension, value)} />
                 ))}
                 <H2kListItem
-                  title={t(`screens.featuresSettings.moreOf.${label}`, 'More {{category}}...', { category: t(`general.extensions.categories.${category}`, label) })}
+                  title={t([`screens.featuresSettings.moreOf.${category}`, 'screens.featuresSettings.moreOf'], 'More {{category}}...', { category: t(`general.extensions.categories.${category}`, label) })}
                   left={() => <View style={{ width: styles.oneSpace * 5 }} />}
                   onPress={() => setShowMoreForGroup({ ...showMoreForGroup, [category]: true })}
                 />

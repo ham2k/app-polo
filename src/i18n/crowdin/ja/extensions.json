@@ -10,7 +10,7 @@
       "total": "合計 {{count}}"
     },
     "bca": {
-      "name": "ベルギーの城と要塞 (Belgium Castels & Fortresses)",
+      "name": "BCA: ベルギーの城と要塞",
       "shortName": "BCA",
       "exportName": "BCAアクティベーション",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "ベルギーの灯台と灯船（Belgian Lighthouse and Lightships）",
+      "name": "BLHA: ベルギーの灯台と灯船",
       "shortName": "BLHA",
       "exportName": "BLHAアクティベーション",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "ハンティングした灯台の数: {{fmtCount}} "
       }
     },
+    "call-history": {
+      "name": "通話履歴",
+      "description": "歴史的なADIFをアップロードして、オフライン検索に使用する"
+    },
     "call-notes": {
       "name": "コールサインノート",
+      "description": "コールサインのメモをファイルに保存し、オフラインで参照する際に使用する",
       "description-md_zero": "読み込まれたノートはありません。",
       "description-md_one": "{{fmtCount}} {{type}} が読込み完了。",
       "description-md_other": "{{fmtCount}} {{type}} が読込み完了。",
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "イギリスの灯台アワード（English Lighthouse Awards: ELA）",
+      "name": "ELA: イギリスの灯台賞",
       "shortName": "ELA",
       "exportName": "ELAアクティベーション",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "グローバルマウンテンアクティビティ(Global Mountain Activity）",
+      "name": "GMA: グローバルマウンテンアクティビティ",
       "shortName": "GMA",
       "exportName": "GMAアクティベーション",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "名前または参照コード…",
         "unknownSummit": "不明な山頂"
       }
+    },
+    "hamdb": {
+      "name": "HamDB.org コールサイン検索",
+      "description": "無料サービスですが、米国、カナダ、ドイツのコールに限定されます"
+    },
+    "hamqth": {
+      "name": "HamQTH.com コールサイン検索",
+      "description": "検索には無料アカウントが必要です"
     },
     "llota": {
       "name": "LLOTA: 電波で湖やラグーンを",
@@ -394,7 +407,7 @@
       "noRefsNearby": "近くに湖はありません！"
     },
     "mota": {
-      "name": "ミルズオンザエア（Mills on the Air: MOTA）",
+      "name": "MOTA: Mills on the Air",
       "shortName": "MOTA",
       "exportName": "MOTAアクティベーション",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "不明な公園",
       "noRefsNearby": "近くに公園はありません!"
     },
+    "qrz": {
+      "name": "QRZ.com コールサイン検索",
+      "description": "名前検索には無料アカウントが必要で、位置情報には有料アカウントが必要です"
+    },
+    "sats": {
+      "name": "サテライト操作"
+    },
     "siota": {
-      "name": "サイロズオンザエア（Silos on the Air）",
+      "name": "SiOTA: Silos on the Air",
       "shortName": "SIOTA",
       "exportName": "SIOTAアクティベーション",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Summits on the Air",
       "account": {
         "title": "SOTA (SOTAWatch でのスポット)",
         "dialogTitle": "SOTA アカウント",
@@ -612,6 +633,7 @@
       "noRefsNearby": "近くに山頂はありません!"
     },
     "tota": {
+      "name": "TOTA: Towers on the Air",
       "activityOptions": {
         "title_zero": "アクティベートするタワーが選択されていません",
         "title_one": "アクティベート中のタワー：1ヶ所",
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL on the Air",
       "account": {
         "title": "ZLOTA (ZLOTA スポット)",
         "dialogTitle": "ZLOTA アカウント",

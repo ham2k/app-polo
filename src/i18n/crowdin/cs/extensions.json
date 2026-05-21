@@ -10,7 +10,7 @@
       "total": "Celkem {{count}}"
     },
     "bca": {
-      "name": "Belgické hrady a pevnosti",
+      "name": "BCA: Belgické hrady a pevnosti",
       "shortName": "BCA",
       "exportName": "Aktivace BCA",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Belgické majáky a majákové lodě",
+      "name": "BLHA: Belgické majáky a majákové lodě",
       "shortName": "BLHA",
       "exportName": "Aktivace BLHA",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} lovených majáků"
       }
     },
+    "call-history": {
+      "name": "Historie volání",
+      "description": "Nahrát historický ADIF a použít pro offline vyhledávání"
+    },
     "call-notes": {
       "name": "Poznámky k volacím znakům",
+      "description": "Ukládat poznámky k volací značce do souboru a používat pro offline vyhledávání",
       "description-md_zero": "Žádné poznámky nebyly nahrány.",
       "description-md_one": "Nahráno {{fmtCount}} {{type}}.",
       "description-md_other": "Nahráno {{fmtCount}} {{type}}.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} entit DXCC"
     },
     "eca": {
-      "name": "Anglické ocenění za počty hradů",
+      "name": "ECA: Anglické ocenění za počty hradů",
       "shortName": "ECA",
       "exportName": "Aktivace ECA",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "Anglické ocenění za majáky",
+      "name": "ELA: Anglické ocenění za majáky",
       "shortName": "ELA",
       "exportName": "Aktivace ELA",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Global Mountain Activity",
+      "name": "GMA: Globální horská aktivita",
       "shortName": "GMA",
       "exportName": "Aktivace GMA",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Jméno nebo reference…",
         "unknownSummit": "Neznámý vrchol"
       }
+    },
+    "hamdb": {
+      "name": "Vyhledávání volacích znaků na HamDB.org",
+      "description": "Bezplatná služba, ale omezená na hovory v USA, Kanadě a Německu"
+    },
+    "hamqth": {
+      "name": "Vyhledávání volacích znaků na HamQTH.com",
+      "description": "Pro vyhledávání je vyžadován bezplatný účet"
     },
     "llota": {
       "name": "LLOTA: Jezera a laguny v éteru",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Žádná jezera v okolí!"
     },
     "mota": {
-      "name": "Mills on the Air",
+      "name": "MOTA: Mlýny ve vzduchu",
       "shortName": "MOTA",
       "exportName": "Aktivace MOTA",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Neznámý park",
       "noRefsNearby": "Neloveny žádné parky!"
     },
+    "qrz": {
+      "name": "Vyhledávání volacích znaků na QRZ.com",
+      "description": "Pro vyhledávání jmen je vyžadován bezplatný účet, pro polohu placený účet"
+    },
+    "sats": {
+      "name": "Satelitní operace"
+    },
     "siota": {
-      "name": "Sila v éteru",
+      "name": "SiOTA: Sila ve vzduchu",
       "shortName": "SIOTA",
       "exportName": "Aktivace SIOTA",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Vrcholy ve vzduchu",
       "account": {
         "title": "SOTA (pro SOTAWatch self-spotting)",
         "dialogTitle": "Účet SOTA",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Neloveny žádné vrcholy!"
     },
     "tota": {
+      "name": "TOTA: Věž na vzduchu",
       "activityOptions": {
         "title_zero": "Žádná rozledna k aktivaci",
         "title_one": "Aktivace 1 rezhledny",
@@ -682,7 +704,7 @@
       "noSquareSet": "Žádný čtverec není nastaven"
     },
     "wca": {
-      "name": "World Castles Awards",
+      "name": "WCA: Světové hrady ocenění",
       "shortName": "WCA",
       "exportName": "Aktivace WCA",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL na vzduchu",
       "account": {
         "title": "ZLOTA (ZLOTA spotting)",
         "dialogTitle": "Účet ZLOTA",

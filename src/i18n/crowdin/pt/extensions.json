@@ -10,7 +10,7 @@
       "total": "Total {{count}}"
     },
     "bca": {
-      "name": "Castelos & Fortalezas da Bélgica",
+      "name": "BCA: Castelos & Fortalezas da Bélgica",
       "shortName": "BCA",
       "exportName": "Ativação BCA",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Faróis e Lightships Belgas",
+      "name": "BLHA: Faróis e Lightships Belgas",
       "shortName": "BLHA",
       "exportName": "Ativação BLHA",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} faróis caçados"
       }
     },
+    "call-history": {
+      "name": "Histórico de Chamadas",
+      "description": "Carregar ADIF histórico e usar para consultas offline"
+    },
     "call-notes": {
       "name": "Notas Sobre o Indicativo",
+      "description": "Armazene notas de indicativo em um arquivo e use para consultas offline",
       "description-md_zero": "Nenhuma nota carregada.",
       "description-md_one": "{{fmtCount}} {{type}} carregado.",
       "description-md_other": "{{fmtCount}} {{type}} carregados.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} Entidades DXCC"
     },
     "eca": {
-      "name": "Prémios de Castelos Ingleses",
+      "name": "ECA: Prémios de Castelos Ingleses",
       "shortName": "ECA",
       "exportName": "Ativação ECA",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "Prémios de Farol Ingleses",
+      "name": "ELA: Prémios de Farol Ingleses",
       "shortName": "ELA",
       "exportName": "Ativação ELA",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Atividade de Montanha Global",
+      "name": "GMA: Atividade de Montanha Global",
       "shortName": "GMA",
       "exportName": "Ativação GMA",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Nome ou referência…",
         "unknownSummit": "Cume desconhecido"
       }
+    },
+    "hamdb": {
+      "name": "Pesquisas de Indicativo HamDB.org",
+      "description": "Serviço gratuito, mas limitado a chamadas dos EUA, Canadá e Alemanha"
+    },
+    "hamqth": {
+      "name": "Pesquisas de Indicativo HamQTH.com",
+      "description": "Requer conta gratuita para pesquisas"
     },
     "llota": {
       "name": "LLOTA: Lagos e Lagoas no Ar",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Nenhum lago próximo!"
     },
     "mota": {
-      "name": "Moinhos no Ar",
+      "name": "MOTA: Moinhos no Ar",
       "shortName": "MOTA",
       "exportName": "Ativação MOTA",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Parque Desconhecido",
       "noRefsNearby": "Nenhum parque próximo!"
     },
+    "qrz": {
+      "name": "Pesquisas de Indicativo QRZ.com",
+      "description": "Requer conta gratuita para nomes, e conta paga para localizações"
+    },
+    "sats": {
+      "name": "Operações de Satélite"
+    },
     "siota": {
-      "name": "Silos no Ar",
+      "name": "SiOTA: Silos no Ar",
       "shortName": "SIOTA",
       "exportName": "Ativação do SIOTA",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Cumes no Ar",
       "account": {
         "title": "SOTA (para self-spotting do SOTAWatch)",
         "dialogTitle": "Conta SOTA",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Nenhum cume próximo!"
     },
     "tota": {
+      "name": "TOTA: Torres no Ar",
       "activityOptions": {
         "title_zero": "Nenhuma torre selecionada para ativação",
         "title_one": "A ativar 1 torre",
@@ -682,7 +704,7 @@
       "noSquareSet": "Nenhum grid definido"
     },
     "wca": {
-      "name": "Prémios Mundiais de Castelos",
+      "name": "WCA: Prémios Mundiais de Castelos",
       "shortName": "PMC",
       "exportName": "Ativação PMC",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL no Ar",
       "account": {
         "title": "ZLOTA (deteção de ZLOTA)",
         "dialogTitle": "Conta ZLOTA",

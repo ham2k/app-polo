@@ -10,7 +10,7 @@
       "total": "Totalt {{count}}"
     },
     "bca": {
-      "name": "Belgiske Slott og Festninger",
+      "name": "BCA: Belgiske Slott og Festninger",
       "shortName": "BCA",
       "exportName": "BCA Aktivering",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Belgiske Fyrtårn og Fyrskip",
+      "name": "BLHA: Belgiske Fyrtårn og Fyrskip",
       "shortName": "BLHA",
       "exportName": "BLHA Aktivering",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} fyrer jaktet på"
       }
     },
+    "call-history": {
+      "name": "Anropshistorikk",
+      "description": "Last opp historisk ADIF og bruk for offline oppslag"
+    },
     "call-notes": {
       "name": "Notater for kallesignal",
+      "description": "Lagre kallesignalnotater i en fil og bruk dem for frakoblede oppslag",
       "description-md_zero": "Ingen notater lastet.",
       "description-md_one": "{{fmtCount}} {{type}} lastet.",
       "description-md_other": "{{fmtCount}} {{type}} lastet.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} DXCC-enheter"
     },
     "eca": {
-      "name": "English Castles Awards",
+      "name": "ECA: Engelske Slotte Awards",
       "shortName": "ECA",
       "exportName": "ECA Aktivering",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "English Lighthouse Awards",
+      "name": "ELA: Engelske Fyr Awards",
       "shortName": "ELA",
       "exportName": "ELA Aktivering",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Global Mountain Activity",
+      "name": "GMA: Global Fjell Aktivitet",
       "shortName": "GMA",
       "exportName": "GMA Aktivering",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Legg til flere referanser",
         "unknownSummit": "Ukjent topp"
       }
+    },
+    "hamdb": {
+      "name": "HamDB.org Kallesignaloppslag",
+      "description": "Gratis tjeneste, men begrenset til samtaler i USA, Canada og Tyskland"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Kallesignaloppslag",
+      "description": "Krever gratis konto for oppslag"
     },
     "llota": {
       "name": "LLOTA: Innsjøer på luften",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Ingen innsjøer i nærheten!"
     },
     "mota": {
-      "name": "Mills on the Air",
+      "name": "MOTA: Møller i eteren",
       "shortName": "MOTA",
       "exportName": "MOTA Aktivering",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Ukjent park",
       "noRefsNearby": "Ingen parker i nærheten!"
     },
+    "qrz": {
+      "name": "QRZ.com Kallesignaloppslag",
+      "description": "Krever gratis konto for navn, og betalt konto for steder"
+    },
+    "sats": {
+      "name": "Satellite Operasjoner"
+    },
     "siota": {
-      "name": "Silos on the Air",
+      "name": "SiOTA: Silos i eteren",
       "shortName": "SIOTA",
       "exportName": "SIOTA Aktivering",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Toppene i eteren",
       "account": {
         "title": "SOTA (for SOTAWatch selvspotting)",
         "dialogTitle": "SOTA-konto",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Ingen topper i nærheten!"
     },
     "tota": {
+      "name": "TOTA: Tårn i eteren",
       "activityOptions": {
         "title_zero": "Ingen tårn valgt for aktivering",
         "title_one": "Aktiverer 1 tårn",
@@ -682,7 +704,7 @@
       "noSquareSet": "Ingen rute satt"
     },
     "wca": {
-      "name": "World Castles Awards",
+      "name": "WCA: Verdens Slotte Awards",
       "shortName": "WCA",
       "exportName": "WCA aktivering",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL i eteren",
       "account": {
         "title": "ZLOTA (ZLOTA spotting)",
         "dialogTitle": "ZLOTA-konto",

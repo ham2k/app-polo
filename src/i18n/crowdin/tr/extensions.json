@@ -10,7 +10,7 @@
       "total": "Toplam {{count}}"
     },
     "bca": {
-      "name": "Belçika Kaleleri ve Hisarları",
+      "name": "BCA: Belçika Kaleleri ve Hisarları",
       "shortName": "BCA",
       "exportName": "BCA Aktivasyonu",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Belçika Deniz Fenerleri ve Fener Gemileri",
+      "name": "BLHA: Belçika Deniz Fenerleri ve Fener Gemileri",
       "shortName": "BLHA",
       "exportName": "BLHA Aktivasyonu",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} deniz feneri avlandı"
       }
     },
+    "call-history": {
+      "name": "Çağrı Geçmişi",
+      "description": "Tarihî ADIF yükle ve çevrimdışı aramalar için kullan"
+    },
     "call-notes": {
       "name": "Çağrı Yazısı Notları",
+      "description": "Çağrı işareti notlarını bir dosyada saklayın ve çevrimdışı aramalar için kullanın",
       "description-md_zero": "Yüklenmiş not yok.",
       "description-md_one": "{{fmtCount}} {{type}} yüklendi.",
       "description-md_other": "{{fmtCount}} {{type}} yüklendi.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} DXCC Varlığı"
     },
     "eca": {
-      "name": "İngiliz Şato Ödülleri",
+      "name": "ECA: İngiliz Şato Ödülleri",
       "shortName": "ECA",
       "exportName": "ECA Aktivasyonu",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "İngiliz Deniz Feneri Ödülleri",
+      "name": "ELA: İngiliz Deniz Feneri Ödülleri",
       "shortName": "ELA",
       "exportName": "ELA Aktivasyonu",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Küresel Dağ Aktivitesi",
+      "name": "GMA: Küresel Dağ Aktivitesi",
       "shortName": "GMA",
       "exportName": "GMA Aktivasyonu",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Ad veya referans…",
         "unknownSummit": "Bilinmeyen zirve"
       }
+    },
+    "hamdb": {
+      "name": "HamDB.org Çağrı İşareti Sorguları",
+      "description": "Ücretsiz hizmet, ancak ABD, Kanada ve Almanya çağrılarıyla sınırlı"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Çağrı İşareti Sorguları",
+      "description": "Sorgular için ücretsiz hesap gerektirir"
     },
     "llota": {
       "name": "LLOTA: Göller ve Lagünler Havadadır",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Yakında göl yok!"
     },
     "mota": {
-      "name": "Havada Değirmenler",
+      "name": "MOTA: Havada Değirmenler",
       "shortName": "MOTA",
       "exportName": "MOTA Aktivasyonu",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Bilinmeyen Park",
       "noRefsNearby": "Yakında park yok!"
     },
+    "qrz": {
+      "name": "QRZ.com Çağrı İşareti Sorguları",
+      "description": "İsimler için ücretsiz hesap, konumlar için ücretli hesap gerektirir"
+    },
+    "sats": {
+      "name": "Uydu Operasyonları"
+    },
     "siota": {
-      "name": "Havadaki Silolar",
+      "name": "SiOTA: Havada Silolar",
       "shortName": "SIOTA",
       "exportName": "SIOTA Aktivasyonu",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Havada Zirveler",
       "account": {
         "title": "SOTA (SOTAwatch kendi kendine noktalama için)",
         "dialogTitle": "SOTA Hesabı",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Yakında zirve yok!"
     },
     "tota": {
+      "name": "TOTA: Havada Kuleler",
       "activityOptions": {
         "title_zero": "Etkinleştirilmek üzere seçilmiş kule yok",
         "title_one": "1 kule etkinleştiriliyor",
@@ -682,7 +704,7 @@
       "noSquareSet": "Henüz kare ayarlanmadı"
     },
     "wca": {
-      "name": "Dünya Kaleleri Ödülleri",
+      "name": "WCA: Dünya Kaleleri Ödülleri",
       "shortName": "WCA",
       "exportName": "WCA Aktivasyonu",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL Havada",
       "account": {
         "title": "ZLOTA (ZLOTA noktalama)",
         "dialogTitle": "ZLOTA Hesabı",

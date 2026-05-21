@@ -10,7 +10,7 @@
       "total": "Total {{count}}"
     },
     "bca": {
-      "name": "Castells i Fortaleses de Bèlgica",
+      "name": "BCA: Castells i Fortaleses de Bèlgica",
       "shortName": "BCA",
       "exportName": "Activació BCA",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Fars i Vaixells de Bèlgica",
+      "name": "BLHA: Fars i Vaixells de Bèlgica",
       "shortName": "BLHA",
       "exportName": "Activació BLHA",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} fars caçats"
       }
     },
+    "call-history": {
+      "name": "Historial de Trucades",
+      "description": "Pujar ADIF històric i utilitzar per a consultes fora de línia"
+    },
     "call-notes": {
       "name": "Anotacions de la crida",
+      "description": "Emmagatzema notes d'indicatius en un fitxer i utilitza-les per a consultes fora de línia",
       "description-md_zero": "No hi ha anotacions carregades.",
       "description-md_one": "{{fmtCount}} {{type}} carregat.",
       "description-md_other": "{{fmtCount}} {{type}} carregats.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} Entitats DXCC"
     },
     "eca": {
-      "name": "Premis de Castells Anglesos",
+      "name": "ECA: Premis de Castells Anglesos",
       "shortName": "ECA",
       "exportName": "Activació ECA",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "Premis de Fars Anglesos",
+      "name": "ELA: Premis de Fars Anglesos",
       "shortName": "ELA",
       "exportName": "Activació ELA",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Activitat de Muntanya Global",
+      "name": "GMA: Activitat de Muntanya Global",
       "shortName": "GMA",
       "exportName": "Activació GMA",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Nom o referència…",
         "unknownSummit": "Cim desconegut"
       }
+    },
+    "hamdb": {
+      "name": "Consultes d'indicatius HamDB.org",
+      "description": "Servei gratuït, però limitat a trucades dels EUA, Canadà i Alemanya"
+    },
+    "hamqth": {
+      "name": "Consultes d'indicatius HamQTH.com",
+      "description": "Requereix un compte gratuït per a les consultes"
     },
     "llota": {
       "name": "LLOTA: Llacs i Llacunes A l'Aire",
@@ -394,7 +407,7 @@
       "noRefsNearby": "No hi ha llacs a prop!"
     },
     "mota": {
-      "name": "Molins a l'Aire",
+      "name": "MOTA: Molins en l'Aire",
       "shortName": "MOTA",
       "exportName": "Activació MOTA",
       "activityOptions": {
@@ -423,7 +436,7 @@
       "account": {
         "title": "ParksnPeaks (anuncis VK/ZL)",
         "dialogTitle": "Compte de ParksnPeaks",
-        "description": "Compte: {{username}}",
+        "description": "Compte #{{username}}",
         "noAccount": "Sense compte",
         "pleaseEnterDetails": "Si us plau, introdueix les dades per al teu compte de ParksnPeaks:"
       },
@@ -508,14 +521,21 @@
       "unknownRefName": "Parc Desconegut",
       "noRefsNearby": "No hi ha parcs propers!"
     },
+    "qrz": {
+      "name": "Consultes d'indicatius QRZ.com",
+      "description": "Requereix un compte gratuït per a noms, i un compte de pagament per a ubicacions"
+    },
+    "sats": {
+      "name": "Operacions Satèl·lit"
+    },
     "siota": {
-      "name": "Sitges en l'Aire",
+      "name": "SiOTA: Silos en l'Aire",
       "shortName": "SIOTA",
       "exportName": "Activació SIOTA",
       "account": {
         "title": "ParksnPeaks (anuncis SiOTA)",
         "dialogTitle": "Compte ParksnPeaks",
-        "description": "Compte: {{username}}",
+        "description": "Compte #{{username}}",
         "noAccount": "Cap compte",
         "pleaseEnterDetails": "Introduïu els detalls del vostre compte ParksnPeaks:",
         "usernameLabel": "Nom d'usuari (no indicatiu)",
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Cims en l'Aire",
       "account": {
         "title": "SOTA (per l'autoanunci de SOTAWatch)",
         "dialogTitle": "Compte SOTA",
@@ -612,6 +633,7 @@
       "noRefsNearby": "No hi ha cims a prop!"
     },
     "tota": {
+      "name": "TOTA: Torres en l'Aire",
       "activityOptions": {
         "title_zero": "No s'han seleccionat torres per activar",
         "title_one": "Activant 1 torre",
@@ -682,7 +704,7 @@
       "noSquareSet": "No es defineix cap graella"
     },
     "wca": {
-      "name": "World Castles Awards",
+      "name": "WCA: Premis Mundials de Castells",
       "shortName": "WCA",
       "exportName": "Activació WCA",
       "activityOptions": {
@@ -852,10 +874,11 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL en l'Aire",
       "account": {
         "title": "ZLOTA (senyalització ZLOTA)",
         "dialogTitle": "Compte ZLOTA",
-        "description": "Compte: {{callsign}}",
+        "description": "Compte #{{callsign}}",
         "noAccount": "Cap compte",
         "pleaseEnterDetails": "Introduïu els detalls del vostre compte ZLOTA:",
         "callsignLabel": "Indicatiu",

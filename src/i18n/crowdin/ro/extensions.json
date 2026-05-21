@@ -10,7 +10,7 @@
       "total": "Total {{count}}"
     },
     "bca": {
-      "name": "Castele și Fortărețe din Belgia",
+      "name": "BCA: Castele și Fortărețe din Belgia",
       "shortName": "BCA",
       "exportName": "Activare BCA",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Faruri și Nave Far din Belgia",
+      "name": "BLHA: Faruri și Nave Far din Belgia",
       "shortName": "BLHA",
       "exportName": "Activare BLHA",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} Faruri vânate"
       }
     },
+    "call-history": {
+      "name": "Istoric Apeluri",
+      "description": "Încarcă ADIF istoric și folosește pentru căutări offline"
+    },
     "call-notes": {
       "name": "Note de Indicativ",
+      "description": "Stochează notele indicativului de apel într-un fișier și folosește-le pentru căutări offline",
       "description-md_zero": "Nicio notă încărcată.",
       "description-md_one": "{{fmtCount}} {{type}} încărcate.",
       "description-md_other": "{{fmtCount}} {{type}} Încărcate",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} Entități DXCC"
     },
     "eca": {
-      "name": "(ECA) Premiile Castelelor Engleze",
+      "name": "Premiile Castelurilor Engleze",
       "shortName": "ECA",
       "exportName": "Activare ECA",
       "activityOptions": {
@@ -337,6 +342,14 @@
         "unknownSummit": "Vârf necunoscut"
       }
     },
+    "hamdb": {
+      "name": "Căutări de indicative HamDB.org",
+      "description": "Serviciu gratuit, dar limitat la apeluri din SUA, Canada și Germania"
+    },
+    "hamqth": {
+      "name": "Căutări de indicative HamQTH.com",
+      "description": "Necesar cont gratuit pentru căutări"
+    },
     "llota": {
       "name": "LLOTA: Lacuri și Lagune în Aer",
       "shortName": "LLOTA",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Nu sunt lacuri în apropiere!"
     },
     "mota": {
-      "name": "Morile pe Aer",
+      "name": "MOTA: Moara în aer",
       "shortName": "MOTA",
       "exportName": "Activare MOTA",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Parc Necunoscut",
       "noRefsNearby": "Nu sunt parcuri în apropiere!"
     },
+    "qrz": {
+      "name": "Căutări de indicative QRZ.com",
+      "description": "Necesar cont gratuit pentru nume și cont plătit pentru locații"
+    },
+    "sats": {
+      "name": "Operațiuni Satelit"
+    },
     "siota": {
-      "name": "Silozuri în aer",
+      "name": "SiOTA: Silozuri în Eter",
       "shortName": "SIOTA",
       "exportName": "Activare SIOTA",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Vârfuri în Eter",
       "account": {
         "title": "SOTA (pentru autodepistare SOTAWatch)",
         "dialogTitle": "Cont SOTA",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Nu sunt vârfuri în apropiere!"
     },
     "tota": {
+      "name": "TOTA: Turnuri în Eter",
       "activityOptions": {
         "title_zero": "Nicio turn activat pentru activare",
         "title_one": "Activarea 1 turn",
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL în Eter",
       "account": {
         "title": "ZLOTA (monitorizare ZLOTA)",
         "dialogTitle": "Cont ZLOTA",

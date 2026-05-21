@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} phares chassés"
       }
     },
+    "call-history": {
+      "name": "Historique des appels",
+      "description": "Télécharger l'ADIF historique et utiliser pour les recherches hors ligne"
+    },
     "call-notes": {
       "name": "Notes d'indicatif",
+      "description": "Stockez les notes d'indicatifs dans un fichier et utilisez-les pour des consultations hors ligne",
       "description-md_zero": "Aucune note chargée.",
       "description-md_one": "{{fmtCount}} {{type}} chargé.",
       "description-md_other": "{{fmtCount}} {{type}} chargé.",
@@ -337,6 +342,14 @@
         "unknownSummit": "Sommet inconnu"
       }
     },
+    "hamdb": {
+      "name": "Recherches d'indicatifs sur HamDB.org",
+      "description": "Service gratuit, mais limité aux appels aux États-Unis, au Canada et en Allemagne"
+    },
+    "hamqth": {
+      "name": "Recherches d'indicatifs sur HamQTH.com",
+      "description": "Nécessite un compte gratuit pour les recherches"
+    },
     "llota": {
       "name": "LLOTA : Lacs et lagunes en ondes",
       "shortName": "LLOTA",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Aucun lac à proximité !"
     },
     "mota": {
-      "name": "Mills On The Air",
+      "name": "Mills on the Air",
       "shortName": "MOTA",
       "exportName": "Activation MOTA",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Parc inconnu",
       "noRefsNearby": "Pas de parcs à proximité !"
     },
+    "qrz": {
+      "name": "Recherches d'indicatifs sur QRZ.com",
+      "description": "Nécessite un compte gratuit pour les noms, et un compte payant pour les localisations"
+    },
+    "sats": {
+      "name": "Opérations satellites"
+    },
     "siota": {
-      "name": "Silos On The Air",
+      "name": "Silos on the Air",
       "shortName": "SIOTA",
       "exportName": "Activation SIOTA",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "Summits on the Air",
       "account": {
         "title": "SOTA (pour auto-spotting SOTAWatch)",
         "dialogTitle": "Compte SOTA",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Pas de sommets à proximité !"
     },
     "tota": {
+      "name": "Towers on the Air",
       "activityOptions": {
         "title_zero": "Aucune tour sélectionnée pour l'activation",
         "title_one": "Activation de 1 tour",
@@ -682,7 +704,7 @@
       "noSquareSet": "Aucun carré défini"
     },
     "wca": {
-      "name": "Prix des Châteaux du Monde",
+      "name": "WCA : Diplômes des Châteaux Mondiaux",
       "shortName": "WCA",
       "exportName": "Activation WCA",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZaloTA: ZL on the Air",
       "account": {
         "title": "ZLOTA (spotting ZLOTA)",
         "dialogTitle": "Compte ZLOTA",

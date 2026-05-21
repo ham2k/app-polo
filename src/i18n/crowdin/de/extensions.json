@@ -10,7 +10,7 @@
       "total": "Insgesamt {{count}}"
     },
     "bca": {
-      "name": "Belgium Castles & Fortresses",
+      "name": "BCA: Belgien Burgen & Festungen",
       "shortName": "BCA",
       "exportName": "BCA Aktivierung",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "Belgian Lighthouses and Lightships",
+      "name": "BLHA: Belgische Leuchttürme und Feuerschiffe",
       "shortName": "BLHA",
       "exportName": "BLHA Aktivierung",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} Leuchttürme gejagt"
       }
     },
+    "call-history": {
+      "name": "Anrufverlauf",
+      "description": "Historische ADIF hochladen und für Offline-Abfragen nutzen"
+    },
     "call-notes": {
       "name": "Rufzeichensammlung",
+      "description": "Speichern Sie Rufzeichen-Notizen in einer Datei und verwenden Sie diese für Offline-Abfragen",
       "description-md_zero": "Keine Sammlung geladen.",
       "description-md_one": "{{fmtCount}} {{type}} geladen.",
       "description-md_other": "{{fmtCount}} {{type}} geladen.",
@@ -262,7 +267,7 @@
       "entitiesCount_other": "{{count}} DXCC-Entitäten"
     },
     "eca": {
-      "name": "English Castles Awards",
+      "name": "ECA: Englische Burgpreise",
       "shortName": "ECA",
       "exportName": "ECA Aktivierung",
       "activityOptions": {
@@ -281,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "English Lighthouse Awards",
+      "name": "ELA: Englische Leuchtturmpreise",
       "shortName": "ELA",
       "exportName": "ELA Aktivierung",
       "activityOptions": {
@@ -318,7 +323,7 @@
       }
     },
     "gma": {
-      "name": "Global Mountain Activity",
+      "name": "GMA: Globale Bergaktivität",
       "shortName": "GMA",
       "exportName": "GMA Aktivierung",
       "activityOptions": {
@@ -336,6 +341,14 @@
         "searchPlaceholder": "Name oder Referenz…",
         "unknownSummit": "Unbekannter Gipfel"
       }
+    },
+    "hamdb": {
+      "name": "HamDB.org Rufzeichenabfragen",
+      "description": "Kostenloser Dienst, aber auf Anrufe in den USA, Kanada und Deutschland beschränkt"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Rufzeichenabfragen",
+      "description": "Erfordert ein kostenloses Konto für Abfragen"
     },
     "llota": {
       "name": "LLOTA: Lakes and Lagoons on the Air",
@@ -394,7 +407,7 @@
       "noRefsNearby": "Keine Seen in der Nähe!"
     },
     "mota": {
-      "name": "Mills on the Air",
+      "name": "MOTA: Mühlen im Äther",
       "shortName": "MOTA",
       "exportName": "MOTA Aktivierung",
       "activityOptions": {
@@ -508,8 +521,15 @@
       "unknownRefName": "Unbekannter Park",
       "noRefsNearby": "Keine Parks in der Nähe!"
     },
+    "qrz": {
+      "name": "QRZ.com Rufzeichenabfragen",
+      "description": "Erfordert ein kostenloses Konto für Namen und ein kostenpflichtiges Konto für Standorte"
+    },
+    "sats": {
+      "name": "Satellitenbetrieb"
+    },
     "siota": {
-      "name": "Silos on the Air",
+      "name": "SiOTA: Silos im Äther",
       "shortName": "SIOTA",
       "exportName": "SIOTA Aktivierung",
       "account": {
@@ -547,6 +567,7 @@
       }
     },
     "sota": {
+      "name": "SOTA: Gipfel im Äther",
       "account": {
         "title": "SOTA (für SOTAWatch Selbst-Spot)",
         "dialogTitle": "SOTA Konto",
@@ -612,6 +633,7 @@
       "noRefsNearby": "Keine Gipfel in der Nähe!"
     },
     "tota": {
+      "name": "TOTA: Türme im Äther",
       "activityOptions": {
         "title_zero": "Keine Türme zur Aktivierung ausgewählt",
         "title_one": "Ein Turm wird aktiviert",
@@ -682,7 +704,7 @@
       "noSquareSet": "Kein Quadrat eingestellt"
     },
     "wca": {
-      "name": "World Castles Awards",
+      "name": "WCA: Weltburgenpreise",
       "shortName": "WCA",
       "exportName": "WCA Aktivierung",
       "activityOptions": {
@@ -852,6 +874,7 @@
       }
     },
     "zlota": {
+      "name": "ZLOTA: ZL im Äther",
       "account": {
         "title": "ZLOTA (ZLOTA Spot)",
         "dialogTitle": "ZLOTA Konto",
