@@ -307,12 +307,13 @@ const ReferenceHandler = {
 
     if (activationRef) {
       fields.push({ MY_SOTA_REF: activationRef.ref })
-      fields.push({ GRIDSQUARE: (qso.their?.grid ?? qso.their?.guess?.grid) })
-      fields.push({ MY_GRIDSQUARE: (qso?.our?.grid ?? common.grid) })
     }
 
     if (huntingRef) {
       fields.push({ SOTA_REF: huntingRef.ref })
+    }
+
+    if (activationRef || huntingRef) {
       fields.push({ GRIDSQUARE: (qso.their?.grid ?? qso.their?.guess?.grid) })
       fields.push({ MY_GRIDSQUARE: (qso?.our?.grid ?? common.grid) })
     }
