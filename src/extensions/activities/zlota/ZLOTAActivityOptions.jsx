@@ -19,7 +19,7 @@ import { Info } from './ZLOTAInfo'
 import { zlotaFindAllByLocation, zlotaFindAllByName, zlotaFindOneByReference } from './ZLOTADataFile'
 import { ZLOTAListItem } from './ZLOTAListItem'
 
-export function ZLOTAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function ZLOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -47,10 +47,10 @@ export function ZLOTAActivityOptions({ styles, operation, settings, refs: allRef
       error => {
         console.info('Geolocation error', error)
       }, {
-      enableHighAccuracy: true,
-      timeout: 30 * 1000 /* 30 seconds */,
-      maximumAge: 1000 * 60 * 5 /* 5 minutes */
-    }
+        enableHighAccuracy: true,
+        timeout: 30 * 1000 /* 30 seconds */,
+        maximumAge: 1000 * 60 * 5 /* 5 minutes */
+      }
     )
   }, [])
 

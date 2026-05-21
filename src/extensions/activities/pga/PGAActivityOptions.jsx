@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -17,7 +17,7 @@ import { Info } from './PGAInfo'
 import { PGAListItem } from './PGAListItem'
 import { pgaFindAllByLocation, pgaFindAllByName, pgaFindOneByReference } from './PGADataFile'
 
-export function PGAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function PGAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -43,10 +43,10 @@ export function PGAActivityOptions({ styles, operation, settings, refs: allRefs,
       error => {
         console.info('Geolocation error', error)
       }, {
-      enableHighAccuracy: true,
-      timeout: 1000 * 30 /* 30 seconds */,
-      maximumAge: 1000 * 60 /* 1 minute */
-    }
+        enableHighAccuracy: true,
+        timeout: 1000 * 30 /* 30 seconds */,
+        maximumAge: 1000 * 60 /* 1 minute */
+      }
     )
   }, [])
 
@@ -123,7 +123,7 @@ export function PGAActivityOptions({ styles, operation, settings, refs: allRefs,
   }, [allRefs, setRefs])
 
   const handleRemoveReference = useCallback((newRef) => {
-    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
+    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: undefined }))
   }, [allRefs, setRefs])
 
   return (
