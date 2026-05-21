@@ -4,6 +4,7 @@
     "photoCaption": "F4WFI at FR-13916",
     "changes": [
       "Use QR Codes for LoFi account linking",
+      "Improve accessibility for visually impaired users",
       "Performance and stability improvements"
     ]
   },

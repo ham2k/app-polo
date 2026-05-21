@@ -22,7 +22,7 @@ export function SOTAListItem ({ activityRef, refData, operationRef, style, setti
   return (
     <H2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
       titlePrimary={reference?.ref ?? activityRef}
-      titleSecondary={reference?.name ? ` - ${reference?.name}` : ''}
+      titleSecondary={reference?.name ?? ''}
       description={[
         fmtDistance(refData.distance, { units: settings.distanceUnits, away: true }),
         reference?.ref ? [reference?.region, reference?.association].filter(x => x).join(' • ') : 'Unknown Summit Reference'

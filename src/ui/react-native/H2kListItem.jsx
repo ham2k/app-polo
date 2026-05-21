@@ -105,15 +105,20 @@ export function H2kListItem ({
     if (accessibilityLabel) {
       return accessibilityLabel
     }
-    if (rightSwitchValue || rightSwitchOnValueChange) {
-      return [
-        accessibilityTitle || title,
-        rightSwitchValue ? 'On' : 'Off',
-        accessibilityDescription || description
-      ].filter(Boolean).join(', ')
-    }
-    return [accessibilityTitle || title, accessibilityDescription || description].filter(Boolean).join(', ')
-  }, [accessibilityTitle, accessibilityDescription, rightSwitchValue, rightSwitchOnValueChange, title, description, accessibilityLabel])
+
+    const parts = []
+
+    if (accessibilityTitle) parts.push(accessibilityTitle)
+    else if (titlePrimary || titleSecondary) parts.push(titlePrimary, titleSecondary)
+    else parts.push(title)
+
+    if (rightSwitchValue || rightSwitchOnValueChange) parts.push(rightSwitchValue ? 'On' : 'Off')
+
+    if (accessibilityDescription) parts.push(accessibilityDescription)
+    else parts.push(description)
+
+    return parts.filter(Boolean).join(', ')
+  }, [accessibilityLabel, rightSwitchValue, rightSwitchOnValueChange, accessibilityTitle, titlePrimary, titleSecondary, title, accessibilityDescription, description])
 
   // NOTE: Ideally, we'd use `accessibilityHint` to describe the setting,
   // but using it on `List.Item` seems to crash on iOS.  ¯\_(ツ)_/¯
