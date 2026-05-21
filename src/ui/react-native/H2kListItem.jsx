@@ -20,7 +20,7 @@ export function H2kListItem ({
   accessibilityLabel, accesibilityHint, accessibilityRole,
   accessibilityTitle, accessibilityDescription,
   leftIcon, leftIconColor, left,
-  rightIcon, right, onPressRight,
+  rightIcon, rightIconColor, right, onPressRight,
   rightSwitchValue, rightSwitchOnValueChange,
   ...moreProps
 }) {
@@ -93,14 +93,13 @@ export function H2kListItem ({
       return () => <Switch value={rightSwitchValue} onValueChange={rightSwitchOnValueChange} />
     } else if (rightIcon) {
       if (onPressRight) {
-        return () => <H2kIconButton icon={rightIcon} size={styles.oneSpace * 3} style={{ marginRight: styles.oneSpace * 2 }} onPress={onPressRight} />
+        return () => <H2kIconButton icon={rightIcon} iconColor={rightIconColor} size={styles.oneSpace * 3} style={{ marginRight: styles.oneSpace * 2 }} onPress={onPressRight} />
       } else {
-        return () => <View style={{ marginRight: styles.oneSpace * 2 }}><H2kIcon icon={rightIcon} /></View>
+        return () => <View style={{ marginRight: styles.oneSpace * 2 }}><H2kIcon icon={rightIcon} color={rightIconColor} /></View>
       }
     }
     return null
-  }, [right, rightSwitchValue, rightIcon, rightSwitchOnValueChange, onPressRight, styles.oneSpace])
-
+  }, [right, rightSwitchValue, rightIcon, rightSwitchOnValueChange, onPressRight, styles.oneSpace, rightIconColor])
   const actualAccessibilityLabel = useMemo(() => {
     if (accessibilityLabel) {
       return accessibilityLabel

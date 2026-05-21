@@ -8,6 +8,8 @@
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
+import { setOperationData } from '../../../store/operations'
+import { hashCode } from '../../../tools/hashCode'
 
 import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'
@@ -22,6 +24,7 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { distanceOnEarth } from '../../../tools/geoTools'
 import { WWBOTAPostOtherSpot } from './WWBOTAPostOtherSpot'
+import { WWBOTAAccountSetting } from './WWBOTAAccount'
 import GLOBAL from '../../../GLOBAL'
 
 const Extension = {
@@ -34,6 +37,14 @@ const Extension = {
     registerHook(`ref:${Info.activationType}`, { hook: ReferenceHandler })
     registerHook('ref:ukbota', { hook: ReferenceHandler }) // Legacy
     registerHook('ref:ukbotaActivation', { hook: ReferenceHandler }) // Legacy
+    registerHook('setting', {
+      hook: {
+        key: 'wwbota-account',
+        category: 'account',
+        SettingItem: WWBOTAAccountSetting
+      }
+    })
+    registerHook('qsl', { hook: QSLHook })
 
     registerWWBOTADataFile()
     await dispatch(loadDataFile('wwbota-all-bunkers', { noticesInsteadOfFetch: true }))
@@ -133,6 +144,140 @@ const SpotsHook = {
       }
     }
     return dedupedQSOs
+  }
+}
+
+function wwbotaQsoDataStr(qso) {
+  return [qso.key, qso.our?.sent, qso.their?.sent, qso.notes, ...filterRefs(qso.refs, Info.huntingType).map(r => r.ref).sort()].join('|')
+}
+
+const QSLHook = {
+  ...Info,
+  serviceName: 'WWBOTA Logger',
+  canSendOutgoingQSLs: ({ operation, qsos, settings }) => {
+    if (!settings.accounts?.wwbota?.login) return false
+    const hasHunted = qsos.filter(q => !q.deleted && findRef(q, Info.huntingType)).length > 0
+    const isActivation = findRef(operation, Info.activationType)
+    return hasHunted || isActivation
+  },
+  sendOutgoingQSLs: async ({ operation, qsos, settings, dispatch }) => {
+    const qsl = operation?.qsl?.[Info.key]
+    const qslUploadIDs = {...qsl?.uploadIDs || {}}
+    const operationRefs = filterRefs(operation, Info.activationType).filter(r => r.ref)
+    // To cover case where references changed
+    const allRefsUploaded = qsl?.refs?.length === operationRefs.length && operationRefs.every(ref => qsl?.refs?.find(x => x.ref === ref.ref))
+
+    const uploadQSOs = []
+    let index = 0
+    const qsoIndexes = {}
+    const qsosToDelete = []
+    qsos.filter(q => !q.deleted).forEach(qso => {
+      if (allRefsUploaded && qslUploadIDs[qso.uuid]?.hash && qslUploadIDs[qso.uuid]?.hash === hashCode(wwbotaQsoDataStr(qso))) return // Don't re-upload QSOs we've already uploaded
+      qsosToDelete.push(...(qslUploadIDs[qso.uuid]?.uuids || [])) // If we're re-uploading, delete old ones
+      qsoIndexes[qso.uuid] = []
+      operationRefs.forEach(ref => {
+        uploadQSOs.push({
+          "activator_call": qso.our?.call,
+          "band": qso.band,
+          "hunter_call": qso.their?.call,
+          "mode": qso.mode,
+          "notes": qso.notes || null,
+          "reference": ref.ref,
+          "rst_rcvd": qso.their?.sent || null,
+          "rst_sent": qso.our?.sent || null,
+          "time": new Date(qso.startAtMillis).toISOString()
+        })
+        qsoIndexes[qso.uuid].push(index++)
+      })
+      // Hunter references and also bunker 2 bunker contacts
+      const huntRefs = filterRefs(qso.refs, Info.huntingType).filter(r => r.ref)
+      huntRefs.forEach(ref => {
+        uploadQSOs.push({
+          "activator_call": qso.their?.call,
+          "band": qso.band,
+          "hunter_call": qso.our?.call,
+          "mode": qso.mode,
+          "notes": qso.notes || null,
+          "reference": ref.ref,
+          "rst_rcvd": qso.their?.sent || null,
+          "rst_sent": qso.our?.sent || null,
+          "time": new Date(qso.startAtMillis).toISOString()
+        })
+        qsoIndexes[qso.uuid].push(index++)
+      })
+    })
+
+    // Find any previously uploaded QSOs that are no longer in the log and delete them
+    Object.keys(qslUploadIDs).forEach(qsoUUID => {
+      if (!qsos.find(q => !q.deleted && q.uuid === qsoUUID)) {
+        qsosToDelete.push(...(qslUploadIDs[qsoUUID].uuids || []))
+        delete qslUploadIDs[qsoUUID]
+      }
+    })
+
+    const apiPromises = qsosToDelete.map(id => dispatch(apiWWBOTA.endpoints.deleteQSO.initiate({ id })))
+    await Promise.all(apiPromises)
+    apiPromises.forEach(p => p.unsubscribe && p.unsubscribe())
+
+    let apiResults
+    if (uploadQSOs.length > 0) {
+      const apiPromise = await dispatch(apiWWBOTA.endpoints.logUpload.initiate(uploadQSOs, { forceRefetch: true }))
+      await Promise.all(dispatch(apiWWBOTA.util.getRunningQueriesThunk()))
+      apiResults = await dispatch((_dispatch, getState) => apiWWBOTA.endpoints.logUpload.select(uploadQSOs)(getState()))
+      apiPromise.unsubscribe && apiPromise.unsubscribe()
+    }
+
+    if (!apiResults?.error) {
+      let qsosHash = 0
+      qsos.filter(q => !q.deleted).forEach(qso => {
+        const qsoKey = wwbotaQsoDataStr(qso)
+        qsosHash = hashCode(qsoKey, qsosHash)
+        if (qsoIndexes[qso.uuid]) {  // Was added or updated
+          qslUploadIDs[qso.uuid] = {
+            uuids: qsoIndexes[qso.uuid]?.map(index => apiResults?.data?.[index]).filter(x => x) || [],
+            hash: hashCode(qsoKey)
+          }
+        }
+      })
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        qsl: { ...operation?.qsl, [Info.key]: {
+          lastUpdated: Date.now(),
+          refs: operationRefs,
+          qsosHash,
+          uploadIDs: qslUploadIDs
+        }}
+      }))
+    } else {
+      console.log('Error uploading QSOs to WWBOTA', apiResults.error)
+      dispatch(setOperationData({
+        uuid: operation.uuid,
+        qsl: { ...operation?.qsl, [Info.key]: {
+          ...operation?.qsl?.[Info.key],
+          error: apiResults.error?.data?.detail?.[0]?.msg || apiResults?.error?.data?.detail || apiResults?.error?.data?.message || 'Unknown error'
+        }}
+      }))
+    }
+  },
+  qslStatusForOperation: ({ operation, qsos }) => {
+    error = operation?.qsl?.[Info.key]?.error
+    if (!operation?.qsl?.[Info.key]) return { status: 'neverSent', error }
+
+    // Activation references changed?
+    const qslRefs = operation.qsl?.[Info.key]?.refs || []
+    const newRefs = filterRefs(operation, Info.activationType)
+    if (newRefs.length !== qslRefs.length || !newRefs.every(ref => qslRefs.find(x => x.ref === ref.ref))) {
+      return { status: 'needsUpdate', error }
+    }
+
+    // QSO modified in way that concerns service?
+    const qslHash = operation.qsl?.[Info.key]?.qsosHash
+    const newHash = qsos.filter(q => !q.deleted).reduce((hash, q) => hashCode(wwbotaQsoDataStr(q), hash), 0)
+    if (qslHash !== newHash) {
+      return { status:'needsUpdate', error }
+    }
+
+    return { status: 'upToDate', error }
   }
 }
 
