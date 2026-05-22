@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Dados da Operação",
       "selectFromTheExportOptionsBelow": "Selecione entre as opções de exportação abaixo",
-      "exportSingeFile": "Exportar um ficheiro",
-      "exportSelectedFiles_zero": "Exportar 0 ficheiros selecionados",
-      "exportSelectedFiles_one": "Exportar 1 ficheiro selecionado",
-      "exportSelectedFiles_other": "Exportar {{count}} ficheiros selecionados",
-      "exportAllFiles": "Exportar todos os ficheiros",
+      "exportSelectedFiles_zero": "0 ficheiros selecionados",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Partilhar",
+      "exportActionsSave": "Guardar",
+      "exportActionsExport": "Exportar",
       "exportQSOs": "Exportar QSOs",
       "pendingToDoItems_zero": "Nenhum item pendente",
       "pendingToDoItems_one": "1 item pendente",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Eliminar operação?",
         "description": "Tem certeza de que deseja eliminar esta operação?"
-      }
+      },
+      "errorSavingExport": "Não foi possível guardar o ficheiro"
     },
     "callInfo": {
       "title": "Informações do Indicativo",

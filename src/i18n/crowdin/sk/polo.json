@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Údaje o prevádzke",
       "selectFromTheExportOptionsBelow": "Vyberte z nasledujúcich možností exportu",
-      "exportSingeFile": "Exportovať jeden súbor",
-      "exportSelectedFiles_zero": "Exportovať 0 vybraných súborov",
-      "exportSelectedFiles_one": "Exportovať 1 vybraný súbor",
-      "exportSelectedFiles_other": "Exportovať {{count}} vybraných súborov",
-      "exportAllFiles": "Exportovať všetky súbory",
+      "exportSelectedFiles_zero": "0 vybraných súborov",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Zdieľať",
+      "exportActionsSave": "Uložiť",
+      "exportActionsExport": "Exportovať",
       "exportQSOs": "Export QSOs",
       "pendingToDoItems_zero": "Žiadne čakajúce úlohy",
       "pendingToDoItems_one": "1 čakajúca úloha",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Vymazať túto prevádzku?",
         "description": "Naozaj chcete vymazať túto prevádzku?"
-      }
+      },
+      "errorSavingExport": "Nepodarilo sa uložiť súbor"
     },
     "callInfo": {
       "title": "Informácie o volacom znaku",

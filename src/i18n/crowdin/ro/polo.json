@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Date Operațiune",
       "selectFromTheExportOptionsBelow": "Selectează din opțiunile de export de mai jos",
-      "exportSingeFile": "Exportă un fișier",
-      "exportSelectedFiles_zero": "Exportă 0 fișiere selectate",
-      "exportSelectedFiles_one": "Exportă 1 fișier selectat",
-      "exportSelectedFiles_other": "Exportă {{count}} fișiere selectate",
-      "exportAllFiles": "Exportă toate fișierele",
+      "exportSelectedFiles_zero": "0 selected files",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Partajează",
+      "exportActionsSave": "Salvează",
+      "exportActionsExport": "Exportă",
       "exportQSOs": "Exportă QSO-uri",
       "pendingToDoItems_zero": "Niciun articol de făcut în așteptare",
       "pendingToDoItems_one": "1 articol de făcut în așteptare",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Ștergeți operațiunea?",
         "description": "Sunteţi sigur că doriţi să ştergeţi această operaţiune?"
-      }
+      },
+      "errorSavingExport": "Nu s-a putut salva fișierul"
     },
     "callInfo": {
       "title": "Informații Indicativ",

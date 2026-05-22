@@ -7,9 +7,9 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Alert, ScrollView, View } from 'react-native'
+import { Alert, Platform, ScrollView, View } from 'react-native'
 import { Checkbox, Menu, Text } from 'react-native-paper'
-import { pick, keepLocalCopy } from '@react-native-documents/picker'
+import { errorCodes, isErrorWithCode, keepLocalCopy, pick, saveDocuments } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -24,11 +24,17 @@ import { loadQSOs, selectQSOs } from '../../../store/qsos'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { reportError, trackEvent } from '../../../distro'
-import { H2kListItem, H2kListSection } from '../../../ui'
+import { H2kButton, H2kListItem, H2kListSection } from '../../../ui'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { ExportWavelogDialog } from './components/ExportWavelogDialog'
 import { buildTitleForOperation } from '../OperationScreen'
+
+const isLikelyCanceledSavePickError = (err) =>
+  isErrorWithCode(err) &&
+  (err.code === errorCodes.OPERATION_CANCELED ||
+    /** Android save-picker dismiss often rejects with INVALID_DATA_RETURNED ("Data from document picker is null"). */
+    err.code === 'INVALID_DATA_RETURNED')
 
 export default function OperationDataScreen (props) {
   const { t } = useTranslation()
@@ -96,49 +102,93 @@ export default function OperationDataScreen (props) {
     }
   }, [operation, ourInfo, qsos, settings])
 
-  const handleExports = useCallback(({ options }) => {
+  const handleExports = useCallback(({ options, disposition = 'share' }) => {
+    const destination = disposition === 'save' ? 'save_documents' : 'share'
     options.forEach((option) => {
       trackEvent('operation_exported', {
+        destination,
         export_type: [option.exportType ?? option.handler.key, option.format].join('.'),
         qso_count: operation.qsoCount,
         duration_minutes: Math.round((operation.startAtMillisMax - operation.startAtMillisMin) / (1000 * 60)),
         refs: (option.operationData?.refs || []).map(r => r.type).join(',')
       })
     })
-    console.log('handle exports', options)
+    console.log(`handle exports (${disposition})`, options)
     const useDataURIs = false
-    dispatch(generateExportsForOptions(operation.uuid, options, { dataURI: useDataURIs })).then((exports) => {
-      console.log('generated exports', exports)
-      if (exports?.length > 0) {
-        const shareOptions = {
-          urls: exports.map(e => e.uri),
-          type: 'text/plain',
-          showAppsToView: true
+    dispatch(generateExportsForOptions(operation.uuid, options, { dataURI: useDataURIs }))
+      .then(async (exports) => {
+        console.log('generated exports', exports)
+        if (!exports?.length) return
+
+        if (disposition === 'save') {
+          for (const e of exports) {
+            try {
+              const responses = await saveDocuments({
+                sourceUris: [e.uri],
+                mimeType: e.type ?? 'text/plain',
+                fileName: e.fileName
+              })
+              const res = responses[0]
+              if (res?.error) {
+                Alert.alert(
+                  t('screens.operationData.errorSavingExport', "Couldn't save file"),
+                  res.error
+                )
+                reportError('Error saving export', new Error(res.error))
+                break
+              }
+            } catch (err) {
+              if (isLikelyCanceledSavePickError(err)) {
+                break
+              }
+              console.info('Saving export Error', err)
+              reportError('Error saving export', err instanceof Error ? err : new Error(String(err)))
+              const message = typeof err?.message === 'string' ? err.message : ''
+              Alert.alert(t('screens.operationData.errorSavingExport', "Couldn't save file"), message)
+              break
+            }
+          }
+          return
         }
+
+        const shareOptions =
+          exports.length === 1
+            ? {
+                url: exports[0].uri,
+                type: exports[0].type ?? 'text/plain',
+                showAppsToView: true
+              }
+            : {
+                urls: exports.map((exportItem) => exportItem.uri),
+                type: 'text/plain',
+                showAppsToView: true
+              }
         if (useDataURIs) {
-          shareOptions.filenames = exports.map(e => e.fileName)
+          if (exports.length === 1) {
+            shareOptions.filename = exports[0].fileName
+          } else {
+            shareOptions.filenames = exports.map((exportItem) => exportItem.fileName)
+          }
         }
 
         console.log('share options', shareOptions)
-        Share.open(shareOptions).then((x) => {
-          console.info('Shared', x)
-        }).catch((e) => {
-          if (e.message.includes('user canceled')) {
-            // Do nothing
-          } else {
-            console.info('Sharing Error', e)
-          }
-        }).finally(() => {
-          // Deleting these file causes GMail on Android to fail to attach it
-          // So for the time being, we're leaving them in place.
-          // dispatch(deleteExport(path))
-        })
-      }
-    }).catch((error) => {
-      console.error('Error generating exports', error)
-      reportError('Error generating exports', error)
-    })
-  }, [dispatch, operation])
+        Share.open({ ...shareOptions, failOnCancel: false })
+          .then((x) => {
+            console.info('Shared', x)
+          })
+          .catch((shareErr) => {
+            if (shareErr?.message?.includes('user canceled')) {
+              // ignore
+            } else {
+              console.info('Sharing Error', shareErr)
+            }
+          })
+      })
+      .catch((error) => {
+        console.error('Error generating exports', error)
+        reportError('Error generating exports', error)
+      })
+  }, [dispatch, operation, t])
 
   const handleImportADIF = useCallback(() => {
     pick({ mode: 'import' }).then(async (files) => {
@@ -173,10 +223,10 @@ export default function OperationDataScreen (props) {
 
   const exportLabel = useMemo(() => {
     if (selectedExportOptions.length === 0) return t('screens.operationData.selectFromTheExportOptionsBelow', 'Select from the export options below')
-    if (exportOptions.length === 1) return t('screens.operationData.exportSingeFile', 'Export one file')
-    if (selectedExportOptions.length === exportOptions.length) return t('screens.operationData.exportAllFiles', `Export all ${selectedExportOptions.length} files`)
     return t('screens.operationData.exportSelectedFiles', 'Export {{count}} selected files', { count: selectedExportOptions.length })
-  }, [exportOptions.length, selectedExportOptions.length, t])
+  }, [selectedExportOptions.length, t])
+
+  const exportActionsEnabled = Boolean(readyToExport && selectedExportOptions.length > 0)
 
   const handleNavigateToLoggingTab = useCallback(() => {
     // Passing `selectedUUID` in `params` so that it makes it to the `OpLog` tab if it is present
@@ -205,16 +255,68 @@ export default function OperationDataScreen (props) {
               />
             )}
 
-            <H2kListItem
-              title={exportLabel}
-              leftIcon="share"
-              onPress={() => readyToExport && handleExports({ options: selectedExportOptions })}
-              style={{ opacity: readyToExport ? 1 : 0.5 }}
-              disabled={!readyToExport}
-            />
+            <View
+              style={{
+                ...styles.list.item,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingHorizontal: styles.oneSpace * 2,
+                paddingVertical: styles.halfSpace * 1,
+                opacity: readyToExport ? 1 : 0.5
+              }}
+            >
+              <Text
+                style={[styles.list.title, { flex: 1, flexShrink: 1, marginRight: styles.oneSpace }]}
+                numberOfLines={2}
+                accessibilityRole="header"
+              >
+                {exportLabel}
+              </Text>
+              {Platform.OS === 'android' ? (
+                <View style={{ flexDirection: 'row', flexShrink: 0, gap: styles.oneSpace * 2, alignItems: 'center' }}>
+                  <H2kButton
+                    mode="elevated"
+                    icon="share"
+                    compact
+                    disabled={!exportActionsEnabled}
+                    onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'share' })}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('screens.operationData.exportRowShare', 'Share')}
+                  >
+                    {t('screens.operationData.exportRowShare', 'Share')}
+                  </H2kButton>
+                  <H2kButton
+                    mode="elevated"
+                    icon="content-save"
+                    compact
+                    disabled={!exportActionsEnabled}
+                    onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'save' })}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('screens.operationData.exportRowSave', 'Save')}
+                  >
+                    {t('screens.operationData.exportRowSave', 'Save')}
+                  </H2kButton>
+                </View>
+              ) : (
+                <View style={{ flexDirection: 'row', flexShrink: 0, gap: styles.oneSpace * 2, alignItems: 'center' }}>
+                  <H2kButton
+                    mode="elevated"
+                    icon="share"
+                    compact
+                    disabled={!exportActionsEnabled}
+                    onPress={() => readyToExport && handleExports({ options: selectedExportOptions, disposition: 'share' })}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('screens.operationData.exportRowShare', 'Share')}
+                  >
+                    {t('screens.operationData.exportRowExport', 'Export')}
+                  </H2kButton>
+                </View>
+              )}
+            </View>
             {exportOptions.map((option) => (
               <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'flex-start' }}>
-                <View style={{ marginTop: styles.oneSpace * 1 }}>
+                <View style={{ marginTop: styles.oneSpace * 1, marginRight: styles.oneSpace * -1.5 }}>
                   <Checkbox
                     status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
                     onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
@@ -226,7 +328,7 @@ export default function OperationDataScreen (props) {
                   description={option.fileName}
                   leftIcon={option.icon ?? option.handler.icon ?? 'file-outline'}
                   leftIconColor={option.devMode ? styles.colors.devMode : styles.colors.onBackground}
-                  onPress={() => readyToExport && handleExports({ options: [option] })}
+                  onPress={() => readyToExport && handleExports({ options: [option], disposition: 'share' })}
                   descriptionStyle={option.devMode ? { color: styles.colors.devMode } : {}}
                   titleStyle={option.devMode ? { color: styles.colors.devMode } : {}}
                   style={{ opacity: readyToExport ? 1 : 0.5, flex: 1 }}

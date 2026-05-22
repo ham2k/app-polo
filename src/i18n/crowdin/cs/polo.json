@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Data aktivity",
       "selectFromTheExportOptionsBelow": "Vyberte si z níže uvedených možností exportu",
-      "exportSingeFile": "Exportovat jeden soubor",
-      "exportSelectedFiles_zero": "Exportovat 0 vybraných souboru",
-      "exportSelectedFiles_one": "Exportovat 1 vybraný soubor",
-      "exportSelectedFiles_other": "Exportovat {{count}} vybraných souborů",
-      "exportAllFiles": "Exportovat všechny soubory",
+      "exportSelectedFiles_zero": "0 vybraných souborů",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Sdílet",
+      "exportActionsSave": "Uložit",
+      "exportActionsExport": "Exportovat",
       "exportQSOs": "Exportovat QSOs",
       "pendingToDoItems_zero": "Žádné čekající úkoly na vyřízení",
       "pendingToDoItems_one": "1 čekající úkol na vyřízení",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Smazat operaci?",
         "description": "Jste si jisti, že chcete smazat tuto operaci?"
-      }
+      },
+      "errorSavingExport": "Nepodařilo se uložit soubor"
     },
     "callInfo": {
       "title": "Informace o volací značce",

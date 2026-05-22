@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Dades de l'operació",
       "selectFromTheExportOptionsBelow": "Selecciona entre les opcions d'exportació a continuació",
-      "exportSingeFile": "Exportar un fitxer",
-      "exportSelectedFiles_zero": "Exportar 0 fitxers seleccionats",
-      "exportSelectedFiles_one": "Exportar 1 fitxer seleccionat",
-      "exportSelectedFiles_other": "Exportar {{count}} fitxers seleccionats",
-      "exportAllFiles": "Exportar tots els fitxers",
+      "exportSelectedFiles_zero": "0 fitxers seleccionats",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Comparteix",
+      "exportActionsSave": "Desa",
+      "exportActionsExport": "Exporta",
       "exportQSOs": "Exportar QSOs",
       "pendingToDoItems_zero": "No hi ha tasques pendents",
       "pendingToDoItems_one": "1 tasca pendent",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Esborrar operació?",
         "description": "Estàs segur que vols esborrar aquesta operació?"
-      }
+      },
+      "errorSavingExport": "No s'ha pogut desar el fitxer"
     },
     "callInfo": {
       "title": "Informació de l'indicatiu",

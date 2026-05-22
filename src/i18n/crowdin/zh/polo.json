@@ -83,11 +83,12 @@
     "operationData": {
       "title": "操作数据",
       "selectFromTheExportOptionsBelow": "从以下导出选项中选择",
-      "exportSingeFile": "导出一个文件",
-      "exportSelectedFiles_zero": "导出 0 个选中文件",
-      "exportSelectedFiles_one": "导出 1 个选中文件",
-      "exportSelectedFiles_other": "导出 {{count}} 个选中文件",
-      "exportAllFiles": "导出所有文件",
+      "exportSelectedFiles_zero": "0 个选中文件",
+      "exportSelectedFiles_one": "1 个选中文件",
+      "exportSelectedFiles_other": "{{count}} 个选中文件",
+      "exportActionsShare": "分享",
+      "exportActionsSave": "保存",
+      "exportActionsExport": "导出",
       "exportQSOs": "导出 QSOs",
       "pendingToDoItems_zero": "没有待办事项",
       "pendingToDoItems_one": "1 个待办事项",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "删除操作？",
         "description": "确定要删除此操作吗？"
-      }
+      },
+      "errorSavingExport": "无法保存文件"
     },
     "callInfo": {
       "title": "呼号信息",

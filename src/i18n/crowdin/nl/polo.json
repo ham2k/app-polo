@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Activatie Gegevens",
       "selectFromTheExportOptionsBelow": "Selecteer uit de onderstaande exportopties",
-      "exportSingeFile": "Exporteer één bestand",
-      "exportSelectedFiles_zero": "Exporteer 0 geselecteerde bestanden",
-      "exportSelectedFiles_one": "Exporteer 1 geselecteerd bestand.",
-      "exportSelectedFiles_other": "Exporteer {{count}} geselecteerde bestanden.",
-      "exportAllFiles": "Exporteer alle bestanden",
+      "exportSelectedFiles_zero": "0 selected files",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Delen",
+      "exportActionsSave": "Opslaan",
+      "exportActionsExport": "Exporteren",
       "exportQSOs": "Exporteer QSO's",
       "pendingToDoItems_zero": "Geen lopende to-do acties",
       "pendingToDoItems_one": "1 lopend to-do item",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Activatie verwijderen?",
         "description": "Weet u zeker dat u deze activatie wilt verwijderen?"
-      }
+      },
+      "errorSavingExport": "Kon bestand niet opslaan"
     },
     "callInfo": {
       "title": "Roepnaam Info",

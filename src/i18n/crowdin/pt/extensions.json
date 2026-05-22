@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "BLHA: Faróis e Lightships Belgas",
+      "name": "BLHA: Faróis e Navios-faróis Belgas",
       "shortName": "BLHA",
       "exportName": "Ativação BLHA",
       "activityOptions": {
@@ -98,7 +98,7 @@
     },
     "call-notes": {
       "name": "Notas Sobre o Indicativo",
-      "description": "Armazene notas de indicativo em um arquivo e use para consultas offline",
+      "description": "Armazene notas de indicativos num ficheiro e use para consultas offline",
       "description-md_zero": "Nenhuma nota carregada.",
       "description-md_one": "{{fmtCount}} {{type}} carregado.",
       "description-md_other": "{{fmtCount}} {{type}} carregados.",
@@ -286,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "ELA: Prémios de Farol Ingleses",
+      "name": "ELA: Prémios de Faróis Ingleses",
       "shortName": "ELA",
       "exportName": "Ativação ELA",
       "activityOptions": {
@@ -344,7 +344,7 @@
     },
     "hamdb": {
       "name": "Pesquisas de Indicativo HamDB.org",
-      "description": "Serviço gratuito, mas limitado a chamadas dos EUA, Canadá e Alemanha"
+      "description": "Serviço gratuito, mas limitado a indicativos dos EUA, Canadá e Alemanha"
     },
     "hamqth": {
       "name": "Pesquisas de Indicativo HamQTH.com",

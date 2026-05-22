@@ -1,10 +1,11 @@
 {
-  "26.5.0-pre2": {
-    "name": "May '26 - Pre 2",
+  "26.5.0-pre5": {
+    "name": "May '26 - Pre 5",
     "photoCaption": "F4WFI at FR-13916",
     "changes": [
       "Use QR Codes for LoFi account linking",
       "Improve accessibility for visually impaired users",
+      "Android users can now save to local files",
       "Performance and stability improvements"
     ]
   },

@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Operation Data",
       "selectFromTheExportOptionsBelow": "Select from the export options below",
-      "exportSingeFile": "Export one file",
-      "exportSelectedFiles_zero": "Export 0 selected files",
-      "exportSelectedFiles_one": "Export 1 selected file",
-      "exportSelectedFiles_other": "Export {{count}} selected files",
-      "exportAllFiles": "Export all files",
+      "exportSelectedFiles_zero": "0 selected files",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Share",
+      "exportActionsSave": "Save",
+      "exportActionsExport": "Export",
       "exportQSOs": "Export QSOs",
       "pendingToDoItems_zero": "No pending to-do items",
       "pendingToDoItems_one": "1 pending to-do item",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Delete operation?",
         "description": "Are you sure you want to delete this operation?"
-      }
+      },
+      "errorSavingExport": "Couldn't save file"
     },
     "callInfo": {
       "title": "Callsign Info",

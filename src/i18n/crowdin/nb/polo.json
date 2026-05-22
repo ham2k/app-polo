@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Operasjonsdata",
       "selectFromTheExportOptionsBelow": "Velg blant eksportalternativene nedenfor",
-      "exportSingeFile": "Eksporter én fil",
-      "exportSelectedFiles_zero": "Eksporter 0 valgte filer",
-      "exportSelectedFiles_one": "Eksporter 1 valgt fil",
-      "exportSelectedFiles_other": "Eksporter {{count}} valgte filer",
-      "exportAllFiles": "Eksporter alle filer",
+      "exportSelectedFiles_zero": "0 valgte filer",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Del",
+      "exportActionsSave": "Lagre",
+      "exportActionsExport": "Eksporter",
       "exportQSOs": "Eksporter QSOer",
       "pendingToDoItems_zero": "Ingen ventende oppgaver",
       "pendingToDoItems_one": "1 ventende oppgave",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Slett operasjon?",
         "description": "Er du sikker på at du vil slette denne operasjonen?"
-      }
+      },
+      "errorSavingExport": "Kunne ikke lagre fil"
     },
     "callInfo": {
       "title": "Kallesignalinfo",

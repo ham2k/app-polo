@@ -83,11 +83,12 @@
     "operationData": {
       "title": "Operasyon Verileri",
       "selectFromTheExportOptionsBelow": "Aşağıdaki dışa aktarma seçeneklerinden birini seçin",
-      "exportSingeFile": "Bir dosyayı dışa aktar",
-      "exportSelectedFiles_zero": "0 seçili dosyayı dışa aktar",
-      "exportSelectedFiles_one": "1 seçili dosyayı dışa aktar",
-      "exportSelectedFiles_other": "{{count}} seçili dosyayı dışa aktar",
-      "exportAllFiles": "Tüm dosyaları dışa aktar",
+      "exportSelectedFiles_zero": "0 selected files",
+      "exportSelectedFiles_one": "1 selected file",
+      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportActionsShare": "Paylaş",
+      "exportActionsSave": "Kaydet",
+      "exportActionsExport": "Dışa Aktar",
       "exportQSOs": "QSOs Dışa Aktar",
       "pendingToDoItems_zero": "Bekleyen yapılacak bir şey yok",
       "pendingToDoItems_one": "1 bekleyen yapılacak iş",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "Operasyonu sil?",
         "description": "Bu operasyonu silmek istediğinizden emin misiniz?"
-      }
+      },
+      "errorSavingExport": "Dosya kaydedilemedi"
     },
     "callInfo": {
       "title": "Çağrı İşareti Bilgisi",

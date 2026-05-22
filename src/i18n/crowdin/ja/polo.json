@@ -83,11 +83,12 @@
     "operationData": {
       "title": "オペレーションデータ",
       "selectFromTheExportOptionsBelow": "以下のエクスポートオプションから選択",
-      "exportSingeFile": "1ファイルをエクスポート",
-      "exportSelectedFiles_zero": "0件の選択されたファイルをエクスポート",
-      "exportSelectedFiles_one": "1件の選択されたファイルをエクスポート",
-      "exportSelectedFiles_other": "{{count}}件の選択されたファイルをエクスポート",
-      "exportAllFiles": "すべてのファイルをエクスポート",
+      "exportSelectedFiles_zero": "0 件の選択されたファイル",
+      "exportSelectedFiles_one": "1 件の選択されたファイル",
+      "exportSelectedFiles_other": "{{count}}件の選択されたファイル",
+      "exportActionsShare": "共有",
+      "exportActionsSave": "保存",
+      "exportActionsExport": "エクスポート",
       "exportQSOs": "QSOをエクスポート",
       "pendingToDoItems_zero": "保留中のTo-Do項目はありません",
       "pendingToDoItems_one": "1件の保留中To-Do項目",
@@ -108,7 +109,8 @@
       "deleteOperationDialog": {
         "title": "操作を削除しますか？",
         "description": "本当にこの操作を削除してもよろしいですか？"
-      }
+      },
+      "errorSavingExport": "ファイルを保存できませんでした"
     },
     "callInfo": {
       "title": "コールサイン情報",
