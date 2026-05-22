@@ -239,9 +239,32 @@ export function H2kTextInput (props) {
     textTransformer, onChangeText, onChange, onSpace, trackSelection
   ])
 
-  const handleOuterPress = useCallback(() => {
-    actualInnerRef.current?.focus()
+  const handleOuterPress = useCallback((event) => {
+    if (actualInnerRef?.current?.isFocused() && !value) {
+      actualInnerRef.current?.blur()
+    } else {
+      actualInnerRef.current?.focus()
+    }
+  }, [actualInnerRef, value])
+
+  const pressInRef = useRef(0)
+  const handlePressIn = useCallback((event) => {
+    if (actualInnerRef.current.isFocused()) {
+      pressInRef.current = (new Date()).getTime()
+    } else {
+      pressInRef.current = 0
+    }
   }, [actualInnerRef])
+
+  const handlePressOut = useCallback((event) => {
+    const now = (new Date()).getTime()
+    if (pressInRef.current && now - pressInRef.current < 200) {
+      if (actualInnerRef?.current?.isFocused() && !value) {
+        actualInnerRef.current?.blur()
+      }
+    }
+    pressInRef.current = 0
+  }, [actualInnerRef, value])
 
   // BEGIN VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 2
   // If this input is focused, we update `focusedRef` to provide a callback that can be used
@@ -374,6 +397,8 @@ export function H2kTextInput (props) {
           // selectionColor={colorStyles.sectionColor}
           onSubmitEditing={onSubmitEditing}
           blurOnSubmit={false} // Prevent keyboard from hiding
+          onPressIn={handlePressIn}
+          onPressOut={handlePressOut}
           onChange={handleChange}
           onChangeText={undefined}
           onFocus={handleFocus}
