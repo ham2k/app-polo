@@ -84,8 +84,8 @@
       "title": "Dades de l'operació",
       "selectFromTheExportOptionsBelow": "Selecciona entre les opcions d'exportació a continuació",
       "exportSelectedFiles_zero": "0 fitxers seleccionats",
-      "exportSelectedFiles_one": "1 selected file",
-      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportSelectedFiles_one": "1 fitxer seleccionat",
+      "exportSelectedFiles_other": "{{count}} fitxers seleccionats",
       "exportActionsShare": "Comparteix",
       "exportActionsSave": "Desa",
       "exportActionsExport": "Exporta",
@@ -774,7 +774,7 @@
       }
     },
     "opLoggingTab": {
-      "qsosTabCount_zero": "Ni un sol QSO",
+      "qsosTabCount_zero": "0 QSOs",
       "qsosTabCount_one": "1 QSO",
       "qsosTabCount_other": "{{fmtCount}} QSOs",
       "qsosCompactTabCount_zero": "No Qs",
@@ -862,7 +862,7 @@
     "opSpotsTab": {
       "noSpots": "Sense Anuncis",
       "spotsCount_zero": "Sense Anuncis",
-      "spotsCount_one": "1 Observació",
+      "spotsCount_one": "1 Anunci",
       "spotsCount_other": "{{fmtCount}} Anuncis",
       "showingSpots": "Mostrant {{count}} de {{total}}",
       "loadingSpots": "Carregant Anuncis…",
@@ -890,7 +890,7 @@
       "filtersAge45Minutes": "45 minuts",
       "filtersAge60Minutes": "60 minuts",
       "filtersSorting": "Ordenació",
-      "filtersSortByTime": "Per hora de l'observació",
+      "filtersSortByTime": "Per hora de l'anunci",
       "filtersSortByFrequency": "Per freqüència",
       "filtersGroupSpecialSpots": "Agrupar anuncis especials primer",
       "filtersGroupCallsWithNotes": "Agrupa indicatius amb notes",

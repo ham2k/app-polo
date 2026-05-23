@@ -83,9 +83,9 @@
     "operationData": {
       "title": "Date Operațiune",
       "selectFromTheExportOptionsBelow": "Selectează din opțiunile de export de mai jos",
-      "exportSelectedFiles_zero": "0 selected files",
-      "exportSelectedFiles_one": "1 selected file",
-      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportSelectedFiles_zero": "0 fișiere selectate",
+      "exportSelectedFiles_one": "1 fișier selectat",
+      "exportSelectedFiles_other": "{{count}} fișiere selectate",
       "exportActionsShare": "Partajează",
       "exportActionsSave": "Salvează",
       "exportActionsExport": "Exportă",

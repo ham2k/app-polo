@@ -93,7 +93,7 @@
       }
     },
     "call-history": {
-      "name": "Historial de Trucades",
+      "name": "Historial de Crides",
       "description": "Pujar ADIF històric i utilitzar per a consultes fora de línia"
     },
     "call-notes": {
@@ -241,7 +241,7 @@
         "activityLabel": "Activitat - MY_SIG en ADIF (Opcional)",
         "activityPlaceholder": "i.e. COTA…",
         "referenceLabel": "Referència - MY_SIG_INFO en ADIF",
-        "referencePlaceholder": "p.e. XY-1234…",
+        "referencePlaceholder": "p.ex. XY-1234…",
         "nameLabel": "Nom (Opcional)",
         "namePlaceholder": "p.e. Castell XYZ…",
         "addButton": "Afegeix {{mySig}} {{mySigInfo}}"
@@ -344,7 +344,7 @@
     },
     "hamdb": {
       "name": "Consultes d'indicatius HamDB.org",
-      "description": "Servei gratuït, però limitat a trucades dels EUA, Canadà i Alemanya"
+      "description": "Servei gratuït, però limitat a crides dels EUA, Canadà i Alemanya"
     },
     "hamqth": {
       "name": "Consultes d'indicatius HamQTH.com",
@@ -392,7 +392,7 @@
         "referencesMissedCount_one": "1 llac incomplet",
         "referencesMissedCount_other": "{{fmtCount}} llacs incomplets",
         "referencesHuntedCount_zero": "No s'han capturat llacs",
-        "referencesHuntedCount_one": "1 llac capturat",
+        "referencesHuntedCount_one": "1 llac caçat",
         "referencesHuntedCount_other": "{{fmtCount}} llacs caçats"
       },
       "loggingControl": {

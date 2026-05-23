@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "BLHA: Faróis e Navios-Farois Belgas",
+      "name": "BLHA: Faróis e Navios-Faróis Belgas",
       "shortName": "BLHA",
       "exportName": "Ativação BLHA",
       "activityOptions": {
@@ -94,7 +94,7 @@
     },
     "call-history": {
       "name": "Histórico de Chamadas",
-      "description": "Carregar ADIF histórico e utilizar para pesquisas offline"
+      "description": "Carregar histórico ADIF e utilizar para pesquisas offline"
     },
     "call-notes": {
       "name": "Anotações de indicativo",
