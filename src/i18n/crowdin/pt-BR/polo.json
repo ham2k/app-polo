@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Opções de Atividade",
-      "removeActivity": "Remover {{activity}} desta operação"
+      "removeActivity": "Remover {{activity}} desta operação",
+      "activityHasNoOptions": "Esta atividade não tem opções.",
+      "activityNotEnabled": "A atividade \"{{name}}\" não está habilitada.",
+      "lookInSettings": "Procure em Configurações > Recursos do app"
     },
     "operationData": {
       "title": "Dados da Operação",

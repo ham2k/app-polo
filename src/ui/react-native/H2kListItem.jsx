@@ -95,11 +95,11 @@ export function H2kListItem ({
       if (onPressRight) {
         return () => <H2kIconButton icon={rightIcon} size={styles.oneSpace * 3} style={{ marginRight: styles.oneSpace * 2 }} onPress={onPressRight} />
       } else {
-        return () => <View style={{ marginRight: styles.oneSpace * 2 }}><H2kIcon icon={rightIcon} /></View>
+        return () => <View style={{ marginRight: styles.oneSpace * 2 }}><H2kIcon icon={rightIcon} size={styles.normalFontSize * 1.5} /></View>
       }
     }
     return null
-  }, [right, rightSwitchValue, rightIcon, rightSwitchOnValueChange, onPressRight, styles.oneSpace])
+  }, [right, rightSwitchValue, rightIcon, rightSwitchOnValueChange, onPressRight, styles.oneSpace, styles.normalFontSize])
 
   const actualAccessibilityLabel = useMemo(() => {
     if (accessibilityLabel) {

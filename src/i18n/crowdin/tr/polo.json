@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Aktivite Seçenekleri",
-      "removeActivity": "Bu operasyondan {{activity}} aktivitesini kaldır"
+      "removeActivity": "Bu operasyondan {{activity}} aktivitesini kaldır",
+      "activityHasNoOptions": "Bu etkinliğin seçeneği yok.",
+      "activityNotEnabled": "\"{{name}}\" etkinliği etkin değil.",
+      "lookInSettings": "Ayarlar > Uygulama Özellikleri bölümünde arayın"
     },
     "operationData": {
       "title": "Operasyon Verileri",

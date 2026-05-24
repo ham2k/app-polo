@@ -82,6 +82,7 @@ export default function OperationAddActivityScreen ({ navigation, route }) {
             <H2kListItem
               title={t('screens.operationAddActivity.cantFindActivity', "Can't find the activity you're looking for?")}
               description={t('screens.operationAddActivity.thereAreMoreOptions', 'There are more options in Settings > App Features')}
+              leftIcon="arrow-right-bold"
               onPress={() => navigation.navigate('Settings', { screen: 'FeaturesSettings' })}
             />
           </H2kListSection>

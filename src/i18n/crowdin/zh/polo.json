@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "活动选项",
-      "removeActivity": "从此操作中删除 {{activity}}"
+      "removeActivity": "从此操作中删除 {{activity}}",
+      "activityHasNoOptions": "此活动没有选项。",
+      "activityNotEnabled": "活动“{{name}}”未启用。",
+      "lookInSettings": "请在 设置 > 应用功能 中查找"
     },
     "operationData": {
       "title": "操作数据",

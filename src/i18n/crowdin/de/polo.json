@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Aktivitäts-Optionen",
-      "removeActivity": "Entfernen die Aktivität {{activity}} aus diesem Betrieb"
+      "removeActivity": "Entfernen die Aktivität {{activity}} aus diesem Betrieb",
+      "activityHasNoOptions": "Diese Aktivität hat keine Optionen.",
+      "activityNotEnabled": "Aktivität „{{name}}“ ist nicht aktiviert.",
+      "lookInSettings": "Suche danach unter Einstellungen > App-Funktionen"
     },
     "operationData": {
       "title": "Betriebsdaten",

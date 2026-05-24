@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Opcions d'activitats",
-      "removeActivity": "Elimina {{activity}} d'aquesta operació"
+      "removeActivity": "Elimina {{activity}} d'aquesta operació",
+      "activityHasNoOptions": "Aquesta activitat no té opcions.",
+      "activityNotEnabled": "L'activitat \"{{name}}\" no està activada.",
+      "lookInSettings": "Busqueu-la a Configuració > Característiques de l'aplicació"
     },
     "operationData": {
       "title": "Dades de l'operació",

@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Activiteit Opties",
-      "removeActivity": "Verwijder {{activity}} van deze activatie"
+      "removeActivity": "Verwijder {{activity}} van deze activatie",
+      "activityHasNoOptions": "Deze activiteit heeft geen opties.",
+      "activityNotEnabled": "Activiteit \"{{name}}\" is niet ingeschakeld.",
+      "lookInSettings": "Zoek ernaar in Instellingen > App-functies"
     },
     "operationData": {
       "title": "Activatie Gegevens",

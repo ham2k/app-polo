@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Activity Options",
-      "removeActivity": "Remove {{activity}} from this operation"
+      "removeActivity": "Remove {{activity}} from this operation",
+      "activityHasNoOptions": "This activity has no options.",
+      "activityNotEnabled": "Activity \"{{name}}\" is not enabled.",
+      "lookInSettings": "Look for it in Settings > App Features"
     },
     "operationData": {
       "title": "Operation Data",

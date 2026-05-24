@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Aktivitetsalternativer",
-      "removeActivity": "Fjern {{activity}} fra denne operasjonen"
+      "removeActivity": "Fjern {{activity}} fra denne operasjonen",
+      "activityHasNoOptions": "Denne aktiviteten har ingen alternativer.",
+      "activityNotEnabled": "Aktiviteten \"{{name}}\" er ikke aktivert.",
+      "lookInSettings": "Se etter den i Innstillinger > App-funksjoner"
     },
     "operationData": {
       "title": "Operasjonsdata",

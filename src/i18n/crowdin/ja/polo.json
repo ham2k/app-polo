@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "アクティビティオプション",
-      "removeActivity": "このオペレーションから{{activity}}を削除"
+      "removeActivity": "このオペレーションから{{activity}}を削除",
+      "activityHasNoOptions": "このアクティビティにはオプションがありません。",
+      "activityNotEnabled": "アクティビティ「{{name}}」は有効になっていません。",
+      "lookInSettings": "設定 > アプリの機能で探してください"
     },
     "operationData": {
       "title": "オペレーションデータ",

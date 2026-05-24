@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Možnosti aktivity",
-      "removeActivity": "Odstranit {{activity}} z této aktivity"
+      "removeActivity": "Odstranit {{activity}} z této aktivity",
+      "activityHasNoOptions": "Tato aktivita nemá žádné možnosti.",
+      "activityNotEnabled": "Aktivita „{{name}}“ není povolena.",
+      "lookInSettings": "Najdete to v Nastavení > Funkce aplikace"
     },
     "operationData": {
       "title": "Data aktivity",

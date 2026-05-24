@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Opciones de Actividad",
-      "removeActivity": "Eliminar {{activity}} de esta operación"
+      "removeActivity": "Eliminar {{activity}} de esta operación",
+      "activityHasNoOptions": "Esta actividad no tiene opciones.",
+      "activityNotEnabled": "La actividad \"{{name}}\" no está habilitada.",
+      "lookInSettings": "Búscala en Configuración > Funcionalidades de la aplicación"
     },
     "operationData": {
       "title": "Logs de la Operación",

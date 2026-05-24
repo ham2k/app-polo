@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Opțiuni Activitate",
-      "removeActivity": "Elimină {{activity}} din această operațiune"
+      "removeActivity": "Elimină {{activity}} din această operațiune",
+      "activityHasNoOptions": "Această activitate nu are opțiuni.",
+      "activityNotEnabled": "Activitatea „{{name}}” nu este activată.",
+      "lookInSettings": "Caută în Setări > Caracteristici ale aplicației"
     },
     "operationData": {
       "title": "Date Operațiune",

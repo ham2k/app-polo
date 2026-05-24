@@ -78,7 +78,10 @@
     },
     "operationActivityOptions": {
       "title": "Možnosti aktivity",
-      "removeActivity": "Odstrániť {{activity}} z tejto prevádzky"
+      "removeActivity": "Odstrániť {{activity}} z tejto prevádzky",
+      "activityHasNoOptions": "Táto aktivita nemá žiadne možnosti.",
+      "activityNotEnabled": "Aktivita „{{name}}“ nie je povolená.",
+      "lookInSettings": "Hľadajte ju v Nastavenia > Funkcie aplikácie"
     },
     "operationData": {
       "title": "Údaje o prevádzke",
