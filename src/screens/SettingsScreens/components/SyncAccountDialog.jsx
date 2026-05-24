@@ -531,7 +531,7 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
               )}
             </H2kMarkdown>
             <Text variant="displayMedium" style={{ ...styles.text.numbers, fontWeight: 'bold', textAlign: 'center', marginBottom: styles.oneSpace }}>
-              {[...lofiData?.pending_link_challenge].join(' ')}
+              {lofiData?.pending_link_challenge}
             </Text>
             <H2kMarkdown variant="bodyLarge" style={{ textAlign: 'left', marginTop: styles.oneSpace }}>
               {t(
