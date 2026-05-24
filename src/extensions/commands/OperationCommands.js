@@ -77,7 +77,7 @@ const StopOperationCommandHook = {
 
     return t?.('extensions.commands-operation.stop', 'Stop the operation?') || 'Stop the operation?'
   },
-  invokeCommand: (match, { operation, qsos, dispatch, settings }) => {
+  invokeCommand: (match, { operation, qsos, dispatch, settings, t }) => {
     if (!operation) { return }
 
     markOperationStop({ operation, qsos, dispatch })
