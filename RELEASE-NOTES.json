@@ -1,4 +1,11 @@
 {
+  "26.5.1": {
+    "name": "May '26 (patch 1)",
+    "photoCaption": "F4WFI at FR-13916",
+    "changes": [
+      "Fixed bug in SOTA reference entry (thanks to OE5JFE)"
+    ]
+  },
   "26.5.0": {
     "name": "May '26",
     "photoCaption": "F4WFI at FR-13916",
