@@ -1,6 +1,6 @@
 {
-  "26.5.0-pre5": {
-    "name": "May '26 - Pre 5",
+  "26.5.0": {
+    "name": "May '26",
     "photoCaption": "F4WFI at FR-13916",
     "changes": [
       "Use QR Codes for LoFi account linking",
