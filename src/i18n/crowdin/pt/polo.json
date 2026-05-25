@@ -81,14 +81,14 @@
       "removeActivity": "Remover {{activity}} desta operação",
       "activityHasNoOptions": "Esta atividade não tem opções.",
       "activityNotEnabled": "A atividade \"{{name}}\" não está ativada.",
-      "lookInSettings": "Procure em Definições > Funcionalidades da app"
+      "lookInSettings": "Procure em Definições > Funcionalidades da App"
     },
     "operationData": {
       "title": "Dados da Operação",
       "selectFromTheExportOptionsBelow": "Selecione entre as opções de exportação abaixo",
       "exportSelectedFiles_zero": "0 ficheiros selecionados",
-      "exportSelectedFiles_one": "1 selected file",
-      "exportSelectedFiles_other": "{{count}} selected files",
+      "exportSelectedFiles_one": "1 ficheiro selecionado",
+      "exportSelectedFiles_other": "{{count}} ficheiros selecionados",
       "exportActionsShare": "Partilhar",
       "exportActionsSave": "Guardar",
       "exportActionsExport": "Exportar",
