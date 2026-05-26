@@ -1,1 +1,26 @@
-
+{
+  "key": "OHSP",
+  "name": "Ohio State Parks Event",
+  "short": "OH SP",
+  "url": "https://ospota.org/",
+  "start": "2026-9-12 14:00Z",
+  "end": "2026-9-12 22:00Z",
+  "notes": "First entry, please verify my work.",
+  "lastUpdated": "2026-05-26 19:00z",
+  "status": "created for 2026",
+  "options": {
+    "multipliers": "stateParkscontacted"
+  },
+  "points": {
+    "PHONE": 1,
+    "DIGITAL": 1,
+    "CW": 1, 
+  },
+  "excludedBands": [
+    "60m",
+    "30m",
+    "17m",
+    "12m"
+  ],
+  "parks": {
+    "US-0636": 1,
