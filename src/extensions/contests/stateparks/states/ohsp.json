@@ -15,14 +15,14 @@
   },
   "points": {
     "PHONE": 1,
-    "DIGITAL": 1,
     "CW": 1, 
   },
-  "excludedBands": [
-    "60m",
-    "30m",
-    "17m",
-    "12m"
+   "bands": [
+    "80m",
+    "40m",
+    "20m",
+    "15m",
+    "10m",
   ],
   "parks": {
     "ADA": "Adams Lake",
