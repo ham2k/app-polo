@@ -50,7 +50,7 @@ const LookupHook = {
   lookupCallWithDispatch: (callInfo, { settings, online }) => async (dispatch) => {
     if (GLOBAL?.flags?.services?.qrzcall === false) return {}
 
-    if (online && settings?.accounts?.qrzcall?.login && settings?.accounts?.qrzcall?.password && callInfo?.baseCall?.length > 2) {
+    if (online && settings?.accounts?.qrzcall?.token && callInfo?.baseCall?.length > 2) {
       let promise = await dispatch(apiQRZCALL.endpoints.lookupCall.initiate({ call: callInfo.call }))
       await Promise.all(dispatch(apiQRZCALL.util.getRunningQueriesThunk()))
       let lookup = await dispatch((_dispatch, getState) => apiQRZCALL.endpoints.lookupCall.select({ call: callInfo.call })(getState()))
