@@ -1,6 +1,6 @@
 
 [tools]
-node = "22"
+node = "24"
 ruby = "3.2"
 
 # Tasks useful for local development
