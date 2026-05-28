@@ -6,14 +6,13 @@
  */
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { XMLParser } from 'fast-xml-parser'
 
 import packageJson from '../../../../package.json'
-import { parseQRZCALLXml } from './parseQRZCALLXml'
+import { parseQRZCALLJson } from './parseQRZCALLJson'
 
 /**
 
-  QRZCALL.EU Premium XML API
+  QRZCALL.EU Premium JSON API
   https://qrzcall.eu/
 
   Authentication: a single long-lived Personal Access Token (PAT) the user
@@ -22,9 +21,10 @@ import { parseQRZCALLXml } from './parseQRZCALLXml'
   settings.accounts.qrzcall.token and sends it as `Authorization: Bearer <token>`
   on every lookup.
 
-  - GET /v1/pub/callsign_xml.php?callsign=PA4R
+  - GET /v1/pub/callsign_json.php?callsign=PA4R
         Authorization: Bearer pat_…
-        → <QRZCALLDatabase> with QRZ-compatible field names
+        → { success, api, data: { …fields } }   on a hit
+        → { error: '…' }                          on a miss (HTTP 404) / failure
 
   Required tier: Data or Extra subscription on QRZCALL.EU (the upstream
   endpoint enforces this and returns 401/403 if the token's owner is on the
@@ -40,15 +40,15 @@ import { parseQRZCALLXml } from './parseQRZCALLXml'
 const DEBUG = false
 
 const BASE_URL = 'https://api.qrzcall.eu/v1'
-const XML_PATH = '/pub/callsign_xml.php'
+const JSON_PATH = '/pub/callsign_json.php'
 
 const API_TIMEOUT = 5000 // 5 seconds
 
 // 404 is a valid response (callsign not in database). Treat it as ok so the
-// XML parser / queryFn below can produce a friendly "not found" instead of
+// JSON parser / queryFn below can produce a friendly "not found" instead of
 // surfacing a network error to the caller.
-const baseQueryXml = fetchBaseQuery({
-  baseUrl: `${BASE_URL}${XML_PATH}`,
+const baseQueryJson = fetchBaseQuery({
+  baseUrl: `${BASE_URL}${JSON_PATH}`,
   timeout: API_TIMEOUT,
   validateStatus: (response) => response.status === 200 || response.status === 404,
   prepareHeaders: (headers, { getState }) => {
@@ -63,10 +63,9 @@ const baseQueryXml = fetchBaseQuery({
       return { _httpStatus: 404, _body: body }
     }
     try {
-      const parser = new XMLParser()
-      const xml = parser.parse(body)
+      const json = JSON.parse(body)
       if (DEBUG) console.log(`QRZCALLApi ${response.url} ${response.status}`)
-      return xml
+      return json
     } catch (err) {
       return { _parseError: err.message, _body: body }
     }
@@ -75,11 +74,11 @@ const baseQueryXml = fetchBaseQuery({
 
 export const apiQRZCALL = createApi({
   reducerPath: 'apiQRZCALL',
-  baseQuery: baseQueryXml,
+  baseQuery: baseQueryJson,
   endpoints: builder => ({
 
     // Lookup a callsign
-    //   GET https://api.qrzcall.eu/v1/pub/callsign_xml.php?callsign=PA4R
+    //   GET https://api.qrzcall.eu/v1/pub/callsign_json.php?callsign=PA4R
     //   Authorization: Bearer pat_…
 
     lookupCall: builder.query({
@@ -123,7 +122,7 @@ export const apiQRZCALL = createApi({
         }
 
         if (response.data) {
-          const parsed = parseQRZCALLXml(response.data, call)
+          const parsed = parseQRZCALLJson(response.data, call)
           if (parsed.error) return { ...response, error: parsed.error, data: undefined }
           return { ...response, error: undefined, data: parsed.data, meta: response.meta }
         } else {
@@ -134,7 +133,7 @@ export const apiQRZCALL = createApi({
   })
 })
 
-// XML→record mapping + `cast*` helpers live in ./parseQRZCALLXml so they
+// JSON→record mapping + `cast*` helpers live in ./parseQRZCALLJson so they
 // can be unit-tested without instantiating RTK Query / Redux.
 
 export const { actions } = apiQRZCALL

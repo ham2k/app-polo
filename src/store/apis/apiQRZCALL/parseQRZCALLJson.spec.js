@@ -5,50 +5,59 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { XMLParser } from 'fast-xml-parser'
-import { parseQRZCALLXml, castString, castNumber } from './parseQRZCALLXml'
+import { parseQRZCALLJson, castString, castNumber } from './parseQRZCALLJson'
 
-// Real response shape returned by api.qrzcall.eu/v1/pub/callsign_xml.php
-// captured from production for callsign PA4R.
-const PA4R_XML = `<?xml version="1.0" encoding="UTF-8"?>
-<QRZCALLDatabase version="1.0">
-  <Callsign>
-    <call>PA4R</call>
-    <fname>Ronald</fname>
-    <name>DHer</name>
-    <nickname>Ron</nickname>
-    <born>1965</born>
-    <addr1>address 1</addr1>
-    <addr2>Wijk en Aalburg</addr2>
-    <zip>4261</zip>
-    <state>NB</state>
-    <country>Netherlands</country>
-    <dxcc>263</dxcc>
-    <land>Netherlands</land>
-    <continent>EU</continent>
-    <lat>51.760403</lat>
-    <lon>5.111732</lon>
-    <ituzone>27</ituzone>
-    <cqzone>14</cqzone>
-    <grid>JO21NS</grid>
-    <iota></iota>
-    <class>Full</class>
-    <email></email>
-    <url></url>
-    <views>123</views>
-  </Callsign>
-</QRZCALLDatabase>`
+// Real response shape returned by api.qrzcall.eu/v1/pub/callsign_json.php
+// captured from production for callsign PA4R. Empty DB fields come back as
+// JSON null (the endpoint maps them with `?: null`); dxcc/lat/lon are numbers.
+const PA4R_JSON = {
+  success: true,
+  api: 'QRZCALL JSON API v1.0',
+  data: {
+    callsign: 'PA4R',
+    prev_call: null,
+    firstname: 'Ronald',
+    lastname: 'DHer',
+    nickname: 'Ron',
+    born: 1965,
+    email: null,
+    url: null,
+    address1: 'address 1',
+    address2: 'Wijk en Aalburg',
+    zip: '4261',
+    qth: null,
+    state: 'NB',
+    county: null,
+    country: 'Netherlands',
+    dxcc: 263,
+    dxcc_country: 'Netherlands',
+    continent: 'EU',
+    lat: 51.760403,
+    lon: 5.111732,
+    ituzone: '27',
+    cqzone: '14',
+    gridsquare: 'JO21NS',
+    iota: null,
+    pota: null,
+    sota: null,
+    wwff: null,
+    lic_class: 'Full',
+    lic_efdate: null,
+    lic_expdate: null,
+    lotw: null,
+    eqsl: null,
+    mqsl: null,
+    qslinfo: null,
+    image: null,
+    views: 123,
+    created: '2024-01-01 00:00:00',
+    updated: '2026-05-01 12:00:00'
+  }
+}
 
-const NOT_FOUND_XML = `<?xml version="1.0" encoding="UTF-8"?>
-<QRZCALLDatabase version="1.0"><Error>Callsign not found: XX9XX9XX</Error><code>404</code></QRZCALLDatabase>`
-
-const SOME_OTHER_ERROR_XML = `<?xml version="1.0" encoding="UTF-8"?>
-<QRZCALLDatabase version="1.0"><Error>Internal database error</Error></QRZCALLDatabase>`
-
-const EMPTY_DOC_XML = `<?xml version="1.0" encoding="UTF-8"?>
-<QRZCALLDatabase version="1.0"></QRZCALLDatabase>`
-
-const parser = new XMLParser()
+const NOT_FOUND_JSON = { error: 'Callsign not found: XX9XX9XX' }
+const SOME_OTHER_ERROR_JSON = { error: 'Internal database error' }
+const MISSING_DATA_JSON = { success: true, api: 'QRZCALL JSON API v1.0' }
 
 describe('apiQRZCALL.castString', () => {
   it('returns empty string for null/undefined', () => {
@@ -77,12 +86,12 @@ describe('apiQRZCALL.castNumber', () => {
     expect(castNumber('27')).toBe(27)
     expect(castNumber(14)).toBe(14)
     expect(castNumber('51.760403')).toBeCloseTo(51.760403)
+    expect(castNumber(263)).toBe(263)
   })
 })
 
-describe('apiQRZCALL.parseQRZCALLXml — happy path', () => {
-  const xml = parser.parse(PA4R_XML)
-  const result = parseQRZCALLXml(xml, 'PA4R')
+describe('apiQRZCALL.parseQRZCALLJson — happy path', () => {
+  const result = parseQRZCALLJson(PA4R_JSON, 'PA4R')
 
   it('returns no error', () => {
     expect(result.error).toBeUndefined()
@@ -93,9 +102,6 @@ describe('apiQRZCALL.parseQRZCALLXml — happy path', () => {
   })
 
   it('builds a full name with nickname in curly quotes', () => {
-    // capitalizeString preserves user-set casing when force: false. Our fixture
-    // has "Ronald", "Ron", "DHer" — the formatter should keep them as-is and
-    // wrap the nickname.
     expect(result.data.name).toContain('Ronald')
     expect(result.data.name).toContain('“Ron”')
     expect(result.data.name).toContain('DHer')
@@ -128,33 +134,27 @@ describe('apiQRZCALL.parseQRZCALLXml — happy path', () => {
   })
 })
 
-describe('apiQRZCALL.parseQRZCALLXml — error paths', () => {
-  it('returns "<call> not found" on a 404-style error tag', () => {
-    const xml = parser.parse(NOT_FOUND_XML)
-    const result = parseQRZCALLXml(xml, 'XX9XX9XX')
+describe('apiQRZCALL.parseQRZCALLJson — error paths', () => {
+  it('returns "<call> not found" on a 404-style error', () => {
+    const result = parseQRZCALLJson(NOT_FOUND_JSON, 'XX9XX9XX')
     expect(result.error).toBe('XX9XX9XX not found')
     expect(result.data).toBeUndefined()
   })
 
   it('returns the raw error message for other server errors', () => {
-    const xml = parser.parse(SOME_OTHER_ERROR_XML)
-    const result = parseQRZCALLXml(xml, 'PA4R')
+    const result = parseQRZCALLJson(SOME_OTHER_ERROR_JSON, 'PA4R')
     expect(result.error).toBe('Internal database error')
     expect(result.data).toBeUndefined()
   })
 
-  it('returns a friendly error if no <Callsign> element is present', () => {
-    const xml = parser.parse(EMPTY_DOC_XML)
-    const result = parseQRZCALLXml(xml, 'PA4R')
-    expect(result.error).toMatch(/missing <Callsign>/)
+  it('returns a friendly error if no data object is present', () => {
+    const result = parseQRZCALLJson(MISSING_DATA_JSON, 'PA4R')
+    expect(result.error).toMatch(/missing data object/)
     expect(result.data).toBeUndefined()
   })
 
   it('case-insensitive "not found" matching', () => {
-    const upperCaseError = `<?xml version="1.0" encoding="UTF-8"?>
-      <QRZCALLDatabase version="1.0"><Error>NOT FOUND: ZZ9ZZ</Error></QRZCALLDatabase>`
-    const xml = parser.parse(upperCaseError)
-    const result = parseQRZCALLXml(xml, 'ZZ9ZZ')
+    const result = parseQRZCALLJson({ error: 'NOT FOUND: ZZ9ZZ' }, 'ZZ9ZZ')
     expect(result.error).toBe('ZZ9ZZ not found')
   })
 })
