@@ -6,8 +6,8 @@
  */
 
 import React, { useCallback, useMemo } from 'react'
+import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useIsFocused } from '@react-navigation/native'
 
 import { selectOperation } from '../../../store/operations'
@@ -38,7 +38,7 @@ export default function OpInfoTab ({ navigation, route }) {
   const safeAreaInsets = useSafeAreaInsets()
 
   return (
-    <GestureHandlerRootView
+    <View
       style={{
         flexDirection: 'column',
         flex: 1,
@@ -53,6 +53,6 @@ export default function OpInfoTab ({ navigation, route }) {
       ) : (
         <OpInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qsos={qsos} qso={qso} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
       )}
-    </GestureHandlerRootView>
+    </View>
   )
 }

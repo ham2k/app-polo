@@ -9,7 +9,6 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { TouchableOpacity, View } from 'react-native'
 import { Text } from 'react-native-paper'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useTranslation } from 'react-i18next'
 import { useIsFocused } from '@react-navigation/native'
 
@@ -32,6 +31,7 @@ import { useSelectorConditionally, useUIStateConditionally } from '../../../comp
 import SpotList from './SpotList'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
+import { InterceptingGestureDetector } from 'react-native-gesture-handler'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -334,32 +334,17 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   }, [onSelect])
 
   return (
-    <GestureHandlerRootView style={[{ flex: 1, flexDirection: 'column', alignItems: 'stretch' }]}>
-      {showControls ? (
-        <View style={[styles.panel, { flex: 1, paddingBottom: 0 }]}>
-          <SpotFilterControls
-            style={{ paddingBottom: Math.max(style?.paddingBottom ?? 0 + styles.oneSpace, styles.oneSpace * 2), paddingRight: style?.paddingRight ?? 0 }}
-            rawSpots={spotsState.rawSpots}
-            filteredSpots={scoredSpots}
-            options={options}
-            counts={counts}
-            spotsSources={spotsHooks}
-            operation={operation}
-            vfo={vfo}
-            styles={styles}
-            themeColor={themeColor}
-            settings={settings}
-            online={online}
-            filterState={filterState}
-            updateFilterState={updateFilterState}
-            refreshSpots={() => updateSpotsState({ lastFetched: 0 })}
-            onDone={() => setShowControls(false)}
-          />
-        </View>
-      ) : (
-        <>
-          <View style={[{ flex: 0, flexDirection: 'column', alignItems: 'center' }, styles.panel]}>
-            <SpotFilterIndicators
+    <InterceptingGestureDetector>
+      <View style={[{ flex: 1, flexDirection: 'column', alignItems: 'stretch' }]}>
+        {showControls ? (
+          <View style={[styles.panel, { flex: 1, paddingBottom: 0 }]}>
+            <SpotFilterControls
+              style={{ paddingBottom: Math.max(style?.paddingBottom ?? 0 + styles.oneSpace, styles.oneSpace * 2), paddingRight: style?.paddingRight ?? 0 }}
+              rawSpots={spotsState.rawSpots}
+              filteredSpots={scoredSpots}
+              options={options}
+              counts={counts}
+              spotsSources={spotsHooks}
               operation={operation}
               vfo={vfo}
               styles={styles}
@@ -367,32 +352,51 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
               settings={settings}
               online={online}
               filterState={filterState}
-              onPress={() => setShowControls(true)}
+              updateFilterState={updateFilterState}
+              refreshSpots={() => updateSpotsState({ lastFetched: 0 })}
+              onDone={() => setShowControls(false)}
             />
-            <TouchableOpacity onPress={() => setShowControls(true)} style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
-              <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
-                {spotsState.loading ? (
-                  t('screens.opSpotsTab.loadingSpots', 'Loading Spots...')
-                ) : (
-                  spotCountText
-                )}
-              </Text>
-            </TouchableOpacity>
           </View>
-          <SpotList
-            sections={sectionedSpots}
-            loading={spotsState.loading}
-            refresh={refresh}
-            onPress={handlePress}
-            style={{
-              paddingBottom: style?.paddingBottom,
-              paddingRight: style?.paddingRight,
-              paddingLeft: style?.paddingLeft
-            }}
-          />
-        </>
-      )}
-    </GestureHandlerRootView>
+        ) : (
+          <>
+            <View style={[{ flex: 0, flexDirection: 'column', alignItems: 'center' }, styles.panel]}>
+              <SpotFilterIndicators
+                operation={operation}
+                vfo={vfo}
+                styles={styles}
+                themeColor={themeColor}
+                settings={settings}
+                online={online}
+                filterState={filterState}
+                onPress={() => setShowControls(true)}
+              />
+              <TouchableOpacity onPress={() => setShowControls(true)} style={{ flex: 0, flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace, alignItems: 'center' }}>
+                <Text style={{ fontWeight: 'bold', marginTop: styles.halfSpace, textAlign: 'center' }}>
+                  {spotsState.loading ? (
+                    t('screens.opSpotsTab.loadingSpots', 'Loading Spots...')
+                  ) : (
+                    spotCountText
+                  )}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <SpotList
+              sections={sectionedSpots}
+              loading={spotsState.loading}
+              refresh={refresh}
+              onPress={handlePress}
+              style={{
+                paddingBottom: style?.paddingBottom,
+                paddingRight: style?.paddingRight,
+                paddingLeft: style?.paddingLeft
+              }}
+            />
+          </>
+        )}
+      </View>
+
+    </InterceptingGestureDetector>
+
   )
 }
 

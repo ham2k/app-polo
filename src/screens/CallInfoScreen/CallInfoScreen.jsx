@@ -6,8 +6,8 @@
  */
 
 import React, { useEffect } from 'react'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { View } from 'react-native'
 
 import { slashZeros } from '@ham2k/lib-format-tools'
 
@@ -29,7 +29,7 @@ export default function CallInfoScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <GestureHandlerRootView
+      <View
         style={{
           flex: 1,
           flexDirection: 'column',
@@ -45,7 +45,7 @@ export default function CallInfoScreen ({ navigation, route }) {
           qso={qso}
           operation={operation}
         />
-      </GestureHandlerRootView>
+      </View>
     </ScreenContainer>
   )
 }

@@ -10,7 +10,6 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { AnimatedFAB, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -84,26 +83,24 @@ export default function HomeScreen ({ navigation }) {
   return (
     <ScreenContainer>
       <View style={styles.root}>
-        <GestureHandlerRootView style={styles.root}>
-          <FlashList
-            accesibilityLabel={t('screens.home.operationList-a11y', 'screens.home.operationList', 'Operation List')}
-            style={styles.list}
-            data={operationIds}
-            renderItem={renderRow}
-            ListEmptyComponent={emptyListComponent}
-            keyboardShouldPersistTaps={'handled'}
-            onScroll={handleScroll}
-          />
-          <AnimatedFAB
-            icon="plus"
-            label={t('screens.home.newOperation', 'New Operation')}
-            accessibilityLabel={t('screens.home.newOperation-a11y', 'screens.home.newOperation', 'New Operation')}
-            mode="elevated"
-            extended={isExtended}
-            style={styles.fab}
-            onPress={handleNewOperation}
-          />
-        </GestureHandlerRootView>
+        <FlashList
+          accesibilityLabel={t('screens.home.operationList-a11y', 'screens.home.operationList', 'Operation List')}
+          style={styles.list}
+          data={operationIds}
+          renderItem={renderRow}
+          ListEmptyComponent={emptyListComponent}
+          keyboardShouldPersistTaps={'handled'}
+          onScroll={handleScroll}
+        />
+        <AnimatedFAB
+          icon="plus"
+          label={t('screens.home.newOperation', 'New Operation')}
+          accessibilityLabel={t('screens.home.newOperation-a11y', 'screens.home.newOperation', 'New Operation')}
+          mode="elevated"
+          extended={isExtended}
+          style={styles.fab}
+          onPress={handleNewOperation}
+        />
       </View>
 
       <HomeTools settings={settings} styles={styles} />

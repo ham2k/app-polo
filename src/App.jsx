@@ -10,6 +10,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { PaperProvider, Portal } from 'react-native-paper'
 import MaterialCommunityIcon from '@react-native-vector-icons/material-design-icons'
 import DeviceInfo from 'react-native-device-info'
@@ -128,110 +129,112 @@ function MainApp ({ navigationTheme }) {
     return <StartScreen setAppState={setAppState} />
   } else {
     return (
-      <Portal.Host>
-        <NavigationContainer
-          theme={navigationTheme}
-          ref={navigationRef}
-          onReady={() => {
-            onNavigationReadyForDistribution(navigationRef)
+      <GestureHandlerRootView>
+        <Portal.Host>
+          <NavigationContainer
+            theme={navigationTheme}
+            ref={navigationRef}
+            onReady={() => {
+              onNavigationReadyForDistribution(navigationRef)
 
-            if (routeNameRef.current === undefined) {
-              trackNavigation({ settings, currentRouteName: navigationRef.current?.getCurrentRoute()?.name })
-            }
-            routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name
-          }}
-          onStateChange={() => {
-            const previousRouteName = routeNameRef.current
-            const currentRouteName = navigationRef.current?.getCurrentRoute()?.name
-            if (previousRouteName !== currentRouteName) {
-              trackNavigation({ settings, currentRouteName, previousRouteName })
-            }
-            routeNameRef.current = currentRouteName
-          }}
-        >
-          <DeepLinks navigationRef={navigationRef} />
-
-          <Stack.Navigator
-            id="RootNavigator"
-            screenOptions={{
-              header: HeaderBar,
-              animation: 'slide_from_right',
-              freezeOnBlur: true
+              if (routeNameRef.current === undefined) {
+                trackNavigation({ settings, currentRouteName: navigationRef.current?.getCurrentRoute()?.name })
+              }
+              routeNameRef.current = navigationRef.current?.getCurrentRoute()?.name
+            }}
+            onStateChange={() => {
+              const previousRouteName = routeNameRef.current
+              const currentRouteName = navigationRef.current?.getCurrentRoute()?.name
+              if (previousRouteName !== currentRouteName) {
+                trackNavigation({ settings, currentRouteName, previousRouteName })
+              }
+              routeNameRef.current = currentRouteName
             }}
           >
-            <Stack.Screen name="Home"
-              options={{ title: t('screens.home.title', 'Portable Logger'), navigationBarColor: styles.colors.primary }}
-              component={HomeScreen}
-            />
+            <DeepLinks navigationRef={navigationRef} />
 
-            <Stack.Screen name="Operation"
-              options={{ title: t('screens.operation.title', 'Operation'), headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
-              component={OperationScreen}
-            />
+            <Stack.Navigator
+              id="RootNavigator"
+              screenOptions={{
+                header: HeaderBar,
+                animation: 'slide_from_right',
+                freezeOnBlur: true
+              }}
+            >
+              <Stack.Screen name="Home"
+                options={{ title: t('screens.home.title', 'Portable Logger'), navigationBarColor: styles.colors.primary }}
+                component={HomeScreen}
+              />
 
-            <Stack.Screen name="OperationBadgeScreen"
-              options={{ headerMode: 'none', headerShown: false }}
-              component={OperationBadgeScreen}
-            />
+              <Stack.Screen name="Operation"
+                options={{ title: t('screens.operation.title', 'Operation'), headerShown: false, headerBackTitle: 'Home', leftAction: 'close' }}
+                component={OperationScreen}
+              />
 
-            <Stack.Screen name="OperationDetails"
-              options={{ title: t('screens.operationDetails.title', 'Operation Details'), headerBackTitle: 'Operation' }}
-              component={OperationDetailsScreen}
-            />
+              <Stack.Screen name="OperationBadgeScreen"
+                options={{ headerMode: 'none', headerShown: false }}
+                component={OperationBadgeScreen}
+              />
 
-            <Stack.Screen name="OperationStationInfo"
-              options={{ title: t('screens.operationStationInfo.title', 'Station & Operator Info'), headerBackTitle: 'Operation' }}
-              component={OperationStationInfoScreen}
-            />
+              <Stack.Screen name="OperationDetails"
+                options={{ title: t('screens.operationDetails.title', 'Operation Details'), headerBackTitle: 'Operation' }}
+                component={OperationDetailsScreen}
+              />
 
-            <Stack.Screen name="OperationLocation"
-              options={{ title: t('screens.operationLocation.title', 'Operation Location'), headerBackTitle: 'Operation' }}
-              component={OperationLocationScreen}
-            />
+              <Stack.Screen name="OperationStationInfo"
+                options={{ title: t('screens.operationStationInfo.title', 'Station & Operator Info'), headerBackTitle: 'Operation' }}
+                component={OperationStationInfoScreen}
+              />
 
-            <Stack.Screen name="OperationAddActivity"
-              options={{ title: t('screens.operationAddActivity.title', 'Add Activity'), headerBackTitle: 'Operation' }}
-              component={OperationAddActivityScreen}
-            />
+              <Stack.Screen name="OperationLocation"
+                options={{ title: t('screens.operationLocation.title', 'Operation Location'), headerBackTitle: 'Operation' }}
+                component={OperationLocationScreen}
+              />
 
-            <Stack.Screen name="OperationActivityOptions"
-              options={{ title: t('screens.operationActivityOptions.title', 'Activity Options'), headerBackTitle: 'Operation' }}
-              component={OperationActivityOptionsScreen}
-            />
+              <Stack.Screen name="OperationAddActivity"
+                options={{ title: t('screens.operationAddActivity.title', 'Add Activity'), headerBackTitle: 'Operation' }}
+                component={OperationAddActivityScreen}
+              />
 
-            <Stack.Screen name="OperationData"
-              options={{ title: t('screens.operationData.title', 'Operation Data'), headerBackTitle: 'Operation' }}
-              component={OperationDataScreen}
-            />
+              <Stack.Screen name="OperationActivityOptions"
+                options={{ title: t('screens.operationActivityOptions.title', 'Activity Options'), headerBackTitle: 'Operation' }}
+                component={OperationActivityOptionsScreen}
+              />
 
-            <Stack.Screen name="CallInfo"
-              options={{ title: t('screens.callInfo.title', 'Callsign Info') }}
-              component={CallInfoScreen}
-            />
+              <Stack.Screen name="OperationData"
+                options={{ title: t('screens.operationData.title', 'Operation Data'), headerBackTitle: 'Operation' }}
+                component={OperationDataScreen}
+              />
 
-            <Stack.Screen name="Spots"
-              options={{ title: t('screens.spots.title', 'Spots') }}
-              component={SpotsScreen}
-            />
+              <Stack.Screen name="CallInfo"
+                options={{ title: t('screens.callInfo.title', 'Callsign Info') }}
+                component={CallInfoScreen}
+              />
 
-            <Stack.Screen name="EditQSO"
-              options={{ title: t('screens.editQSO.title', 'Edit QSO') }}
-              component={EditQSOScreen}
-            />
+              <Stack.Screen name="Spots"
+                options={{ title: t('screens.spots.title', 'Spots') }}
+                component={SpotsScreen}
+              />
 
-            <Stack.Screen name="OpInfo"
-              options={{ title: t('screens.opInfo.title', 'Operation Info') }}
-              component={OpInfoScreen}
-            />
+              <Stack.Screen name="EditQSO"
+                options={{ title: t('screens.editQSO.title', 'Edit QSO') }}
+                component={EditQSOScreen}
+              />
 
-            <Stack.Screen name="Settings"
-              options={{ title: t('screens.settings.title', 'Settings'), headerShown: false }}
-              component={MainSettingsScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-        {(globalDialog?.title || globalDialog?.content) && <GlobalDialog {...globalDialog} />}
-      </Portal.Host>
+              <Stack.Screen name="OpInfo"
+                options={{ title: t('screens.opInfo.title', 'Operation Info') }}
+                component={OpInfoScreen}
+              />
+
+              <Stack.Screen name="Settings"
+                options={{ title: t('screens.settings.title', 'Settings'), headerShown: false }}
+                component={MainSettingsScreen}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+          {(globalDialog?.title || globalDialog?.content) && <GlobalDialog {...globalDialog} />}
+        </Portal.Host>
+      </GestureHandlerRootView>
     )
   }
 }

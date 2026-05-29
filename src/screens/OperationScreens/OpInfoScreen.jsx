@@ -6,8 +6,8 @@
  */
 
 import React, { useCallback } from 'react'
+import { View } from 'react-native'
 import { useSelector } from 'react-redux'
-import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
@@ -33,7 +33,7 @@ export default function OpInfoScreen ({ navigation, route }) {
 
   return (
     <ScreenContainer>
-      <GestureHandlerRootView
+      <View
         style={{
           flex: 1,
           flexDirection: 'column',
@@ -51,7 +51,7 @@ export default function OpInfoScreen ({ navigation, route }) {
           activeQSOs={activeQSOs}
           operation={operation}
         />
-      </GestureHandlerRootView>
+      </View>
     </ScreenContainer>
   )
 }
