@@ -5,17 +5,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 
-import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const ECAData = {}
 
-export function registerECADataFile() {
+export function registerECADataFile () {
   registerDataFile({
     key: 'eca-all-castles',
     name: 'ECA: All Castles',
@@ -108,11 +107,11 @@ export function registerECADataFile() {
   })
 }
 
-export async function ecaFindOneByReference(ref) {
+export async function ecaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['eca', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function ecaFindAllByName(dxccCode, name) {
+export async function ecaFindAllByName (dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['eca', `%${name}%`, `%${name}%`],
@@ -121,7 +120,7 @@ export async function ecaFindAllByName(dxccCode, name) {
   return results
 }
 
-export async function ecaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
+export async function ecaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['eca', lat - delta, lat + delta, lon - delta, lon + delta],

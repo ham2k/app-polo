@@ -5,15 +5,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
 
 import GLOBAL from '../../../GLOBAL'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { LOCATION_ACCURACY } from '../../constants'
-import { distanceOnEarth } from '../../../tools/geoTools'
 
 import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 

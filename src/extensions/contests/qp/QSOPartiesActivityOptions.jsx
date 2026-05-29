@@ -7,9 +7,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
+import { fmtDateNice, fmtDateTimeNice, fmtTimeBetween, prepareDateValue } from '@ham2k/lib-format-tools'
+
 import { selectOperatorCallInfo, selectSettings } from '../../../store/settings'
 import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
-import { fmtDateNice, fmtDateTimeNice, fmtTimeBetween, prepareTimeValue } from '../../../tools/timeFormats'
 import { findRef, replaceRef } from '../../../tools/refTools'
 
 import { Info } from './QSOPartiesInfo'
@@ -231,8 +232,8 @@ ${qp.status ? `**Status:** ${qp.status}` : ''}
 }
 
 function _fmtDateTimeNiceRange (t1, t2) {
-  t1 = prepareTimeValue(t1)
-  t2 = prepareTimeValue(t2)
+  t1 = prepareDateValue(t1)
+  t2 = prepareDateValue(t2)
   const diffInDays = (t2 - t1) / (1000 * 60 * 60 * 24)
   if (diffInDays < 7) {
     const date1 = t1.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })

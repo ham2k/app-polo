@@ -5,8 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { fmtDateTimeDynamicZulu } from '@ham2k/lib-format-tools'
+
 import { setOperationLocalData } from '../../store/operations'
-import { fmtDateTimeDynamicZulu } from '../../tools/timeFormats'
 
 const Info = {
   key: 'commands-time',
@@ -71,11 +72,11 @@ const DeltaTimeCommandHook = {
     if (match) {
       const delta = parseInt(match[1], 10)
       const units = match[2].toUpperCase()
-      if (units === 'H') return t?.('extensions.commands-time.changeTimeByHours', 'Change time by {{delta}} hours?', { delta: delta }) || `Change time by ${delta} hours?`
-      else if (units === 'M') return t?.('extensions.commands-time.changeTimeByMinutes', 'Change time by {{delta}} minutes?', { delta: delta }) || `Change time by ${delta} minutes?`
-      else if (units === 'S') return t?.('extensions.commands-time.changeTimeBySeconds', 'Change time by {{delta}} seconds?', { delta: delta }) || `Change time by ${delta} seconds?`
-      else if (units === 'D') return t?.('extensions.commands-time.changeTimeByDays', 'Change time by {{delta}} days?', { delta: delta }) || `Change time by ${delta} days?`
-      else if (units === 'W') return t?.('extensions.commands-time.changeTimeByWeeks', 'Change time by {{delta}} weeks?', { delta: delta }) || `Change time by ${delta} weeks?`
+      if (units === 'H') return t?.('extensions.commands-time.changeTimeByHours', 'Change time by {{delta}} hours?', { delta }) || `Change time by ${delta} hours?`
+      else if (units === 'M') return t?.('extensions.commands-time.changeTimeByMinutes', 'Change time by {{delta}} minutes?', { delta }) || `Change time by ${delta} minutes?`
+      else if (units === 'S') return t?.('extensions.commands-time.changeTimeBySeconds', 'Change time by {{delta}} seconds?', { delta }) || `Change time by ${delta} seconds?`
+      else if (units === 'D') return t?.('extensions.commands-time.changeTimeByDays', 'Change time by {{delta}} days?', { delta }) || `Change time by ${delta} days?`
+      else if (units === 'W') return t?.('extensions.commands-time.changeTimeByWeeks', 'Change time by {{delta}} weeks?', { delta }) || `Change time by ${delta} weeks?`
       else return ''
     }
   },

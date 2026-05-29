@@ -23,7 +23,7 @@ import { DeleteOperationDialog } from './components/DeleteOperationDialog'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { H2kListItem, H2kListSection, H2kMarkdown } from '../../../ui'
-import { joinCalls } from '../../../tools/joinAnd'
+import { joinCalls } from '../../../tools/joinCalls'
 import { useIsFocused } from '@react-navigation/native'
 import { useSelectorConditionally } from '../../components/useConditionally'
 

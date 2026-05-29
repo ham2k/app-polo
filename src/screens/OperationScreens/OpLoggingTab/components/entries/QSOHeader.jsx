@@ -9,9 +9,8 @@ import React from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
-import { capitalizeFirstLetter, fmtNumber } from '@ham2k/lib-format-tools'
+import { capitalizeFirstLetter, fmtNumber, fmtDateDynamicZulu } from '@ham2k/lib-format-tools'
 
-import { fmtDateDynamicZulu } from '../../../../../tools/timeFormats'
 import { H2kIcon, H2kPressable } from '../../../../../ui'
 
 const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {

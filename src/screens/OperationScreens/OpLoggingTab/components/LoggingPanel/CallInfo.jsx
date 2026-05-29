@@ -10,21 +10,20 @@ import { Icon, Text } from 'react-native-paper'
 import { View } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+import { bearingForQSON, distanceForQSON, fmtDistance } from '@ham2k/lib-geo-tools'
+import { fmtNumber, sanitizeForMarkdown } from '@ham2k/lib-format-tools'
 
 import { scoringHandlersForOperation } from '../../../../../extensions/scoring'
-import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../../tools/geoTools'
 import { startOfDayInMillis, yesterdayInMillis } from '../../../../../tools/timeTools'
-import { useSelector } from 'react-redux'
 import { selectOperationCallInfo } from '../../../../../store/operations'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
-import { sanitizeForMarkdown } from '../../../../../tools/stringTools'
 import { H2kMarkdown, H2kPressable } from '../../../../../ui'
 import { parseStackedCalls } from '../../../../../tools/callsignTools'
 
 import { useCallLookup } from './useCallLookup'
-import { fmtNumber } from '@ham2k/lib-format-tools'
 
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',

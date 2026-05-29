@@ -5,10 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { removeASCIIControlCharacters, capitalizeString } from '@ham2k/lib-format-tools'
+
 import packageJson from '../../../../package.json'
 import GLOBAL from '../../../GLOBAL'
-import { capitalizeString } from '../../../tools/capitalizeString'
-import { removeASCIIControlCharacters } from '../../../tools/stringTools'
 
 export const Info = {
   key: 'hamdb',
@@ -82,12 +82,12 @@ const LookupHook = {
   }
 }
 
-function castString(value) {
+function castString (value) {
   if (value === undefined || value === null) return ''
   return String(value)
 }
 
-function castNumber(value) {
+function castNumber (value) {
   if (value === undefined || value === null) return 0
   const number = Number(value)
   if (isNaN(number)) return null

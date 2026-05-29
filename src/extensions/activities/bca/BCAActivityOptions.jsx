@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
-import { distanceOnEarth } from '../../../tools/geoTools'
+import { distanceOnEarth } from '@ham2k/lib-geo-tools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './BCAInfo'

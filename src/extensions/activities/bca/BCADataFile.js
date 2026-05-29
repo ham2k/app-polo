@@ -5,17 +5,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 
-import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
 export const BCAData = {}
 
-export function registerBCADataFile() {
+export function registerBCADataFile () {
   registerDataFile({
     key: 'bca-all-castles',
     name: 'BCA: All Castles',
@@ -106,11 +105,11 @@ export function registerBCADataFile() {
   })
 }
 
-export async function bcaFindOneByReference(ref) {
+export async function bcaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['bca', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function bcaFindAllByName(dxccCode, name) {
+export async function bcaFindAllByName (dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['bca', `%${name}%`, `%${name}%`],
@@ -119,7 +118,7 @@ export async function bcaFindAllByName(dxccCode, name) {
   return results
 }
 
-export async function bcaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
+export async function bcaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['bca', lat - delta, lat + delta, lon - delta, lon + delta],

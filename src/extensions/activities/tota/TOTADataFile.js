@@ -6,18 +6,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-
-export const TOTAData = {}
 import Config from 'react-native-config'
 
-export function registerTOTADataFile() {
+export const TOTAData = {}
+
+export function registerTOTADataFile () {
   registerDataFile({
     key: 'tota-all-towers',
     name: 'TOTA: All Towers',
@@ -45,16 +44,15 @@ export function registerTOTADataFile() {
           const startTime = Date.now()
           let processedRefs = 0
 
-
           while (refs.length > 0) {
             const batch = refs.splice(0, 251)
             const sql = []
             for (const ref of batch) {
               const grid = locationToGrid6(ref.lat, ref.lon)
-              const prefix = ref.ref.split("-")[0] // May be useful later
+              const prefix = ref.ref.split('-')[0] // May be useful later
               const data = {
                 ...ref,
-                grid,
+                grid
               }
 
               sql.push([
@@ -90,7 +88,7 @@ export function registerTOTADataFile() {
 
           return {
             totalReferences,
-            version: fmtDateNiceZulu(new Date()),
+            version: fmtDateNiceZulu(new Date())
           }
         }
       })
@@ -105,11 +103,11 @@ export function registerTOTADataFile() {
   })
 }
 
-export async function totaFindOneByReference(ref) {
+export async function totaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['tota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function totaFindAllByName(name) {
+export async function totaFindAllByName (name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['tota', `%${name}%`, `%${name}%`],
@@ -118,7 +116,7 @@ export async function totaFindAllByName(name) {
   return results
 }
 
-export async function totaFindAllByLocation(lat, lon, delta = 1) {
+export async function totaFindAllByLocation (lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['tota', lat - delta, lat + delta, lon - delta, lon + delta],

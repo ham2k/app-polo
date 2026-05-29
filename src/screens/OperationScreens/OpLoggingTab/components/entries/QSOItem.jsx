@@ -10,8 +10,8 @@ import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+import { partsForFreqInMHz } from '@ham2k/lib-format-tools'
 
-import { partsForFreqInMHz } from '../../../../../tools/frequencyFormats'
 import { findBestHook } from '../../../../../extensions/registry'
 import { H2kIcon, H2kPressable } from '../../../../../ui'
 

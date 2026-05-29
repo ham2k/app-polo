@@ -8,8 +8,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { fmtDistance } from '@ham2k/lib-geo-tools'
+
 import { H2kListItem } from '../../../ui'
-import { fmtDistance } from '../../../tools/geoTools'
 
 import { Info } from './WCAInfo'
 import { wcaFindOneByReference } from './WCADataFile'

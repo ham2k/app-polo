@@ -6,6 +6,9 @@
  */
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -15,9 +18,6 @@ import { registerMOTADataFile, motaFindOneByReference, motaFindAllByLocation } f
 import { Info } from './MOTAInfo'
 import { MOTALoggingControl } from './MOTALoggingControl'
 import { MOTAPostSelfSpot } from './MOTAPostSelfSpot'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
 import { MOTAPostOtherSpot } from './MOTAPostOtherSpot'
 
 const Extension = {
@@ -132,8 +132,8 @@ const ReferenceHandler = {
 
   updateFromTemplateWithDispatch: ({ ref, operation }) => async (dispatch) => {
     if (operation?.grid) {
-      let info = parseCallsign(operation.stationCall || '')
-      info = annotateFromCountryFile(info)
+      const info = parseCallsign(operation.stationCall || '')
+      annotateFromCountryFile(info)
       const [lat, lon] = gridToLocation(operation.grid)
 
       let nearby = await motaFindAllByLocation(lat, lon, 0.25)
@@ -194,7 +194,7 @@ const ReferenceHandler = {
     if (huntingRefs.length > 0) {
       return huntingRefs.map(huntingRef => [
         ...activationFields,
-        { SIG: 'MOTA' }, { SIG_INFO: huntingRef.ref },
+        { SIG: 'MOTA' }, { SIG_INFO: huntingRef.ref }
       ])
     } else {
       return [activationFields]

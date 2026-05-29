@@ -5,8 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { capitalizeString } from '@ham2k/lib-format-tools'
+
 import { findQSOHistory } from '../../../store/qsos/actions/findQSOHistory'
-import { capitalizeString } from '../../../tools/capitalizeString'
 
 export const Info = {
   key: 'call-history',

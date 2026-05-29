@@ -7,7 +7,7 @@
 
 import React, { useMemo } from 'react'
 
-import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '../../../../tools/geoTools'
+import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '@ham2k/lib-geo-tools'
 
 import MapboxMapWithQSOs from './MapboxMapWithQSOs'
 

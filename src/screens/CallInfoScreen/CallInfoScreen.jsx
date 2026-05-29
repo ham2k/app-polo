@@ -9,10 +9,11 @@ import React, { useEffect } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { slashZeros } from '@ham2k/lib-format-tools'
+
 import ScreenContainer from '../components/ScreenContainer'
 import { CallInfoPanel } from '../OperationScreens/OpInfoTab/components/CallInfoPanel'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { slashZeros } from '../../tools/stringTools'
 
 export default function CallInfoScreen ({ navigation, route }) {
   const call = route?.params?.call

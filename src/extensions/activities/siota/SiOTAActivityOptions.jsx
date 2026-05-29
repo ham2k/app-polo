@@ -10,10 +10,11 @@ import { useSelector } from 'react-redux'
 import Geolocation from '@react-native-community/geolocation'
 import { useTranslation } from 'react-i18next'
 
+import { distanceOnEarth } from '@ham2k/lib-geo-tools'
+
 import { selectOperationCallInfo } from '../../../store/operations'
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { selectRuntimeOnline } from '../../../store/runtime'
-import { distanceOnEarth } from '../../../tools/geoTools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './SiOTAInfo'

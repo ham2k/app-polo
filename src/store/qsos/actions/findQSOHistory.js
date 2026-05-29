@@ -5,11 +5,12 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtDateZulu } from '../../../tools/timeFormats'
+import { fmtDateZulu } from '@ham2k/lib-format-tools'
+
 import { dbSelectAll } from '../../db/db'
 import { prepareQSORow } from './qsosDB'
 
-export async function findQSOHistory(call, options = {}) {
+export async function findQSOHistory (call, options = {}) {
   const whereClauses = ['qsos.theirCall = ?']
   const whereArgs = [call]
 

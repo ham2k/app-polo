@@ -6,7 +6,9 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { fmtISODate } from '../../tools/timeFormats'
+
+import { fmtISODate } from '@ham2k/lib-format-tools'
+
 import { useSelector } from 'react-redux'
 import { selectSecondsTick } from '../../store/time'
 import { H2kTextInput } from './H2kTextInput'

@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useIsFocused } from '@react-navigation/native'
 
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { gridToLocation } from '@ham2k/lib-geo-tools'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../../store/operations'

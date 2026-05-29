@@ -17,6 +17,8 @@ import YAML from 'yaml'
 import Config from 'react-native-config'
 import { useTranslation } from 'react-i18next'
 
+import { fmtGigabytes, fmtMegabytes } from '@ham2k/lib-format-tools'
+
 import packageJson from '../../../../package.json'
 import GLOBAL from '../../../GLOBAL'
 
@@ -29,7 +31,6 @@ import { setLocalData } from '../../../store/local'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { fmtGigabytes, fmtMegabytes } from '../../../tools/numberFormats'
 import { H2kIconButton, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 function prepareStyles (baseStyles) {

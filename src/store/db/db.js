@@ -5,13 +5,14 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { Platform } from 'react-native'
 import { open as sqliteOpen } from '@op-engineering/op-sqlite'
 import RNFetchBlob from 'react-native-blob-util'
 import RNRestart from 'react-native-restart'
 
+import { fmtTimestamp } from '@ham2k/lib-format-tools'
+
 import { createTables } from './dbSchema'
-import { fmtTimestamp } from '../../tools/timeFormats'
-import { Platform } from 'react-native'
 
 const DB_NAME = 'polo.sqlite'
 

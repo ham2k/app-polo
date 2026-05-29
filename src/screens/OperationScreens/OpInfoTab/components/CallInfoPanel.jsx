@@ -14,16 +14,14 @@ import { useTranslation } from 'react-i18next'
 import { useIsFocused } from '@react-navigation/native'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
-import { fmtNumber } from '@ham2k/lib-format-tools'
+import { fmtNumber, capitalizeString, fmtDateTimeDynamicZulu } from '@ham2k/lib-format-tools'
+import { bearingForQSON, distanceForQSON, fmtDistance } from '@ham2k/lib-geo-tools'
 
 import { selectSettings, setSettings } from '../../../../store/settings'
 import { findHooks } from '../../../../extensions/registry'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import { capitalizeString } from '../../../../tools/capitalizeString'
-import { fmtDateTimeDynamicZulu } from '../../../../tools/timeFormats'
 import { useCallLookup } from '../../OpLoggingTab/components/LoggingPanel/useCallLookup'
 import { H2kMarkdown } from '../../../../ui'
-import { bearingForQSON, distanceForQSON, fmtDistance } from '../../../../tools/geoTools'
 import { selectOperationCallInfo } from '../../../../store/operations'
 import { useSelectorConditionally } from '../../../components/useConditionally'
 

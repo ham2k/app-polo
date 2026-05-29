@@ -5,6 +5,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, mergeRefs, refsToString } from '../../../tools/refTools'
 
@@ -16,15 +21,10 @@ import { POTALoggingControl } from './POTALoggingControl'
 import { POTAPostOtherSpot } from './POTAPostOtherSpot'
 import { POTAPostSelfSpot } from './POTAPostSelfSpot'
 import { apiPOTA, directLookupPark } from '../../../store/apis/apiPOTA'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
 import { ConfirmFromSpotsHook } from './POTAConfirmFromSpots'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import GLOBAL from '../../../GLOBAL'
-import { filterNearDupes, filterQSOsWithSectionRefs } from '../../../tools/qsonTools'
+import { filterNearDupes } from '../../../tools/qsonTools'
 import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {
@@ -335,8 +335,7 @@ const ReferenceHandler = {
   summarizeScore: generateActivitySumarizer({ info: Info }),
 
   originalScoringForQSO: ({ qso, qsos, operation, ref: scoredRef }) => {
-    const { band, mode, uuid, startAtMillis } = qso
-    if (DEBUG) console.log('  -- POTA scoringForQSO', { ...operation }, { ...scoredRef })
+    const { band, mode } = qso
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24
 
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
@@ -355,10 +354,8 @@ const ReferenceHandler = {
     // console.log('pota scoring', qso.their.call, scoredRef.type ?? '?', scoredRef.ref ?? '?')
 
     const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
-    if (DEBUG) console.log('-- nearDupes', qso.uuid, qso.key, nearDupes)
 
     if (nearDupes.length === 0) {
-      if (DEBUG) console.log('-- no dupes', { value, refCount, type })
       return { value, refCount, type }
     } else {
       const thisQSOTime = qso.startAtMillis ?? Date.now()
@@ -373,10 +370,7 @@ const ReferenceHandler = {
       const sameRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).filter(r => refs.find(qr => qr.ref === r.ref)).length > 0).length !== 0
       const dupesHadRefs = sameDayDupes.filter(q => filterRefs(q, Info.huntingType).length !== 0).length !== 0
 
-      if (DEBUG) console.log('-- ', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
-
       if (sameBandMode && sameDay && (sameRefs || refs.length === 0)) {
-        if (DEBUG) console.log('-- duplicate', qso.uuid, { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
         if (refs.length === 0 && dupesHadRefs && !qso.uuid) return { value: 0, refCount, notices: ['maybeDupe'], type }
         return { value: 0, refCount, alerts: ['duplicate'], type }
       } else {
@@ -386,7 +380,6 @@ const ReferenceHandler = {
         if (!sameMode) notices.push('newMode')
         if (!sameBand) notices.push('newBand')
 
-        if (DEBUG) console.log('-- near duplicate', { sameDayDupes, sameDay, sameBand, sameMode, sameBandMode, sameRefs })
         return { value, refCount, notices, type }
       }
     }

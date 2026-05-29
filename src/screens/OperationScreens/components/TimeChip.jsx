@@ -6,9 +6,11 @@
  */
 
 import React, { useEffect, useState } from 'react'
-import LoggerChip from './LoggerChip'
-import { fmtTimeZulu } from '../../../tools/timeFormats'
 import { useSelector } from 'react-redux'
+
+import { fmtTimeZulu } from '@ham2k/lib-format-tools'
+
+import LoggerChip from './LoggerChip'
 import { selectSecondsTick } from '../../../store/time'
 
 export default function TimeChip (props) {

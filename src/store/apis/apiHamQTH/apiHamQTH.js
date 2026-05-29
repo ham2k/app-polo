@@ -10,8 +10,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { XMLParser } from 'fast-xml-parser'
 
+import { capitalizeString } from '@ham2k/lib-format-tools'
+
 import packageJson from '../../../../package.json'
-import { capitalizeString } from '../../../tools/capitalizeString'
 import { setAccountInfo } from '../../settings'
 
 /**

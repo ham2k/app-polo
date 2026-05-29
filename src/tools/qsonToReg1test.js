@@ -5,8 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { fmtTimestamp } from '@ham2k/lib-format-tools'
+
 import { findRef } from './refTools'
-import { fmtTimestamp } from './timeFormats'
 
 const REG1TEST_MODE = {
   // Note, we don't support CW/SSB or SSB/CW split modes
@@ -18,7 +19,7 @@ const REG1TEST_MODE = {
   SSTY: 8
 }
 
-export function qsonToReg1test({ operation, qsos, settings, handler, combineSegmentRefs }) {
+export function qsonToReg1test ({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)
 
   let str = ''

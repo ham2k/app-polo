@@ -7,14 +7,13 @@
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
 
 import GLOBAL from '../../../GLOBAL'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { LOCATION_ACCURACY } from '../../constants'
-import { distanceOnEarth } from '../../../tools/geoTools'
 
 import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
@@ -140,5 +139,5 @@ const ReferenceHandler = {
 
   scoringForQSO: generateActivityScorer({ info: Info }),
   accumulateScoreForDay: generateActivityOperationAccumulator({ info: Info }),
-  summarizeScore: generateActivitySumarizer({ info: Info }),
+  summarizeScore: generateActivitySumarizer({ info: Info })
 }

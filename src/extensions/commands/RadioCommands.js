@@ -6,7 +6,7 @@
  */
 
 import { modeForFrequency } from '@ham2k/lib-operation-data'
-import { fmtFreqInMHz, parseFreqInMHz } from '../../tools/frequencyFormats'
+import { fmtFreqInMHz, parseFreqInMHz } from '@ham2k/lib-format-tools'
 
 const Info = {
   key: 'commands-radio',

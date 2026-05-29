@@ -8,7 +8,7 @@ import { Alert } from 'react-native'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
 
 import GLOBAL from '../../../GLOBAL'
 
@@ -16,7 +16,6 @@ import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/d
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { LOCATION_ACCURACY } from '../../constants'
-import { distanceOnEarth } from '../../../tools/geoTools'
 
 import { SOTAActivityOptions } from './SOTAActivityOptions'
 import { registerSOTADataFile, sotaFindAllByLocation, sotaFindOneByReference } from './SOTADataFile'

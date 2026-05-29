@@ -10,9 +10,8 @@ import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSelector } from 'react-redux'
 
-import { capitalizeFirstLetter, fmtNumber } from '@ham2k/lib-format-tools'
+import { capitalizeFirstLetter, fmtNumber, fmtDateDynamicZulu } from '@ham2k/lib-format-tools'
 
-import { fmtDateDynamicZulu } from '../../../tools/timeFormats'
 import { tweakStringForVoiceOver } from '../../../tools/a11yTools'
 import { buildTitleForOperation } from '../../OperationScreens/OperationScreen'
 import { selectOperation } from '../../../store/operations'

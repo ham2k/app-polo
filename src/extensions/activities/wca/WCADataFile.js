@@ -11,12 +11,11 @@
  * and extracted to polo.ham2k.com/data/activities/wca/all-castles.csv
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { fmtNumber, fmtPercent, fmtDateTimeNiceZulu } from '@ham2k/lib-format-tools'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 
 import GLOBAL from '../../../GLOBAL'
 
-import { fmtDateTimeNiceZulu } from '../../../tools/timeFormats'
 import { registerDataFile } from '../../../store/dataFiles'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
@@ -24,7 +23,7 @@ import { Info } from './WCAInfo'
 
 export const WCAData = {}
 
-export function registerWCADataFile() {
+export function registerWCADataFile () {
   registerDataFile({
     key: 'wca-all-castles',
     name: 'WCA: All Castles',
@@ -35,7 +34,9 @@ export function registerWCADataFile() {
     fetch: async (args) => {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({
-        key, definition, status: 'progress',
+        key,
+        definition,
+        status: 'progress',
         progress: GLOBAL?.t?.(
           'extensions.dataFiles.loading.downloadingRawData',
           'Downloading raw data…'
@@ -65,17 +66,17 @@ export function registerWCADataFile() {
             for (const line of batch) {
               const row = parseWCACSVRow(line, { headers })
 
-              if (row['REF'] && Info.referenceRegex.test(row['REF'])) {
+              if (row.REF && Info.referenceRegex.test(row.REF)) {
                 let lon, lat, grid
-                if (row['COORDINATES'] && row['COORDINATES'].includes(',')) {
-                  const [latStr, lonStr] = row['COORDINATES'].split(',')
+                if (row.COORDINATES && row.COORDINATES.includes(',')) {
+                  const [latStr, lonStr] = row.COORDINATES.split(',')
                   lon = Number.parseFloat(lonStr)
                   lat = Number.parseFloat(latStr)
                   grid = locationToGrid6(lat, lon)
                 }
                 const data = {
-                  ref: row['REF'].toUpperCase(),
-                  prefix: row['PREFIX'],
+                  ref: row.REF.toUpperCase(),
+                  prefix: row.PREFIX,
                   name: row['CLEAN NAME'],
                   location: row['CLEAN LOCATION'],
                   grid,
@@ -112,7 +113,7 @@ export function registerWCADataFile() {
               status: 'progress',
               progress: GLOBAL?.t?.(
                 'extensions.dataFiles.loading.progress',
-                'Loaded \`{{processedLines}}\` references.\n\n\`{{percent}}\` • {{secondsLeft}} seconds left.',
+                'Loaded `{{processedLines}}` references.\n\n`{{percent}}` • {{secondsLeft}} seconds left.',
                 {
                   processedLines: fmtNumber(processedLines),
                   percent: fmtPercent(Math.min(processedLines / totalLines, 1), 'integer'),
@@ -141,11 +142,11 @@ export function registerWCADataFile() {
   })
 }
 
-export async function wcaFindOneByReference(ref) {
+export async function wcaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['wca', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function wcaFindAllByName(dxccCode, name) {
+export async function wcaFindAllByName (dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['wca', `%${name}%`, `%${name}%`],
@@ -154,7 +155,7 @@ export async function wcaFindAllByName(dxccCode, name) {
   return results
 }
 
-export async function wcaFindAllByLocation(dxccCode, lat, lon, delta = 1) {
+export async function wcaFindAllByLocation (dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['wca', lat - delta, lat + delta, lon - delta, lon + delta],
@@ -171,7 +172,7 @@ const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g
 // )                # End of non-capturing group for each column
 // (?:,|\s*$)       # Match either a comma or the end of the line
 
-function parseWCACSVRow(row, options) {
+function parseWCACSVRow (row, options) {
   const parts = [...row.matchAll(CSV_ROW_REGEX)].map(match => match[1]?.replaceAll('""', '"') ?? match[2] ?? '')
 
   if (options?.headers) {

@@ -5,10 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { prepareTimeValue } from './timeFormats'
+import { prepareDateValue } from '@ham2k/lib-format-tools'
 
 export function startOfDayInMillis (t) {
-  if (t) t = prepareTimeValue(t)
+  if (t) t = prepareDateValue(t)
   else t = new Date()
   t.setHours(0, 0, 0, 0)
   return t.getTime()

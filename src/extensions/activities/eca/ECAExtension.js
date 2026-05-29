@@ -5,6 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
@@ -13,10 +17,6 @@ import { ecaFindAllByLocation, ecaFindOneByReference, registerECADataFile } from
 import { ECAActivityOptions } from './ECAActivityOptions'
 import { ECAPostSelfSpot } from './ECAPostSelfSpot'
 import { LOCATION_ACCURACY } from '../../constants'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,

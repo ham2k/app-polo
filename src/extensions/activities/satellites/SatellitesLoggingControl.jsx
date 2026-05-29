@@ -8,10 +8,10 @@
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
+import { capitalizeString, fmtFreqInMHz } from '@ham2k/lib-format-tools'
+
 import { setOperationData } from '../../../store/operations'
 import { setVFO } from '../../../store/station/stationSlice'
-import { capitalizeString } from '../../../tools/capitalizeString'
-import { fmtFreqInMHz } from '../../../tools/frequencyFormats'
 import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
 import { H2kDropDown } from '../../../ui'
 

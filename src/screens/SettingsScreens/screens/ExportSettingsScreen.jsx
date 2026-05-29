@@ -12,12 +12,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
+import { fmtISODate } from '@ham2k/lib-format-tools'
+
 import { selectExportSettings, selectSettings, setExportSettings } from '../../../store/settings'
 import ScreenContainer from '../../components/ScreenContainer'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { basePartialTemplates, DATA_FORMAT_DESCRIPTIONS, runTemplateForOperation } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { fmtISODate } from '../../../tools/timeFormats'
 import { H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export default function ExportSettingsScreen ({ navigation, splitView }) {

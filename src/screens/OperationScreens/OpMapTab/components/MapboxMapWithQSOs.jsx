@@ -11,7 +11,7 @@ import { Platform, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Config from 'react-native-config'
 
-import { fmtShortTimeZulu } from '../../../../tools/timeFormats'
+import { fmtShortTimeZulu } from '@ham2k/lib-format-tools'
 
 if (Platform.OS === 'ios') {
   Mapbox.setWellKnownTileServer('mapbox')

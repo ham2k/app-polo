@@ -10,17 +10,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { View, useColorScheme } from 'react-native'
 import { SystemBars } from 'react-native-edge-to-edge'
 import { IconButton, Text } from 'react-native-paper'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import Color from 'color'
+
+import { gridToLocation } from '@ham2k/lib-geo-tools'
+import { slashZeros, fmtDateTimeNiceZulu, fmtTimeBetween } from '@ham2k/lib-format-tools'
 
 import { loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs, selectQSOs } from '../../store/qsos'
 import { selectSettings } from '../../store/settings'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { fmtDateTimeNiceZulu, fmtTimeBetween } from '../../tools/timeFormats'
-import Color from 'color'
 import MapWithQSOs from '../OperationScreens/OpMapTab/components/MapWithQSOs'
-import { slashZeros } from '../../tools/stringTools'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 function prepareStyles (baseTheme, themeColor, deviceColorScheme) {
   let titleBackground

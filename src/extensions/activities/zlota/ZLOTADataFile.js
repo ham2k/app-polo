@@ -5,17 +5,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
 export const ZLOTAData = {}
 
-export function registerZLOTADataFile() {
+export function registerZLOTADataFile () {
   registerDataFile({
     key: 'zlota-all-references',
     name: 'ZLOTA: All References',
@@ -105,11 +104,11 @@ export function registerZLOTADataFile() {
   })
 }
 
-export async function zlotaFindOneByReference(ref) {
+export async function zlotaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['zlota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function zlotaFindAllByName(name) {
+export async function zlotaFindAllByName (name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['zlota', `%${name}%`, `%${name}%`],
@@ -118,7 +117,7 @@ export async function zlotaFindAllByName(name) {
   return results
 }
 
-export async function zlotaFindAllByLocation(lat, lon, delta = 1) {
+export async function zlotaFindAllByLocation (lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['zlota', lat - delta, lat + delta, lon - delta, lon + delta],

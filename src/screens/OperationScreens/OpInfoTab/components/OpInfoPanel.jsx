@@ -11,10 +11,9 @@ import { Text } from 'react-native-paper'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useTranslation } from 'react-i18next'
 
-import { capitalizeFirstLetter, fmtNumber } from '@ham2k/lib-format-tools'
+import { capitalizeFirstLetter, fmtNumber, fmtDateFullZulu, fmtTimeBetween } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
-import { fmtDateFullZulu, fmtTimeBetween } from '../../../../tools/timeFormats'
 import { selectSecondsTick } from '../../../../store/time'
 import { H2kIcon, H2kMarkdown } from '../../../../ui'
 import { useIsFocused } from '@react-navigation/native'

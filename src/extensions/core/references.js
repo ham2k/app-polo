@@ -6,7 +6,7 @@
  */
 
 import { filterRefs, refsToString } from '../../tools/refTools'
-import { camelCaseToWords } from '../../tools/stringTools'
+import { camelCaseToWords } from '@ham2k/lib-format-tools'
 
 export function defaultReferenceHandlerFor (type) {
   return {

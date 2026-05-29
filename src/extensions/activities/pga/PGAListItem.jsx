@@ -7,7 +7,8 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { fmtDistance } from '../../../tools/geoTools'
+import { fmtDistance } from '@ham2k/lib-geo-tools'
+
 import { H2kListItem } from '../../../ui'
 
 import { Info } from './PGAInfo'

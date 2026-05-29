@@ -8,12 +8,11 @@
 import { Alert } from 'react-native'
 
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
+import { fmtFreqInMHz } from '@ham2k/lib-format-tools'
 
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
 import packageJson from '../../../../package.json'
-
-import { fmtFreqInMHz } from '../../../tools/frequencyFormats'
 
 import { PnPAccountSetting } from './PnPAccountSetting'
 

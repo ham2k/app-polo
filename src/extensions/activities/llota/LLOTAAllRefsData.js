@@ -5,13 +5,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 import { DXCC_BY_CODE } from '@ham2k/lib-dxcc-data'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { logTimer } from '../../../tools/perfTools'
-import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
@@ -24,9 +22,7 @@ export const LLOTAAllReferences = {
   }, {})
 }
 
-const DEBUG = true
-
-export function registerLLOTAAllRefsData() {
+export function registerLLOTAAllRefsData () {
   registerDataFile({
     key: 'llota-all-lakes',
     name: 'LLOTA: All Lakes',
@@ -125,15 +121,15 @@ export function registerLLOTAAllRefsData() {
   })
 }
 
-export function llotaPrefixForDXCCCode(code) {
+export function llotaPrefixForDXCCCode (code) {
   return (LLOTAAllReferences.prefixByDXCCCode && LLOTAAllReferences.prefixByDXCCCode[code]) || ''
 }
 
-export async function llotaFindByReference(ref) {
+export async function llotaFindByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['llota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function llotaFindByName(dxccCode, name) {
+export async function llotaFindByName (dxccCode, name) {
   const prefix = llotaPrefixForDXCCCode(dxccCode)
 
   const results = await dbSelectAll(
@@ -145,7 +141,7 @@ export async function llotaFindByName(dxccCode, name) {
   return results
 }
 
-export async function llotaFindByLocation(dxccCode, lat, lon, delta = 1) {
+export async function llotaFindByLocation (dxccCode, lat, lon, delta = 1) {
   const prefix = llotaPrefixForDXCCCode(dxccCode)
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',

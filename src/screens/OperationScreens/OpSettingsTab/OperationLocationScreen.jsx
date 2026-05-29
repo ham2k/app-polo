@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Geolocation from '@react-native-community/geolocation'
 import { useTranslation } from 'react-i18next'
 
-import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-maidenhead-grid'
+import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-geo-tools'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../../store/settings'

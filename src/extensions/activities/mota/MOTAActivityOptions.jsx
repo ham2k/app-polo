@@ -9,8 +9,9 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import Geolocation from '@react-native-community/geolocation'
 import { useTranslation } from 'react-i18next'
 
+import { distanceOnEarth } from '@ham2k/lib-geo-tools'
+
 import { filterRefs, replaceRefs } from '../../../tools/refTools'
-import { distanceOnEarth } from '../../../tools/geoTools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './MOTAInfo'

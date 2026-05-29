@@ -9,14 +9,13 @@
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 
 import GLOBAL from '../../../GLOBAL'
 
 import { apiZLOTA } from '../../../store/apis/apiZLOTA'
 import { LOCATION_ACCURACY } from '../../constants'
-import { distanceOnEarth } from '../../../tools/geoTools'
 
 import { Info } from './ZLOTAInfo'
 import { ZLOTAActivityOptions } from './ZLOTAActivityOptions'

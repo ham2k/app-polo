@@ -5,6 +5,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, mergeRefs, refsToString } from '../../../tools/refTools'
 
@@ -16,12 +21,7 @@ import { LLOTALoggingControl } from './LLOTALoggingControl'
 import { LLOTAPostOtherSpot } from './LLOTAPostOtherSpot'
 import { LLOTAPostSelfSpot } from './LLOTAPostSelfSpot'
 import { apiLLOTA } from '../../../store/apis/apiLLOTA'
-import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import GLOBAL from '../../../GLOBAL'
 import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 

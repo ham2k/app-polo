@@ -5,6 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { findRef, refsToString } from '../../../tools/refTools'
 import { LOCATION_ACCURACY } from '../../constants'
@@ -12,8 +14,6 @@ import { LOCATION_ACCURACY } from '../../constants'
 import { PGAActivityOptions } from './PGAActivityOptions'
 import { registerPGADataFile, pgaFindOneByReference, pgaFindAllByLocation } from './PGADataFile'
 import { Info } from './PGAInfo'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
 
 const Extension = {
   ...Info,

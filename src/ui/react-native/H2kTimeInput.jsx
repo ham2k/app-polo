@@ -6,9 +6,11 @@
  */
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { H2kTextInput } from './H2kTextInput'
-import { fmtTimeZulu } from '../../tools/timeFormats'
 import { useSelector } from 'react-redux'
+
+import { fmtTimeZulu } from '@ham2k/lib-format-tools'
+
+import { H2kTextInput } from './H2kTextInput'
 import { selectSecondsTick } from '../../store/time'
 
 export function H2kTimeInput (props) {

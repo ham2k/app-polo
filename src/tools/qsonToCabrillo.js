@@ -5,8 +5,9 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { fmtCabrilloDate, fmtCabrilloTime } from '@ham2k/lib-format-tools'
+
 import { findRef } from './refTools'
-import { fmtCabrilloDate, fmtCabrilloTime } from './timeFormats'
 
 export function qsonToCabrillo ({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)

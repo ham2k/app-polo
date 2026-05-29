@@ -6,7 +6,7 @@
  */
 
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
@@ -14,7 +14,7 @@ import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../st
 
 export const MOTAData = {}
 
-export function registerMOTADataFile() {
+export function registerMOTADataFile () {
   registerDataFile({
     key: 'mota-all-mills',
     name: 'MOTA: All Mills',
@@ -113,11 +113,11 @@ export function registerMOTADataFile() {
   })
 }
 
-export async function motaFindOneByReference(ref) {
+export async function motaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['mota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function motaFindAllByName(name) {
+export async function motaFindAllByName (name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['mota', `%${name}%`, `%${name}%`],
@@ -126,7 +126,7 @@ export async function motaFindAllByName(name) {
   return results
 }
 
-export async function motaFindAllByLocation(lat, lon, delta = 1) {
+export async function motaFindAllByLocation (lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['mota', lat - delta, lat + delta, lon - delta, lon + delta],
@@ -143,7 +143,7 @@ const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g
 // )                # End of non-capturing group for each column
 // (?:,|\s*$)       # Match either a comma or the end of the line
 
-function parseMOTACSVRow(row, options) {
+function parseMOTACSVRow (row, options) {
   const parts = [...row.matchAll(CSV_ROW_REGEX)].map(match => match[1]?.replaceAll('""', '"') ?? match[2] ?? '')
 
   if (options?.headers) {

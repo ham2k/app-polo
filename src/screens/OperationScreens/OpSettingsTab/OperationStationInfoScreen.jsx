@@ -19,7 +19,7 @@ import { selectSettings } from '../../../store/settings'
 import { selectOperation, setOperationData, setOperationLocalData } from '../../../store/operations'
 import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
 import ScreenContainer from '../../components/ScreenContainer'
-import { joinCalls } from '../../../tools/joinAnd'
+import { joinCalls } from '../../../tools/joinCalls'
 import { H2kCallsignInput, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 export default function OperationStationInfoScreen ({ navigation, route }) {

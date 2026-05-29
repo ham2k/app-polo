@@ -12,10 +12,10 @@ import { useTranslation } from 'react-i18next'
 import { useNavigation } from '@react-navigation/native'
 import { useSelector } from 'react-redux'
 
-import { fmtTimeBetween } from '../../../../../tools/timeFormats'
+import { fmtNumber, fmtTimeBetween } from '@ham2k/lib-format-tools'
+
 import { selectSecondsTick } from '../../../../../store/time'
 import { H2kIcon, H2kMarkdown, H2kPressable } from '../../../../../ui'
-import { fmtNumber } from '@ham2k/lib-format-tools'
 
 export function OpInfo ({ message, clearMessage, operation, activeQSOs, style, styles, themeColor }) {
   const { t } = useTranslation()

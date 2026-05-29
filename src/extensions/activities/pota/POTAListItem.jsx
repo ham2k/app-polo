@@ -7,8 +7,9 @@
 
 import React, { useMemo } from 'react'
 
+import { fmtDistance } from '@ham2k/lib-geo-tools'
+
 import { useLookupParkQuery } from '../../../store/apis/apiPOTA'
-import { fmtDistance } from '../../../tools/geoTools'
 import { H2kListItem } from '../../../ui'
 
 import { Info } from './POTAInfo'

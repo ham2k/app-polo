@@ -5,6 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
@@ -12,13 +16,7 @@ import { Info } from './SiOTAInfo'
 import { SiOTAActivityOptions } from './SiOTAActivityOptions'
 import { siotaFindOneByReference, registerSiOTADataFile, siotaFindAllByLocation } from './SiOTADataFile'
 import { SiOTALoggingControl } from './SiOTALoggingControl'
-import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { LOCATION_ACCURACY } from '../../constants'
-import { parseCallsign } from '@ham2k/lib-callsigns'
-import { annotateFromCountryFile } from '@ham2k/lib-country-files'
-import { gridToLocation } from '@ham2k/lib-maidenhead-grid'
-import { distanceOnEarth } from '../../../tools/geoTools'
-import GLOBAL from '../../../GLOBAL'
 
 const Extension = {
   ...Info,
@@ -200,13 +198,11 @@ const ReferenceHandler = {
     const refs = filterRefs(qso, Info.huntingType).filter(x => x.ref)
     const points = refs.length
 
-    let type, value
+    let type
     if (scoredRef?.ref) {
       type = Info.activationType
-      value = points || 1
     } else {
       type = Info.huntingType
-      value = points
     }
 
     const TWENTY_FOUR_HOURS_IN_MILLIS = 1000 * 60 * 60 * 24

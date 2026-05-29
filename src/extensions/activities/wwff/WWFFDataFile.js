@@ -6,7 +6,7 @@
  */
 
 import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
-import { locationToGrid6 } from '@ham2k/lib-maidenhead-grid'
+import { locationToGrid6 } from '@ham2k/lib-geo-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
@@ -14,7 +14,7 @@ import { fetchAndProcessBatchedLines } from '../../../store/dataFiles/actions/da
 
 export const WWFFData = { prefixByDXCCCode: {} }
 
-export function registerWWFFDataFile() {
+export function registerWWFFDataFile () {
   registerDataFile({
     key: 'wwff-all-parks',
     name: 'WWFF: All Parks',
@@ -41,7 +41,7 @@ export function registerWWFFDataFile() {
       const expectedSteps = expectedReferences * (fetchWorkRatio + dbWorkRatio)
 
       let completedSteps = 0
-      let totalReferences = 0
+      const totalReferences = 0
       const startTime = Date.now()
 
       let headers
@@ -127,15 +127,15 @@ export function registerWWFFDataFile() {
   })
 }
 
-export function wwffPrefixForDXCCCode(code) {
+export function wwffPrefixForDXCCCode (code) {
   return (WWFFData.prefixByDXCCCode && WWFFData.prefixByDXCCCode[code]) || ''
 }
 
-export async function wwffFindOneByReference(ref) {
+export async function wwffFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['wwff', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function wwffFindAllByName(dxccCode, name) {
+export async function wwffFindAllByName (dxccCode, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['wwff', `${dxccCode}`, `%${name}%`, `%${name}%`],
@@ -144,7 +144,7 @@ export async function wwffFindAllByName(dxccCode, name) {
   return results
 }
 
-export async function wwffFindAllByLocation(dxccCode, lat, lon, delta = 1) {
+export async function wwffFindAllByLocation (dxccCode, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['wwff', `${dxccCode}`, lat - delta, lat + delta, lon - delta, lon + delta],
@@ -161,7 +161,7 @@ const CSV_ROW_REGEX = /(?:"((?:[^"]|"")*)"|([^",]*))(?:,|\s*$)/g
 // )                # End of non-capturing group for each column
 // (?:,|\s*$)       # Match either a comma or the end of the line
 
-function parseWWFFCSVRow(row, options) {
+function parseWWFFCSVRow (row, options) {
   const parts = [...row.matchAll(CSV_ROW_REGEX)].map(match => match[1]?.replaceAll('""', '"') ?? match[2] ?? '')
 
   if (options?.headers) {

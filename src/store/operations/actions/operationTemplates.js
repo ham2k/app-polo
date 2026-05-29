@@ -6,9 +6,11 @@
  */
 
 import Geolocation from '@react-native-community/geolocation'
+
+import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-geo-tools'
+
 import { selectSettings } from '../../settings'
 import { findBestHook } from '../../../extensions/registry'
-import { locationToGrid6, locationToGrid8 } from '@ham2k/lib-maidenhead-grid'
 import { setOperationData } from './setOperationData'
 import GLOBAL from '../../../GLOBAL'
 
@@ -133,10 +135,10 @@ export const fillOperationFromTemplate = (operation, template) => async (dispatc
           console.info('Geolocation error', error)
           resolve()
         }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 15 /* 15 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+          enableHighAccuracy: true,
+          timeout: 1000 * 15 /* 15 seconds */,
+          maximumAge: 1000 * 60 /* 1 minute */
+        }
       )
     })
     dispatch(setOperationData({ uuid, grid: operation.grid }))

@@ -81,9 +81,11 @@ Templates are also provided with the following helper functions:
 
  */
 
-import { fmtISODate, fmtTimeZulu } from '../../../../tools/timeFormats'
-import { findBestHook, findHooks } from '../../../../extensions/registry'
 import Handlebars from 'handlebars'
+
+import { fmtISODate, fmtTimeZulu } from '@ham2k/lib-format-tools'
+
+import { findBestHook, findHooks } from '../../../../extensions/registry'
 import { selectExportSettings } from '../../../settings'
 
 export const DATA_EXTENSIONS = {
@@ -109,7 +111,7 @@ export const DATA_FORMAT_DESCRIPTIONS = {
   other: 'Data'
 }
 
-export function baseNamePartsFor({ operation, ourInfo }) {
+export function baseNamePartsFor ({ operation, ourInfo }) {
   return {
     call: ourInfo.call,
     baseCall: ourInfo.baseCall,
@@ -121,7 +123,7 @@ export function baseNamePartsFor({ operation, ourInfo }) {
   }
 }
 
-function getAllRefsForOperation({ operation, qsos }) {
+function getAllRefsForOperation ({ operation, qsos }) {
   const refs = qsos.filter(qso => !qso.deleted && (qso?.event?.event === 'start' || qso?.event?.event === 'break'))
     .map(qso => qso?.event?.operation?.refs ?? [])
     .flat().filter(ref => ref)
@@ -134,7 +136,7 @@ function getAllRefsForOperation({ operation, qsos }) {
 
 const DEBUG = false
 
-function getExportOptionsForOperation({ operation, qsos, settings }) {
+function getExportOptionsForOperation ({ operation, qsos, settings }) {
   const refs = getAllRefsForOperation({ operation, qsos })
   const exportOptions = {}
 
@@ -174,7 +176,7 @@ function getExportOptionsForOperation({ operation, qsos, settings }) {
   return Object.values(exportOptions)
 }
 
-export function dataExportOptions({ operation, qsos, settings, ourInfo }) {
+export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
   const exports = []
 
   const exportOptions = getExportOptionsForOperation({ operation, qsos, settings })
@@ -231,7 +233,7 @@ export function dataExportOptions({ operation, qsos, settings, ourInfo }) {
   return exports.sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
 }
 
-export function compileTemplateForOperation(template, { settings }) {
+export function compileTemplateForOperation (template, { settings }) {
   try {
     const compiled = Handlebars.compile(template ?? '', { noEscape: true })
     return compiled
@@ -241,7 +243,7 @@ export function compileTemplateForOperation(template, { settings }) {
   }
 }
 
-export function runTemplateForOperation(template, { settings, operation, ourInfo, handler, ref, qso }) {
+export function runTemplateForOperation (template, { settings, operation, ourInfo, handler, ref, qso }) {
   try {
     const compiled = Handlebars.compile(template ?? '', { noEscape: true })
     const context = templateContextForOneExport({ settings, operation, ourInfo, handler, ref, qso })
@@ -255,7 +257,7 @@ export function runTemplateForOperation(template, { settings, operation, ourInfo
   }
 }
 
-export function templateContextForOneExport({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
+export function templateContextForOneExport ({ option, settings, operation, ourInfo, handler, qso, ref, context }) {
   return {
     settings: {
       useCompactFileNames: settings.useCompactFileNames
@@ -298,8 +300,8 @@ export function templateContextForOneExport({ option, settings, operation, ourIn
   }
 }
 
-export function basePartialTemplates({ settings }) {
-  let partials = {
+export function basePartialTemplates ({ settings }) {
+  const partials = {
     RefActivityNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} at {{#if log.refPrefix}}{{log.refPrefix}} {{/if}}{{log.ref}}',
     RefActivityNameCompact: '{{log.station}}@{{#if log.refPrefix}}{{dash (downcase log.refPrefix)}}-{{/if}}{{log.ref}}-{{compact op.date}}',
     OtherActivityNameNormal: '{{op.date}}{{#if log.includeTime}} {{op.startTime}}{{/if}} {{log.station}} for {{log.handlerShortName}}',
@@ -317,7 +319,7 @@ export function basePartialTemplates({ settings }) {
   if (settings) {
     const userDefaults = selectExportSettings({ settings }, 'default')
     Object.keys(userDefaults).forEach(key => {
-      if (typeof userDefaults[key] == 'string') {
+      if (typeof userDefaults[key] === 'string') {
         if (userDefaults[key].trim() !== '') {
           partials[key] = userDefaults[key]
         }
@@ -338,7 +340,7 @@ export function basePartialTemplates({ settings }) {
   return partials
 }
 
-export function extraDataForTemplates({ settings }) {
+export function extraDataForTemplates ({ settings }) {
   return {
     app: {
       name: 'Ham2K Portable Logger',

@@ -6,8 +6,9 @@
  */
 
 import { Linking } from 'react-native'
+import { fmtFreqInMHz } from '@ham2k/lib-format-tools'
+
 import { postSpots, retrieveHooksWithSpotting } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
-import { fmtFreqInMHz } from '../../tools/frequencyFormats'
 
 const Info = {
   key: 'commands-misc',

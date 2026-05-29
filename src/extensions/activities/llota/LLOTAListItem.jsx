@@ -5,9 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+import { fmtDistance } from '@ham2k/lib-geo-tools'
+
 import React, { useMemo } from 'react'
 
-import { fmtDistance } from '../../../tools/geoTools'
 import { H2kListItem } from '../../../ui'
 
 import { Info } from './LLOTAInfo'

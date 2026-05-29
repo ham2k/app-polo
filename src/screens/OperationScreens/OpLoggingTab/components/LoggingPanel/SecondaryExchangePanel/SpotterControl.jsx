@@ -7,10 +7,11 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { parseCallsign } from '@ham2k/lib-callsigns'
 import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
+
+import { parseCallsign } from '@ham2k/lib-callsigns'
+import { fmtFreqInMHz, fmtDateTimeRelative } from '@ham2k/lib-format-tools'
 
 import GLOBAL from '../../../../../../GLOBAL'
 
@@ -19,8 +20,6 @@ import { selectRuntimeOnline } from '../../../../../../store/runtime'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { findHooks } from '../../../../../../extensions/registry'
 import { findRef } from '../../../../../../tools/refTools'
-import { fmtFreqInMHz } from '../../../../../../tools/frequencyFormats'
-import { fmtDateTimeRelative } from '../../../../../../tools/timeFormats'
 import { H2kButton, H2kIcon, H2kTextInput } from '../../../../../../ui'
 import LoggerChip from '../../../../components/LoggerChip'
 

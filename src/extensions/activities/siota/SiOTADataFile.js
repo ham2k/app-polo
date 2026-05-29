@@ -5,17 +5,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
+import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
 
 import { registerDataFile } from '../../../store/dataFiles'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
-import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { Info } from './SiOTAInfo'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const SiOTAData = {}
 
-export function registerSiOTADataFile() {
+export function registerSiOTADataFile () {
   registerDataFile({
     key: 'siota-all-silos',
     name: 'SiOTA: All Silos',
@@ -112,11 +111,11 @@ export function registerSiOTADataFile() {
   })
 }
 
-export async function siotaFindOneByReference(ref) {
+export async function siotaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['siota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function siotaFindAllByName(name) {
+export async function siotaFindAllByName (name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['siota', `%${name}%`, `%${name}%`],
@@ -125,7 +124,7 @@ export async function siotaFindAllByName(name) {
   return results
 }
 
-export async function siotaFindAllByLocation(lat, lon, delta = 1) {
+export async function siotaFindAllByLocation (lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['siota', lat - delta, lat + delta, lon - delta, lon + delta],
@@ -135,7 +134,7 @@ export async function siotaFindAllByLocation(lat, lon, delta = 1) {
 }
 
 const OPTIONAL_QUOTED_CSV_ROW_REGEX = /(?<=^|,)(?:(?:"((?:[^"]|"")*)")|([^,]*))(?:,|$)/g
-function parseSiOTACSVRow(row, options) {
+function parseSiOTACSVRow (row, options) {
   const parts = [...row.matchAll(OPTIONAL_QUOTED_CSV_ROW_REGEX)].map(
     match => match[1] ? match[1].replaceAll('""', '"') : match[2])
   if (options?.headers) {

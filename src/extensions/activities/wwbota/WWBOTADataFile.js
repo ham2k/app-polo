@@ -5,19 +5,16 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtPercent } from '@ham2k/lib-format-tools'
+import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
 import { DXCC_BY_CODE } from '@ham2k/lib-dxcc-data'
 
 import { registerDataFile } from '../../../store/dataFiles'
-import { fmtDateNiceZulu } from '../../../tools/timeFormats'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import { dbExecute, dbExecuteBatch, dbSelectAll, dbSelectOne } from '../../../store/db/db'
 
-import { Info } from './WWBOTAInfo'
-
 export const WWBOTAData = { prefixByDXCCPrefix: {} }
 
-export function registerWWBOTADataFile() {
+export function registerWWBOTADataFile () {
   registerDataFile({
     key: 'wwbota-all-bunkers',
     name: 'WWBOTA: All Bunkers',
@@ -130,15 +127,15 @@ export function registerWWBOTADataFile() {
   })
 }
 
-export function wwbotaPrefixForDXCCPrefix(entityPrefix) {
+export function wwbotaPrefixForDXCCPrefix (entityPrefix) {
   return (WWBOTAData.prefixByDXCCPrefix && WWBOTAData.prefixByDXCCPrefix[entityPrefix]) || `B/${entityPrefix || '?'}`
 }
 
-export async function wwbotaFindOneByReference(ref) {
+export async function wwbotaFindOneByReference (ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['wwbota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function wwbotaFindAllByName(entityPrefix, name) {
+export async function wwbotaFindAllByName (entityPrefix, name) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND (key LIKE ? OR name LIKE ?) AND flags = 1',
     ['wwbota', `%${name}%`, `%${name}%`],
@@ -147,7 +144,7 @@ export async function wwbotaFindAllByName(entityPrefix, name) {
   return results
 }
 
-export async function wwbotaFindAllByLocation(entityPrefix, lat, lon, delta = 1) {
+export async function wwbotaFindAllByLocation (entityPrefix, lat, lon, delta = 1) {
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',
     ['wwbota', lat - delta, lat + delta, lon - delta, lon + delta],
@@ -157,7 +154,7 @@ export async function wwbotaFindAllByLocation(entityPrefix, lat, lon, delta = 1)
 }
 
 const OPTIONAL_QUOTED_CSV_ROW_REGEX = /(?<=^|,)(?:(?:"((?:[^"]|"")*)")|([^,]*))(?:,|$)/g
-function parseWWBOTACSVRow(row, options) {
+function parseWWBOTACSVRow (row, options) {
   const parts = [...row?.trim()?.matchAll(OPTIONAL_QUOTED_CSV_ROW_REGEX)]?.map(
     match => match[1] ? match[1].replaceAll('""', '"') : match[2]
   )

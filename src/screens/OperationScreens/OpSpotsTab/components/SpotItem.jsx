@@ -6,11 +6,11 @@
  */
 
 import React, { useMemo } from 'react'
+import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
-import { View } from 'react-native'
-import { partsForFreqInMHz } from '../../../../tools/frequencyFormats'
-import { fmtDateTimeRelative } from '../../../../tools/timeFormats'
+import { partsForFreqInMHz, fmtDateTimeRelative } from '@ham2k/lib-format-tools'
+
 import { H2kPressable, H2kIcon } from '../../../../ui'
 import { findBestHook } from '../../../../extensions/registry'
 
