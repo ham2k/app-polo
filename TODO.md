@@ -5,7 +5,7 @@
 * In Data File Settings, cannot dismiss the dialog.
 "I could not double tap on the "Close modal” button to dismiss the screen. I used the VoiceOver two finger scrub gesture but should be able to double tap the button as well"
 
-* Review voiceover for park and summit references in lists, titles, etc.
+* Review voiceover for secondary controls (time, frequency, p2p, etc)
 
 # General Package Maintenance Tasks
 
@@ -22,6 +22,9 @@ We work around this by using a simpler Pressable component on Android, as part o
 The existing package has been mostly abandoned.
 
 An alternative is https://github.com/zoontek/react-native-bootsplash but it's meant to show a logo in the middle of a single color background, not full screen image.
+
+Fork: https://github.com/NFSMONSTR/react-native-splash-screen
+@nfsmonstr/react-native-splash-screen
 
 
 
@@ -77,4 +80,10 @@ To add a gradient on the secondary exchange scroll area
 
 https://github.com/ArturKalach/react-native-external-keyboard#readme
 For better external keyboard support
+
+----
+
+# Support for Samsung DEX Mode
+
+https://discord.com/channels/1212171460899119155/1212421656644030466/1509399021079363724
 
