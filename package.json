@@ -25,7 +25,7 @@
     "@ham2k/lib-format-tools": "1.0.5",
     "@ham2k/lib-geo-tools": "1.0.1",
     "@ham2k/lib-operation-data": "1.0.3",
-    "@ham2k/lib-qson-adif": "1.0.1",
+    "@ham2k/lib-qson-adif": "1.0.2",
     "@ham2k/lib-qson-tools": "1.0.1",
     "@nozbe/microfuzz": "1.0.0",
     "@op-engineering/op-sqlite": "^16.2.0",
