@@ -225,10 +225,10 @@ export const generateActivitySumarizer = ({ info }) => {
         summaryParts.push(`${minMissing}/${qsosToActivate}`)
         score.activated = false
       } else if (activatedRefKeys.length < 6) {
-        summaryParts.push('✓'.repeat(activatedRefKeys.length))
+        summaryParts.push(`${minMissing} ${'✓'.repeat(activatedRefKeys.length)}`)
         score.activated = true
       } else {
-        summaryParts.push(`✓ x ${activatedRefKeys.length}`)
+        summaryParts.push(`${minMissing} ✓ x ${activatedRefKeys.length}`)
         score.activated = true
       }
     }
