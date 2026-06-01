@@ -6,7 +6,8 @@
       "IARU Region 1 VHF Contests (Beta)",
       "Add QRZCALL.EU data lookup (thanks to PA4R)",
       "Support FT4, FT2 and other submodes when importing ADIF files",
-      "Fix bug in contests with numbered exchanges"
+      "Fix bug in contests with numbered exchanges",
+      "Allow user-installed CA certificates on Android"
     ]
   },
   "26.5.1": {
