@@ -51,6 +51,9 @@ export default function LoggingPanel ({
 }) {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
+  const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
+
+  const dispatch = useDispatch()
 
   const [allowSpacesInCallField, setAllowSpacesInCallField] = useState(false)
 
@@ -64,12 +67,14 @@ export default function LoggingPanel ({
   const [, setLastUUID] = useUIState('OpLoggingTab', 'lastUUID')
   const [, setCallStack] = useUIState('OpLoggingTab', 'callStack')
 
-  // console.log('--- LoggingPanel render')
-  // console.log('-- qso', qso)
-  // console.log('-- call', qso?.their?.call)
-  // console.log('-- hasChanges', hasChanges)
-  // console.log('-- undoInfo', undoInfo)
-  // console.log('-- originalQSO', originalQSO)
+  const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
+  const styles = useThemedStyles(prepareStyles, { style, themeColor, leftieMode: settings.leftieMode, isKeyboardVisible, keyboardExtraStyles })
+
+  useEffect(() => {
+    if (!qso) {
+      dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+    }
+  }, [qso, dispatch, operation, vfo, settings])
 
   useEffect(() => {
     if (qso?.uuid && qso?.uuid !== originalQSO?.uuid) {
@@ -80,13 +85,6 @@ export default function LoggingPanel ({
       setHasChanges(!!qso?._isSuggested || JSON.stringify(qso) !== JSON.stringify(originalQSO))
     }
   }, [originalQSO, qso, setOriginalQSO, setHasChanges, setUndoInfo])
-
-  const themeColor = useMemo(() => (!qso || qso?._isNew) ? 'tertiary' : 'secondary', [qso])
-  const { isKeyboardVisible, keyboardExtraStyles } = useKeyboardVisible()
-
-  const styles = useThemedStyles(prepareStyles, { style, themeColor, leftieMode: settings.leftieMode, isKeyboardVisible, keyboardExtraStyles })
-
-  const dispatch = useDispatch()
 
   const mainFieldRef = useRef()
   const [focusedUUID, setFocusedUUID] = useState()
@@ -267,14 +265,14 @@ export default function LoggingPanel ({
         delete qso._willBeDeleted
         await dispatch(addQSO({ uuid: operation.uuid, qso }))
         await setUndoInfo(undefined)
-        await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+        await setQSO(undefined)
         trackEvent(eventName, { their_prefix: qso.their?.entityPrefix ?? qso.their?.guess?.entityPrefix, refs: (qso.refs || []).map(r => r.type).join(',') })
       } else if (qso?.event && !qso?.deleted) {
         // Events are just saved as-is, no extra processing needed.
         await setLastUUID(qso.uuid)
         await dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
         await setUndoInfo(undefined)
-        await dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+        await setQSO(undefined)
       } else if (qso && isValidQSO && !qso?.deleted) {
         setCurrentSecondaryControl(undefined)
 
@@ -358,7 +356,7 @@ export default function LoggingPanel ({
           setLastUUID(lastUUID)
           setCallStack(callStack)
           setUndoInfo(undefined)
-          dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+          setQSO(undefined)
         }, 50)
 
         if (DEBUG) logTimer('submit', 'handleSubmit after setQSO')
@@ -366,31 +364,28 @@ export default function LoggingPanel ({
       if (DEBUG) logTimer('submit', 'handleSubmit 3')
     }, 0)
     if (DEBUG) logTimer('submit', 'handleSubmit 4')
-  }, [qso, operation, vfo, qsos, dispatch, settings, i18n, t, online, ourInfo, updateQSO, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, doSubmit, handleSubmit, originalQSO, setLastUUID, setCallStack])
+  }, [qso, operation, vfo, qsos, dispatch, settings, i18n, t, online, ourInfo, updateQSO, handleFieldChange, isValidQSO, setCommandInfo, setCurrentSecondaryControl, doSubmit, handleSubmit, originalQSO, setLastUUID, setCallStack, setQSO])
 
   const undoTimeoutRef = useRef()
 
   const handleWipe = useCallback(() => { // Wipe a new QSO
     if (qso?._isNew) {
       if (qso?._isSuggested) {
-        dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+        setQSO(undefined)
       } else {
         setUndoInfo({ qso, originalQSO })
-        dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+        setQSO(undefined)
       }
       if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current)
-      console.log('timeout for undo')
       undoTimeoutRef.current = setTimeout(() => {
-        console.log('clear undo on timeout')
         setUndoInfo(undefined)
       }, 5 * 1000) // Undo will clear after 5 seconds
       return () => {
-        console.log('clear undo on unmount')
         setUndoInfo(undefined)
         if (undoTimeoutRef.current) clearTimeout(undoTimeoutRef.current)
       }
     }
-  }, [qso, dispatch, operation, vfo, settings, setUndoInfo, originalQSO])
+  }, [qso, setQSO, originalQSO])
 
   const handleUnwipe = useCallback(async () => { // Undo wiping a new QSO
     if (undoInfo) {
