@@ -19,6 +19,24 @@ const REG1TEST_MODE = {
   SSTY: 8
 }
 
+export const REG1TEST_BAND = {
+  '6m': '50 MHz',
+  '4m': '70 MHz',
+  '2m': '145 MHz',
+  '70cm': '432 GHz',
+  '33cm': '1.3 GHz',
+  '13cm': '2.3 GHz',
+  '9cm': '3.4 GHz',
+  '6cm': '5.7 GHz',
+  '3cm': '10 GHz',
+  '1.25cm': '24 GHz',
+  '6mm': '47 GHz',
+  '4mm': '76 GHz',
+  '2.5mm': '120 GHz',
+  '2mm': '150 GHz',
+  '1mm': '248 GHz'
+}
+
 export function qsonToReg1test ({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)
 
@@ -35,7 +53,8 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
   str += '[REG1TEST;1]\n'
   const defaultHeaders = {
     PCall: operation.stationCall ?? settings.operatorCall,
-    RCall: operation.operatorCall ?? operation.stationCall ?? settings.operatorCall
+    RCall: operation.operatorCall ?? operation.stationCall ?? settings.operatorCall,
+    PWWLo: operation.grid
   }
 
   let headers = {}
@@ -79,10 +98,7 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
       band: qso.band,
       freq: qso.freq,
       rstSent: qso.our.sent,
-      sequenceSent: qso.our.sequence,
       rstReceived: qso.their.sent,
-      sequenceReceived: qso.their.sequence,
-      exchangeReceived: qso.their.exchange,
       wwlReceived: qso.their.grid ?? qso.their.guess?.grid
     }
 
@@ -92,7 +108,7 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
       combinations = [combinations]
     }
     combinations.forEach(fields => {
-      const combinedFields = { ...defaultFields, ...fields }
+      const combinedFields = { ...defaultFields, ...(fields || {}) }
 
       const qsoParts = []
       qsoParts.push(fmtTimestamp(combinedFields.timeMillis).substring(2, 8))
@@ -107,7 +123,7 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
       qsoParts.push(combinedFields.wwlReceived)
       // We don't include any of the claimed points or multiplier fields
 
-      str += combinedFields.join(';') + '\n'
+      str += qsoParts.join(';') + '\n'
     })
   }
 

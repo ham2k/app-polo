@@ -50,6 +50,7 @@ import StateParksExtension from './contests/stateparks/StateParksExtension'
 import SimpleContestExtension from './contests/simple-contest/SimpleContestExtension'
 import CQWPXExtension from './contests/cqwpx/CQWPXExtension'
 import Region1VHFContestsExtension from './contests/r1-vhf-tests/Region1VHFContestsExtension'
+import RSGBVHFContestsExtension from './contests/rsgb-vhf-tests/RSGBVHFContestsExtension'
 
 import AnnotationCommands from './commands/AnnotationCommands'
 import DebuggingCommands from './commands/DebuggingCommands'
@@ -104,6 +105,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(SimpleContestExtension)
   registerExtension(CQWPXExtension)
   registerExtension(Region1VHFContestsExtension)
+  registerExtension(RSGBVHFContestsExtension)
 
   registerExtension(AnnotationCommands)
   registerExtension(DebuggingCommands)

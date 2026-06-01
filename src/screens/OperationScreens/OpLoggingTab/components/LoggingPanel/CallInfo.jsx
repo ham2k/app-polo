@@ -34,6 +34,8 @@ export const MESSAGES_FOR_SCORING = {
   newRef: 'New Reference',
   newMult: 'New Mult',
   newDay: 'New Day',
+  newGrid: 'New Grid',
+  newLocation: 'New Location',
   maybeDupe: 'Dupe?',
   partialDupe: 'Dupe',
   'potaActivation-newDay': 'New POTA Day',

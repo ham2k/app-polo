@@ -11,6 +11,7 @@ import base64 from 'react-native-quick-base64'
 import { qsonToADIF } from '../../../../tools/qsonToADIF'
 import { qsonToCabrillo } from '../../../../tools/qsonToCabrillo'
 import { filterQSOsWithSectionRefs } from '../../../../tools/qsonTools'
+import { qsonToReg1test } from '../../../../tools/qsonToReg1test'
 
 const DEBUG = false
 
@@ -25,8 +26,6 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
     const operationData = thisExport.operation || operation
 
     if (DEBUG) console.log('💾 This Export', { ...thisExport })
-    const operationRefs = operationData.refs
-    const includeQSOs = true
 
     let qsos = state.qsos.qsos[uuid].map(qso => {
       return { ...qso, our: { ...qso.our, call: operationData.stationCall } }
@@ -85,6 +84,8 @@ export const generateExportFile = async ({ uuid, fileName, format, operation, qs
     data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else if (format === 'cabrillo') {
     data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+  } else if (format === 'reg1test') {
+    data = qsonToReg1test({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else {
     const generateExportData = rest?.generateExportData ?? rest?.handler?.generateExportData
     if (generateExportData) {
@@ -112,6 +113,8 @@ export const generateExportDataURI = async ({ uuid, fileName, format, operation,
     data = qsonToADIF({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else if (format === 'cabrillo') {
     data = qsonToCabrillo({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
+  } else if (format === 'reg1test') {
+    data = qsonToReg1test({ operation: { ...operation, ...exportData }, qsos, fileName, format, ...rest })
   } else {
     const generateExportData = rest?.generateExportData ?? rest?.handler?.generateExportData
     if (generateExportData) {

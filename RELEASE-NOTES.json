@@ -3,6 +3,7 @@
     "name": "June '26 - Pre 0",
     "photoCaption": "ON4VT at ONFF-0440",
     "changes": [
+      "RSGB VHF Contests (Beta) (thanks to M0TRT)",
       "IARU Region 1 VHF Contests (Beta)",
       "Add QRZCALL.EU data lookup (thanks to PA4R)",
       "Support FT4, FT2 and other submodes when importing ADIF files",

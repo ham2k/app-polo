@@ -121,6 +121,8 @@
         "newRef": "new reference",
         "newMult": "new mult",
         "newDay": "new day",
+        "newGrid": "new grid",
+        "newLocation": "new location",
         "maybeDupe": "dupe?",
         "partialDupe": "dupe",
         "potaActivation-newDay": "new pota day",
