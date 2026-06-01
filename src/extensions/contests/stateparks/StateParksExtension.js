@@ -135,7 +135,7 @@ const ReferenceHandler = {
       huntedParks: qsoStateParks,
       infos: [],
       notices: [],
-      errors: [],
+      alerts: [],
       mults: [],
       bonuses: []
     }

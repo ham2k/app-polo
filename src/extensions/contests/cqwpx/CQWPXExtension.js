@@ -126,7 +126,7 @@ const ReferenceHandler = {
 
   scoringForQSO: ({ qso, qsos, score, operation, ref, ourInfo }) => {
     const { band, key, startAtMillis } = qso
-    console.log('scoringForQSO?', qso, ref, score)
+    // console.log('scoringForQSO?', qso, ref, score)
     const qsoScoring = {
       type: Info.key,
       value: 1,
@@ -164,14 +164,14 @@ const ReferenceHandler = {
 
     const ourContinent = ourInfo?.continent ?? qso?.our?.guess?.continent
     const theirContinent = qso?.their?.continent ?? qso?.their?.guess?.continent
-    console.log('-- continent', ourContinent, theirContinent)
+    // console.log('-- continent', ourContinent, theirContinent)
     if (ourContinent && theirContinent) {
       if (ourContinent !== theirContinent) qsoScoring.value = 3
       else if (ourContinent === 'NA' && theirContinent === 'NA') qsoScoring.value = 2
       else {
         const ourDXCC = ourInfo?.dxccCode ?? ourInfo?.dxccCode
         const theirDXCC = qso?.their?.dxccCode ?? qso?.their?.guess?.dxccCode
-        console.log('-- dxcc', ourDXCC, theirDXCC)
+        // console.log('-- dxcc', ourDXCC, theirDXCC)
         if (ourDXCC && theirDXCC && ourDXCC !== theirDXCC) qsoScoring.value = 2
       }
     }
@@ -205,7 +205,7 @@ const ReferenceHandler = {
         qsoScoring.notices.push('newBand')
       }
     }
-    console.log('-- qsoScoring', qsoScoring)
+    // console.log('-- qsoScoring', qsoScoring)
     return qsoScoring
   },
 
@@ -298,7 +298,6 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
       if (ref.ourNumber) {
         qso.our.exchange = String(ref.ourNumber ?? '-')
         const num = parseInt(ref.ourNumber, 10)
-
         if (!isNaN(num)) {
           await dispatch(setOperationData({
             uuid: operation.uuid,

@@ -22,16 +22,30 @@ const REG1TEST_MODE = {
 export function qsonToReg1test ({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)
 
+  let common = {
+    refs: operation.refs,
+    grid: operation.grid,
+    state: operation.state,
+    county: operation.county,
+    stationCall: operation.stationCall ?? settings.operatorCall
+  }
+
   let str = ''
 
   str += '[REG1TEST;1]\n'
-  if (handler.reg1testHeaders) {
-    str += handler
-      .reg1testHeaders({ operation, settings, headers: [] })
-      .map((header) => header[1] ? `${header[0]}=${header[1]}` : '')
-      .filter(x => x)
-      .join('\n') + '\n'
+  const defaultHeaders = {
+    PCall: operation.stationCall ?? settings.operatorCall,
+    RCall: operation.operatorCall ?? operation.stationCall ?? settings.operatorCall
   }
+
+  let headers = {}
+  if (handler.reg1testHeaders) {
+    headers = handler.reg1testHeaders({ operation, settings, headers })
+  }
+
+  Object.entries({ ...defaultHeaders, ...headers }).forEach(([key, value]) => {
+    if (value) str += `${key}=${value}\n`
+  })
 
   if (operation.notes) {
     str += `[Remarks]\n${operation.notes}\n`
@@ -58,25 +72,42 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
       continue
     }
 
-    let combinations = handler.qsoToReg1testParts && handler.qsoToReg1testParts({ qso, operation, ref })
+    const defaultFields = {
+      timeMillis: qso.startAtMillis,
+      theirCall: qso.their.call,
+      mode: qso.mode,
+      band: qso.band,
+      freq: qso.freq,
+      rstSent: qso.our.sent,
+      sequenceSent: qso.our.sequence,
+      rstReceived: qso.their.sent,
+      sequenceReceived: qso.their.sequence,
+      exchangeReceived: qso.their.exchange,
+      wwlReceived: qso.their.grid ?? qso.their.guess?.grid
+    }
+
+    let combinations = (handler.reg1testFieldsForOneQSO && handler.reg1testFieldsForOneQSO({ qso, operation, ref })) || [{}]
+
     if (!Array.isArray(combinations?.[0])) {
       combinations = [combinations]
     }
-    combinations.forEach(parts => {
+    combinations.forEach(fields => {
+      const combinedFields = { ...defaultFields, ...fields }
+
       const qsoParts = []
-      qsoParts.push(fmtTimestamp(parts.timeMillis).substring(2, 8))
-      qsoParts.push(fmtTimestamp(parts.timeMillis).substring(8, 12))
-      qsoParts.push(parts.theirCall)
-      qsoParts.push(REG1TEST_MODE[parts.mode] || 0)
-      qsoParts.push(parts.rstSent)
-      qsoParts.push(parts.sequenceSent)
-      qsoParts.push(parts.rstReceived)
-      qsoParts.push(parts.sequenceReceived)
-      qsoParts.push(parts.exchangeReceived)
-      qsoParts.push(parts.wwlReceived)
+      qsoParts.push(fmtTimestamp(combinedFields.timeMillis).substring(2, 8))
+      qsoParts.push(fmtTimestamp(combinedFields.timeMillis).substring(8, 12))
+      qsoParts.push(combinedFields.theirCall)
+      qsoParts.push(REG1TEST_MODE[combinedFields.mode] || 0)
+      qsoParts.push(combinedFields.rstSent)
+      qsoParts.push(combinedFields.sequenceSent)
+      qsoParts.push(combinedFields.rstReceived)
+      qsoParts.push(combinedFields.sequenceReceived)
+      qsoParts.push(combinedFields.exchangeReceived)
+      qsoParts.push(combinedFields.wwlReceived)
       // We don't include any of the claimed points or multiplier fields
 
-      str += parts.join(';') + '\n'
+      str += combinedFields.join(';') + '\n'
     })
   }
 

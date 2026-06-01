@@ -28,6 +28,7 @@ import { useCallLookup } from './useCallLookup'
 export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
   invalidBand: 'Invalid Band',
+  ourGrid: 'Missing our location',
   newBand: 'New Band',
   newMode: 'New Mode',
   newRef: 'New Reference',

@@ -115,6 +115,7 @@
       "messages": {
         "duplicate": "duplicate",
         "invalidBand": "invalid band",
+        "ourGrid": "missing our location",
         "newBand": "new band",
         "newMode": "new mode",
         "newRef": "new reference",

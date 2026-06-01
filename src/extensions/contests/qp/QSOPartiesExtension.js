@@ -333,7 +333,7 @@ const ReferenceHandler = {
       type: Info.key,
       infos: [],
       notices: [],
-      errors: [],
+      alerts: [],
       mults: [],
       bonuses: []
     }

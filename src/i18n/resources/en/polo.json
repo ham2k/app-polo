@@ -120,6 +120,7 @@
       "messages": {
         "duplicate": "Duplicate",
         "invalidBand": "Invalid Band",
+        "ourGrid": "Missing our location",
         "newBand": "New Band",
         "newMode": "New Mode",
         "newRef": "New Reference",
