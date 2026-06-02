@@ -50,7 +50,7 @@ const ReferenceHandler = {
     return ['CQ WPX', ref.mode].filter(Boolean).join(' ')
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     return { for: ['CQ WPX', ref.mode].filter(Boolean).join(' ') }
   },
 

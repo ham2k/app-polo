@@ -14,7 +14,7 @@ export function defaultReferenceHandlerFor (type) {
     name: camelCaseToWords(type, { capitalize: true }),
     icon: 'help',
     description: (op) => filterRefs(op, type).map(ref => ref.ref).join(', '),
-    suggestOperationTitle: (ref) => {
+    suggestOperationTitle: ({ ref }) => {
       if (ref.ref && ref.type.match(/Activation$/)) {
         return { at: ref.ref, subtitle: ref.name }
       } else {
@@ -54,7 +54,7 @@ const POTAReferenceHandler = {
   ...POTAInfo,
   description: (operation) => refsToString(operation, 'potaActivation'),
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     if (ref.type === 'potaActivation' && ref.ref) {
       return { at: ref.ref, subtitle: ref.name }
     } else {
@@ -78,7 +78,7 @@ const SOTAReferenceHandler = {
   ...SOTAInfo,
   description: (operation) => refsToString(operation, SOTAInfo.activationType),
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     if (ref.type === SOTAInfo.activationType && ref.ref) {
       return { at: ref.ref, subtitle: ref.name }
     } else {

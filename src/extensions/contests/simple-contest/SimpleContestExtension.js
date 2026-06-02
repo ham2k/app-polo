@@ -52,7 +52,7 @@ const ReferenceHandler = {
     return [ref?.contestIdentifier ?? 'TEST']
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     return { for: ref?.contestIdentifier ?? 'TEST', subtitle: ref?.exchange }
   },
 
@@ -198,7 +198,7 @@ const ReferenceHandler = {
   }
 }
 
-function mainExchangeForOperation(props) {
+function mainExchangeForOperation (props) {
   const { qso, updateQSO, styles, disabled, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, location: '' }

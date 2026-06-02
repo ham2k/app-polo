@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -76,29 +76,9 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
     data.title = data.description
     data.subtitle = ''
   } else if (data.refs && !operation.description) {
-    const referenceTitles = data.refs.map(ref => {
-      const hooks = findHooks(`ref:${ref?.type}`)
-      return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
-    }).filter(x => x).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
-
-    const titleParts = []
-
-    const plainTitles = referenceTitles.map(ref => ref.title).filter(x => x).join(', ')
-    const forTitles = referenceTitles.map(ref => ref.for).filter(x => x).join(', ')
-    const atTitles = referenceTitles.map(ref => ref.at).filter(x => x).join(', ')
-    if (plainTitles) titleParts.push(plainTitles)
-    if (forTitles) titleParts.push('for ' + forTitles)
-    if (atTitles) titleParts.push('at ' + atTitles)
-
-    const subtitleParts = referenceTitles.map(ref => ref.subtitle).filter(x => x)
-
-    if (titleParts.length) {
-      data.title = titleParts.join(' ')
-      data.subtitle = subtitleParts.join(' • ')
-    } else {
-      data.title = 'General Operation'
-      data.subtitle = subtitleParts.join(' • ')
-    }
+    const { title, subtitle } = buildOperationTitle({ refs: data.refs, operation })
+    data.title = title
+    data.subtitle = subtitle
   }
 
   if (!operation.title && (!data.title || data.title === 'at ')) {
@@ -130,11 +110,17 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
     }
   }
 
+  if (operation.allRefs && operation.allRefs.length > (data.refs?.length ?? 0)) {
+    const { title, subtitle } = buildOperationTitle({ refs: operation.allRefs, operation })
+    data.broaderTitle = title
+    data.broaderSubtitle = subtitle
+  }
+
   return { ...operation, ...data }
 }
 
 const DEBUG = false
-export async function markOperationStart({ operation, qsos, dispatch }) {
+export async function markOperationStart ({ operation, qsos, dispatch }) {
   if (!operation) return
   if (DEBUG) console.log('markOperationStart', operation, qsos)
   if (qsos?.find(qso => qso.event?.event === 'start')) {
@@ -156,7 +142,7 @@ export async function markOperationStart({ operation, qsos, dispatch }) {
   }))
 }
 
-export async function updateOperationBreakOrStart({ operation, qsos, dispatch }) {
+export async function updateOperationBreakOrStart ({ operation, qsos, dispatch }) {
   if (!operation) return
 
   if (DEBUG) console.log('updateOperationBreakOrStart')
@@ -191,7 +177,7 @@ export async function updateOperationBreakOrStart({ operation, qsos, dispatch })
   }
 }
 
-export async function markOperationBreak({ operation, qsos, dispatch }) {
+export async function markOperationBreak ({ operation, qsos, dispatch }) {
   if (!operation) return
 
   if (DEBUG) console.log('markOperationBreak')
@@ -215,7 +201,7 @@ export async function markOperationBreak({ operation, qsos, dispatch }) {
   }))
 }
 
-export async function markOperationStop({ operation, qsos, dispatch }) {
+export async function markOperationStop ({ operation, qsos, dispatch }) {
   if (!operation) return
 
   const previousStop = qsos?.findLast(qso => qso.event?.event === 'stop')
@@ -249,7 +235,7 @@ export async function markOperationStop({ operation, qsos, dispatch }) {
   }
 }
 
-export function captureOperationParameters({ operation }) {
+export function captureOperationParameters ({ operation }) {
   if (!operation) return {}
   const params = {}
   if (operation?.refs) params.refs = operation.refs
@@ -257,14 +243,14 @@ export function captureOperationParameters({ operation }) {
   return params
 }
 
-export function describeOperation({ operation }) {
+export function describeOperation ({ operation }) {
   // console.log('describeOperation', operation)
   if (!operation) return ''
 
   const referenceTitles = (operation?.refs ?? []).map(ref => {
     const hooks = findHooks(`ref:${ref?.type}`)
-    return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle(ref)).filter(x => x)[0]
-  }).filter(x => x).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
+    return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle({ ref, operation })).filter(Boolean)[0]
+  }).filter(Boolean).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
 
   const titleParts = []
 
@@ -287,4 +273,28 @@ export function describeOperation({ operation }) {
   }
 
   return titleParts.join(' • ')
+}
+
+export function buildOperationTitle ({ refs, operation }) {
+  const referenceTitles = refs.map(ref => {
+    const hooks = findHooks(`ref:${ref?.type}`)
+    return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle({ ref, operation })).filter(Boolean)[0]
+  }).filter(Boolean).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))
+
+  const titleParts = []
+
+  const plainTitles = referenceTitles.map(ref => ref.title).filter(Boolean).join(', ')
+  const forTitles = referenceTitles.map(ref => ref.for).filter(Boolean).join(', ')
+  const atTitles = referenceTitles.map(ref => ref.at).filter(Boolean).join(', ')
+  if (plainTitles) titleParts.push(plainTitles)
+  if (forTitles) titleParts.push('for ' + forTitles)
+  if (atTitles) titleParts.push('at ' + atTitles)
+
+  const subtitleParts = referenceTitles.map(ref => ref.subtitle).filter(Boolean)
+
+  if (titleParts.length) {
+    return { title: titleParts.join(' '), subtitle: subtitleParts.join(' • ') }
+  } else {
+    return { title: GLOBAL?.t?.('general.terms.generalOperation', 'General Operation') ?? 'General Operation', subtitle: subtitleParts.join(' • ') }
+  }
 }

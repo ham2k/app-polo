@@ -205,7 +205,7 @@ const ReferenceHandler = {
     }
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     if (ref.type === Info.activationType && ref.ref) {
       return { at: ref.ref, subtitle: ref.name }
     } else {

@@ -79,7 +79,7 @@ const ReferenceHandler = {
     return `${Info.key}-${sp.key}`
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     if (ref?.ref) {
       const sp = spData({ ref })
       return { for: _spShortForSP(sp), description: _spShortForSP(sp) }

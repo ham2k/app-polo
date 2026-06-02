@@ -84,7 +84,7 @@ const ReferenceHandler = {
     }
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     return { for: Info.shortName, subtitle: [ref?.class, ref?.location].filter(x => x).join(' ') }
   },
 

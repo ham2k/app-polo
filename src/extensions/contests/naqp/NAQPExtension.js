@@ -48,7 +48,7 @@ const ReferenceHandler = {
     }
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     return { for: `${Info.shortName} ${ref.mode}`, subtitle: ref?.exchange }
   },
 
@@ -216,7 +216,7 @@ const ReferenceHandler = {
   }
 }
 
-function mainExchangeForOperation(props) {
+function mainExchangeForOperation (props) {
   const { qso, qsos, updateQSO, styles, disabled, refStack } = props
 
   const ref = findRef(qso?.refs, Info.key) || { type: Info.key, name: undefined, location: undefined }
@@ -294,7 +294,7 @@ function mainExchangeForOperation(props) {
   return fields
 }
 
-function _nameFromQSO(qso, qsos) {
+function _nameFromQSO (qso, qsos) {
   if (qso?.their?.call?.length >= 3) {
     const prevQSOs = qsos.filter(q => q?.their?.call === qso?.their?.call && q.key !== qso.key && !q.deleted)
     if (prevQSOs.length > 0) {
@@ -310,7 +310,7 @@ function _nameFromQSO(qso, qsos) {
   return parts[0].toUpperCase()
 }
 
-function _locationFromQSO(qso, qsos) {
+function _locationFromQSO (qso, qsos) {
   if (qso?.their?.call?.length >= 3) {
     const prevQSOs = qsos.filter(q => q?.their?.call === qso?.their?.call && q.key !== qso.key && !q.deleted)
     if (prevQSOs.length > 0) {

@@ -102,7 +102,7 @@ const ReferenceHandler = {
     dispatch(setOperationLocalData({ uuid: operation.uuid, coloniesChecklist: checklist }))
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     return { subtitle: 'Chasing 13 Colonies', priority: 100 }
   },
 

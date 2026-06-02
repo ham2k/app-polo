@@ -131,7 +131,7 @@ const ReferenceHandler = {
     return `${Info.key}-${qp.short ?? qp.key}`
   },
 
-  suggestOperationTitle: (ref) => {
+  suggestOperationTitle: ({ ref }) => {
     if (ref?.ref) {
       const qp = qpData({ ref })
       return { for: _qpShortForQP(qp), subtitle: ref?.location, description: `${_qpShortForQP(qp)}: ${ref?.location}` }
