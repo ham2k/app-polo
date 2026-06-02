@@ -279,7 +279,10 @@ const ReferenceHandler = {
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
-    return [qso.their.exchange]
+    const qsoRef = findRef(qso, Info.key)
+    if (qsoRef) {
+      return [qso.their.exchange]
+    }
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref: scoredRef, score }) => {
@@ -822,8 +825,10 @@ function mainExchangeForOperation (props) {
 }
 
 function prepareNewQSO ({ operation, qso }) {
-  const qsoRef = findRef(qso.refs, Info.key) || { type: Info.key }
   const opRef = findRef(operation, Info.key)
+  if (!opRef) return qso
+
+  const qsoRef = findRef(qso.refs, Info.key) || { type: Info.key }
   const qp = qpData({ ref: opRef })
   const hasNumbers = (qp?.exchange?.find(field => field === 'Number') !== undefined)
 
@@ -846,13 +851,17 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
     if (ref.location || ref.ourNumber || ref.theirNumber) {
       qso.refs = replaceRef(qso.refs, Info.key, ref)
       qso.their.exchange = [ref.theirNumber, ref.location].filter(x => x).join(' ')
-      // console.log('processQSOBeforeSaveWithDispatch', { ref, ourNumber: ref.ourNumber, nextNumber: operation.nextNumber })
       if (ref.ourNumber) {
         qso.our.exchange = [ref.ourNumber, opRef.location].filter(x => x).join(' ')
         const num = parseInt(ref.ourNumber, 10)
         if (!isNaN(num)) {
-          await dispatch(setOperationData({ uuid: operation.uuid, nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 }))
-          // console.log('set nextNumber', { nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1 })
+          await dispatch(setOperationData({
+            uuid: operation.uuid,
+            refs: replaceRef(operation.refs, Info.key, {
+              ...opRef,
+              nextNumber: Math.max(num, (operation.nextNumber || 0)) + 1
+            })
+          }))
         }
       }
     }

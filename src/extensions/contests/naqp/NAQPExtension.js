@@ -118,7 +118,9 @@ const ReferenceHandler = {
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
     const qsoRef = findRef(qso, Info.key)
-    return [qsoRef?.name, qsoRef?.location]
+    if (qsoRef) {
+      return [qsoRef?.name, qsoRef?.location]
+    }
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {

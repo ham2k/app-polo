@@ -119,7 +119,10 @@ const ReferenceHandler = {
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
-    return [qso.their.exchange]
+    const qsoRef = findRef(qso, Info.key)
+    if (qsoRef) {
+      return [qsoRef?.exchange]
+    }
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref }) => {

@@ -96,8 +96,6 @@ const ReferenceHandler = {
 
     if (refs.filter(x => GEORGIA_PARKS[x.ref]).length > 0) {
       return ['🍑']
-    } else {
-      return []
     }
   },
 

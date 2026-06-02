@@ -121,7 +121,9 @@ const ReferenceHandler = {
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
     const qsoRef = findRef(qso, Info.key)
-    return [qsoRef?.ourNumber, qsoRef?.theirNumber]
+    if (qsoRef) {
+      return [qsoRef?.ourNumber, qsoRef?.theirNumber]
+    }
   },
 
   scoringForQSO: ({ qso, qsos, score, operation, ref, ourInfo }) => {
@@ -279,8 +281,11 @@ const ReferenceHandler = {
 }
 
 function prepareNewQSO ({ operation, qso }) {
-  const qsoRef = findRef(qso.refs, Info.key) || { type: Info.type }
   const opRef = findRef(operation, Info.key)
+  if (!opRef) return qso
+
+  const qsoRef = findRef(qso.refs, Info.key) || { type: Info.type }
+
   qsoRef.ourNumber = String(opRef?.nextNumber || 1)
   qso.refs = replaceRef(qso.refs, Info.key, qsoRef)
   return qso

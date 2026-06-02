@@ -144,14 +144,17 @@ const ReferenceHandler = {
   },
 
   relevantInfoForQSOItem: ({ qso, operation }) => {
-    let exchange = qso?.their?.exchange
-    if (exchange?.startsWith('PC')) { // "Please Copy…"
-      exchange = '+' + exchange.slice(2)
-    } else if (exchange?.startsWith('P') || exchange?.startsWith('C')) { // "Please Copy…"
-      exchange = '+' + exchange.slice(1)
+    const qsoRef = findRef(qso, Info.key)
+    if (qsoRef) {
+      let exchange = qso?.their?.exchange
+      if (exchange?.startsWith('PC')) { // "Please Copy…"
+        exchange = '+' + exchange.slice(2)
+      } else if (exchange?.startsWith('P') || exchange?.startsWith('C')) { // "Please Copy…"
+        exchange = '+' + exchange.slice(1)
+      }
+      const parts = exchange?.split(' ') || []
+      return [[parts[0]?.padStart(3, ' ') || '', parts[1]?.padStart(3, ' ') || ''].join(' ')]
     }
-    const parts = exchange?.split(' ') || []
-    return [[parts[0]?.padStart(3, ' ') || '', parts[1]?.padStart(3, ' ') || ''].join(' ')]
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref, score }) => {
