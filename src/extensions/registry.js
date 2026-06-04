@@ -41,23 +41,23 @@ const Hooks = {
 
 const VALID_HOOK_REGEX = /^(ref:\w+)/
 
-export function registerExtension(extension) {
+export function registerExtension (extension) {
   Extensions[extension.key] = extension
 }
 
-export function getExtension(key) {
+export function getExtension (key) {
   return Extensions[key]
 }
 
-export function allExtensions() {
+export function allExtensions () {
   return Object.values(Extensions)
 }
 
-function isExtensionEnabled(extension, settings) {
+function isExtensionEnabled (extension, settings) {
   return (extension.alwaysEnabled || (settings[`extensions/${extension.key}`] ?? extension.enabledByDefault))
 }
 
-export function findHooks(hookCategory, { key, withFunction } = {}) {
+export function findHooks (hookCategory, { key, withFunction } = {}) {
   let hooks = (Hooks[hookCategory] ?? []).map(h => h.hook)
   if (key) hooks = hooks.filter(h => h.key === key)
   if (withFunction) hooks = hooks.filter(h => h[withFunction])
@@ -65,7 +65,7 @@ export function findHooks(hookCategory, { key, withFunction } = {}) {
   return hooks
 }
 
-export function useFindHooks(hookCategory, { key, withFunction } = {}) {
+export function useFindHooks (hookCategory, { key, withFunction } = {}) {
   const settings = useSelector(selectSettings)
 
   const activeExtensionHash = useMemo(() => {
@@ -74,17 +74,17 @@ export function useFindHooks(hookCategory, { key, withFunction } = {}) {
   }, [settings])
 
   return useMemo(() => {
-    let hooks = findHooks(hookCategory, { key, withFunction })
+    const hooks = findHooks(hookCategory, { key, withFunction })
 
     return hooks
   }, [activeExtensionHash, hookCategory, key, withFunction]) // eslint-disable-line react-hooks/exhaustive-deps -- because we want to refresh if the exension hash changes
 }
 
-export function findBestHook(hookCategory, options) {
+export function findBestHook (hookCategory, options) {
   return findHooks(hookCategory, options)[0]
 }
 
-function registerHook(hookCategory, { extension, hook, priority }) {
+function registerHook (hookCategory, { extension, hook, priority }) {
   if (!Hooks[hookCategory] && !VALID_HOOK_REGEX.test(hookCategory)) {
     reportError(`Invalid hook ${hookCategory} for extension ${extension.key}`)
     return false
@@ -101,13 +101,13 @@ function registerHook(hookCategory, { extension, hook, priority }) {
   Hooks[hookCategory] = newHooks
 }
 
-function unregisterAllHooks({ extension }) {
+function unregisterAllHooks ({ extension }) {
   Object.keys(Hooks).forEach(hookCategory => {
     Hooks[hookCategory] = Hooks[hookCategory].filter(h => h.extension.key !== extension.key)
   })
 }
 
-export async function activateEnabledExtensions(dispatch, getState) {
+export async function activateEnabledExtensions (dispatch, getState) {
   const settings = selectSettings(getState()) || {}
   const extensions = allExtensions()
   for (const extension of extensions) {

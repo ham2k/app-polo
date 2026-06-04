@@ -36,7 +36,7 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
-  MainExchangePanel: null,
+
   Options: ECAActivityOptions,
   postSelfSpot: ECAPostSelfSpot,
   sampleOperations: ({ settings, callInfo }) => {

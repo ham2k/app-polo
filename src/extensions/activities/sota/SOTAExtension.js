@@ -63,8 +63,6 @@ const ActivityHook = {
     grid: (vfo?.band === '2m' || vfo?.band === '70cm') && (vfo?.mode === 'CW' || vfo?.mode === 'SSB' || vfo?.mode === 'USB')
   }),
 
-  MainExchangePanel: null,
-
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)) {
       return [ActivatorLoggingControl]

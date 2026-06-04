@@ -43,7 +43,6 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
-  MainExchangePanel: null,
   Options: WCAActivityOptions,
   postSelfSpot: WCAPostSelfSpot,
   sampleOperations: ({ t, settings, callInfo }) => {

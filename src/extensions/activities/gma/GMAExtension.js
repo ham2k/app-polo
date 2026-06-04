@@ -39,7 +39,7 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
-  MainExchangePanel: null,
+
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)) {
       return [ActivatorLoggingControl]
