@@ -36,7 +36,6 @@ const QSOItem = React.memo(function QSOItem ({
         if (x) info = info.concat(x)
       })
     } catch (e) {
-      console.error('Error in QSOItem', e)
     }
     return info.filter(x => x).map(x => x.trim()).join(' ')
   }, [qso, refHandlers])
@@ -44,6 +43,20 @@ const QSOItem = React.memo(function QSOItem ({
   const pressHandler = useCallback(() => {
     onPress && onPress({ qso })
   }, [qso, onPress])
+
+  const accessibilityLabel = useMemo(() => {
+    const parts = [qso.their?.call ?? 'no call']
+    if (qso.deleted) parts.push('deleted')
+    if (qso?.their?.name ?? qso?.their?.guess?.name) parts.push(qso?.their?.name ?? qso?.their?.guess?.name)
+    if (qso.startAtMillis) parts.push(timeFormatFunction(qso.startAtMillis))
+    if (freqParts[0]) {
+      parts.push(`${freqParts[0]}.${freqParts[1]} MHz`)
+    } else if (freqParts[1]) {
+      parts.push(freqParts[1])
+    }
+    if (extraInfo) parts.push(extraInfo)
+    return parts.join(', ')
+  }, [qso, freqParts, extraInfo, timeFormatFunction])
 
   const confirmedBySpot = useMemo(() => Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === false), [qso.qsl])
   const bustedBySpot = useMemo(() => Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === true), [qso.qsl])
@@ -74,7 +87,13 @@ const QSOItem = React.memo(function QSOItem ({
   }, [qso.refs, fieldsStyle.icon, styles.normalFontSize])
 
   return (
-    <H2kPressable onPress={pressHandler} style={rowStyle}>
+    <H2kPressable
+      onPress={pressHandler}
+      style={rowStyle}
+      accessible={true}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+    >
       <View style={styles.rowInner}>
         <Text style={fieldsStyle.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
         <Text style={fieldsStyle.freq}>

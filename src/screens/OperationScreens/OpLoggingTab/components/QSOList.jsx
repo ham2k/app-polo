@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { PixelRatio, View } from 'react-native'
+import { AccessibilityInfo, PixelRatio, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import getItemLayout from 'react-native-get-item-layout-section-list'
@@ -35,6 +35,13 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
   const handleLayout = useCallback((event) => {
     const layout = event?.nativeEvent?.layout
     setComponentLayout({ width: Math.round(layout?.width ?? 0), height: Math.round(layout?.height ?? 0) })
+  }, [])
+
+  const [isScreenReaderEnabled, setIsScreenReaderEnabled] = useState(false)
+  useEffect(() => {
+    AccessibilityInfo.isScreenReaderEnabled().then(setIsScreenReaderEnabled)
+    const subscription = AccessibilityInfo.addEventListener('screenReaderChanged', setIsScreenReaderEnabled)
+    return () => subscription.remove()
   }, [])
 
   const { hasFrequencyDecimals, hasLongCall } = useMemo(() => {
@@ -212,7 +219,8 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       keyExtractor={extractKey}
       ListEmptyComponent={emptyComponent}
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
-      stickySectionHeadersEnabled={true}
+      stickySectionHeadersEnabled={false && !isScreenReaderEnabled}
+      accessibilityRole="grid"
       // maintainVisibleContentPosition={{
         // autoscrollToBottomThreshold: 0.2
         // startRenderingFromBottom: true

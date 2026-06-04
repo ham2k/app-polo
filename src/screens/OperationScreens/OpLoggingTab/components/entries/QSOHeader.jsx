@@ -18,8 +18,14 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
   // See https://github.com/facebook/react-native/issues/51290
 
   return (
-    <H2kPressable onPressOut={onHeaderPress} style={styles.headerRow}>
-      <View style={styles.rowInner} accessibilityRole="header">
+    <H2kPressable
+      onPressOut={onHeaderPress}
+      style={styles.headerRow}
+      accessible={true}
+      accessibilityRole="header"
+      accessibilityLabel={`${capitalizeFirstLetter(fmtDateDynamicZulu(section.day, { compact: true }))} - ${fmtNumber(section.count ?? 0)} QSOs`}
+    >
+      <View style={styles.rowInner}>
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
           {capitalizeFirstLetter(fmtDateDynamicZulu(section.day, { compact: true }))}
         </Text>

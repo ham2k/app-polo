@@ -92,6 +92,7 @@ export function OpInfoPanel ({ operation, qso, activeQSOs, sections, style, them
                         name={score.icon}
                         color={score.activated === true ? styles.colors.important : undefined}
                         size={styles.normalFontSize * 1.2}
+                        accessibilityLabel={score.label}
                       />
                     )}
                   </View>
