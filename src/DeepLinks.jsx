@@ -14,8 +14,17 @@
  * or the longer one if you want only PoLo to handle the link.
  * The examples below use the shorter schema for brevity.
  *
- * # Log a QSO:
- *   `com.ham2k://qso?our.call=K2HRC&their.call=N0CALL&frequency=7200&mode=CW`
+ * # Present a QSO for logging:
+ * 
+ *   `com.ham2k://qso?their.call=N0CALL&frequency=7200000&mode=CW`
+ *
+ *   - `their.call`: The callsign of the other station
+ *   - `frequency`: Frequency of the QSO in Hz
+ *   - `freq`: Frequency of the QSO in kHz
+ *   - `band`: Band for the QSO (if `frequency` or `freq` is provided, this is ignored)
+ *   - `startAtMillis`: Timestamp of the QSO in milliseconds since epoch (optional)
+ *   - `mode`: Mode of the QSO
+ *   - `their.refs` (or `refs`): References for the other station, comma separated list of type:ref pairs (i.e. "POTA:US-1234,POTA:US-4567,SOTA:W6/CT-225")
  *
  * # Link a Client
  *   `com.ham2k://link_client?id=1234&token=ABC...`
@@ -25,6 +34,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { Linking } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { selectLatestOperation } from './store/operations'
+import { bandForFrequency } from '@ham2k/lib-operation-data'
 
 const DEBUG = false
 
@@ -52,16 +62,29 @@ export function DeepLinks ({ navigationRef }) {
     }
 
     if (path === '/qso') {
+      let freq
+      if (params.freq) {
+        freq = Number(params.freq)
+      } else if (params.frequency) {
+        freq = Number(params.frequency) / 1000
+      }
+      let band = freq ? bandForFrequency(freq) : params.band
+
       const qso = {
         uuid: 'suggested-qso',
         their: { call: params['their.call'] },
-        band: params.band,
-        freq: Number(params.freq),
+        band,
+        freq,
         mode: params.mode.toUpperCase(),
+        startAtMillis: params.startAtMillis ? Number(params.startAtMillis) : undefined,
         _suggestedKey: url
       }
 
-      if (DEBUG) console.log('🔗 Deep Link to QSO:', qso)
+      if (params['their.refs']) {
+        qso.refs = _parseRefs(params['their.refs'] || params['refs'])
+      }
+
+      if (DEBUG) console.log('🔗 Deep Link to QSO:', { ...qso, their: { ...qso?.their || {} } })
 
       _onceNavigationIsReady(navigationRef, async () => {
         console.log('-- navigationRef.current', navigationRef.current?.getRootState())
@@ -110,6 +133,18 @@ export function DeepLinks ({ navigationRef }) {
   }, [handleDeepLink])
 
   return null // This is a headless component
+}
+
+function _parseRefs (refsString) {
+  const refs = []
+  const parts = refsString.split(',').map(r => r.trim()).filter(r => r)
+  parts.forEach(part => {
+    const [type, ref] = part.split(':')
+    if (type && ref) {
+      refs.push({ type: type.toLowerCase(), ref })
+    }
+  })
+  return refs
 }
 
 function _onceNavigationIsReady (navigationRef, callback) {
