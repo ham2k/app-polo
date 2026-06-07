@@ -7,11 +7,11 @@
 
 import { Alert } from 'react-native'
 
+import { findRef } from '@ham2k/lib-qson-tools'
+
 import GLOBAL from '../../../GLOBAL'
 import { reportError } from '../../../distro'
-
 import { apiWWFF } from '../../../store/apis/apiWWFF'
-import { findRef } from '../../../tools/refTools'
 
 export const WWFFPostOtherSpot = ({ t, comments, qso, spotterCall }) => async (dispatch) => {
   if (GLOBAL?.flags?.services?.wwff === false) return false

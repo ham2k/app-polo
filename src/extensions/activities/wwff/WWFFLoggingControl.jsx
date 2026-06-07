@@ -8,13 +8,14 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '@ham2k/lib-qson-tools'
+
+import { selectOperationCallInfo } from '../../../store/operations'
 
 import { Info } from './WWFFInfo'
 import { WWFFData } from './WWFFDataFile'
 import WWFFInput from './WWFFInput'
 import { useSelector } from 'react-redux'
-import { selectOperationCallInfo } from '../../../store/operations'
 
 export function WWFFLoggingControl (props) {
   const { qso, operation, updateQSO, style, styles } = props

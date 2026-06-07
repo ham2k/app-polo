@@ -10,17 +10,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
+import { useIsFocused } from '@react-navigation/native'
+
+import { replaceRefs } from '@ham2k/lib-qson-tools'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
 import { selectSettings } from '../../../store/settings'
 import { findBestHook } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { replaceRefs } from '../../../tools/refTools'
 import ScreenContainer from '../../components/ScreenContainer'
 import { trackEvent } from '../../../distro'
 import { H2kListItem, H2kListSection, H2kListSeparator } from '../../../ui'
-import { useIsFocused } from '@react-navigation/native'
 
 export default function OperationActivityOptionsScreen ({ navigation, route }) {
   const { t } = useTranslation()

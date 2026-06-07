@@ -6,9 +6,7 @@
  */
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
-
-import { filterNearDupes } from '../../tools/qsonTools'
-import { filterRefs } from '../../tools/refTools'
+import { filterRefs, filterNearDupes } from '@ham2k/lib-qson-tools'
 
 const DEBUG = false
 const DEBUG_ACTIVITIES = ['SOTA']

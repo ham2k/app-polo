@@ -9,7 +9,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
-import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '@ham2k/lib-qson-tools'
+
 import { selectOperationCallInfo } from '../../../store/operations'
 
 import { Info } from './POTAInfo'

@@ -7,11 +7,12 @@
 
 import { Alert } from 'react-native'
 
+import { findRef } from '@ham2k/lib-qson-tools'
+
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
-
-import { findRef } from '../../../tools/refTools'
 import { apiTOTA } from '../../../store/apis/apiTOTA'
+
 import { Info } from './TOTAInfo'
 
 export const TOTAPostOtherSpot = ({ t, comments, qso }) => async (dispatch) => {

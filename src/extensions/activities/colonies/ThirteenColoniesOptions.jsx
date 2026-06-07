@@ -8,8 +8,9 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { findRef } from '@ham2k/lib-qson-tools'
+
 import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
-import { findRef } from '../../../tools/refTools'
 
 import { Info } from './ThirteenColoniesExtension'
 

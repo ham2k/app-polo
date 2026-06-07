@@ -7,7 +7,8 @@
 
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '@ham2k/lib-qson-tools'
+
 import { Info } from './GMAInfo'
 import GMAInput from './GMAInput'
 

@@ -7,11 +7,13 @@
 
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-
-import { findRef, replaceRef } from '../../../tools/refTools'
-import { Info } from './WFDExtension'
-import { H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 import { Text } from 'react-native-paper'
+
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+
+import { H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+
+import { Info } from './WFDExtension'
 
 export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()

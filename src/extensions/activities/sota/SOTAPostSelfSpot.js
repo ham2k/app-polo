@@ -9,11 +9,11 @@
 import { Alert } from 'react-native'
 
 import { ADIF_SUBMODES } from '@ham2k/lib-operation-data'
+import { findRef } from '@ham2k/lib-qson-tools'
 
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
 
-import { findRef } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 
 const validModes = ['AM', 'CW', 'Data', 'DV', 'FM', 'SSB']

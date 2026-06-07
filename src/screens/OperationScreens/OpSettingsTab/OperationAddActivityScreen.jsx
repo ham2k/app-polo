@@ -12,8 +12,9 @@ import { StackActions } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
+import { findRef, replaceRefs } from '@ham2k/lib-qson-tools'
+
 import { selectOperation, setOperationData } from '../../../store/operations'
-import { findRef, replaceRefs } from '../../../tools/refTools'
 import { findBestHook, useFindHooks } from '../../../extensions/registry'
 import ScreenContainer from '../../components/ScreenContainer'
 import { trackEvent } from '../../../distro'

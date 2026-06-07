@@ -5,7 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { findRef } from '../../../tools/refTools'
+import { findRef } from '@ham2k/lib-qson-tools'
+
 import { Info } from './POTAInfo'
 import { apiPOTA } from '../../../store/apis/apiPOTA'
 

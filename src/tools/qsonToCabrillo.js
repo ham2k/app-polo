@@ -7,7 +7,7 @@
 
 import { fmtCabrilloDate, fmtCabrilloTime } from '@ham2k/lib-format-tools'
 
-import { findRef } from './refTools'
+import { findRef } from '@ham2k/lib-qson-tools'
 
 export function qsonToCabrillo ({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)

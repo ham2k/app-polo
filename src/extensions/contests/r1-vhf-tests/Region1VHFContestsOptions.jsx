@@ -6,8 +6,9 @@
  */
 import React, { useCallback, useMemo } from 'react'
 
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+
 import { H2kDropDown, H2kListRow, H2kListSection } from '../../../ui'
-import { findRef, replaceRef } from '../../../tools/refTools'
 
 import { VHF_CONTESTS_DATA } from './Region1VHFContestsExtension'
 import { Info } from './Region1VHFContestsInfo'

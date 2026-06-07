@@ -5,15 +5,17 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import { Alert } from 'react-native'
+
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+import { filterNearDupes } from '@ham2k/lib-qson-tools'
+import { filterRefs, findRef, refsToString } from '@ham2k/lib-qson-tools'
 
 import GLOBAL from '../../../GLOBAL'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { apiSOTA } from '../../../store/apis/apiSOTA'
 import { LOCATION_ACCURACY } from '../../constants'
 
@@ -24,7 +26,6 @@ import { SOTALoggingControl } from './SOTALoggingControl'
 import { SOTAAccountSetting } from './SOTAAccount'
 import { SOTAPostSelfSpot } from './SOTAPostSelfSpot'
 import { SOTAPostOtherSpot } from './SOTAPostOtherSpot'
-import { filterNearDupes } from '../../../tools/qsonTools'
 import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {

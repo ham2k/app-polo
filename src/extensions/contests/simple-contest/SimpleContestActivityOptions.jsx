@@ -5,7 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import React, { useCallback, useMemo } from 'react'
-import { findRef, replaceRef } from '../../../tools/refTools'
+
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kListSection, H2kListRow, H2kMarkdown, H2kTextInput } from '../../../ui'
 

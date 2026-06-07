@@ -10,17 +10,15 @@ import React from 'react'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { findRef, replaceRef } from '../../../tools/refTools'
 import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
 import { setOperationData } from '../../../store/operations'
-
 import RAW_US_STATES from '../../../data/usStates.json'
 import RAW_CANADIAN_PROVINCES from '../../../data/canadianProvinces.json'
 
 import { Info } from './QSOPartiesInfo'
 import { ActivityOptions } from './QSOPartiesActivityOptions'
-
 import RAW_QSO_PARTY_DATA from './all-parties.js'
 import { QSOPartiesPostSelfSpot, SpotsHook } from './QSOPartiesSpotting.js'
 

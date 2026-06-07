@@ -8,8 +8,9 @@
 import React, { useState, useMemo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 
+import { filterRefs, replaceRefs } from '@ham2k/lib-qson-tools'
+
 import { H2kButton, H2kListRow, H2kListSection, H2kTextInput } from '../../../ui'
-import { filterRefs, replaceRefs } from '../../../tools/refTools'
 
 import { Info } from './CustomInfo'
 import { CustomListItem } from './CustomListItem'

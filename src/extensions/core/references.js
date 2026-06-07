@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { filterRefs, refsToString } from '../../tools/refTools'
+import { filterRefs, refsToString } from '@ham2k/lib-qson-tools'
 import { camelCaseToWords } from '@ham2k/lib-format-tools'
 
 export function defaultReferenceHandlerFor (type) {

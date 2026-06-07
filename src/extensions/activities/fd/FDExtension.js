@@ -9,9 +9,9 @@ import React from 'react'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtInteger, fmtNumber } from '@ham2k/lib-format-tools'
 
-import { findRef, replaceRef } from '../../../tools/refTools'
-import { FDActivityOptions } from './FDActivityOptions'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
+import { FDActivityOptions } from './FDActivityOptions'
 import { ABBREVIATED_SECTION_NAMES, RAC_SECTIONS, ARRL_SECTIONS } from './FDSections'
 import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 

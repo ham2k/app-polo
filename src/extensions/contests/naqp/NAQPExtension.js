@@ -6,8 +6,8 @@
  */
 
 import React from 'react'
-import { findRef, replaceRef } from '../../../tools/refTools'
 
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 

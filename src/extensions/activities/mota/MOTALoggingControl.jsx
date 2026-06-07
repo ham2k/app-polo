@@ -8,7 +8,8 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { filterRefs, refsToString, replaceRefs, stringToRefs } from '../../../tools/refTools'
+import { filterRefs, refsToString, replaceRefs, stringToRefs } from '@ham2k/lib-qson-tools'
+
 import { Info } from './MOTAInfo'
 import MOTAInput from './MOTAInput'
 

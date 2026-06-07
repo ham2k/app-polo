@@ -8,10 +8,10 @@
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { distanceForQSON } from '@ham2k/lib-geo-tools'
+import { filterNearDupes } from '@ham2k/lib-qson-tools'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kGridInput, H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
-import { findRef, replaceRef } from '../../../tools/refTools.js'
-import { filterNearDupes } from '../../../tools/qsonTools.js'
 
 import { Info } from './RSGBVHFContestsInfo.js'
 import { ActivityOptions } from './RSGBVHFContestsOptions.jsx'

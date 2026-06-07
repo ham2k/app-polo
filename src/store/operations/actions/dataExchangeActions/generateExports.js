@@ -8,9 +8,10 @@
 import RNFetchBlob from 'react-native-blob-util'
 import base64 from 'react-native-quick-base64'
 
+import { filterQSOsWithSectionRefs } from '@ham2k/lib-qson-tools'
+
 import { qsonToADIF } from '../../../../tools/qsonToADIF'
 import { qsonToCabrillo } from '../../../../tools/qsonToCabrillo'
-import { filterQSOsWithSectionRefs } from '../../../../tools/qsonTools'
 import { qsonToReg1test } from '../../../../tools/qsonToReg1test'
 
 const DEBUG = false

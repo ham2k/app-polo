@@ -9,9 +9,10 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
+import { filterNearDupes } from '@ham2k/lib-qson-tools'
+import { filterRefs, findRef, mergeRefs, refsToString } from '@ham2k/lib-qson-tools'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { filterRefs, findRef, mergeRefs, refsToString } from '../../../tools/refTools'
 
 import { Info } from './POTAInfo'
 import { POTAActivityOptions } from './POTAActivityOptions'
@@ -24,7 +25,6 @@ import { apiPOTA, directLookupPark } from '../../../store/apis/apiPOTA'
 import { LOCATION_ACCURACY } from '../../constants'
 import { ConfirmFromSpotsHook } from './POTAConfirmFromSpots'
 import GLOBAL from '../../../GLOBAL'
-import { filterNearDupes } from '../../../tools/qsonTools'
 import { generateActivityDailyAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'
 
 const Extension = {

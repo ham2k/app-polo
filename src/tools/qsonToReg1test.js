@@ -7,7 +7,7 @@
 
 import { fmtTimestamp } from '@ham2k/lib-format-tools'
 
-import { findRef } from './refTools'
+import { findRef } from '@ham2k/lib-qson-tools'
 
 const REG1TEST_MODE = {
   // Note, we don't support CW/SSB or SSB/CW split modes

@@ -10,9 +10,9 @@ import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+import { filterRefs, findRef, refsToString } from '@ham2k/lib-qson-tools'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 
 import { Info } from './WWBOTAInfo'
 import { WWBOTAActivityOptions } from './WWBOTAActivityOptions'

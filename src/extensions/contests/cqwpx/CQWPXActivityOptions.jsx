@@ -5,12 +5,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 import React, { useCallback, useEffect, useMemo } from 'react'
-import { findRef, replaceRef } from '../../../tools/refTools'
+import { SegmentedButtons } from 'react-native-paper'
+
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kListRow, H2kListSection, H2kMarkdown } from '../../../ui'
 
 import { Info } from './CQWPXExtension'
-import { SegmentedButtons } from 'react-native-paper'
 
 export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
   useEffect(() => {

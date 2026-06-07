@@ -12,7 +12,9 @@ import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-cont
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useTranslation } from 'react-i18next'
+import { Icon, Menu, Text } from 'react-native-paper'
 
+import { hasRef } from '@ham2k/lib-qson-tools'
 import { slashZeros } from '@ham2k/lib-format-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
@@ -23,17 +25,16 @@ import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
 import HeaderBar from '../components/HeaderBar'
+import { selectRuntimeOnline } from '../../store/runtime'
+import { useUIState } from '../../store/ui'
+import GLOBAL from '../../GLOBAL'
+import { selectFeatureFlags } from '../../store/system'
+
 import OpLoggingTab from './OpLoggingTab/OpLoggingTab'
 import OpSettingsTab from './OpSettingsTab/OpSettingsTab'
 import OpSpotsTab from './OpSpotsTab/OpSpotsTab'
 import OpMapTab from './OpMapTab/OpMapTab'
 import OpInfoTab from './OpInfoTab/OpInfoTab'
-import { selectRuntimeOnline } from '../../store/runtime'
-import { useUIState } from '../../store/ui'
-import { Icon, Menu, Text } from 'react-native-paper'
-import { hasRef } from '../../tools/refTools'
-import GLOBAL from '../../GLOBAL'
-import { selectFeatureFlags } from '../../store/system'
 import { manageNextQSO } from './OpLoggingTab/components/LoggingPanel/loggingFunctions'
 
 const Tab = createMaterialTopTabNavigator()

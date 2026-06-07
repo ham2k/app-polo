@@ -8,15 +8,15 @@
 import { fmtNumber, fmtTimestamp } from '@ham2k/lib-format-tools'
 
 import { distanceForQSON } from '@ham2k/lib-geo-tools'
+import { filterNearDupes } from '@ham2k/lib-qson-tools'
+import { findRef } from '@ham2k/lib-qson-tools'
 
 import { H2kGridInput } from '../../../ui'
-import { findRef } from '../../../tools/refTools'
-import { filterNearDupes } from '../../../tools/qsonTools'
+import { REG1TEST_BAND } from '../../../tools/qsonToReg1test'
 
 import { Info } from './Region1VHFContestsInfo'
 import { ActivityOptions } from './Region1VHFContestsOptions'
 import RAW_VHF_CONTESTS_DATA from './all-events.js'
-import { REG1TEST_BAND } from '../../../tools/qsonToReg1test'
 
 export const VHF_CONTESTS_DATA = Object.fromEntries(RAW_VHF_CONTESTS_DATA.map(state => [state.key, state]))
 

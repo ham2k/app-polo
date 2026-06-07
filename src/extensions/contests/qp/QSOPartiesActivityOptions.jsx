@@ -8,10 +8,10 @@ import React, { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { fmtDateNice, fmtDateTimeNice, fmtTimeBetween, prepareDateValue } from '@ham2k/lib-format-tools'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { selectOperatorCallInfo, selectSettings } from '../../../store/settings'
 import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
-import { findRef, replaceRef } from '../../../tools/refTools'
 
 import { Info } from './QSOPartiesInfo'
 import { qpData, qpParseLocations, QSO_PARTY_DATA } from './QSOPartiesExtension'

@@ -9,12 +9,12 @@ import React from 'react'
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { findRef, replaceRef } from '../../../tools/refTools'
 import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 
-import { WFDActivityOptions } from './WFDActivityOptions'
 import { ABBREVIATED_SECTION_NAMES, ARRL_SECTIONS, RAC_SECTIONS } from '../fd/FDSections'
+import { WFDActivityOptions } from './WFDActivityOptions'
 
 /*
  NOTES:

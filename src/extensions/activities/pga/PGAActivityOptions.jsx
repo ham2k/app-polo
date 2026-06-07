@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next'
 
 import { distanceOnEarth } from '@ham2k/lib-geo-tools'
 
-import { findRef, replaceRef } from '../../../tools/refTools'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './PGAInfo'

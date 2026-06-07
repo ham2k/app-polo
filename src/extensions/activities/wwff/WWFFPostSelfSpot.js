@@ -7,10 +7,10 @@
 
 import { Alert } from 'react-native'
 
+import { findRef } from '@ham2k/lib-qson-tools'
+
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
-
-import { findRef } from '../../../tools/refTools'
 import { apiWWFF } from '../../../store/apis/apiWWFF'
 
 export const WWFFPostSelfSpot = ({ t, operation, vfo, comments }) => async (dispatch, getState) => {

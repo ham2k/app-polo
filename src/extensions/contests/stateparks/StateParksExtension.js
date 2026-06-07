@@ -7,14 +7,11 @@
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
-
-import { filterRefs, findRef } from '../../../tools/refTools'
+import { filterRefs, findRef, filterNearDupes } from '@ham2k/lib-qson-tools'
 
 import { Info } from './StateParksInfo'
 import { ActivityOptions } from './StateParksActivityOptions'
-
 import RAW_STATE_PARKS_DATA from './all-events.js'
-import { filterNearDupes } from '../../../tools/qsonTools'
 
 export const STATE_PARKS_DATA = Object.fromEntries(RAW_STATE_PARKS_DATA.map(state => [state.key, state]))
 

@@ -7,11 +7,11 @@
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { findRef } from '@ham2k/lib-qson-tools'
 
 import { ThirteenColoniesOptions } from './ThirteenColoniesOptions'
 import { findQSOsInOtherOps } from '../../../store/qsos/actions/findQSOsInOtherOps'
 import { setOperationLocalData } from '../../../store/operations'
-import { findRef } from '../../../tools/refTools'
 
 export const Info = {
   key: 'colonies',

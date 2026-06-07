@@ -7,16 +7,18 @@
 
 import React, { useMemo } from 'react'
 
+import { findRef } from '@ham2k/lib-qson-tools'
+
+import { findHooks } from '../../../../../extensions/registry'
+import { editQSOControl } from '../../../EditQSOScreen'
+
 import { timeControl } from './SecondaryExchangePanel/TimeControl'
 import { radioControl } from './SecondaryExchangePanel/RadioControl'
 import { notesControl } from './SecondaryExchangePanel/NotesControl'
 import { powerControl } from './SecondaryExchangePanel/TxPowerControl'
 import { SecondaryControlManagementSubPanel } from './SecondaryExchangePanel/SecondaryControlManagementSubPanel'
 import { SecondaryControlSelectionsubPanel } from './SecondaryExchangePanel/SecondaryControlSelectionSubPanel'
-import { findHooks } from '../../../../../extensions/registry'
-import { findRef } from '../../../../../tools/refTools'
 import { spotterControl } from './SecondaryExchangePanel/SpotterControl'
-import { editQSOControl } from '../../../EditQSOScreen'
 
 export const SecondaryExchangePanel = (props) => {
   const { currentSecondaryControl, operation, vfo, settings } = props

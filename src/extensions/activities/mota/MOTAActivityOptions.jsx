@@ -10,8 +10,8 @@ import Geolocation from '@react-native-community/geolocation'
 import { useTranslation } from 'react-i18next'
 
 import { distanceOnEarth } from '@ham2k/lib-geo-tools'
+import { filterRefs, replaceRefs } from '@ham2k/lib-qson-tools'
 
-import { filterRefs, replaceRefs } from '../../../tools/refTools'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
 import { Info } from './MOTAInfo'

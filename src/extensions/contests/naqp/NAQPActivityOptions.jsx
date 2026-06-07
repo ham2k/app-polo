@@ -7,7 +7,7 @@
 
 import React, { useCallback, useMemo } from 'react'
 
-import { findRef, replaceRef } from '../../../tools/refTools'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kListSection, H2kListRow, H2kMarkdown, H2kTextInput, H2kDropDown } from '../../../ui'
 

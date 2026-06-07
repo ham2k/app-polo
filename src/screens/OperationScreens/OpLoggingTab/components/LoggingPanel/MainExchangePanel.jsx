@@ -7,9 +7,10 @@
 
 import React, { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-
 import { View, findNodeHandle } from 'react-native'
-import { findRef } from '../../../../../tools/refTools'
+
+import { findRef } from '@ham2k/lib-qson-tools'
+
 import { findHooks } from '../../../../../extensions/registry'
 import { H2kCallsignInput, H2kGridInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
 import { expandRSTValues } from '../../../../../tools/callsignTools'

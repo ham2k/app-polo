@@ -5,7 +5,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { filterRefs } from '../../../tools/refTools'
+import { filterRefs } from '@ham2k/lib-qson-tools'
+
 import { LLOTAPostSpotAPI } from './LLOTAPostSpotAPI'
 
 export const LLOTAPostSelfSpot = ({ t, operation, vfo, comments }) => (_dispatch, getState) => {

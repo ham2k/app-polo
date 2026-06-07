@@ -8,11 +8,11 @@
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
+import { filterRefs, findRef, refsToString } from '@ham2k/lib-qson-tools'
 
 import GLOBAL from '../../../GLOBAL'
 
 import { loadDataFile, removeDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { filterRefs, findRef, refsToString } from '../../../tools/refTools'
 import { LOCATION_ACCURACY } from '../../constants'
 
 import { generateActivityOperationAccumulator, generateActivityScorer, generateActivitySumarizer } from '../../shared/activityScoring'

@@ -5,12 +5,13 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { findRef, replaceRef } from '../../../tools/refTools'
+import { fmtNumber } from '@ham2k/lib-format-tools'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+
 import { H2kTextInput } from '../../../ui/index.js'
+import { setOperationData } from '../../../store/operations'
 
 import { ActivityOptions } from './CQWPXActivityOptions'
-import { fmtNumber } from '@ham2k/lib-format-tools'
-import { setOperationData } from '../../../store/operations'
 
 export const Info = {
   key: 'cqwpx',

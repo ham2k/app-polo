@@ -10,12 +10,11 @@ import base64 from 'react-native-quick-base64'
 import { gridToLocation, latitudeInMinutes, longitudeInMinutes } from '@ham2k/lib-geo-tools'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
 import { fmtFreqInMHz, parseFreqInMHz } from '@ham2k/lib-format-tools'
-
-import { findRef } from '../../../tools/refTools'
-import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
+import { findRef } from '@ham2k/lib-qson-tools'
 
 import GLOBAL from '../../../GLOBAL'
 import packageJson from '../../../../package.json'
+import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
 
 import { qpData, qpParseLocations } from './QSOPartiesExtension'
 import { Info } from './QSOPartiesInfo'

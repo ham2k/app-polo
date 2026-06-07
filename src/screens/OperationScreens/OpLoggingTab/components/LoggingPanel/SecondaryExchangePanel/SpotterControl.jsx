@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { fmtFreqInMHz, fmtDateTimeRelative } from '@ham2k/lib-format-tools'
+import { findRef } from '@ham2k/lib-qson-tools'
 
 import GLOBAL from '../../../../../../GLOBAL'
 
@@ -19,7 +20,6 @@ import { selectSecondsTick, selectThirtySecondsTick } from '../../../../../../st
 import { selectRuntimeOnline } from '../../../../../../store/runtime'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { findHooks } from '../../../../../../extensions/registry'
-import { findRef } from '../../../../../../tools/refTools'
 import { H2kButton, H2kIcon, H2kTextInput } from '../../../../../../ui'
 import LoggerChip from '../../../../components/LoggerChip'
 

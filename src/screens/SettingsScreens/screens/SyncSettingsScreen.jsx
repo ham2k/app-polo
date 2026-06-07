@@ -86,7 +86,7 @@ export default function SyncSettingsScreen ({ navigation, splitView, route }) {
   }, [currentDialog, dispatch, fiveSecondTick, syncHook, t, syncEnabled])
 
   const accountTitle = useMemo(() => {
-    const id = lofiData?.account?.uuid.slice(0, 8).toUpperCase()
+    const id = lofiData?.account?.uuid?.slice(0, 8)?.toUpperCase()
     if (!lofiData?.account) {
       return t('screens.syncSettings.deviceNotLinked', 'Device not linked! ({{id}})', { id })
     } else {

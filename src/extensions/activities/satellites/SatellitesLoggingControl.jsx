@@ -9,10 +9,10 @@ import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { capitalizeString, fmtFreqInMHz } from '@ham2k/lib-format-tools'
+import { findRef, removeRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { setOperationData } from '../../../store/operations'
 import { setVFO } from '../../../store/station/stationSlice'
-import { findRef, removeRef, replaceRef } from '../../../tools/refTools'
 import { H2kDropDown } from '../../../ui'
 
 import { SatelliteData } from './SatelliteData'

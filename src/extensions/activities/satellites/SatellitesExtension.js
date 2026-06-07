@@ -8,8 +8,8 @@
 import React from 'react'
 
 import { bandForFrequency } from '@ham2k/lib-operation-data'
+import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { findRef, replaceRef } from '../../../tools/refTools'
 import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
 import { H2kGridInput } from '../../../ui'
 

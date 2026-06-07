@@ -6,7 +6,8 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { filterRefs } from '../../../tools/refTools'
+import { filterRefs } from '@ham2k/lib-qson-tools'
+
 import { GMAPostSpotAPI } from './GMAPostSpotAPI'
 
 export const GMACommonPostOtherSpot = ({ comments, refFilter, qso, spotterCall, url }) => () => {

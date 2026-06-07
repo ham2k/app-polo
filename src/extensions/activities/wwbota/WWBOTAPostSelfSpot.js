@@ -8,11 +8,12 @@
 
 import { Alert } from 'react-native'
 
+import { filterRefs } from '@ham2k/lib-qson-tools'
+
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
 
 import { setOperationData } from '../../../store/operations'
-import { filterRefs } from '../../../tools/refTools'
 import { apiWWBOTA } from '../../../store/apis/apiWWBOTA'
 
 import { Info } from './WWBOTAInfo'
