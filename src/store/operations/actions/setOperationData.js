@@ -291,7 +291,7 @@ export function describeOperation ({ operation }) {
 }
 
 export function buildOperationTitle ({ refs, operation }) {
-  const referenceTitles = refs.map(ref => {
+  const referenceTitles = (refs ?? []).map(ref => {
     const hooks = findHooks(`ref:${ref?.type}`)
     return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle({ ref, operation })).filter(Boolean)[0]
   }).filter(Boolean).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0))

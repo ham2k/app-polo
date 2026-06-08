@@ -18,7 +18,7 @@ import { hasRef } from '@ham2k/lib-qson-tools'
 import { slashZeros } from '@ham2k/lib-format-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
-import { loadOperation, selectOperation } from '../../store/operations'
+import { buildOperationTitle, loadOperation, selectOperation } from '../../store/operations'
 import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
@@ -85,10 +85,11 @@ export default function OperationScreen (props) {
 
   const headerOptions = useMemo(() => {
     let options = {}
+    const { title, subtitle } = buildOperationTitle({ refs: operation?.refs, operation })
     if (operation?.stationCall) {
       options = {
-        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation?.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle }),
-        subTitle: operation.subtitle
+        title: buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation?.stationCallPlus || operation.stationCall, title, userTitle: operation.userTitle }),
+        subTitle: subtitle
       }
     } else {
       options = { title: t('general.terms.newOperation', 'New Operation') }
