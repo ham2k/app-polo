@@ -1,10 +1,10 @@
 {
   "key": "TX",
   "name": "Texas QSO Party",
-  "start": "2025-9-20 14:00Z",
-  "end": "2025-9-21 02:00Z",
-  "secondStart": "2025-9-21 14:00Z",
-  "secondEnd": "2025-9-21 20:00Z",
+  "start": "2026-9-19 14:00Z",
+  "end": "2026-9-20 02:00Z",
+  "secondStart": "2026-9-20 14:00Z",
+  "secondEnd": "2026-9-20 20:00Z",
   "status": "Pending",
   "counties": {
     "ANDE": "Anderson",
