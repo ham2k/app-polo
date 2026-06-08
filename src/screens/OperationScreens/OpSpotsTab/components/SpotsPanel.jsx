@@ -37,7 +37,7 @@ export const LABEL_FOR_MODE = {
   CW: 'CW',
   PHONE: 'Phone',
   DIGITAL: 'Digi',
-  DATA: 'Dig'
+  DATA: 'Digi'
 }
 
 export const LONG_LABEL_FOR_MODE = {

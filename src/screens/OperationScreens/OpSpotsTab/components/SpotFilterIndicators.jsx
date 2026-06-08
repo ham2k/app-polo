@@ -61,5 +61,5 @@ function labelForMode (mode, vfo, t) {
   if (!mode || mode === 'any') return t('screens.opSpotsTab.allModes', 'All modes')
   else if (mode === 'notDigital') return `${LABEL_FOR_MODE.PHONE} + ${LABEL_FOR_MODE.CW}`
   else if (mode === 'auto') return vfo.mode ? LABEL_FOR_MODE[superModeForMode(vfo?.mode)] : 'Auto'
-  else return LABEL_FOR_MODE[superModeForMode(mode)] || superModeForMode(mode)
+  else return LABEL_FOR_MODE[mode] || mode
 }
