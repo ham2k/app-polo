@@ -7,7 +7,9 @@
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
-import { filterRefs, findRef, filterNearDupes } from '@ham2k/lib-qson-tools'
+import { filterRefs, findRef, filterNearDupes, replaceRef, replaceRefs } from '@ham2k/lib-qson-tools'
+
+import { H2kTextInputWithSuggestions } from '../../../ui'
 
 import { Info } from './StateParksInfo'
 import { ActivityOptions } from './StateParksActivityOptions'
@@ -23,12 +25,8 @@ const Extension = {
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
     registerHook('activity', { hook: ActivityHook, priority: 10 })
     registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 10 })
-
-    // registerQPDefinitionsDataFile()
-    // dispatch(loadDataFile('qp-definitions'))
   },
   onDeactivationDispatch: () => async (dispatch) => {
-    // await dispatch(removeDataFile('qp-definitions'))
   }
 }
 export default Extension
@@ -38,6 +36,9 @@ const ActivityHook = {
   Options: ActivityOptions,
 
   standardExchangeFields: { state: true, grid: false },
+  mainExchangeForOperation,
+
+  processQSOBeforeSaveWithDispatch,
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
@@ -76,33 +77,128 @@ const ReferenceHandler = {
     return `${Info.key}-${sp.key}`
   },
 
-  suggestOperationTitle: ({ ref }) => {
+  suggestOperationTitle: ({ ref, operation }) => {
     if (ref?.ref) {
       const sp = spData({ ref })
-      return { for: _spShortForSP(sp), description: _spShortForSP(sp) }
+      if (sp.parkAbbreviations) {
+        let location = ref?.location
+        if (!location) {
+          const potaRefs = filterRefs(operation, 'potaActivation')
+          location = potaRefs.map(r => sp.parks[r.ref]).filter(Boolean)[0]
+        }
+        return { for: _spShortForSP(sp), subtitle: location } 
+      } else {
+        return { for: _spShortForSP(sp) } 
+      }
     } else {
       return { for: Info.shortName }
     }
   },
 
   suggestExportOptions: ({ operation, ref, settings }) => {
-    // Uses regular POTA exports
+    const sp = spData({ ref })
+
+    if (sp.options?.exportCabrillo) {
+      return [{
+        format: 'cabrillo',
+        exportType: 'state-parks-cabrillo',
+        exportName: sp.name,
+        refKey: sp.key,
+        templateData: { handlerShortName: sp.short, handlerName: sp.name }
+      }]
+    } else {
+      // Uses regular POTA exports
+    }
   },
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const ref = findRef(operation, Info.key)
     const sp = spData({ ref })
+    const qsoRef = findRef(qso, Info.key)
 
     const fields = [
-      { CONTEST_ID: sp.key }
+      { CONTEST_ID: sp.key },
+      { STX_STRING: ref?.location },
+      { SRX_STRING: qsoRef?.location }
     ]
 
     return fields
   },
 
+
+  cabrilloHeaders: ({ operation, settings, headers }) => {
+    const ref = findRef(operation, Info.key)
+    const sp = spData({ ref })
+
+    let ourLocation = ref?.location || filterRefs(operation, 'potaActivation').filter(r => sp?.parks[r.ref]).map(r => r.ref)[0]
+    
+    if (sp.parkAbbreviations) {
+      ourLocation = sp.parks[ourLocation] || ourLocation
+    }
+
+    if (!ourLocation) {
+      ourLocation = 'NOT'  // At least for Ohio SP, this is what they expect
+    }
+
+    headers.push(['CONTEST', sp.cabrilloName])
+    headers.push(['CALLSIGN', operation.stationCall || settings.operatorCall])
+    headers.push(['LOCATION', ourLocation])
+    headers.push(['EMAIL', ref?.email])
+    headers.push(['NAME', ''])
+    if (operation.local?.operatorCall) headers.push(['OPERATORS', operation.local.operatorCall])
+    if (operation.grid) headers.push(['GRID-LOCATOR', operation.grid])
+    return headers
+  },
+
+  qsoToCabrilloParts: ({ qso, ref, operation, settings }) => {
+    const sp = spData({ ref })
+    
+    let ourLocation = ref.location || filterRefs(operation, 'potaActivation').filter(r => sp?.parks[r.ref]).map(r => r.ref)[0]
+    
+    const qsoRef = findRef(qso, Info.key)
+    
+    let theirLocation = qsoRef?.location || filterRefs(qso, 'pota').filter(r => sp?.parks[r.ref]).map(r => r.ref)[0]
+
+    if (sp.parkAbbreviations) {
+      ourLocation = sp.parks[ourLocation] || ourLocation
+      theirLocation = sp.parks[theirLocation] || theirLocation
+    }
+
+    if (!ourLocation) {
+      ourLocation = 'NOT'  // At least for Ohio SP, this is what they expect
+    }
+
+    if (!theirLocation) {
+      const entity = qso?.their?.entityPrefix ?? qso?.their?.guess?.entityPrefix
+      if (entity === 'K' || entity === 'VE') {
+        theirLocation = qso?.their?.state ?? qso?.their?.guess?.state ?? 'NOT'
+      } else {
+        theirLocation = entity ?? 'DX'
+      }
+    }
+
+    const ourCall = operation.stationCall || settings.operatorCall
+
+    const row = []
+    row.push((ourCall ?? '-').padEnd(13, ' '))
+    row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
+    row.push((ourLocation ?? '-').padEnd(6, ' '))
+    row.push((qso?.their?.call ?? '-').padEnd(13, ' '))
+    row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
+    row.push((theirLocation ?? '-').padEnd(6, ' '))
+
+    return [row]
+  },
+
+  relevantInfoForQSOItem: ({ qso, operation }) => {
+    const qsoRef = findRef(qso, Info.key)
+    if (qsoRef) {
+      return [qso.their.exchange]
+    }
+  },
+
   scoringForQSO: ({ qso, qsos, operation, ref: scoredRef, score }) => {
     const sp = spData({ ref: scoredRef })
-    // console.log('scoringForQSO', qso.key, scoredRef)
 
     const { band, mode } = qso
 
@@ -117,9 +213,17 @@ const ReferenceHandler = {
     const superMode = superModeForMode(mode)
 
     const activationRefs = filterRefs(operation, 'potaActivation').map(r => r.ref)
-    const activationStateParks = activationRefs.filter(r => sp.parks[r])
-    const qsoRefs = filterRefs(qso, 'pota').map(r => r.ref)
-    const qsoStateParks = qsoRefs.filter(r => sp.parks[r])
+    const activationStateParks = activationRefs.filter(r => sp.parks[r.ref])
+
+    const potaRefs = filterRefs(qso, 'pota').map(r => r.ref)
+    let stateParkRefs = potaRefs.filter(r => sp.parks[r.ref]).map(r => r.ref)
+
+    if (sp?.parkAbbreviations && stateParkRefs.length === 0) {
+      const qsoRef = findRef(qso, Info.key)
+      if (qsoRef?.location && sp.parkReferences[qsoRef?.location]) {
+        stateParkRefs = [sp.parkReferences[qsoRef?.location]]
+      }
+    }
 
     const value = (sp?.points?.[superMode] || 1) * (activationRefs.length || 1)
 
@@ -129,12 +233,26 @@ const ReferenceHandler = {
       band,
       type: Info.key,
       activatedParks: activationStateParks,
-      huntedParks: qsoStateParks,
+      huntedParks: stateParkRefs,
       infos: [],
       notices: [],
       alerts: [],
       mults: [],
       bonuses: []
+    }
+
+    if (stateParkRefs.length > 0) {
+      let label = stateParkRefs[0]
+
+      if (sp.parkAbbreviations && sp.parks[label]) {
+        label = sp.parkAbbreviations[sp.parks[label]]
+      }
+
+      if (score?.huntedParks?.[stateParkRefs[0]]) {
+        scoring.infos.push(`${label}`)
+      } else {
+        scoring.notices.push(`${label}`)
+      }
     }
 
     const baseCall = qso?.their?.baseCall || qso?.their?.guess?.baseCall
@@ -159,7 +277,7 @@ const ReferenceHandler = {
     const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
 
     if (nearDupes.length === 0) {
-      scoring.value = scoring.value * (qsoRefs.length || 1)
+      scoring.value = scoring.value * (stateParkRefs.length || 1)
       return scoring
     } else {
       const sameBand = nearDupes.filter(q => q.band === band).length !== 0
@@ -168,7 +286,7 @@ const ReferenceHandler = {
       const sameBandMode = sameBandModeDupes.length !== 0
 
       const bandModeRefs = new Set(sameBandModeDupes.map(q => filterRefs(q, 'pota').map(r => r.ref)).flat())
-      const newbandModeRefCount = qsoRefs.filter(r => !bandModeRefs.has(r)).length
+      const newbandModeRefCount = stateParkRefs.filter(r => !bandModeRefs.has(r)).length
 
       if (sameBandMode && !newbandModeRefCount) {
         return { ...scoring, value: 0, alerts: ['duplicate'] }
@@ -307,10 +425,14 @@ const ReferenceHandler = {
     parts.push(`### ${score.huntedParksCount} State Parks hunted`)
     line = '> '
     Object.keys(sp.parks).forEach(park => {
+      let parkLabel = park
+      if (sp.parkReferences) {
+        parkLabel = Object.keys(sp.parkReferences).find(key => sp.parkReferences[key] === park) || park
+      }
       if (score.huntedParks[park]) {
-        line += `**~~${park}~~**${park.length < 8 ? ' '.repeat(8 - park.length) : ''} `
+        line += `**~~${parkLabel}~~**${parkLabel.length < 8 ? ' '.repeat(8 - parkLabel.length) : ''} `
       } else {
-        line += `${park}${park.length < 8 ? ' '.repeat(8 - park.length) : ''} `
+        line += `${parkLabel}${parkLabel.length < 8 ? ' '.repeat(8 - parkLabel.length) : ''} `
       }
     })
     parts.push(line)
@@ -321,8 +443,87 @@ const ReferenceHandler = {
   }
 }
 
+
+function mainExchangeForOperation (props) {
+  const { qso, qsos, operation, updateQSO, styles, disabled, refStack, settings, suggestions, vfo, ...moreProps } = props
+
+  const qsoRef = findRef(qso?.refs, Info.key) || { type: Info.key, class: undefined, location: undefined }
+  const opRef = findRef(operation, Info.key)
+  const sp = spData({ ref: opRef })
+
+  const fields = []
+  if (sp?.options?.exchange === 'parkAbbreviation') {
+    fields.push(
+      <H2kTextInputWithSuggestions
+        {...moreProps}
+        key={`${Info.key}/location`}
+        fieldId={'refs[sp].location'}
+        innerRef={refStack.shift()}
+        style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
+        textStyle={styles.text.callsign}
+        label={'SP Location'}
+        placeholder={''}
+        keyboard={'dumb'}
+        uppercase={true}
+        noSpaces={true}
+        periodToSlash={true}
+        value={qsoRef?.location ?? _defaultLocationFor({ sp, qso, qsoRef, qsos, operation }) ?? ''}
+        error={qsoRef?.location && sp?.parkAbbreviations && !sp.parkAbbreviations[qsoRef.location] ? 'Invalid location' : false}
+        suggestions={_suggestionsFor({ qso, sp })}
+        minimumLengthForSuggestions={3}
+        onChangeText={(text) => _changeLocationAndParkRef({ location: text, qso, qsoRef, sp, updateQSO })}
+      />
+    )
+  }
+  return fields
+}
+
+const _changeLocationAndParkRef = ({ location, qso, sp, qsoRef, updateQSO }) => {
+  const potaRefs = filterRefs(qso, 'pota')
+  const regularPotaRefs = potaRefs.filter(r => !r._spLocation)
+  if (sp.parkAbbreviations && sp.parkAbbreviations[location]) {
+    regularPotaRefs.push({ type: 'pota', ref: sp.parkReferences[location], _spLocation: location })
+  }
+
+  let newRefs = replaceRefs(qso?.refs, 'pota', regularPotaRefs)
+  newRefs = replaceRef(newRefs, Info.key, { ...qsoRef, location })
+
+  updateQSO({ refs: newRefs })
+}
+
+async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatch }) {
+  const opRef = findRef(operation, Info.key)
+  const sp = spData({ ref: opRef })
+
+  if (opRef) {
+    const ref = findRef(qso?.refs, Info.key) || { type: Info.key, location: undefined }
+
+    if (ref.location) {
+      qso.their.exchange = ref.location
+    }
+  }
+  return qso
+}
+
 export function spData ({ ref }) {
   return STATE_PARKS_DATA[ref?.ref] || { options: {}, parks: {}, points: {}, short: 'State Parks Event' }
+}
+
+
+function _suggestionsFor ({ qso, sp }) {
+  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  if (sp.parkAbbreviations) {
+    return Object.entries(sp.parkAbbreviations)
+  } else {
+    return []
+  }
+}
+
+function _defaultLocationFor ({ qso, sp, qsoRef, qsos, operation }) {
+  const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+  if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
+
+  return sp.parks[qsoRef?.location] || qsoRef?.location
 }
 
 function _spShortForSP (sp) {

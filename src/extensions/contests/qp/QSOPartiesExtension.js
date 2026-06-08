@@ -242,7 +242,8 @@ const ReferenceHandler = {
     let theyAreInState = theirLocations.find(c => qp.counties[c])
 
     if (theirLocations.length === 0) {
-      if (qso?.their?.guess?.entityCode === 'K' || qso?.their?.guess?.entityCode === 'VE') {
+      const entity = qso?.their?.entityPrefix ?? qso?.their?.guess?.entityPrefix
+      if (entity === 'K' || entity === 'VE') {
         theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
       } else {
         theirLocations = 'DX'

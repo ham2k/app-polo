@@ -4,12 +4,12 @@
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 
 import { fmtDateTimeNice, fmtTimeBetween, prepareDateValue } from '@ham2k/lib-format-tools'
-import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+import { filterRefs, findRef, replaceRef, replaceRefs } from '@ham2k/lib-qson-tools'
 
-import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown } from '../../../ui'
+import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 import { Info } from './StateParksInfo'
 import { spData, STATE_PARKS_DATA } from './StateParksExtension'
@@ -52,15 +52,39 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
     setRefs(replaceRef(allRefs, Info.key, { ...activityRef, ref: value }))
   }, [activityRef, allRefs, setRefs])
 
-  // const handleSpotToQPHubChange = useCallback((value) => {
-  //   if (value === undefined) value = !activityRef?.spotToQPHub
-  //   setRefs(replaceRef(allRefs, Info.key, { ...activityRef, spotToQPHub: value }))
-  // }, [activityRef, allRefs, setRefs])
+  const handleLocationChange = useCallback((value) => {
+    const potaRefs = filterRefs(operation, 'potaActivation')
+    const regularPotaRefs = potaRefs.filter(r => !r._spLocation)
+    if (sp.parkAbbreviations && sp.parkAbbreviations[value]) {
+      regularPotaRefs.push({ type: 'potaActivation', ref: sp.parkReferences[value], _spLocation: value })
+    }
 
-  // const handleSpotToAPRSChange = useCallback((value) => {
-  //   if (value === undefined) value = !activityRef?.spotToAPRS
-  //   setRefs(replaceRef(allRefs, Info.key, { ...activityRef, spotToAPRS: value }))
-  // }, [activityRef, allRefs, setRefs])
+    let newRefs = replaceRefs(operation?.refs, 'potaActivation', regularPotaRefs)
+    newRefs = replaceRef(newRefs, Info.key, { ...activityRef, location: value })
+
+    setRefs(newRefs)
+  }, [activityRef, allRefs, setRefs])
+
+  useEffect(() => {
+    if (activityRef?.location === undefined && sp?.parkAbbreviations) {
+      const potaRefs = filterRefs(operation, 'potaActivation')
+      const park = potaRefs.map(r => sp.parks[r.ref]).filter(Boolean)[0]
+      if (park) {
+        setRefs(replaceRef(allRefs, Info.key, { ...activityRef, location: park }))
+      }
+    }
+  }, [activityRef?.location, sp?.parkAbbreviations])
+
+  const needsLocation = useMemo(() => {
+    return !!sp?.parkAbbreviations
+  }, [sp])
+
+  const locationLabel = useMemo(() => {
+    if (!activityRef?.location) return null
+    if (sp?.parkAbbreviations && sp?.parkAbbreviations[activityRef?.location]) {
+      return [sp?.parkReferences[activityRef?.location], sp?.parkAbbreviations[activityRef?.location]].filter(Boolean).join(' ')
+    }
+  }, [activityRef?.location, sp?.parkAbbreviations])
 
   return (
     <>
@@ -77,12 +101,36 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
         </H2kListRow>
       </H2kListSection>
 
+      {needsLocation && (
+        <H2kListSection title={'Location'}>
+          <H2kListRow>
+            <H2kTextInput
+              label="Location (Park Abbreviation)"
+              value={activityRef?.location || ''}
+              uppercase={true}
+              onChangeText={handleLocationChange}
+            />
+          </H2kListRow>
+          {activityRef?.location?.length >= 2 && (
+            locationLabel ? (
+              <H2kMarkdown style={{ padding: styles.oneSpace, marginHorizontal: styles.oneSpace }}>
+                {locationLabel}
+              </H2kMarkdown>
+            ) : (
+              <H2kMarkdown style={{ padding: styles.oneSpace, color: 'red', marginHorizontal: styles.oneSpace  }}>
+                Not found!
+              </H2kMarkdown>
+            )
+          )}
+        </H2kListSection>
+      )}
+
       {sp && (
         <>
           <H2kListSection title={'Information'}>
             <H2kListRow>
               <H2kMarkdown style={{ marginHorizontal: styles.oneSpace }} styles={{ markdown: { paragraph: { marginBottom: styles.oneSpace } } }}>{`
-**You also need to configure a POTA activity with the park references you are activating!**
+**Please, also check your POTA activation settings!**
 
 **Official Site:**
 [${sp.url}](${sp.url})

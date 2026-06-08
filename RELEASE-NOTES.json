@@ -5,6 +5,7 @@
     "changes": [
       "RSGB VHF Contests (Beta) (thanks to M0TRT)",
       "IARU Region 1 VHF Contests (Beta)",
+      "Ohio State Parks On The Air (thanks to W8NI)",
       "Add QRZCALL.EU data lookup (thanks to PA4R)",
       "Support FT4, FT2 and other submodes when importing ADIF files",
       "Fix bug in contests with numbered exchanges",
