@@ -37,13 +37,13 @@ const BandCommandHook = {
     if (!qso) return
 
     if (match[0].length < 2) return ''
-    return t?.('extensions.commands-radio.band', 'Change band to {{band}}?', { band: match[1] }) || `Change band to ${match[1]}m?`
+    return t?.('extensions.commands-radio.band', 'Change band to {{band}}?', { band: `${match[1]}m` }) || `Change band to ${match[1]}m?`
   },
   invokeCommand: (match, { handleFieldChange, qso, t }) => {
     if (!qso) return
 
     handleFieldChange({ fieldId: 'band', value: match[1] + 'm' })
-    return t?.('extensions.commands-radio.bandConfirm', 'Band set to {{band}}', { band: match[1] }) || `Band set to ${match[1]}m`
+    return t?.('extensions.commands-radio.bandConfirm', 'Band set to {{band}}', { band: `${match[1]}m` }) || `Band set to ${match[1]}m`
   }
 }
 
