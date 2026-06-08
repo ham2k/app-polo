@@ -91,7 +91,7 @@ const ActivityHook = {
 const ReferenceHandler = {
   ...Info,
 
-  relevantInfoForQSOItem: ({ qso, operation }) => {
+  relevantInfoForQSOItem: ({ qso }) => {
     const refs = filterRefs(qso, 'pota').filter(x => x.ref)
 
     if (refs.filter(x => GEORGIA_PARKS[x.ref]).length > 0) {

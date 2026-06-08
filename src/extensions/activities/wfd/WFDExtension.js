@@ -150,7 +150,7 @@ const ReferenceHandler = {
     }
   },
 
-  relevantInfoForQSOItem: ({ qso, operation }) => {
+  relevantInfoForQSOItem: ({ qso }) => {
     const qsoRef = findRef(qso, Info.key)
     if (qsoRef) {
       return [qso.their.exchange]

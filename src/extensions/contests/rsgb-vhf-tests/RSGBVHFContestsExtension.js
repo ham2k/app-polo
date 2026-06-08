@@ -19,7 +19,7 @@ import RAW_VHF_CONTESTS_DATA from './all-events.js'
 import { RSGB_POSTCODE_DISTRICTS } from './RSGBDistricts.js'
 import { setOperationData } from '../../../store/operations/index.js'
 
-export const VHF_CONTESTS_DATA = Object.fromEntries(RAW_VHF_CONTESTS_DATA.map(state => [state.key, state]))
+export const VHF_CONTESTS_DATA = Object.fromEntries(RAW_VHF_CONTESTS_DATA.map(event => [event.key, event]))
 
 export const BAND_MULTIPLIERS = {
   '6m': 1,
@@ -108,7 +108,7 @@ const ReferenceHandler = {
     if (ref?.ref) {
       const test = vhfTestData({ ref })
       const subtitleParts = []
-      if (test?.exchange === undefined || test?.exchange?.includes('grid')) {
+      if (test?.exchange === undefined || test?.exchange?.includes('grid6')) {
         subtitleParts.push(operation?.grid)
       }
       subtitleParts.push(ref?.exchange)
@@ -169,7 +169,7 @@ const ReferenceHandler = {
     return fields
   },
 
-  relevantInfoForQSOItem: ({ qso, operation }) => {
+  relevantInfoForQSOItem: ({ qso }) => {
     const qsoRef = findRef(qso, Info.key)
     if (qsoRef) {
       return [qso.their.exchange]
@@ -463,12 +463,13 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
   if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key }
 
-    qso.their.grid = qso.their?.grid ?? qso.their?.guess?.grid
+    qso.their.grid = (qso.their?.grid ?? qso.their?.guess?.grid).substring(0, 6)
 
     if (ref.location || ref.ourNumber || ref.theirNumber) {
-      qso.refs = replaceRef(qso.refs, Info.key, ref)
-      const theirParts = [ref.theirNumber, qso.their?.grid]
-      const ourParts = [ref.ourNumber, opRef.location]
+      qso.refs = replaceRef(qso.refs, Info.key, { ...ref, grid: qso.their.grid })
+      
+      const theirParts = [ref.theirNumber, qso.their.grid]
+      const ourParts = [ref.ourNumber, opRef.grid ?? operation.grid]
       if (test?.exchange?.includes('district') || test?.exchange?.includes('postcode')) {
         theirParts.push(ref.location)
         ourParts.push(opRef.location)

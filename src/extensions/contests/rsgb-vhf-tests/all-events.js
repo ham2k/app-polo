@@ -18,7 +18,7 @@ export default [
     bands: ['2m'],
     modes: RSGB_VHF_MODES,
     selfSpotting: false,
-    exchange: ['number', 'grid', 'district'],
+    exchange: ['number', 'grid6', 'district'],
     bonus: { newGrid: 200, newDistrict: 200, newDXCC: 200 },
     classes: ['5B', '25H']
   },
@@ -31,7 +31,7 @@ export default [
     bands: ['2m'],
     modes: RSGB_VHF_MODES,
     selfSpotting: false,
-    exchange: ['number', 'grid'],
+    exchange: ['number', 'grid6'],
     bonus: { newGrid: 200, newDXCC: 200 },
     classes: ['5B', '25H']
   },
@@ -44,7 +44,7 @@ export default [
     bands: ['2m'],
     modes: RSGB_VHF_MODES,
     selfSpotting: false,
-    exchange: ['number', 'grid'],
+    exchange: ['number', 'grid6'],
     bonus: { newGrid: 500 },
     classes: ['5B', '25H']
   },
@@ -57,7 +57,7 @@ export default [
     bands: ['2m'],
     modes: RSGB_VHF_MODES,
     selfSpotting: false,
-    exchange: ['number', 'grid', 'district'],
+    exchange: ['number', 'grid6', 'district'],
     bonus: { newGrid: 200, newDistrict: 200, newDXCC: 200 },
     classes: ['5B', '25H']
   },
@@ -70,7 +70,7 @@ export default [
     bands: ['2m'],
     modes: RSGB_VHF_MODES,
     selfSpotting: false,
-    exchange: ['number', 'grid'],
+    exchange: ['number', 'grid6'],
     bonus: { newGrid: 500 },
     classes: ['5B', '25H']
   },

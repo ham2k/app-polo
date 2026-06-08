@@ -110,7 +110,7 @@ const ReferenceHandler = {
     }
   },
 
-  relevantInfoForQSOItem: ({ qso, operation }) => {
+  relevantInfoForQSOItem: ({ qso }) => {
     const ref = findRef(qso, Info.refType)
     if (ref?.ref && qso.their.grid) {
       return [qso.their.grid.substring(0, 4)]

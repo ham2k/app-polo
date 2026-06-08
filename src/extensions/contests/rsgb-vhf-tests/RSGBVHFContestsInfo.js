@@ -8,6 +8,6 @@
 export const Info = {
   key: 'rsgb-vhf-tests',
   icon: 'flag-checkered',
-  name: 'RSGB VHF Contests (Beta)',
-  shortName: 'RSGB VHF Contests'
+  name: 'VHF Contests (Beta) - RSGB',
+  shortName: 'VHF Contests (Beta) - RSGB'
 }

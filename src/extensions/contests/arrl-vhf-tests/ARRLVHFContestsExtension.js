@@ -14,30 +14,11 @@ import { findRef } from '@ham2k/lib-qson-tools'
 import { H2kGridInput } from '../../../ui'
 import { REG1TEST_BAND } from '../../../tools/qsonToReg1test'
 
-import { Info } from './Region1VHFContestsInfo'
-import { ActivityOptions } from './Region1VHFContestsOptions'
+import { Info } from './ARRLVHFContestsInfo'
+import { ActivityOptions } from './ARRLVHFContestsOptions'
 import RAW_VHF_CONTESTS_DATA from './all-events.js'
 
 export const VHF_CONTESTS_DATA = Object.fromEntries(RAW_VHF_CONTESTS_DATA.map(event => [event.key, event]))
-
-export const BAND_MULTIPLIERS = {
-  '6m': 1,
-  '4m': 1,
-  '2m': 1,
-  '1.25m': 1,
-  '70cm': 1,
-  '23cm': 1,
-  '13cm': 1,
-  '9cm': 1,
-  '6cm': 1,
-  '1.25cm': 1,
-  '6mm': 2,
-  '4mm': 3,
-  '2.5mm': 4,
-  '2mm': 8,
-  '1mm': 10,
-  submm: 10
-}
 
 const Extension = {
   ...Info,
@@ -47,21 +28,20 @@ const Extension = {
     registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 10 })
   }
 }
+
 export default Extension
 
 const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
 
-  standardExchangeFields: { state: true, grid: false },
+  standardExchangeFields: { state: false, grid: true },
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
-      { refs: [ReferenceHandler.decorateRef({ type: Info.key, ref: '145-SEPTEMBER' })] }
+      { refs: [ReferenceHandler.decorateRef({ type: Info.key, ref: 'ARRL-VHF-JAN' })] }
     ]
   },
-
-  mainExchangeForOperation,
   
   prepareNewQSO,
   processQSOBeforeSaveWithDispatch
@@ -100,13 +80,9 @@ const ReferenceHandler = {
   suggestOperationTitle: ({ ref, operation }) => {
     if (ref?.ref) {
       const test = vhfTestData({ ref })
-      const subtitleParts = []
-      if (test?.exchange === undefined || test?.exchange?.includes('grid')) {
-        subtitleParts.push(operation?.grid)
-      }
-      subtitleParts.push(ref?.exchange)
+      const grid = operation?.grid || ""
 
-      return { for: test?.short ?? test?.name, subtitle: subtitleParts.filter(x => x).join(' • ') }
+      return { for: test?.short ?? test?.name, subtitle: (grid.substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)) }
     } else {
       return { for: Info.shortName }
     }
@@ -116,39 +92,46 @@ const ReferenceHandler = {
     if (ref?.type === Info?.key) {
       const test = vhfTestData({ ref })
       return [{
-        format: 'reg1test',
-        exportType: 'r1-vhf-tests-reg1test',
-        exportName: `${test.short ?? 'REG1TEST'}`,
+        format: 'cabrillo',
+        exportType: 'arrl-vhf-tests-cabrillo',
+        exportName: `${test.short ?? 'ARRL VHF Tests'}`,
         refKey: test.key,
-        templateData: { handlerShortName: test.shortName, handlerName: test.name },
+        templateData: { handlerShortName: test.short, handlerName: test.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       }]
     }
   },
 
-  reg1testHeaders: ({ operation, settings, headers }) => {
+  cabrilloHeaders: ({ operation, settings, headers }) => {
     const ref = findRef(operation, Info.key)
-    const test = vhfTestData({ ref: ref.ref })
 
-    headers.PWWLo = operation.grid
-    headers.TDate = [
-      fmtTimestamp(test.start).substring(2, 8),
-      fmtTimestamp(test.end).substring(2, 8)
-    ].join(';')
-    headers.PSect = ref?.class
-    headers.PExch = ref?.exchange
-
-    if (test.bands.length === 1) {
-      headers.PBand = REG1TEST_BAND[test.bands[0]]
-    }
-
+    headers.push(['CONTEST', `CQ-WPX-${ref.mode}`])
+    headers.push(['CALLSIGN', operation.stationCall || settings.operatorCall])
+    headers.push(['NAME', ''])
+    if (operation.local?.operatorCall) headers.push(['OPERATORS', operation.local.operatorCall])
+    if (operation.grid) headers.push(['GRID-LOCATOR', operation.grid])
     return headers
   },
 
-  reg1testFieldsForOneQSO: ({ qso, operation }) => {
-    // Defaults are OK
-    return {}
+  qsoToCabrilloParts: ({ qso, ref, operation, settings }) => {
+    const qsoRef = findRef(qso, Info.key)
+    const test = vhfTestData({ ref })
+
+    const ourCall = operation.stationCall || settings.operatorCall
+
+    const rows = [
+      [
+        (ourCall ?? '-'),
+        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
+        ((operation?.grid || "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)),
+        (qso?.their?.call || '-'),
+        (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
+        (qso?.their?.grid ?? qso?.their?.guess?.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+      ]
+    ]
+
+    return rows
   },
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
@@ -157,7 +140,7 @@ const ReferenceHandler = {
 
     const fields = [
       { CONTEST_ID: test.cabrilloName ?? test.key },
-      { STX_STRING: operation.grid },
+      { STX_STRING: operation?.grid },
       { SRX_STRING: qso.their.grid ?? qso.their.guess?.grid }
     ]
 
@@ -166,14 +149,14 @@ const ReferenceHandler = {
 
   relevantInfoForQSOItem: ({ qso }) => {
     const qsoRef = findRef(qso, Info.key)
+
     if (qsoRef) {
-      return [qso.their?.grid ?? qso.their?.guess?.grid]
+      return [qsoRef.grid]
     }
   },
 
   scoringForQSO: ({ qso, qsos, operation, ref: scoredRef, score }) => {
     const test = vhfTestData({ ref: scoredRef })
-    // console.log('scoringForQSO', qso.key, scoredRef)
 
     const { band, mode } = qso
 
@@ -199,19 +182,35 @@ const ReferenceHandler = {
       scoring.alerts.push('ourGrid')
     }
 
-    const theirGrid = qso.their?.grid ?? qso.their?.guess?.grid
-    if (theirGrid && operation.grid) {
-      if (theirGrid === operation.grid) {
-        scoring.distance = 50
-        scoring.value = 50 * BAND_MULTIPLIERS[band]
-      } else {
-        const distance = distanceForQSON({ our: { grid: operation.grid }, their: { grid: theirGrid } }, { units: 'km' })
-        scoring.distance = Math.round(distance)
-        scoring.value = Math.round(distance) * BAND_MULTIPLIERS[band]
+    const ourGrid = (operation.grid || "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+    const theirGrid = (qso.their?.grid ?? qso.their?.guess?.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+
+    if (test?.options?.score === 'distance') {
+      if (theirGrid && ourGrid) {
+        if (theirGrid === ourGrid) {
+          scoring.distance = 1
+          scoring.value = 1 * test?.multipliers?.[band]
+        } else {
+          const distance = distanceForQSON({ our: { grid: ourGrid }, their: { grid: theirGrid } }, { units: 'km' })
+          scoring.distance = Math.round(distance)
+          scoring.value = Math.round(distance) * test?.multipliers?.[band]
+        }
+
+        if (test?.points?.qso) {
+          scoring.value = scoring.value + test?.points?.qso
+        }
       }
+    } else if (test?.options?.score === 'points') {
+      scoring.value = test?.points?.[band]
     }
 
-    const nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
+    let nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
+    if (test?.options?.qsosPerBandAndLocation) {
+      nearDupes = nearDupes.filter(q => {
+        const qGrid = (q.their?.grid ?? q.their?.guess?.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+        return qGrid !== theirGrid
+      })
+    }
 
     if (nearDupes.length === 0) {
       return scoring
@@ -276,15 +275,23 @@ const ReferenceHandler = {
 
     score.summary = `${fmtNumber(score.total)} pts`
 
-    score.label = `IARU Region 1 ${test.name}`
+    score.label = `${test.name}`
 
     const parts = []
-    parts.push(`**${fmtNumber(score.total)} points** (${fmtNumber(score.distanceTotal)} km total) ${score.dupeCount > 0 ? `(${score.dupeCount} dupe${score.dupeCount > 1 ? 's' : ''})` : ''}`)
+    if (test?.options?.score === 'distance') {
+      parts.push(`**${fmtNumber(score.total)} points** (${fmtNumber(score.distanceTotal)} km total) ${score.dupeCount > 0 ? `(${score.dupeCount} dupe${score.dupeCount > 1 ? 's' : ''})` : ''}`)
+    } else {
+      parts.push(`**${fmtNumber(score.total)} points** ${score.dupeCount > 0 ? `(${score.dupeCount} dupe${score.dupeCount > 1 ? 's' : ''})` : ''}`)
+    }
 
     parts.push(
       Object.keys(score.bands ?? {}).sort().map(band => {
         if (score?.bands[band]) {
-          return (`${fmtNumber(score.bands[band] ?? 0)} ${band} QSOs • Longest: ${fmtNumber(score.maxDistancePerBand[band])} km`)
+          if (test?.options?.score === 'distance') {
+            return (`${fmtNumber(score.bands[band] ?? 0)} ${band} QSOs • Longest: ${fmtNumber(score.maxDistancePerBand[band])} km`)
+          } else {
+            return (`${fmtNumber(score.bands[band] ?? 0)} ${band} QSOs`)
+          }
         } else {
           return null
         }
@@ -295,35 +302,6 @@ const ReferenceHandler = {
 
     return score
   }
-}
-
-function mainExchangeForOperation (props) {
-  const { qso, updateQSO, styles, disabled, refStack } = props
-
-  const fields = []
-
-  fields.push(
-    <H2kGridInput
-      {...props}
-      key={`${Info.key}/grid`}
-      innerRef={refStack.shift()}
-      style={[styles.input, { minWidth: styles.oneSpace * 10, flex: 1 }]}
-      textStyle={styles.text.callsign}
-      label={'Grid'}
-      keyboard="dumb"
-      uppercase={true}
-      noSpaces={true}
-      value={qso?.their?.grid ?? ''}
-      placeholder={qso?.their?.guess?.grid ?? ''}
-      disabled={disabled}
-      error={false}
-      onChangeText={(text) => updateQSO({
-        their: { grid: text }
-      })}
-    />
-  )
-
-  return fields
 }
 
 function prepareNewQSO ({ operation, qso }) {
@@ -344,19 +322,19 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
   if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key }
 
-    qso.their.grid = (qso.their?.grid ?? qso.their?.guess?.grid).substring(0, 6)
+    qso.their.grid = (qso.their?.grid ?? qso.their?.guess?.grid).substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+    const ourGrid = (operation.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
 
     qso.refs = replaceRef(qso.refs, Info.key, { ...ref, grid: qso.their.grid })
 
     const theirParts = [qso.their.grid]
-    const ourParts = [opRef.grid ?? operation.grid]
+    const ourParts = [ourGrid]
     
     qso.their.exchange = theirParts.filter(x => x).join(' ')
     qso.our.exchange = ourParts.filter(x => x).join(' ')
   }
   return qso
 }
-
 
 export function vhfTestData ({ ref }) {
   return VHF_CONTESTS_DATA[ref?.ref] || { bands: [], name: 'Unknown VHF Contest', short: 'Unknown VHF Contest' }

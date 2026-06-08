@@ -6,8 +6,8 @@
  */
 
 export const Info = {
-  key: 'r1-vhf-tests',
+  key: 'arrl-vhf-tests',
   icon: 'flag-checkered',
-  name: 'VHF Contests (Beta) - IARU Region 1',
-  shortName: 'VHF Contests (Beta) - IARU Region 1'
+  name: 'VHF Contests (Beta) - ARRL',
+  shortName: 'VHF Contests (Beta) - ARRL'
 }
