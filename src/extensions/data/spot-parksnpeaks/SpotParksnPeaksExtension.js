@@ -8,7 +8,7 @@
 import { Alert } from 'react-native'
 
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
-import { fmtFreqInMHz } from '@ham2k/lib-format-tools'
+import { fmtFreq } from '@ham2k/lib-format-tools'
 
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
@@ -91,7 +91,7 @@ const SpotsHook = {
               actCallsign: activatorCallsign,
               actClass: OUTBOUND_SPOT_TYPES[ref.type],
               actSite: ref.ref,
-              freq: fmtFreqInMHz(vfo.freq, { mode: 'compact' }),
+              freq: fmtFreq(vfo.freq, { mode: 'compact' }),
               mode: vfo.mode || null,
               comments,
               userID: state.settings?.accounts?.parksnpeaks?.userId,
@@ -125,7 +125,7 @@ const SpotsHook = {
               actCallsign: qso.their.call,
               actClass: OUTBOUND_SPOT_TYPES[ref.type],
               actSite: ref.ref,
-              freq: fmtFreqInMHz(qso.freq, { mode: 'compact' }),
+              freq: fmtFreq(qso.freq, { mode: 'compact' }),
               mode: qso.mode || null,
               comments,
               userID: state.settings?.accounts?.parksnpeaks?.userId,

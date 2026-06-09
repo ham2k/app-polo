@@ -9,7 +9,7 @@ import base64 from 'react-native-quick-base64'
 
 import { gridToLocation, latitudeInMinutes, longitudeInMinutes } from '@ham2k/lib-geo-tools'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
-import { fmtFreqInMHz, parseFreqInMHz } from '@ham2k/lib-format-tools'
+import { fmtFreq, parseFreq } from '@ham2k/lib-format-tools'
 import { findRef } from '@ham2k/lib-qson-tools'
 
 import GLOBAL from '../../../GLOBAL'
@@ -48,7 +48,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
 
     const form = new FormData()
     form.append('station', call ?? '?')
-    form.append('frequency', fmtFreqInMHz(vfo.freq) || '00')
+    form.append('frequency', fmtFreq(vfo.freq) || '00')
     form.append('county', counties?.[0]?.location || '')
     form.append('comment', [
       counties?.length > 1 ? counties?.map(county => county.location)?.join('/') : '',
@@ -89,7 +89,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
     // See https://www.aprs-is.net/SendOnlyPorts.aspx and https://ham.packet-radio.net/packet/aprs-wb2osz/Understanding-APRS-Packets.pdf
 
     const header = `user ${call} pass ${_aprsPasscodeForCall(call)} vers Ham2K-PoLo ${packageJson?.version}`
-    const message = `${qp.aprsShort ?? qp.short} ${fmtFreqInMHz(vfo.freq)} ${counties?.map(county => county.location)?.join('/')}`
+    const message = `${qp.aprsShort ?? qp.short} ${fmtFreq(vfo.freq)} ${counties?.map(county => county.location)?.join('/')}`
 
     let command
     if (operation?.grid) {
@@ -223,7 +223,7 @@ export const SpotsHook = {
           for (const row of rows) {
             const cells = row.match(/<td>(.*?)<\/td>/gs).map(cell => cell.replace(/<[^>]*>?/g, ''))
 
-            const freq = parseFreqInMHz(cells[2])
+            const freq = parseFreq(cells[2])
 
             const spot = ({
               their: { call: cells[1] },

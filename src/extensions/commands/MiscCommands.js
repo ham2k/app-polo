@@ -6,7 +6,7 @@
  */
 
 import { Linking } from 'react-native'
-import { fmtFreqInMHz } from '@ham2k/lib-format-tools'
+import { fmtFreq } from '@ham2k/lib-format-tools'
 
 import { postSpots, retrieveHooksWithSpotting } from '../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
 
@@ -90,9 +90,9 @@ const SpotCommandHook = {
     const hooksWithSpotting = retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings })
     postSpots({ t, isSelfSpotting: true, operation, vfo, comments, hooksWithSpotting, dispatch })
     if (comments) {
-      return t?.('extensions.commands-misc.spot.selfSpottingWithComments', 'Self-spotting at {{freq}} with ‘{{comments}}’', { freq: fmtFreqInMHz(vfo.freq), comments }) || `Self-spotting at ${fmtFreqInMHz(vfo.freq)} with ‘${comments}’`
+      return t?.('extensions.commands-misc.spot.selfSpottingWithComments', 'Self-spotting at {{freq}} with ‘{{comments}}’', { freq: fmtFreq(vfo.freq), comments }) || `Self-spotting at ${fmtFreq(vfo.freq)} with ‘${comments}’`
     } else {
-      return t?.('extensions.commands-misc.spot.selfSpotting', 'Self-spotting at {{freq}}', { freq: fmtFreqInMHz(vfo.freq) }) || `Self-spotting at ${fmtFreqInMHz(vfo.freq)}`
+      return t?.('extensions.commands-misc.spot.selfSpotting', 'Self-spotting at {{freq}}', { freq: fmtFreq(vfo.freq) }) || `Self-spotting at ${fmtFreq(vfo.freq)}`
     }
   }
 }

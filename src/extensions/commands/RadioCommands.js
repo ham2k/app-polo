@@ -6,7 +6,7 @@
  */
 
 import { modeForFrequency } from '@ham2k/lib-operation-data'
-import { fmtFreqInMHz, parseFreqInMHz } from '@ham2k/lib-format-tools'
+import { fmtFreq, parseFreq } from '@ham2k/lib-format-tools'
 
 const Info = {
   key: 'commands-radio',
@@ -58,20 +58,20 @@ const FrequencyCommandHook = {
     let freq
     if (match[1].length < 3) return
     if (match[1].startsWith('..') && qso.freq) {
-      freq = parseFreqInMHz(`${Math.round(qso.freq)}${match[1].substring(1)}`)
+      freq = parseFreq(`${Math.round(qso.freq)}${match[1].substring(1)}`)
     } else if (match[1].startsWith('.') && qso.freq) {
-      freq = parseFreqInMHz(`${Math.floor(qso.freq / 1000)}${match[1]}`)
+      freq = parseFreq(`${Math.floor(qso.freq / 1000)}${match[1]}`)
     } else if (match[1].startsWith(',') && qso.freq) {
-      freq = parseFreqInMHz(`${Math.floor(qso.freq / 1000)}${match[1]}`)
+      freq = parseFreq(`${Math.floor(qso.freq / 1000)}${match[1]}`)
     } else {
-      freq = parseFreqInMHz(match[1])
+      freq = parseFreq(match[1])
     }
     if (freq) {
       const mode = modeForFrequency(freq, ourInfo) ?? vfo.mode ?? 'SSB'
       if (mode && mode !== vfo?.mode) {
-        return t?.('extensions.commands-radio.frequencyAndMode', 'Change frequency to {{freq}} MHz ({{mode}})?', { freq: fmtFreqInMHz(freq), mode }) || `Change frequency to ${fmtFreqInMHz(freq)} MHz (${mode})?`
+        return t?.('extensions.commands-radio.frequencyAndMode', 'Change frequency to {{freq}} MHz ({{mode}})?', { freq: fmtFreq(freq), mode }) || `Change frequency to ${fmtFreq(freq)} MHz (${mode})?`
       } else {
-        return t?.('extensions.commands-radio.frequency', 'Change frequency to {{freq}} MHz?', { freq: fmtFreqInMHz(freq) }) || `Change frequency to ${fmtFreqInMHz(freq)} MHz?`
+        return t?.('extensions.commands-radio.frequency', 'Change frequency to {{freq}} MHz?', { freq: fmtFreq(freq) }) || `Change frequency to ${fmtFreq(freq)} MHz?`
       }
     }
   },
@@ -80,20 +80,20 @@ const FrequencyCommandHook = {
 
     let freq
     if (match[1].startsWith('..') && qso.freq) {
-      freq = parseFreqInMHz(`${Math.round(qso.freq)}${match[1].substring(1)} `)
+      freq = parseFreq(`${Math.round(qso.freq)}${match[1].substring(1)} `)
     } else if (match[1].startsWith('.') && qso.freq) {
-      freq = parseFreqInMHz(`${Math.floor(qso.freq / 1000)}${match[1]} `)
+      freq = parseFreq(`${Math.floor(qso.freq / 1000)}${match[1]} `)
     } else {
-      freq = parseFreqInMHz(match[1])
+      freq = parseFreq(match[1])
     }
 
     if (freq) {
       const mode = modeForFrequency(freq, ourInfo) ?? vfo.mode ?? 'SSB'
       handleFieldChange({ fieldId: 'freq', value: freq })
       if (mode && mode !== vfo?.mode) {
-        return t?.('extensions.commands-radio.frequencyAndModeConfirm', 'Frequency set to {{freq}} MHz ({{mode}})', { freq: fmtFreqInMHz(freq), mode }) || `Frequency set to ${fmtFreqInMHz(freq)} MHz (${mode})`
+        return t?.('extensions.commands-radio.frequencyAndModeConfirm', 'Frequency set to {{freq}} MHz ({{mode}})', { freq: fmtFreq(freq), mode }) || `Frequency set to ${fmtFreq(freq)} MHz (${mode})`
       } else {
-        return t?.('extensions.commands-radio.frequencyConfirm', 'Frequency set to {{freq}} MHz', { freq: fmtFreqInMHz(freq) }) || `Frequency set to ${fmtFreqInMHz(freq)} MHz`
+        return t?.('extensions.commands-radio.frequencyConfirm', 'Frequency set to {{freq}} MHz', { freq: fmtFreq(freq) }) || `Frequency set to ${fmtFreq(freq)} MHz`
       }
     }
   }

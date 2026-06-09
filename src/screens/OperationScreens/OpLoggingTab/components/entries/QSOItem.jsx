@@ -10,7 +10,7 @@ import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
-import { partsForFreqInMHz } from '@ham2k/lib-format-tools'
+import { partsForFreq } from '@ham2k/lib-format-tools'
 
 import { findBestHook } from '../../../../../extensions/registry'
 import { H2kIcon, H2kPressable } from '../../../../../ui'
@@ -22,7 +22,7 @@ const QSOItem = React.memo(function QSOItem ({
 
   const freqParts = useMemo(() => {
     if (qso?.freq) {
-      return partsForFreqInMHz(qso.freq)
+      return partsForFreq(qso.freq)
     } else {
       return [null, qso?.band, null]
     }

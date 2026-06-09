@@ -10,7 +10,7 @@ import { View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
 import { ADIF_MODES_AND_SUBMODES, BANDS, POPULAR_BANDS, POPULAR_MODES } from '@ham2k/lib-operation-data'
-import { fmtFreqInMHz } from '@ham2k/lib-format-tools'
+import { fmtFreq } from '@ham2k/lib-format-tools'
 
 import { H2kDropDown, H2kFrequencyInput } from '../../../../../../ui'
 
@@ -117,7 +117,7 @@ export const radioControl = {
     const parts = []
     if (qso?.event) {
       if (vfo?.freq) {
-        parts.push(`${fmtFreqInMHz(vfo?.freq)} MHz`)
+        parts.push(`${fmtFreq(vfo?.freq)} MHz`)
       } else if (vfo?.band) {
         parts.push(`${vfo?.band}`)
       } else {
@@ -126,7 +126,7 @@ export const radioControl = {
       parts.push(`${vfo?.mode ?? 'SSB'}`)
     } else {
       if (qso?.freq ?? vfo?.freq) {
-        parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
+        parts.push(`${fmtFreq(qso?.freq ?? vfo?.freq)} MHz`)
       } else if (qso?.band ?? vfo?.band) {
         parts.push(`${qso?.band ?? vfo?.band}`)
       } else {
@@ -140,7 +140,7 @@ export const radioControl = {
   accessibilityLabel: ({ qso, t, operation, vfo, settings }) => {
     const parts = []
     if (qso?.freq ?? vfo?.freq) {
-      parts.push(`${fmtFreqInMHz(qso?.freq ?? vfo?.freq)} MHz`)
+      parts.push(`${fmtFreq(qso?.freq ?? vfo?.freq)} MHz`)
     } else if (qso?.band ?? operation?.local?.band) {
       parts.push(`${qso?.band ?? operation?.local?.band}`)
     } else {

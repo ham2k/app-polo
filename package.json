@@ -22,7 +22,7 @@
     "@ham2k/lib-callsigns": "1.0.1",
     "@ham2k/lib-country-files": "1.0.20260530",
     "@ham2k/lib-dxcc-data": "1.0.1",
-    "@ham2k/lib-format-tools": "1.0.6",
+    "@ham2k/lib-format-tools": "1.1.1",
     "@ham2k/lib-geo-tools": "1.0.1",
     "@ham2k/lib-operation-data": "1.0.4",
     "@ham2k/lib-qson-adif": "1.0.2",

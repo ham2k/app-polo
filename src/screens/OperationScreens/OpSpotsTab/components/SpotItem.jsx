@@ -9,13 +9,13 @@ import React, { useMemo } from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
 
-import { partsForFreqInMHz, fmtDateTimeRelative } from '@ham2k/lib-format-tools'
+import { partsForFreq, fmtDateTimeRelative } from '@ham2k/lib-format-tools'
 
 import { H2kPressable, H2kIcon } from '../../../../ui'
 import { findBestHook } from '../../../../extensions/registry'
 
 const SpotItem = React.memo(function QSOItem ({ spot, onPress, styles, extendedWidth }) {
-  const freqParts = useMemo(() => partsForFreqInMHz(spot.freq), [spot.freq])
+  const freqParts = useMemo(() => partsForFreq(spot.freq), [spot.freq])
 
   const { commonStyle, bandStyle, modeStyle, refStyle, callStyle } = useMemo(() => {
     const workedStyles = {}

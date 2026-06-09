@@ -12,7 +12,7 @@ import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-cont
 import getItemLayout from 'react-native-get-item-layout-section-list'
 import { useTranslation } from 'react-i18next'
 
-import { fmtFreqInMHz, fmtShortTimeZulu, fmtTimeZulu } from '@ham2k/lib-format-tools'
+import { fmtFreq, fmtShortTimeZulu, fmtTimeZulu } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import { findHooks } from '../../../../extensions/registry'
@@ -244,7 +244,7 @@ const ListEmptyComponent = React.memo(function ListEmptyComponent ({ styles, vfo
         {t('screens.opLoggingTab.currentlySetTo', 'Currently set to')}
       </Text>
       <Text style={{ flex: 1, marginTop: styles.oneSpace * 1, textAlign: 'center', fontWeight: 'bold' }}>
-        {[vfo.freq ? fmtFreqInMHz(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}
+        {[vfo.freq ? fmtFreq(vfo.freq) + ' MHz' : vfo.band, vfo.mode].filter(x => x).join(' • ')}
       </Text>
     </View>
   )

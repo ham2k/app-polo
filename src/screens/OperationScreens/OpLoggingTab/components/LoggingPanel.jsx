@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
-import { joinAnd, parseFreqInMHz } from '@ham2k/lib-format-tools'
+import { joinAnd, parseFreq } from '@ham2k/lib-format-tools'
 
 import { setOperationLocalData } from '../../../../store/operations'
 import { addQSO, addQSOs } from '../../../../store/qsos'
@@ -189,7 +189,7 @@ export default function LoggingPanel ({
     } else if (fieldId === 'notes') {
       updateQSO({ notes: value })
     } else if (fieldId === 'freq') {
-      const freq = value ? parseFreqInMHz(value) : undefined
+      const freq = value ? parseFreq(value) : undefined
       const band = freq ? bandForFrequency(freq) : undefined
       const mode = freq ? (modeForFrequency(freq, ourInfo) ?? qso?.mode ?? vfo?.mode ?? 'SSB') : qso?.mode
       updateQSO({ freq, band, mode })

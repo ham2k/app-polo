@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { capitalizeString, fmtFreqInMHz } from '@ham2k/lib-format-tools'
+import { capitalizeString, fmtFreq } from '@ham2k/lib-format-tools'
 import { findRef, removeRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { setOperationData } from '../../../store/operations'
@@ -35,7 +35,7 @@ export function SatellitesLoggingControl (props) {
         const downlink = sat.downlinks[index] && sat.downlinks[index]
         let label = sat.name
         label += ` • ${capitalizeString(uplink?.mode)}: `
-        label += [fmtFreqInMHz(uplink?.lowerMHz), fmtFreqInMHz(downlink?.upperMHz)].filter(x => x).join(' → ')
+        label += [fmtFreq(uplink?.lowerMHz), fmtFreq(downlink?.upperMHz)].filter(x => x).join(' → ')
         if (sat.aliases) label += ' (' + sat.aliases.join(', ') + ')'
 
         sats.push({

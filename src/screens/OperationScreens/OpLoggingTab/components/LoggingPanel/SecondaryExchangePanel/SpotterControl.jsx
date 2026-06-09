@@ -11,7 +11,7 @@ import { View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { parseCallsign } from '@ham2k/lib-callsigns'
-import { fmtFreqInMHz, fmtDateTimeRelative } from '@ham2k/lib-format-tools'
+import { fmtFreq, fmtDateTimeRelative } from '@ham2k/lib-format-tools'
 import { findRef } from '@ham2k/lib-qson-tools'
 
 import GLOBAL from '../../../../../../GLOBAL'
@@ -56,12 +56,12 @@ export function SpotterControlInputs (props) {
     if (inProgress) {
       if (isSelfSpotting) {
         return {
-          spotterMessage: t('screens.opLoggingTab.spotting.selfSpottingAt', 'Self-spotting at {{freq}}', { freq: fmtFreqInMHz(freq) }),
+          spotterMessage: t('screens.opLoggingTab.spotting.selfSpottingAt', 'Self-spotting at {{freq}}', { freq: fmtFreq(freq) }),
           spotterDisabled: true
         }
       } else {
         return {
-          spotterMessage: t('screens.opLoggingTab.spotting.spottingAt', 'Spotting {{call}} at {{freq}}', { call: qso?.their?.call, freq: fmtFreqInMHz(freq) }),
+          spotterMessage: t('screens.opLoggingTab.spotting.spottingAt', 'Spotting {{call}} at {{freq}}', { call: qso?.their?.call, freq: fmtFreq(freq) }),
           spotterDisabled: true
         }
       }
@@ -80,7 +80,7 @@ export function SpotterControlInputs (props) {
           }
         } else if (vfo.freq !== operation?.local?.spottedFreq) {
           return {
-            spotterMessage: t('screens.opLoggingTab.spotting.selfSpotAt', 'Self-spot at {{freq}}', { freq: fmtFreqInMHz(vfo.freq) }),
+            spotterMessage: t('screens.opLoggingTab.spotting.selfSpotAt', 'Self-spot at {{freq}}', { freq: fmtFreq(vfo.freq) }),
             spotterDisabled: false
           }
         } else if ((now - (operation?.local?.spottedAt || 0)) < (10 * 1000)) {
@@ -91,7 +91,7 @@ export function SpotterControlInputs (props) {
           }
         } else if (now - (operation?.local?.spottedAt || 0) > (1000 * SECONDS_UNTIL_RESPOT)) {
           return {
-            spotterMessage: t('screens.opLoggingTab.spotting.reSpotAt', 'Re-spot at {{freq}}', { freq: fmtFreqInMHz(vfo.freq) }),
+            spotterMessage: t('screens.opLoggingTab.spotting.reSpotAt', 'Re-spot at {{freq}}', { freq: fmtFreq(vfo.freq) }),
             spotterDisabled: false
           }
         } else if (comments?.length > 0 && (now - (operation?.local?.spottedAt || 0) < (1000 * 15))) {
@@ -102,7 +102,7 @@ export function SpotterControlInputs (props) {
           }
         } else if (comments?.length > 0) {
           return {
-            spotterMessage: t('screens.opLoggingTab.spotting.reSpotAt', 'Re-spot at {{freq}}', { freq: fmtFreqInMHz(vfo.freq) }),
+            spotterMessage: t('screens.opLoggingTab.spotting.reSpotAt', 'Re-spot at {{freq}}', { freq: fmtFreq(vfo.freq) }),
             spotterDisabled: false
           }
         } else {
@@ -114,7 +114,7 @@ export function SpotterControlInputs (props) {
       } else {
         if (!qso?.startAtMillis || (now - qso?.startAtMillis) < (1000 * 60 * 10)) {
           return {
-            spotterMessage: t('screens.opLoggingTab.spotting.spotAt', 'Spot {{call}} at {{freq}}', { call: qso?.their?.call, freq: fmtFreqInMHz(freq) }),
+            spotterMessage: t('screens.opLoggingTab.spotting.spotAt', 'Spot {{call}} at {{freq}}', { call: qso?.their?.call, freq: fmtFreq(freq) }),
             spotterDisabled: false
           }
         } else {

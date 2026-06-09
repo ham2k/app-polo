@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { bandForFrequency, modeForFrequency } from '@ham2k/lib-operation-data'
-import { parseFreqInMHz } from '@ham2k/lib-format-tools'
+import { parseFreq } from '@ham2k/lib-format-tools'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../store/operations'
@@ -308,7 +308,7 @@ function callParsingSetter ({ qso, field, section, value, changes }) {
 }
 
 function frequencySetter ({ qso, field, section, value, changes, vfo }) {
-  const freq = value ? parseFreqInMHz(value) : undefined
+  const freq = value ? parseFreq(value) : undefined
   const band = freq ? bandForFrequency(freq) : undefined
   const mode = freq ? (modeForFrequency(freq, qso.our) ?? qso?.mode ?? 'SSB') : qso?.mode
 
