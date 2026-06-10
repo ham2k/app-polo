@@ -200,6 +200,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       if (!token) {
         if (DEBUG) console.log('-- Ham2K LoFi Authenticating', { server, token, secret })
         const response = await fetchWithTimeout(`${server}/v1/client`, {
+          timeout: 5000,
           method: 'POST',
           headers: {
             'User-Agent': _buildUserAgent(),
@@ -246,6 +247,7 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
 
       if (DEBUG) console.log('-- request', { url, method, body, token })
       const response = await fetchWithTimeout(`${server}/${url}`, {
+        timeout: 30000,
         method,
         headers: {
           'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
