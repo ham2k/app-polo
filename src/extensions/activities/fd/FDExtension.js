@@ -70,7 +70,7 @@ const ReferenceHandler = {
   descriptionPlaceholder: '',
   description: (operation) => {
     let date
-    if (operation?.startAtMillisMax) date = Date.parse(operation.startAtMillisMax)
+    if (operation?.startAtMillisMax) date = new Date(operation.startAtMillisMax)
     else date = new Date()
     const ref = findRef(operation, Info.key)
     return [`FD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')

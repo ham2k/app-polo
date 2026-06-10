@@ -73,8 +73,9 @@ const ReferenceHandler = {
 
   descriptionPlaceholder: '',
   description: (operation) => {
+    console.log('WFD description', operation)
     let date
-    if (operation?.startAtMillisMax) date = Date.parse(operation.startAtMillisMax)
+    if (operation?.startAtMillisMax) date = new Date(operation.startAtMillisMax)
     else date = new Date()
     const ref = findRef(operation, Info.key)
     return [`WFD ${date.getFullYear()}`, [ref?.class, ref?.location].filter(x => x).join(' ')].filter(x => x).join(' • ')
