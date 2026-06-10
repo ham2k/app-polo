@@ -23,6 +23,7 @@ import EventItem from './entries/EventItem'
 import EventNoteItem from './entries/EventNoteItem'
 import EventSegmentItem from './entries/EventSegmentItem'
 import { SectionFlashList } from '../../../components/SectionFlashList'
+import { useScreenReaderEnabled } from '../../../../tools/a11yTools'
 
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
   const { t } = useTranslation()
@@ -37,12 +38,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     setComponentLayout({ width: Math.round(layout?.width ?? 0), height: Math.round(layout?.height ?? 0) })
   }, [])
 
-  const [isScreenReaderEnabled, setIsScreenReaderEnabled] = useState(false)
-  useEffect(() => {
-    AccessibilityInfo.isScreenReaderEnabled().then(setIsScreenReaderEnabled)
-    const subscription = AccessibilityInfo.addEventListener('screenReaderChanged', setIsScreenReaderEnabled)
-    return () => subscription.remove()
-  }, [])
+  const isScreenReaderEnabled = useScreenReaderEnabled()
 
   const { hasFrequencyDecimals, hasLongCall } = useMemo(() => {
     const _hasDecimals = qsos.find(qso => (qso?.freq || 0) % 1 !== 0)
@@ -219,7 +215,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       keyExtractor={extractKey}
       ListEmptyComponent={emptyComponent}
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
-      stickySectionHeadersEnabled={false && !isScreenReaderEnabled}
+      stickySectionHeadersEnabled={!isScreenReaderEnabled}
       accessibilityRole="grid"
       // maintainVisibleContentPosition={{
         // autoscrollToBottomThreshold: 0.2

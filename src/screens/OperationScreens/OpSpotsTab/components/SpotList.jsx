@@ -16,9 +16,11 @@ import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import SpotItem from './SpotItem'
 import SpotHeader from './SpotHeader'
 import { SectionFlashList } from '../../../components/SectionFlashList'
+import { useScreenReaderEnabled } from '../../../../tools/a11yTools'
 
 export default function SpotList ({ sections, loading, refresh, style, onPress }) {
   const styles = useThemedStyles(_prepareStyles, style)
+  const isScreenReaderEnabled = useScreenReaderEnabled()
 
   const { width } = useSafeAreaFrame()
   // const { width } = useWindowDimensions() <-- broken on iOS, no rotation
@@ -73,7 +75,7 @@ export default function SpotList ({ sections, loading, refresh, style, onPress }
         <RefreshControl refreshing={loading} onRefresh={refresh} />
       }
       ListFooterComponent={<View style={{ height: paddingBottom }}/>}
-      stickySectionHeadersEnabled={true}
+      stickySectionHeadersEnabled={!isScreenReaderEnabled}
       removeClippedSubviews={false} // Buggy on Android
     />
   )
