@@ -8,8 +8,7 @@
 import { fmtNumber, fmtTimestamp } from '@ham2k/lib-format-tools'
 
 import { distanceForQSON } from '@ham2k/lib-geo-tools'
-import { filterNearDupes, replaceRef } from '@ham2k/lib-qson-tools'
-import { findRef } from '@ham2k/lib-qson-tools'
+import { filterNearDupes, replaceRef, findRef } from '@ham2k/lib-qson-tools'
 
 import { H2kGridInput } from '../../../ui'
 import { REG1TEST_BAND } from '../../../tools/qsonToReg1test'
@@ -62,7 +61,7 @@ const ActivityHook = {
   },
 
   mainExchangeForOperation,
-  
+
   prepareNewQSO,
   processQSOBeforeSaveWithDispatch
 }
@@ -73,7 +72,7 @@ const ReferenceHandler = {
   descriptionPlaceholder: '',
   description: (operation) => {
     let date
-    if (operation?.qsos && operation.qsos[0]?.startAtMillis) date = Date.parse(operation.qsos[0].startAtMillis)
+    if (operation?.startAtMillisMax) date = Date.parse(operation.startAtMillisMax)
     else date = new Date()
 
     const ref = findRef(operation, Info.key)
@@ -350,13 +349,12 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
 
     const theirParts = [qso.their.grid]
     const ourParts = [opRef.grid ?? operation.grid]
-    
+
     qso.their.exchange = theirParts.filter(x => x).join(' ')
     qso.our.exchange = ourParts.filter(x => x).join(' ')
   }
   return qso
 }
-
 
 export function vhfTestData ({ ref }) {
   return VHF_CONTESTS_DATA[ref?.ref] || { bands: [], name: 'Unknown VHF Contest', short: 'Unknown VHF Contest' }

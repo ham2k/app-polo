@@ -8,8 +8,7 @@
 import { fmtNumber, fmtTimestamp } from '@ham2k/lib-format-tools'
 
 import { distanceForQSON } from '@ham2k/lib-geo-tools'
-import { filterNearDupes, replaceRef } from '@ham2k/lib-qson-tools'
-import { findRef } from '@ham2k/lib-qson-tools'
+import { filterNearDupes, replaceRef, findRef } from '@ham2k/lib-qson-tools'
 
 import { H2kGridInput } from '../../../ui'
 import { REG1TEST_BAND } from '../../../tools/qsonToReg1test'
@@ -42,7 +41,7 @@ const ActivityHook = {
       { refs: [ReferenceHandler.decorateRef({ type: Info.key, ref: 'ARRL-VHF-JAN' })] }
     ]
   },
-  
+
   prepareNewQSO,
   processQSOBeforeSaveWithDispatch
 }
@@ -53,7 +52,7 @@ const ReferenceHandler = {
   descriptionPlaceholder: '',
   description: (operation) => {
     let date
-    if (operation?.qsos && operation.qsos[0]?.startAtMillis) date = Date.parse(operation.qsos[0].startAtMillis)
+    if (operation?.startAtMillisMax) date = Date.parse(operation.startAtMillisMax)
     else date = new Date()
 
     const ref = findRef(operation, Info.key)
@@ -80,7 +79,7 @@ const ReferenceHandler = {
   suggestOperationTitle: ({ ref, operation }) => {
     if (ref?.ref) {
       const test = vhfTestData({ ref })
-      const grid = operation?.grid || ""
+      const grid = operation?.grid || ''
 
       return { for: test?.short ?? test?.name, subtitle: (grid.substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)) }
     } else {
@@ -124,10 +123,10 @@ const ReferenceHandler = {
       [
         (ourCall ?? '-'),
         (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
-        ((operation?.grid || "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)),
+        ((operation?.grid || '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)),
         (qso?.their?.call || '-'),
         (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
-        (qso?.their?.grid ?? qso?.their?.guess?.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+        (qso?.their?.grid ?? qso?.their?.guess?.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
       ]
     ]
 
@@ -182,8 +181,8 @@ const ReferenceHandler = {
       scoring.alerts.push('ourGrid')
     }
 
-    const ourGrid = (operation.grid || "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
-    const theirGrid = (qso.their?.grid ?? qso.their?.guess?.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+    const ourGrid = (operation.grid || '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+    const theirGrid = (qso.their?.grid ?? qso.their?.guess?.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
 
     if (test?.options?.score === 'distance') {
       if (theirGrid && ourGrid) {
@@ -207,7 +206,7 @@ const ReferenceHandler = {
     let nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
     if (test?.options?.qsosPerBandAndLocation) {
       nearDupes = nearDupes.filter(q => {
-        const qGrid = (q.their?.grid ?? q.their?.guess?.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+        const qGrid = (q.their?.grid ?? q.their?.guess?.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
         return qGrid !== theirGrid
       })
     }
@@ -323,13 +322,13 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key }
 
     qso.their.grid = (qso.their?.grid ?? qso.their?.guess?.grid).substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
-    const ourGrid = (operation.grid ?? "").substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+    const ourGrid = (operation.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
 
     qso.refs = replaceRef(qso.refs, Info.key, { ...ref, grid: qso.their.grid })
 
     const theirParts = [qso.their.grid]
     const ourParts = [ourGrid]
-    
+
     qso.their.exchange = theirParts.filter(x => x).join(' ')
     qso.our.exchange = ourParts.filter(x => x).join(' ')
   }

@@ -53,7 +53,7 @@ const ReferenceHandler = {
   descriptionPlaceholder: '',
   description: (operation) => {
     let date
-    if (operation?.qsos && operation.qsos[0]?.startAtMillis) date = Date.parse(operation.qsos[0].startAtMillis)
+    if (operation?.startAtMillisMax) date = Date.parse(operation.startAtMillisMax)
     else date = new Date()
 
     const ref = findRef(operation, Info.key)
@@ -86,9 +86,9 @@ const ReferenceHandler = {
           const potaRefs = filterRefs(operation, 'potaActivation')
           location = potaRefs.map(r => sp.parks[r.ref]).filter(Boolean)[0]
         }
-        return { for: _spShortForSP(sp), subtitle: location } 
+        return { for: _spShortForSP(sp), subtitle: location }
       } else {
-        return { for: _spShortForSP(sp) } 
+        return { for: _spShortForSP(sp) }
       }
     } else {
       return { for: Info.shortName }
@@ -125,19 +125,18 @@ const ReferenceHandler = {
     return fields
   },
 
-
   cabrilloHeaders: ({ operation, settings, headers }) => {
     const ref = findRef(operation, Info.key)
     const sp = spData({ ref })
 
     let ourLocation = ref?.location || filterRefs(operation, 'potaActivation').filter(r => sp?.parks[r.ref]).map(r => r.ref)[0]
-    
+
     if (sp.parkAbbreviations) {
       ourLocation = sp.parks[ourLocation] || ourLocation
     }
 
     if (!ourLocation) {
-      ourLocation = 'NOT'  // At least for Ohio SP, this is what they expect
+      ourLocation = 'NOT' // At least for Ohio SP, this is what they expect
     }
 
     headers.push(['CONTEST', sp.cabrilloName])
@@ -152,11 +151,11 @@ const ReferenceHandler = {
 
   qsoToCabrilloParts: ({ qso, ref, operation, settings }) => {
     const sp = spData({ ref })
-    
+
     let ourLocation = ref.location || filterRefs(operation, 'potaActivation').filter(r => sp?.parks[r.ref]).map(r => r.ref)[0]
-    
+
     const qsoRef = findRef(qso, Info.key)
-    
+
     let theirLocation = qsoRef?.location || filterRefs(qso, 'pota').filter(r => sp?.parks[r.ref]).map(r => r.ref)[0]
 
     if (sp.parkAbbreviations) {
@@ -165,7 +164,7 @@ const ReferenceHandler = {
     }
 
     if (!ourLocation) {
-      ourLocation = 'NOT'  // At least for Ohio SP, this is what they expect
+      ourLocation = 'NOT' // At least for Ohio SP, this is what they expect
     }
 
     if (!theirLocation) {
@@ -443,7 +442,6 @@ const ReferenceHandler = {
   }
 }
 
-
 function mainExchangeForOperation (props) {
   const { qso, qsos, operation, updateQSO, styles, disabled, refStack, settings, suggestions, vfo, ...moreProps } = props
 
@@ -508,7 +506,6 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
 export function spData ({ ref }) {
   return STATE_PARKS_DATA[ref?.ref] || { options: {}, parks: {}, points: {}, short: 'State Parks Event' }
 }
-
 
 function _suggestionsFor ({ qso, sp }) {
   const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix

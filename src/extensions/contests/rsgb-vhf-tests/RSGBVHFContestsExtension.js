@@ -8,8 +8,7 @@
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { distanceForQSON } from '@ham2k/lib-geo-tools'
-import { filterNearDupes } from '@ham2k/lib-qson-tools'
-import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+import { filterNearDupes, findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kGridInput, H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
 
@@ -80,7 +79,7 @@ const ReferenceHandler = {
   descriptionPlaceholder: '',
   description: (operation) => {
     let date
-    if (operation?.qsos && operation.qsos[0]?.startAtMillis) date = Date.parse(operation.qsos[0].startAtMillis)
+    if (operation?.startAtMillisMax) date = Date.parse(operation.startAtMillisMax)
     else date = new Date()
 
     const ref = findRef(operation, Info.key)
@@ -467,7 +466,7 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
 
     if (ref.location || ref.ourNumber || ref.theirNumber) {
       qso.refs = replaceRef(qso.refs, Info.key, { ...ref, grid: qso.their.grid })
-      
+
       const theirParts = [ref.theirNumber, qso.their.grid]
       const ourParts = [ref.ourNumber, opRef.grid ?? operation.grid]
       if (test?.exchange?.includes('district') || test?.exchange?.includes('postcode')) {

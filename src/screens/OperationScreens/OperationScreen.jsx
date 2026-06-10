@@ -19,7 +19,7 @@ import { slashZeros } from '@ham2k/lib-format-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import { buildOperationTitle, loadOperation, selectOperation } from '../../store/operations'
-import { loadQSOs, lookupAllQSOs, confirmFromSpots } from '../../store/qsos'
+import { loadQSOs, lookupAllQSOs, confirmFromSpots, selectQSOs } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
@@ -59,6 +59,13 @@ export default function OperationScreen (props) {
 
   const [lastSuggestedQSO, setLastSuggestedQSO] = useState(null)
   const [lastSelectedUUID, setLastSelectedUUID] = useState(null)
+
+  // Memoize the selector function to prevent excessive calls
+  const qsosSelector = useCallback(
+    (state) => selectQSOs(state, operation?.uuid, settings.showDeletedQSOs !== false),
+    [operation?.uuid, settings.showDeletedQSOs]
+  )
+  const { qsos } = useSelector(qsosSelector)
 
   useEffect(() => {
     if (route?.params?.qso && lastSuggestedQSO !== route?.params?.qso) {

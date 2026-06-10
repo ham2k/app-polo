@@ -105,7 +105,7 @@ const ReferenceHandler = {
   descriptionPlaceholder: '',
   description: (operation) => {
     let date
-    if (operation?.qsos && operation.qsos[0]?.startAtMillis) date = Date.parse(operation.qsos[0].startAtMillis)
+    if (operation?.startAtMillisMax) date = Date.parse(operation.startAtMillisMax)
     else date = new Date()
 
     const ref = findRef(operation, Info.key)

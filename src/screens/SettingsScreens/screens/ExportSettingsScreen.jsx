@@ -144,7 +144,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
         (sampleOperation?.refs || []).filter(ref => ref.type).forEach(ref => {
           const refHook = findBestHook(`ref:${ref.type}`)
           if (refHook?.suggestExportOptions) {
-            const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ t, operation: sampleOperation, qsos: sampleOperation.qsos, ref, settings })) || []
+            const options = (refHook.suggestExportOptions && refHook.suggestExportOptions({ t, operation: sampleOperation, qsos: [], ref, settings })) || []
             options.forEach(option => {
               const key = `${hook.key}-${option.format}-${option.exportType ?? 'export'}`
               const exportSettings = selectExportSettings({ settings }, key, (refHook?.defaultExportSettings && refHook?.defaultExportSettings()))
@@ -214,7 +214,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
 
       const sampleOperations = (exportHook.sampleOperations && exportHook.sampleOperations({ t, settings })) || []
       sampleOperations.forEach(operation => {
-        const options = (exportHook.suggestExportOptions && exportHook.suggestExportOptions({ operation, qsos: operation.qsos, settings })) || []
+        const options = (exportHook.suggestExportOptions && exportHook.suggestExportOptions({ operation, qsos: [], settings })) || []
         options.forEach(option => {
           const key = `${exportHook.key}-${option.format}-${option.exportType ?? 'export'}`
           const exportSettings = selectExportSettings({ settings }, key, (exportHook?.defaultExportSettings && exportHook?.defaultExportSettings()))
