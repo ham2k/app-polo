@@ -70,13 +70,13 @@ export default function OperationScreen (props) {
   useEffect(() => {
     if (route?.params?.qso && lastSuggestedQSO !== route?.params?.qso) {
       setLastSuggestedQSO(route?.params?.qso)
-      dispatch(manageNextQSO({ suggestedQSO: route?.params?.qso, qsos: operation?.qsos, operation, settings }))
+      dispatch(manageNextQSO({ suggestedQSO: route?.params?.qso, qsos, operation, settings }))
     }
     if (route?.params?.selectedUUID && lastSelectedUUID !== route?.params?.selectedUUID) {
       setLastSelectedUUID(route?.params?.selectedUUID)
-      dispatch(manageNextQSO({ selectedUUID: route?.params?.selectedUUID, qsos: operation?.qsos, operation, settings }))
+      dispatch(manageNextQSO({ selectedUUID: route?.params?.selectedUUID, qsos, operation, settings }))
     }
-  }, [route?.params?.qso, route?.params?.selectedUUID, lastSuggestedQSO, lastSelectedUUID, dispatch, operation, settings])
+  }, [route?.params?.qso, route?.params?.selectedUUID, lastSuggestedQSO, lastSelectedUUID, dispatch, operation, settings, qsos])
 
   useEffect(() => { // Ensure the clock is ticking
     dispatch(startTickTock())
@@ -85,6 +85,7 @@ export default function OperationScreen (props) {
 
   useEffect(() => { // When starting, make sure all operation data is loaded
     setImmediate(async () => {
+      console.log('Loading operation and QSOs', operation.uuid)
       await dispatch(loadOperation(operation.uuid))
       await dispatch(loadQSOs(operation.uuid))
     })
@@ -392,7 +393,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="signal"
         trailingIcon={_iconForBinarySetting(settings.showRSTFields, true)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showRSTFields: _nextBinaryValue(settings.showRSTFields, true) }))) }}
+        onPress={() => dispatch(setSettings({ showRSTFields: _nextBinaryValue(settings.showRSTFields, true) })) }
         title={t('screens.operationScreen.menu.rstFields', 'RST Fields')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -400,7 +401,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="selection-marker"
         trailingIcon={_iconForBinarySetting(settings.showStateField, true)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showStateField: _nextBinaryValue(settings.showStateField, true) }))) }}
+        onPress={() => dispatch(setSettings({ showStateField: _nextBinaryValue(settings.showStateField, true) })) }
         title={t('screens.operationScreen.menu.stateField', 'State Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -408,7 +409,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="select-marker"
         trailingIcon={_iconForBinarySetting(settings.showGridField, false)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showGridField: _nextBinaryValue(settings.showGridField, false) }))) }}
+        onPress={() => dispatch(setSettings({ showGridField: _nextBinaryValue(settings.showGridField, false) })) }
         title={t('screens.operationScreen.menu.gridField', 'Grid Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -416,7 +417,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="delete-off-outline"
         trailingIcon={_iconForBinarySetting(settings.showDeletedQSOs)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showDeletedQSOs: settings.showDeletedQSOs === false }))) }}
+        onPress={() => dispatch(setSettings({ showDeletedQSOs: settings.showDeletedQSOs === false })) }
         title={t('screens.operationScreen.menu.showDeletedQSOs', 'Show Deleted QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -424,7 +425,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="numeric"
         trailingIcon={_iconForBinarySetting(settings.showNumbersRow)}
-        onPress={() => { hideAndRun(() => dispatch(setSettings({ showNumbersRow: settings.showNumbersRow === false }))) }}
+        onPress={() => dispatch(setSettings({ showNumbersRow: settings.showNumbersRow === false })) }
         title={t('screens.operationScreen.menu.numbersRow', 'Numbers Row')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
