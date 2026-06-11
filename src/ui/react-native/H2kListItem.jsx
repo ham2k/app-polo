@@ -21,7 +21,7 @@ export function H2kListItem ({
   accessibilityTitle, accessibilityDescription,
   leftIcon, leftIconColor, left,
   rightIcon, right, onPressRight,
-  rightSwitchValue, rightSwitchOnValueChange,
+  rightSwitchValue, rightSwitchOnValueChange, rightSwitchEnabled: rightSwitchDisabled,
   ...moreProps
 }) {
   const styles = useThemedStyles()
@@ -89,8 +89,8 @@ export function H2kListItem ({
   const rightElement = useMemo(() => {
     if (right) {
       return right
-    } else if (rightSwitchOnValueChange || rightSwitchValue) {
-      return () => <Switch value={rightSwitchValue} onValueChange={rightSwitchOnValueChange} />
+    } else if (rightSwitchOnValueChange || rightSwitchValue !== undefined) {
+      return () => <Switch value={rightSwitchValue} onValueChange={rightSwitchOnValueChange} disabled={rightSwitchDisabled} />
     } else if (rightIcon) {
       if (onPressRight) {
         return () => <H2kIconButton icon={rightIcon} size={styles.oneSpace * 3} style={{ marginRight: styles.oneSpace * 2 }} onPress={onPressRight} />
@@ -99,7 +99,10 @@ export function H2kListItem ({
       }
     }
     return null
-  }, [right, rightSwitchValue, rightIcon, rightSwitchOnValueChange, onPressRight, styles.oneSpace, styles.normalFontSize])
+  }, [
+    right, rightSwitchOnValueChange, rightSwitchValue, rightIcon, rightSwitchDisabled,
+    onPressRight, styles.oneSpace, styles.normalFontSize
+  ])
 
   const actualAccessibilityLabel = useMemo(() => {
     if (accessibilityLabel) {

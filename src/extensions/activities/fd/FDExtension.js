@@ -1,5 +1,5 @@
 /*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+ * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
  *
  * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
@@ -37,6 +37,9 @@ export const Info = {
   infoURL: 'https://field-day.arrl.org/',
   defaultValue: { class: '', location: '' }
 }
+
+const INVALID_BANDS = ['60m', '30m', '17m', '12m']
+const POINTS = { PHONE: 1, CW: 2, DIGITAL: 2 }
 
 const Extension = {
   ...Info,
@@ -161,11 +164,15 @@ const ReferenceHandler = {
     const { band, mode, uuid, startAtMillis } = qso
     const superMode = superModeForMode(mode)
 
+    if (INVALID_BANDS.indexOf(band) >= 0) {
+      return { value: 0, alerts: ['invalidBand'], type: Info.key }
+    }
+
     const qsoRef = findRef(qso, Info.key)
 
     const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
-    const value = superMode === 'PHONE' ? 1 : 2
+    const value = POINTS[superMode]
     const scoring = { value, theirSection: qsoRef?.location, mode: superMode, band }
 
     if (FD_LOCATION_VALUES[qsoRef?.location]) {
@@ -211,6 +218,7 @@ const ReferenceHandler = {
       qsoCount: 0,
       qsoPoints: 0,
       powerMult: 1,
+      bonusPoints: 0,
       modes: {},
       arrlSections: {},
       racSections: {},
@@ -236,7 +244,8 @@ const ReferenceHandler = {
     else if (ref?.transmitterPower === '100W') score.powerMult = 2
     else score.powerMult = 1
 
-    score.total = score.qsoPoints * score.powerMult
+    score.bonusPoints = ref?.bonusPoints || 0
+    score.total = score.qsoPoints * score.powerMult + score.bonusPoints
 
     return score
   },
@@ -251,7 +260,12 @@ const ReferenceHandler = {
     score.summary = `${fmtNumber(score.total)} pts`
 
     const parts = []
-    parts.push(`**${fmtNumber(score.qsoPoints)} QSO points x ${score.powerMult} power mult = ${fmtNumber(score.total)} points**`)
+    const multipliedPoints = score.qsoPoints * score.powerMult
+    parts.push(`**${fmtNumber(score.qsoPoints)} QSO points × ${score.powerMult} power mult = ${fmtNumber(multipliedPoints)} points**`)
+    if (score.bonusPoints) {
+      // eslint-disable-next-line no-irregular-whitespace
+      parts.push(`  **+ ${fmtNumber(score.bonusPoints)} bonus points = ${fmtNumber(score.total)} total**`)
+    }
     parts.push(
       Object.keys(score.modes ?? {}).sort().map(mode => {
         if (score?.modes[mode]) {

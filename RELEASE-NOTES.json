@@ -1,8 +1,9 @@
 {
-  "26.6.0-pre1": {
-    "name": "June '26 - Pre 1",
+  "26.6.0-pre3": {
+    "name": "June '26 - Pre 3",
     "photoCaption": "ON4VT at ONFF-0440",
     "changes": [
+      "ARRL Field Day improvements for 2026",
       "ARRL VHF Contests (Beta)",
       "RSGB VHF Contests (Beta) (thanks to M0TRT)",
       "IARU Region 1 VHF Contests (Beta)",
