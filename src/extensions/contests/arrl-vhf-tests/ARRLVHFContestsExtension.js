@@ -5,13 +5,10 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { fmtNumber, fmtTimestamp } from '@ham2k/lib-format-tools'
+import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { distanceForQSON } from '@ham2k/lib-geo-tools'
-import { filterNearDupes, replaceRef, findRef } from '@ham2k/lib-qson-tools'
-
-import { H2kGridInput } from '../../../ui'
-import { REG1TEST_BAND } from '../../../tools/qsonToReg1test'
+import { replaceRef, findRef } from '@ham2k/lib-qson-tools'
 
 import { Info } from './ARRLVHFContestsInfo'
 import { ActivityOptions } from './ARRLVHFContestsOptions'
@@ -23,8 +20,8 @@ const Extension = {
   ...Info,
   category: 'contests',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
-    registerHook('activity', { hook: ActivityHook, priority: 10 })
-    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 10 })
+    registerHook('activity', { hook: ActivityHook, priority: 200 }) // Contests get highest priority
+    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 200 })
   }
 }
 
@@ -76,12 +73,26 @@ const ReferenceHandler = {
     return `${Info.key}-${test.key}`
   },
 
+  lookupCall: ({ call }, { operation, qsos, online, mode }) => {
+    if (!qsos) return
+
+    const callQSOs = qsos.filter(q => q.their?.call === call)
+    const lastQSO = callQSOs[callQSOs.length - 1]
+    if (!lastQSO || !lastQSO.their.grid) return
+
+    const opRef = findRef(operation, Info.key)
+    const test = vhfTestData({ ref: opRef })
+    const grid = _trimmedGrid({ grid: lastQSO.their.grid ?? '', test })
+
+    return { call, grid }
+  },
+
   suggestOperationTitle: ({ ref, operation }) => {
     if (ref?.ref) {
       const test = vhfTestData({ ref })
       const grid = operation?.grid || ''
 
-      return { for: test?.short ?? test?.name, subtitle: (grid.substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)) }
+      return { for: test?.short ?? test?.name, subtitle: _trimmedGrid({ grid, test }) }
     } else {
       return { for: Info.shortName }
     }
@@ -114,7 +125,6 @@ const ReferenceHandler = {
   },
 
   qsoToCabrilloParts: ({ qso, ref, operation, settings }) => {
-    const qsoRef = findRef(qso, Info.key)
     const test = vhfTestData({ ref })
 
     const ourCall = operation.stationCall || settings.operatorCall
@@ -123,10 +133,10 @@ const ReferenceHandler = {
       [
         (ourCall ?? '-'),
         (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
-        ((operation?.grid || '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)),
+        (_trimmedGrid({ grid: operation?.grid || '', test })),
         (qso?.their?.call || '-'),
         (qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59'),
-        (qso?.their?.grid ?? qso?.their?.guess?.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+        (_trimmedGrid({ grid: qso?.their?.grid ?? qso?.their?.guess?.grid ?? '', test }))
       ]
     ]
 
@@ -180,9 +190,8 @@ const ReferenceHandler = {
     if (!operation.grid) {
       scoring.alerts.push('ourGrid')
     }
-
-    const ourGrid = (operation.grid || '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
-    const theirGrid = (qso.their?.grid ?? qso.their?.guess?.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+    const ourGrid = _trimmedGrid({ grid: scoredRef?.grid || operation.grid || '', test })
+    const theirGrid = _trimmedGrid({ grid: qso.their?.grid ?? qso.their?.guess?.grid ?? '', test })
 
     if (test?.options?.score === 'distance') {
       if (theirGrid && ourGrid) {
@@ -203,11 +212,13 @@ const ReferenceHandler = {
       scoring.value = test?.points?.[band]
     }
 
-    let nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
-    if (test?.options?.qsosPerBandAndLocation) {
+    // let nearDupes = filterNearDupes({ qso, qsos, operation, withSectionRefs: [scoredRef] })
+    let nearDupes = _nearDupesFor({ test, qso, qsos, operation, ourGrid, theirGrid })
+
+    if (test?.options?.qsosPerBandAndLocation && theirGrid) {
       nearDupes = nearDupes.filter(q => {
         const qGrid = (q.their?.grid ?? q.their?.guess?.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
-        return qGrid !== theirGrid
+        return qGrid === theirGrid
       })
     }
 
@@ -321,8 +332,8 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
   if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key }
 
-    qso.their.grid = (qso.their?.grid ?? qso.their?.guess?.grid).substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
-    const ourGrid = (operation.grid ?? '').substring(0, test?.exchange[0] === 'grid6' ? 6 : 4)
+    qso.their.grid = _trimmedGrid({ grid: qso.their?.grid ?? qso.their?.guess?.grid, test })
+    const ourGrid = _trimmedGrid({ grid: operation.grid ?? '', test })
 
     qso.refs = replaceRef(qso.refs, Info.key, { ...ref, grid: qso.their.grid })
 
@@ -344,4 +355,35 @@ function _testModeForMode (mode) {
   if (mode === 'SSB' || mode === 'USB' || mode === 'LSB') return 'PH'
   if (mode === 'FM') return 'FM'
   return 'DG'
+}
+
+function _trimmedGrid ({ grid, test }) {
+  return grid?.substring(0, test?.exchange?.[0] === 'grid6' ? 6 : 4)
+}
+
+function _nearDupesFor ({ test, qso, qsos, operation, ourGrid, theirGrid }) {
+  let ourRollingGrid = _trimmedGrid({ grid: operation.grid, test })
+
+  const nearDupes = qsos.filter(q => {
+    if (!q.deleted && (q.event?.event === 'break' || q.event?.event === 'start')) {
+      ourRollingGrid = _trimmedGrid({ grid: q?.event?.operation?.grid ?? '', test })
+    }
+
+    if (q.event || q.deleted || q.their?.call !== qso.their?.call || q.uuid === qso?.uuid) {
+      return false
+    }
+    if (qso?.startAtMillis && q.startAtMillis > qso?.startAtMillis) {
+      return false
+    }
+
+    if (ourRollingGrid === ourGrid) {
+      const qsoGrid = _trimmedGrid({ grid: q.their?.grid ?? q.their?.guess?.grid ?? '', test })
+
+      if (qsoGrid === theirGrid || !qsoGrid) {
+        return true
+      }
+    }
+    return false
+  })
+  return nearDupes
 }

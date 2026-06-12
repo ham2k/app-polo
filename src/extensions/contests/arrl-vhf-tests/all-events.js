@@ -17,27 +17,27 @@ export default [
     bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS],
     exchange: ['grid4'],
     options: {
-      qsosPerBand: true,
+      qsosPerBandAndLocation: true,
       score: 'points'
     },
     points: {
-      "6m": 1, // 50
-      "2m": 1, // 144
-      "1.25m": 2, // 222
-      "70cm": 2, // 430
-      "33cm": 4, // 900
-      "23cm": 4, // 1200
-      "13cm": 8, // 2300
-      "9cm": 8, // 3300
-      "6cm": 8, // 5700
-      "3cm": 8, // 10G
-      "1.25cm": 8, // 24G
-      "6mm": 8, // 47G
-      "4mm": 8, // 75G
-      "2mm": 8, // 123G
-      "2.5mm": 8, // 134G
-      "1mm": 8, // 241G
-      "submm": 4, // 241G
+      '6m': 1, // 50
+      '2m': 1, // 144
+      '1.25m': 2, // 222
+      '70cm': 2, // 430
+      '33cm': 4, // 900
+      '23cm': 4, // 1200
+      '13cm': 8, // 2300
+      '9cm': 8, // 3300
+      '6cm': 8, // 5700
+      '3cm': 8, // 10G
+      '1.25cm': 8, // 24G
+      '6mm': 8, // 47G
+      '4mm': 8, // 75G
+      '2mm': 8, // 123G
+      '2.5mm': 8, // 134G
+      '1mm': 8, // 241G
+      submm: 4 // 241G
     },
     rules: 'https://contests.arrl.org/ContestRules/JanJunSep-VHF-Rules.pdf'
   },
@@ -50,27 +50,27 @@ export default [
     bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS],
     exchange: ['grid4'],
     options: {
-      qsosPerBand: true,
+      qsosPerBandAndLocation: true,
       score: 'points'
     },
     points: {
-      "6m": 1, // 50
-      "2m": 1, // 144
-      "1.25m": 2, // 222
-      "70cm": 2, // 430
-      "33cm": 3, // 900
-      "23cm": 3, // 1200
-      "13cm": 4, // 2300
-      "9cm": 4, // 3300
-      "6cm": 4, // 5700
-      "3cm": 4, // 10G
-      "1.25cm": 4, // 24G
-      "6mm": 4, // 47G
-      "4mm": 4, // 75G
-      "2mm": 4, // 123G
-      "2.5mm": 4, // 134G
-      "1mm": 4, // 241G
-      "submm": 4, // 241G
+      '6m': 1, // 50
+      '2m': 1, // 144
+      '1.25m': 2, // 222
+      '70cm': 2, // 430
+      '33cm': 3, // 900
+      '23cm': 3, // 1200
+      '13cm': 4, // 2300
+      '9cm': 4, // 3300
+      '6cm': 4, // 5700
+      '3cm': 4, // 10G
+      '1.25cm': 4, // 24G
+      '6mm': 4, // 47G
+      '4mm': 4, // 75G
+      '2mm': 4, // 123G
+      '2.5mm': 4, // 134G
+      '1mm': 4, // 241G
+      submm: 4 // 241G
     },
     rules: 'https://contests.arrl.org/ContestRules/JanJunSep-VHF-Rules.pdf'
   },
@@ -83,27 +83,27 @@ export default [
     bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS],
     exchange: ['grid4'],
     options: {
-      qsosPerBand: true,
+      qsosPerBandAndLocation: true,
       score: 'points'
     },
     points: {
-      "6m": 1, // 50
-      "2m": 1, // 144
-      "1.25m": 2, // 222
-      "70cm": 2, // 430
-      "33cm": 3, // 900
-      "23cm": 3, // 1200
-      "13cm": 4, // 2300
-      "9cm": 4, // 3300
-      "6cm": 4, // 5700
-      "3cm": 4, // 10G
-      "1.25cm": 4, // 24G
-      "6mm": 4, // 47G
-      "4mm": 4, // 75G
-      "2mm": 4, // 123G
-      "2.5mm": 4, // 134G
-      "1mm": 4, // 241G
-      "submm": 4, // 241G
+      '6m': 1, // 50
+      '2m': 1, // 144
+      '1.25m': 2, // 222
+      '70cm': 2, // 430
+      '33cm': 3, // 900
+      '23cm': 3, // 1200
+      '13cm': 4, // 2300
+      '9cm': 4, // 3300
+      '6cm': 4, // 5700
+      '3cm': 4, // 10G
+      '1.25cm': 4, // 24G
+      '6mm': 4, // 47G
+      '4mm': 4, // 75G
+      '2mm': 4, // 123G
+      '2.5mm': 4, // 134G
+      '1mm': 4, // 241G
+      submm: 4 // 241G
     },
     rules: 'https://contests.arrl.org/ContestRules/JanJunSep-VHF-Rules.pdf'
   },
@@ -120,21 +120,21 @@ export default [
       score: 'distance'
     },
     multipliers: {
-      "1.25m": 2, // 222
-      "70cm": 1,  // 430
-      "33cm": 4,  // 900
-      "23cm": 2, // 1200
-      "13cm": 6, // 2300
-      "9cm": 10, // 3400
-      "6cm": 10,  // 5700
-      "3cm": 6,  // 10G
-      "1.25cm": 20, // 24G
-      "6mm": 20, // 47G
-      "4mm": 20, // 75G
-      "2mm": 20, // 123G
-      "2.5mm": 20, // 134G
-      "1mm": 20, // 241G
-      "submm": 20
+      '1.25m': 2, // 222
+      '70cm': 1, // 430
+      '33cm': 4, // 900
+      '23cm': 2, // 1200
+      '13cm': 6, // 2300
+      '9cm': 10, // 3400
+      '6cm': 10, // 5700
+      '3cm': 6, // 10G
+      '1.25cm': 20, // 24G
+      '6mm': 20, // 47G
+      '4mm': 20, // 75G
+      '2mm': 20, // 123G
+      '2.5mm': 20, // 134G
+      '1mm': 20, // 241G
+      submm: 20
     },
     rules: 'https://contests.arrl.org/ContestRules/222-MHz-Rules.pdf'
   },
@@ -152,16 +152,16 @@ export default [
       score: 'distanceAndPoints'
     },
     points: {
-      "qso": 100,
+      qso: 100
     },
     multipliers: {
-      "3cm": 1, // 10G
-      "1.25cm": 2, // 24G
-      "6mm": 3, // 47G
-      "4mm": 4, // 75G
-      "2mm": 5, // 123G
-      "2.5mm": 5, // 134G
-      "1mm": 5, // 241G
+      '3cm': 1, // 10G
+      '1.25cm': 2, // 24G
+      '6mm': 3, // 47G
+      '4mm': 4, // 75G
+      '2mm': 5, // 123G
+      '2.5mm': 5, // 134G
+      '1mm': 5 // 241G
     },
     rules: 'https://contests.arrl.org/ContestRules/10-GHz-Rules.pdf'
   },
@@ -179,16 +179,16 @@ export default [
       score: 'distanceAndPoints'
     },
     points: {
-      "qso": 100,
+      qso: 100
     },
     multipliers: {
-      "3cm": 1, // 10G
-      "1.25cm": 2, // 24G
-      "6mm": 3, // 47G
-      "4mm": 4, // 75G
-      "2mm": 5, // 123G
-      "2.5mm": 5, // 134G
-      "1mm": 5, // 241G
+      '3cm': 1, // 10G
+      '1.25cm': 2, // 24G
+      '6mm': 3, // 47G
+      '4mm': 4, // 75G
+      '2mm': 5, // 123G
+      '2.5mm': 5, // 134G
+      '1mm': 5 // 241G
     },
     rules: 'https://contests.arrl.org/ContestRules/10-GHz-Rules.pdf'
   }
