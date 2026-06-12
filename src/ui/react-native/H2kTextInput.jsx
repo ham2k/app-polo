@@ -12,6 +12,7 @@ import { Text } from 'react-native-paper'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { selectSettings } from '../../store/settings'
+import { useKeyboardVisible } from '../../screens/components/useKeyboardVisible'
 
 const LEFT_TRIM_REGEX = /^\s+/
 const SPACE_REGEX = /\s/g
@@ -40,6 +41,8 @@ export function H2kTextInput (props) {
   } = props
   const styles = useThemedStyles(prepareStyles, { style, textStyle, error, themeColor, disabled })
   const settings = useSelector(selectSettings)
+
+  const { isKeyboardVisible } = useKeyboardVisible()
 
   const alternateInnerRef = useRef()
   const actualInnerRef = innerRef ?? alternateInnerRef
@@ -240,12 +243,13 @@ export function H2kTextInput (props) {
   ])
 
   const handleOuterPress = useCallback((event) => {
-    if (actualInnerRef?.current?.isFocused() && !value) {
+    if (actualInnerRef?.current?.isFocused() && !value && isKeyboardVisible) {
+      onBlur && onBlur({ ...event, value: stringValue?.trim() || '', fieldId, objectId, ref: actualInnerRef.current })
       actualInnerRef.current?.blur()
     } else {
       actualInnerRef.current?.focus()
     }
-  }, [actualInnerRef, value])
+  }, [actualInnerRef, value, isKeyboardVisible, onBlur, stringValue, fieldId, objectId])
 
   const pressInRef = useRef(0)
   const handlePressIn = useCallback((event) => {
@@ -259,12 +263,13 @@ export function H2kTextInput (props) {
   const handlePressOut = useCallback((event) => {
     const now = (new Date()).getTime()
     if (pressInRef.current && now - pressInRef.current < 200) {
-      if (actualInnerRef?.current?.isFocused() && !value) {
+      if (actualInnerRef?.current?.isFocused() && !value && isKeyboardVisible) {
+        onBlur && onBlur({ ...event, value: stringValue?.trim() || '', fieldId, objectId, ref: actualInnerRef.current })
         actualInnerRef.current?.blur()
       }
     }
     pressInRef.current = 0
-  }, [actualInnerRef, value])
+  }, [actualInnerRef, fieldId, isKeyboardVisible, objectId, onBlur, stringValue, value])
 
   // BEGIN VIRTUAL NUMERIC KEY FUNCTIONALITY, PART 2
   // If this input is focused, we update `focusedRef` to provide a callback that can be used
