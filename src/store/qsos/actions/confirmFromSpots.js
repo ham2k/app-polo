@@ -96,7 +96,8 @@ export const confirmFromSpots = (options = {}) => async (dispatch, getState) => 
 
   dispatch(addQSOs({
     uuid: options.operation.uuid,
-    qsos: updatedQSOs
+    qsos: updatedQSOs,
+    operation: options.operation
   }))
 }
 

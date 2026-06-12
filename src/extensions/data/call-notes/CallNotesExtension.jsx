@@ -96,7 +96,7 @@ const Extension = {
 
     registerHook('lookup', { hook: LookupHook, priority: 100 })
 
-    registerHook('command', { priority: 200, hook: NoteExpansionCommandHook })
+    registerHook('command', { hook: NoteExpansionCommandHook, priority: 200 })
   },
   onDeactivationDispatch: () => async (dispatch, getState) => {
     for (const file of CallNotesData.files) {

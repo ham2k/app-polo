@@ -437,7 +437,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
 
       <Menu.Item
         leadingIcon="search-web"
-        onPress={() => hideAndRun(() => dispatch(lookupAllQSOs(operation.uuid)))}
+        onPress={() => hideAndRun(() => dispatch(lookupAllQSOs({ operation })))}
         title={t('screens.operationScreen.menu.lookupAllQSOs', 'Lookup all QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />

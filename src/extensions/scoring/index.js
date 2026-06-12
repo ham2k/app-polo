@@ -140,13 +140,13 @@ export function analyzeAndSectionQSOs ({ qsos, operation, ourInfo, showDeletedQS
       scoringHandlers.forEach(({ handler, ref }) => {
         const key = ref?.type ?? handler.key
 
-        const qsoScore = handler.scoringForQSO({ qso, qsos, score: currentSection.scores[key], operation, ref, ourInfo })
+        const qsoScore = handler.scoringForQSO({ qso, qsos, score: currentSection.scores[key], operation: currentOperation, ref, ourInfo })
 
         try {
           if (handler.accumulateScoreForDay) {
-            currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation, ref })
+            currentSection.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: currentSection.scores[key], operation: currentOperation, ref })
           } else if (handler.accumulateScoreForOperation) {
-            currentSection.scores[key] = handler.accumulateScoreForOperation({ qsoScore, score: currentSection.scores[key], operation, ref })
+            currentSection.scores[key] = handler.accumulateScoreForOperation({ qsoScore, score: currentSection.scores[key], operation: currentOperation, ref })
           }
 
           if (VERBOSE && DEBUG_KEYS.includes(handler.key)) console.log(`-- ${handler.key}${handler.key !== key ? ` (${key})` : ' '} ${ref.ref ?? ref.location ?? ref.type}`, { ...qsoScore }, JSON.parse(JSON.stringify(currentSection.scores[key])))

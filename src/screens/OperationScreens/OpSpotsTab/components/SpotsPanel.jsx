@@ -15,6 +15,7 @@ import { useIsFocused } from '@react-navigation/native'
 import { qsoKey } from '@ham2k/lib-qson-tools'
 import { BANDS, ADIF_MODES, superModeForMode, modeForFrequency } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
+import { InterceptingGestureDetector } from 'react-native-gesture-handler'
 
 import GLOBAL from '../../../../GLOBAL'
 
@@ -31,7 +32,6 @@ import { useSelectorConditionally, useUIStateConditionally } from '../../../comp
 import SpotList from './SpotList'
 import SpotFilterControls from './SpotFilterControls'
 import SpotFilterIndicators from './SpotFilterIndicators'
-import { InterceptingGestureDetector } from 'react-native-gesture-handler'
 
 export const LABEL_FOR_MODE = {
   CW: 'CW',
@@ -134,7 +134,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
                   spot.mode = modeForFrequency(spot.freq, ourInfo) ?? 'SSB'
                 }
 
-                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, dispatch, mode: 'spots' }))
+                annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, operation, qsos, dispatch, mode: 'spots' }))
               }
               console.log('SpotsPanel fetched', hook.key, annotatedSpots)
               updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
@@ -146,7 +146,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
     }
   }, [
     allOperations, spotsHooks, online, settings, dispatch,
-    operation, spotsState.lastFetched, spotsState.loading, updateSpotsState,
+    operation, qsos, spotsState.lastFetched, spotsState.loading, updateSpotsState,
     filterState.sources, ourInfo, t
   ])
 

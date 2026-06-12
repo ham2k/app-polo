@@ -73,7 +73,7 @@ export const queryQSOs = async (query, params) => {
   return qsos
 }
 
-export const addQSO = ({ uuid, qso, synced = false }) => addQSOs({ uuid, qsos: [qso], synced })
+export const addQSO = ({ uuid, qso, operation, synced = false }) => addQSOs({ uuid, qsos: [qso], operation, synced })
 
 export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = false }) => {
   const qso = {
@@ -93,7 +93,7 @@ export const newEventQSO = ({ uuid, event, startAtMillis, endAtMillis, synced = 
 const DEBUG = false
 // const DEBUG = true
 
-export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getState) => {
+export const addQSOs = ({ uuid, qsos, operation, synced = false }) => async (dispatch, getState) => {
   const now = Date.now()
 
   if (DEBUG) logTimer('addQSOs', 'Start', { reset: true })
@@ -131,7 +131,7 @@ export const addQSOs = ({ uuid, qsos, synced = false }) => async (dispatch, getS
           const state = getState()
           const settings = selectSettings(state)
           const online = selectRuntimeOnline(state)
-          const annotatedQSO = await annotateQSO({ qso, online, settings, dispatch })
+          const annotatedQSO = await annotateQSO({ qso, online, settings, operation, qsos, dispatch })
           dispatch(addQSO({ uuid, qso: annotatedQSO }))
         })
       }

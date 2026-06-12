@@ -27,7 +27,7 @@ import { useSelectorConditionally } from '../../../components/useConditionally'
 
 const HISTORY_QSOS_TO_SHOW = 3
 
-export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) {
+export function CallInfoPanel ({ qso, operation, qsos, activeQSOs, sections, themeColor, style }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
@@ -46,7 +46,7 @@ export function CallInfoPanel ({ qso, operation, sections, themeColor, style }) 
     }
   }, [qso?.their?.call])
 
-  const { guess, lookup } = useCallLookup(qso)
+  const { guess, lookup } = useCallLookup({ qso, operation, qsos: activeQSOs })
 
   const entity = DXCC_BY_PREFIX[guess?.entityPrefix]
 

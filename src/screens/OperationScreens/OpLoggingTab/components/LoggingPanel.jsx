@@ -270,7 +270,7 @@ export default function LoggingPanel ({
       } else if (qso?.event && !qso?.deleted) {
         // Events are just saved as-is, no extra processing needed.
         await setLastUUID(qso.uuid)
-        await dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso] }))
+        await dispatch(addQSOs({ uuid: operation.uuid, qsos: [qso], operation }))
         await setUndoInfo(undefined)
         await setQSO(undefined)
       } else if (qso && isValidQSO && !qso?.deleted) {
@@ -323,7 +323,7 @@ export default function LoggingPanel ({
             oneQSO.their.call = allCalls[i]?.trim()
             oneQSO.their.guess = {}
             oneQSO.their.lookup = {}
-            oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, dispatch })
+            oneQSO = await annotateQSO({ qso: oneQSO, online: false, settings, operation, qsos, dispatch })
             oneQSO._needsLookup = true
           }
           multiQSOs.push(oneQSO)
@@ -349,7 +349,7 @@ export default function LoggingPanel ({
           // But leave enough time for blur effects to take place before being overwritten by the new setQSO
           // Just 10ms did not seemed to be enough in tests, but 50ms is fine.
 
-          dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs }))
+          dispatch(addQSOs({ uuid: operation.uuid, qsos: multiQSOs, operation }))
           if (DEBUG) logTimer('submit', 'handleSubmit added QSOs')
 
           // Let queue management decide what to do next

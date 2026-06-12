@@ -14,7 +14,7 @@ import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { selectRuntimeOnline } from '../../../../../store/runtime'
 import { selectSettings } from '../../../../../store/settings'
 
-import { findHooks } from '../../../../../extensions/registry'
+import { findBestHook, findHooks } from '../../../../../extensions/registry'
 import { LOCATION_ACCURACY } from '../../../../../extensions/constants'
 import { removeEmptyValues } from '../../../../../tools/objectTools'
 
@@ -33,7 +33,7 @@ export const resetCallLookupCache = () => (dispatch, getState) => {
   CACHE.lookups = {}
 }
 
-export const useCallLookup = (qso) => {
+export const useCallLookup = ({ qso, operation = {}, qsos = [] }) => {
   const online = useSelector(selectRuntimeOnline)
   const settings = useSelector(selectSettings)
   const dispatch = useDispatch()
@@ -57,7 +57,7 @@ export const useCallLookup = (qso) => {
 
       setImmediate(async () => {
         // First do an offline lookup, to use things like local history as fast as possible
-        const offlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online: false, settings, dispatch })
+        const offlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online: false, settings, operation, qsos, dispatch })
 
         if (offlineLookup?.guess?.name || offlineLookup?.guess?.city || offlineLookup?.guess?.grid || offlineLookup?.guess?.locationLabel || offlineLookup?.guess?.note) {
           if (DEBUG) console.log('  -- filling CACHE.lookups with offline lookup', { name: offlineLookup.guess.name })
@@ -67,7 +67,7 @@ export const useCallLookup = (qso) => {
 
         if (online) {
           // And then a full lookup for slower online sources
-          const onlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online, settings, dispatch })
+          const onlineLookup = await _performLookup({ call, refs: qso?.refs, theirInfo, online, settings, operation, qsos, dispatch })
 
           if (onlineLookup?.guess?.name || onlineLookup?.guess?.city || onlineLookup?.guess?.grid || onlineLookup?.guess?.locationLabel || onlineLookup?.guess?.note || onlineLookup?.lookup?.image || onlineLookup?.lookup?.error) {
             if (DEBUG) console.log('  -- filling CACHE.lookups with online lookup', { name: onlineLookup.guess.name })
@@ -83,7 +83,7 @@ export const useCallLookup = (qso) => {
     } else {
       if (DEBUG) console.log('  -- useCallLookup effect cached', { cacheKey })
     }
-  }, [call, online, dispatch, cacheKey, theirInfo, qso?.refs, settings])
+  }, [call, online, dispatch, cacheKey, theirInfo, qso?.refs, settings, operation, qsos])
 
   if (CACHE.lookups[cacheKey]) {
     if (DEBUG) console.log('-- useCallLookup returns', cacheKey, { name: CACHE.lookups[cacheKey]?.guess?.name, status: CACHE.lookups[cacheKey]?.status })
@@ -106,10 +106,10 @@ export const useCallLookup = (qso) => {
   }
 }
 
-export async function annotateQSO ({ qso, online, settings, dispatch, mode = 'full' }) {
+export async function annotateQSO ({ qso, online, settings, operation, qsos, dispatch, mode = 'full' }) {
   const { call, theirInfo } = _extractCallInfo(qso?.their?.call, qso?.refs)
 
-  const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, dispatch, mode })
+  const { guess, lookup } = await _performLookup({ qso, call, theirInfo, online, settings, operation, qsos, dispatch, mode })
 
   return { ...qso, their: { ...qso.their, ...theirInfo, guess, lookup } }
 }
@@ -142,8 +142,8 @@ function _extractCallInfo (call, refs) {
   return { call: oneCall, theirInfo, cacheKey, baseCacheKey }
 }
 
-async function _performLookup ({ refs, call, theirInfo, online, settings, dispatch, mode = 'full' }) {
-  const { lookups } = await _lookupCall(theirInfo, { online, settings, dispatch, mode })
+async function _performLookup ({ refs, call, theirInfo, online, settings, operation, qsos, dispatch, mode = 'full' }) {
+  const { lookups } = await _lookupCall(theirInfo, { online, settings, operation, qsos, dispatch, mode })
   const { refs: lookedUpRefs } = await _lookupRefs(refs, { lookups, online, settings, dispatch, mode })
   const { guess, lookup } = _mergeData({ theirInfo, lookups, refs: lookedUpRefs })
   if (DEBUG) console.log('  -- performLookup', { call, keys: Object.keys(lookups), guess, lookup })
@@ -151,12 +151,12 @@ async function _performLookup ({ refs, call, theirInfo, online, settings, dispat
   return { guess, lookup, lookups, theirInfo }
 }
 
-async function _lookupCall (theirInfo, { online, settings, dispatch, mode = 'full' }) {
+async function _lookupCall (theirInfo, { online, settings, operation, qsos, dispatch, mode = 'full' }) {
   const lookups = {}
   const lookupHooks = findHooks('lookup')
   const lookedUp = {}
   for (const hook of lookupHooks) {
-    if (DEBUG) console.log('  -- lookupCall', hook.key, { online, lookedUp })
+    if (DEBUG) console.log('  -- lookupCall lookup hook', hook.key, { online, lookedUp })
     if (!hook?.shouldSkipLookup || !hook.shouldSkipLookup({ online, lookedUp })) {
       let data
       try {
@@ -167,13 +167,40 @@ async function _lookupCall (theirInfo, { online, settings, dispatch, mode = 'ful
         }
 
         if (data) {
-          if (DEBUG) console.log('  -- lookupCall data', hook.key, { data })
+          if (DEBUG) console.log('    -- lookupCall <<< data', hook.key, { data })
           lookups[hook.key] = removeEmptyValues(data)
+          lookups[hook.key].key = hook.key
+          lookups[hook.key].priority = hook.priority ?? 0
           Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
         }
       } catch (error) {
         reportError(`Error looking up call ${theirInfo?.call} on ${hook?.key}`, error)
       }
+    }
+  }
+
+  const types = [...new Set((operation?.refs || []).map((ref) => ref?.type).filter(x => x))]
+  const refHooks = types.map(type => findBestHook(`ref:${type}`))
+
+  for (const hook of refHooks) {
+    if (DEBUG) console.log('  -- lookupCall refhook', hook.key, { online, lookedUp })
+    let data
+    try {
+      if (hook?.lookupCallWithDispatch) {
+        data = await dispatch(hook.lookupCallWithDispatch(theirInfo, { settings, operation, qsos, online, mode }))
+      } else if (hook?.lookupCall) {
+        data = hook.lookupCall(theirInfo, { settings, operation, qsos, online, mode })
+      }
+
+      if (data) {
+        if (DEBUG) console.log('    -- lookupCall <<< data', hook.key, { data })
+        lookups[hook.key] = removeEmptyValues(data)
+        lookups[hook.key].key = hook.key
+        lookups[hook.key].priority = hook.priority ?? 0
+        Object.keys(lookups[hook.key]).forEach(key => { lookedUp[key] = true })
+      }
+    } catch (error) {
+      reportError(`Error looking up call ${theirInfo?.call} on ${hook?.key}`, error)
     }
   }
 
@@ -207,20 +234,22 @@ function _mergeData ({ theirInfo, lookups, refs }) {
   let mergedLookup = {}
   const newGuess = { ...theirInfo }
 
-  for (const key in lookups) { // High to low priority
-    if (DEBUG) console.log('mergeData', key)
-    if (lookups[key].call === theirInfo.call || lookups[key].call === theirInfo.baseCall) {
+  const lookupData = Object.values(lookups).sort((a, b) => b.priority - a.priority)
+
+  if (DEBUG) console.log('mergeData', lookups)
+  if (DEBUG) console.log('-- ', lookupData)
+  for (const lookup of lookupData) { // High to low priority
+    if (DEBUG) console.log('  -- mergeData for ', lookup.key)
+    if (lookup.call === theirInfo.call || lookup.call === theirInfo.baseCall) {
       mergedLookup = {
         sources: [],
-        ...lookups[key], // Use new data from this key's lookup
+        ...lookup, // Use new data from this key's lookup
         ...mergedLookup, // But override with any data already present, based on priority
-        notes: [...mergedLookup.notes ?? [], ...lookups[key].notes ?? []],
-        history: [...mergedLookup.history ?? [], ...lookups[key].history ?? []]
+        notes: [...mergedLookup.notes ?? [], ...lookup.notes ?? []],
+        history: [...mergedLookup.history ?? [], ...lookup.history ?? []]
       }
-      if (DEBUG) console.log('-- data matches', { key, lookupName: lookups[key]?.name, mergedName: mergedLookup?.name })
-      if (lookups[key].source) {
-        mergedLookup.sources.push(lookups[key].source)
-      }
+      if (DEBUG) console.log('-- data matches', { key: lookup.key, lookupName: lookup?.name, mergedName: mergedLookup?.name, lookupGrid: lookup?.grid, mergedGrid: mergedLookup?.grid })
+      mergedLookup.sources.push(lookup.key)
     }
   }
 

@@ -49,7 +49,7 @@ export default function OpInfoTab ({ navigation, route }) {
       }}
     >
       {qso?.their?.call ? (
-        <CallInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qso={qso} operation={operation} sections={sections} themeColor={themeColor} />
+        <CallInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qso={qso} operation={operation} qsos={qsos} activeQSOs={activeQSOs} sections={sections} themeColor={themeColor} />
       ) : (
         <OpInfoPanel styles={styles} style={{ paddingBottom: safeAreaInsets.bottom }} qsos={qsos} qso={qso} activeQSOs={activeQSOs} sections={sections} operation={operation} themeColor={themeColor} />
       )}

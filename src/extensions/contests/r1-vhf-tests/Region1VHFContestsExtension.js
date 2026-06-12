@@ -42,8 +42,8 @@ const Extension = {
   ...Info,
   category: 'contests',
   onActivationDispatch: ({ registerHook }) => async (dispatch) => {
-    registerHook('activity', { hook: ActivityHook, priority: 10 })
-    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 10 })
+    registerHook('activity', { hook: ActivityHook, priority: 200 }) // Contests get highest priority
+    registerHook(`ref:${Info.key}`, { hook: ReferenceHandler, priority: 200 }) // Contests get highest priority
   }
 }
 export default Extension

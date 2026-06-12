@@ -280,7 +280,7 @@ const SeedCommandHook = {
           logTimer('seeding', 'Seeded one', { sinceLast: true })
         }
         console.log('adding', qsos)
-        await dispatch(addQSOs({ uuid: operation.uuid, qsos }))
+        await dispatch(addQSOs({ uuid: operation.uuid, qsos, operation }))
         await dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'selectedUUID', value: undefined }))
         await dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'lastUUID', value: qsos[qsos.length - 1]?.uuid }))
 

@@ -62,7 +62,7 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
 
   styles = prepareStyles(styles, { style })
 
-  const { call, guess, lookup, refs, status, when } = useCallLookup(qso)
+  const { call, guess, lookup, refs, status, when } = useCallLookup({ qso, operation, qsos: activeQSOs })
 
   const { call: theirCall, allCalls } = useMemo(() => parseStackedCalls(qso?.their?.call ?? ''), [qso?.their?.call])
 
