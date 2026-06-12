@@ -73,7 +73,7 @@ export function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
 
 export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo, settings }) => (dispatch, getState) => {
   qsos = qsos || []
-  console.log('manageNextQSO', [...qsos])
+
   const state = getState()
   const qso = selectStateForComponentAndKey(state, 'OpLoggingTab', 'qso')
   const qsoQueue = selectStateForComponentAndKey(state, 'OpLoggingTab', 'qsoQueue')

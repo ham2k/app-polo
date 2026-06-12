@@ -43,8 +43,7 @@ import EventEditingPanel from './LoggingPanel/EventEditingPanel/EventEditingPane
 import { manageNextQSO } from './LoggingPanel/loggingFunctions'
 import { useUIState } from '../../../../store/ui'
 
-const DEBUG = true
-// const DEBUG = false
+const DEBUG = false
 
 export default function LoggingPanel ({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView

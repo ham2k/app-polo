@@ -85,7 +85,6 @@ export default function OperationScreen (props) {
 
   useEffect(() => { // When starting, make sure all operation data is loaded
     setImmediate(async () => {
-      console.log('Loading operation and QSOs', operation.uuid)
       await dispatch(loadOperation(operation.uuid))
       await dispatch(loadQSOs(operation.uuid))
     })
