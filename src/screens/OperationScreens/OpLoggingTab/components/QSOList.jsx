@@ -6,7 +6,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { AccessibilityInfo, PixelRatio, View } from 'react-native'
+import { PixelRatio, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import getItemLayout from 'react-native-get-item-layout-section-list'

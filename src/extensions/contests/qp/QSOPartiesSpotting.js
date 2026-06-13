@@ -268,9 +268,12 @@ function _aprsPasscodeForCall (call) {
   call = call.split('-')[0]
   let passcode = 29666
   for (let index = 0; index < call.length; index += 2) {
+    // eslint-disable-next-line no-bitwise
     passcode = passcode ^ call.charCodeAt(index) * 256
+    // eslint-disable-next-line no-bitwise
     passcode = passcode ^ call.charCodeAt(index + 1)
   }
+  // eslint-disable-next-line no-bitwise
   passcode = passcode & 32767
   return passcode
 }

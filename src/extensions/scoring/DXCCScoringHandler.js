@@ -45,7 +45,7 @@ export const DXCCScoringHandler = {
     }
 
     if (count >= 2) {
-      score.label = t?.('extensions.dxcc.entitiesCount', '{{count}} DXCC Entities', { count: count }) || `${count} DXCC Entities`
+      score.label = t?.('extensions.dxcc.entitiesCount', '{{count}} DXCC Entities', { count }) || `${count} DXCC Entities`
       score.longSummary = '\n'
       Object.keys(score.entities ?? {})
         .map(entityPrefix => DXCC_BY_PREFIX[entityPrefix])

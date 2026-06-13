@@ -10,8 +10,7 @@ import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { gridToLocation, distanceOnEarth } from '@ham2k/lib-geo-tools'
-import { filterNearDupes } from '@ham2k/lib-qson-tools'
-import { filterRefs, findRef, refsToString } from '@ham2k/lib-qson-tools'
+import { filterNearDupes, filterRefs, findRef, refsToString } from '@ham2k/lib-qson-tools'
 
 import GLOBAL from '../../../GLOBAL'
 

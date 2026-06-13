@@ -32,13 +32,14 @@ export const stationSlice = createSlice({
       let { name, ...data } = action.payload
       name = name ?? state.currentTransceiver ?? 'default'
       if (data.freq) data.band = bandForFrequency(data.freq)
-      let mode
+
       if (!state.devices) {
         state.devices = state.transceivers || {}
       }
       state.devices[name] = state.devices[name] || {}
       state.devices[name].vfo = state.devices[name].vfo || {}
-      mode = state.devices[name].vfo.mode
+
+      const mode = state.devices[name].vfo.mode
 
       if (mode === 'USB') {
         if (data.band === '160m' || data.band === '80m' || data.band === '40m') {

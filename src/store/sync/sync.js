@@ -131,11 +131,11 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
   useEffect(() => {
     if (appState === 'starting') return
     setImmediate(() => {
-      const diff = ((tick || 0) - (GLOBAL.lastSyncLoop || 0))
+      const timeDiff = ((tick || 0) - (GLOBAL.lastSyncLoop || 0))
       const maxTime = (GLOBAL.syncCheckPeriod || DEFAULT_SYNC_CHECK_PERIOD)
 
-      if (VERBOSE >= 1) console.log('⏱️ Sync tick', tick, { last: GLOBAL.lastSyncLoop, tick, diff, max: maxTime, online })
-      if (goAheadWithSync && GLOBAL.syncEnabled && online && !nextSyncLoopInterval && diff > maxTime) {
+      if (VERBOSE >= 1) console.log('⏱️ Sync tick', tick, { last: GLOBAL.lastSyncLoop, tick, timeDiff, max: maxTime, online })
+      if (goAheadWithSync && GLOBAL.syncEnabled && online && !nextSyncLoopInterval && timeDiff > maxTime) {
         if (VERBOSE >= 1) console.log('📅 Sync due')
         _scheduleNextSyncLoop({ dispatch, delay: 1 })
       }

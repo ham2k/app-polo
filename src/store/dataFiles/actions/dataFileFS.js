@@ -206,7 +206,7 @@ export const loadAllDataFiles = () => async (dispatch) => {
 
 const DEBUG_FETCH = false
 
-export async function fetchAndProcessURL({ url, key, process, definition, info, options }) {
+export async function fetchAndProcessURL ({ url, key, process, definition, info, options }) {
   url = await resolveDownloadUrl(url)
 
   const headers = {
@@ -227,7 +227,7 @@ export async function fetchAndProcessURL({ url, key, process, definition, info, 
   return data
 }
 
-export async function fetchAndProcessBatchedLines({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
+export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch, processEndOfBatch, chunkSize, definition, info, options }) {
   url = await resolveDownloadUrl(url)
 
   if (!processLineBatch) {
@@ -252,7 +252,7 @@ export async function fetchAndProcessBatchedLines({ url, key, processLineBatch, 
   }
 }
 
-export async function resolveDownloadUrl(url) {
+export async function resolveDownloadUrl (url) {
   url = url?.trim() || ''
 
   // Dropbox

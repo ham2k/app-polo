@@ -8,7 +8,7 @@
 import { dbSelectAll } from '../../db/db'
 import { prepareQSORow } from './qsosDB'
 
-export async function findQSOsInOtherOps(calls, options = {}) {
+export async function findQSOsInOtherOps (calls, options = {}) {
   const whereClauses = []
   const whereArgs = []
 

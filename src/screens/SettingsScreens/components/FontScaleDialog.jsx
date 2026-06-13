@@ -16,7 +16,7 @@ import { setSettings } from '../../../store/settings'
 import { BASE_FONT_SIZE } from '../../../styles/globalStyles'
 import { SCALE_ADJUSTMENTS } from '../../../styles/tools/computeSizes'
 
-export function FontScaleDialog({ visible, settings, styles, onDialogDone }) {
+export function FontScaleDialog ({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()

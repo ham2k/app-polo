@@ -53,7 +53,7 @@ export const USStatesScoringHandler = {
     }
 
     if (count >= 3) {
-      score.label = t?.('extensions.usStates.statesCount', '{{count}} US States', { count: count }) || `${count} US States`
+      score.label = t?.('extensions.usStates.statesCount', '{{count}} US States', { count }) || `${count} US States`
       score.longSummary = ''
       // for (let row = 0; row < 5; row++) {
       // Object.keys(US_STATES).slice(row * 10, row * 10 + 10).forEach(state => {

@@ -491,7 +491,6 @@ const _changeLocationAndParkRef = ({ location, qso, sp, qsoRef, updateQSO }) => 
 
 async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatch }) {
   const opRef = findRef(operation, Info.key)
-  const sp = spData({ ref: opRef })
 
   if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key, location: undefined }
@@ -508,7 +507,6 @@ export function spData ({ ref }) {
 }
 
 function _suggestionsFor ({ qso, sp }) {
-  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
   if (sp.parkAbbreviations) {
     return Object.entries(sp.parkAbbreviations)
   } else {

@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { setSettings } from "../../store/settings"
+import { setSettings } from '../../store/settings'
 
 const Info = {
   key: 'commands-settings',
@@ -80,48 +80,48 @@ const SetSettingCommandHook = {
 }
 
 const SETTINGS = {
-  'devMode': {
+  devMode: {
     alias: 'konami',
     label: 'Developer Mode',
     default: false,
     type: 'boolean'
   },
-  'showNumbersRow': {
+  showNumbersRow: {
     alias: 'numbersRow',
     label: 'Show Numbers Row',
     default: false,
     type: 'boolean'
   },
-  'showDeletedOps': {
+  showDeletedOps: {
     alias: 'deletedOps',
     label: 'Show Deleted Operations',
     default: false,
     type: 'boolean'
   },
-  'showDeletedQSOs': {
+  showDeletedQSOs: {
     alias: 'deletedQSOs',
     label: 'Show Deleted QSOs',
     default: false,
     type: 'boolean'
   },
-  'defaultReportCW': {
+  defaultReportCW: {
     alias: 'reportCW',
     label: 'Default Report CW',
     default: '599',
     type: 'string'
   },
-  'defaultReportFT8': {
+  defaultReportFT8: {
     aliases: ['reportFT8', 'reportFT4', 'defaultReportFT4'],
     label: 'Default Report FT8/FT4',
     default: '+0',
     type: 'string'
   },
-  'defaultReport': {
+  defaultReport: {
     aliases: ['reportSSB', 'defaultReportSSB', 'reportRTTY', 'defaultReportRTTY'],
     label: 'Default Report',
     default: '59',
     type: 'string'
-  },
+  }
 }
 const SETTINGS_BY_KEY = {}
 
@@ -139,7 +139,7 @@ for (const key of Object.keys(SETTINGS)) {
   }
 }
 
-function _describeValue({ setting, value, isDefault }) {
+function _describeValue ({ setting, value, isDefault }) {
   console.log('-- describe value', setting.type, value, typeof value)
   let description
   if (setting.type === 'boolean') {
@@ -154,7 +154,7 @@ function _describeValue({ setting, value, isDefault }) {
   return isDefault ? `${description} *` : description
 }
 
-function _coerceValue({ setting, value }) {
+function _coerceValue ({ setting, value }) {
   console.log('-- coerce value', setting.type, value, typeof value)
   if (setting.type === 'boolean') {
     value = (value || '').trim().toUpperCase()
@@ -168,4 +168,3 @@ function _coerceValue({ setting, value }) {
   }
   return value
 }
-

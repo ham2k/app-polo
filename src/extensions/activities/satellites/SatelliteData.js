@@ -10,7 +10,7 @@ import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 
 export const SatelliteData = {}
 
-export function registerSatelliteData() {
+export function registerSatelliteData () {
   registerDataFile({
     key: 'satellite-data',
     name: 'Satellites: Active Birds',

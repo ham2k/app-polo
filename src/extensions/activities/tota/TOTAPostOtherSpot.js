@@ -26,7 +26,7 @@ export const TOTAPostOtherSpot = ({ t, comments, qso }) => async (dispatch) => {
       frequency: qso.freq,
       mode: qso.mode,
       tower_ref: ref.ref,
-      comment: comments,
+      comment: comments
     }
 
     try {

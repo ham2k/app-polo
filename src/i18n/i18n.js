@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import i18n from 'i18next'
+import i18next from 'i18next'
 import { getLocales, findBestLanguageTag } from 'react-native-localize'
 import { initReactI18next } from 'react-i18next'
 import Config from 'react-native-config'
@@ -185,7 +185,7 @@ const I18N_EXTRA_INFO = {
 }
 
 export const initializeI18Next = (language) => {
-  return i18n
+  return i18next
     .use(BundledJSONBackend)
     .use(NativeLanguageDetector)
     .use(initReactI18next)

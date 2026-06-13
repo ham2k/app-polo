@@ -26,7 +26,7 @@ export const MAX_DISPLAY_EMOJIS = 4
  * @param {Object} theirInfo - Call info with { baseCall, call } properties
  * @returns {{ note: string, emoji: string } | null} Combined note and first emoji, or null if no matches
  */
-export function combineCallNotes(notes, theirInfo) {
+export function combineCallNotes (notes, theirInfo) {
   const matchingNotes = (notes || []).filter(
     note => note?.call === undefined || note?.call === theirInfo.baseCall || note?.call === theirInfo?.call
   )

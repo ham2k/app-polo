@@ -338,7 +338,6 @@ function prepareNewQSO ({ operation, qso }) {
 
 async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatch }) {
   const opRef = findRef(operation, Info.key)
-  const test = vhfTestData({ ref: opRef })
 
   if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key }

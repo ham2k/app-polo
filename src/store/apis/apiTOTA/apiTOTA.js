@@ -28,7 +28,7 @@ export const apiTOTA = createApi({
     spots: builder.query({
       query: () => ({
         url: 'cluster.php',
-        params: {key: Config.TOTA_API_KEY}
+        params: { key: Config.TOTA_API_KEY }
       }),
       keepUnusedDataFor: 60 * 60 // 1 hour
     }),
@@ -36,7 +36,7 @@ export const apiTOTA = createApi({
       query: (body) => ({
         url: 'cluster_selfspot.php',
         method: 'POST',
-        params: {key: Config.TOTA_API_KEY},
+        params: { key: Config.TOTA_API_KEY },
         body
       })
     })

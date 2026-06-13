@@ -34,7 +34,7 @@ export async function fetchWithTimeout (url, options) {
 }
 
 export class FetchTimeoutError extends Error {
-  constructor(message = 'Request timed out') {
+  constructor (message = 'Request timed out') {
     super(message)
     this.name = 'FetchTimeoutError'
   }

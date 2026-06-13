@@ -5,15 +5,11 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { useState } from 'react'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import Config from 'react-native-config'
 
 import packageJson from '../../../../package.json'
-
-import { LLOTAAllRefs, llotaFindByReference } from '../../../extensions/activities/llota/LLOTAAllRefsData'
-import { reportError } from '../../../distro'
-import Config from 'react-native-config'
 
 /**
 
@@ -34,8 +30,6 @@ curl -X POST https://llota.app/api/public/spot \
     "comments": "QRV CQ LLOTA CQ LLOTA"
   }'
 al crear el spot te entregara un id de spot
-
-
 
 #RE-SPOT
 
@@ -83,13 +77,11 @@ export const apiLLOTA = createApi({
         })
         return response
       }
-    }),
+    })
   })
 })
 
 export const { actions } = apiLLOTA
-const LLOTA_REGEX = /[A-Z]{1,2}-[0-9]{4,5}/
-
 export const { endpoints, reducerPath, reducer, middleware, useSpotsQuery, useSpotCommentsQuery } = apiLLOTA
 
 export default apiLLOTA.reducer

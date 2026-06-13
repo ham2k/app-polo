@@ -18,7 +18,7 @@ import lightColors from '../lightColors'
 import darkColors from '../darkColors'
 import fontConfig from '../fonts'
 
-export function usePrepareThemes() {
+export function usePrepareThemes () {
   const settings = useSelector(selectSettings)
 
   const deviceColorScheme = useColorScheme()
@@ -64,7 +64,6 @@ export function usePrepareThemes() {
       loadedColors.onBackgroundLighter = Color(loadedColors.onBackground).darken(0.25).hex()
 
       loadedColors.primaryLighter = Color(loadedColors.primary).darken(0.3).desaturate(0.2).hex()
-
     } else {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
         const upcasedColor = color.charAt(0).toUpperCase() + color.slice(1)

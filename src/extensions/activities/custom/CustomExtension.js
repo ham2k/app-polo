@@ -6,7 +6,7 @@
  */
 
 import { filterRefs, findRef, refsToString } from '@ham2k/lib-qson-tools'
-  
+
 import { Info } from './CustomInfo'
 import { CustomActivityOptions } from './CustomActivityOptions'
 import { CustomLoggingControl } from './CustomLoggingControl'

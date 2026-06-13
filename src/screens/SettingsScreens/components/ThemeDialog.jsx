@@ -14,7 +14,7 @@ import { useTranslation } from 'react-i18next'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 import { setSettings } from '../../../store/settings'
 
-export function ThemeDialog({ visible, settings, styles, onDialogDone }) {
+export function ThemeDialog ({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
 

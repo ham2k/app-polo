@@ -14,7 +14,7 @@ export const LLOTAPostSelfSpot = ({ t, operation, vfo, comments }) => (_dispatch
 
   let mainCall = operation.stationCall || state.settings.operatorCall
   if (operation.local?.isMultiStation) {
-    mainCall = `${mainCall}/M${operation.local.multiIdentifier ?? "0"}`
+    mainCall = `${mainCall}/M${operation.local.multiIdentifier ?? '0'}`
   }
 
   const calls = [

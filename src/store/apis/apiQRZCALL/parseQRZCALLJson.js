@@ -5,7 +5,7 @@
  * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-import { capitalizeString } from "@ham2k/lib-format-tools"
+import { capitalizeString } from '@ham2k/lib-format-tools'
 
 /**
  * Pure JSON-to-record mapper for the QRZCALL.EU JSON lookup endpoint

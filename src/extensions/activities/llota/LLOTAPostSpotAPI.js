@@ -7,7 +7,6 @@
  */
 
 import { Alert } from 'react-native'
-import { useTranslation } from 'react-i18next'
 import Config from 'react-native-config'
 
 import packageJson from '../../../../package.json'
@@ -43,7 +42,7 @@ export const LLOTAPostSpotAPI = async ({ t, calls, comments, freq, mode, refs, s
         if (response.status > 299) {
           const body = await response.text()
           Alert.alert(t('extensions.activities.llota.postSpotAPI.error', 'Error posting LLOTA spot'),
-            t('extensions.activities.llota.postSpotAPI.serverResponse', 'Server responded with error {{status}}: {{body}}', { status: response.status, body: body }))
+            t('extensions.activities.llota.postSpotAPI.serverResponse', 'Server responded with error {{status}}: {{body}}', { status: response.status, body }))
           return false
         }
       } catch (error) {

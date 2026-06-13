@@ -15,9 +15,9 @@ import packageJson from '../../../package.json'
 import { selectDismissedNotices, selectFeatureFlags, selectNotices } from './systemSlice'
 import { selectOperatorCallInfo } from '../settings'
 import { processNoticeTemplateDataForDistribution } from '../../distro'
-import { CallNotesData, findAllCallNotes } from '../../extensions/data/call-notes/CallNotesExtension'
+import { findAllCallNotes } from '../../extensions/data/call-notes/CallNotesExtension'
 
-export function useNotices({ dispatch, includeDismissed = false, includeTransient = false }) {
+export function useNotices ({ dispatch, includeDismissed = false, includeTransient = false }) {
   const operatorCallInfo = useSelector(selectOperatorCallInfo)
   const systemNotices = useSelector(selectNotices)
   const featureFlags = useSelector(selectFeatureFlags)
@@ -95,7 +95,7 @@ export function useNotices({ dispatch, includeDismissed = false, includeTransien
   return notices
 }
 
-function _adjustNotice(object, templateData) {
+function _adjustNotice (object, templateData) {
   for (const key in object) {
     if (key.endsWith('-android') && Platform.OS === 'android') {
       object[key.slice(0, -7)] = object[key]
@@ -134,4 +134,3 @@ const _findInHam2KNotes = (call, rule) => {
 
   return false
 }
-

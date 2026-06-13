@@ -181,9 +181,7 @@ export function dataExportOptions ({ operation, qsos, settings, ourInfo }) {
 
   const exportOptions = getExportOptionsForOperation({ operation, qsos, settings })
 
-  const exportHandlersForRefs = (operation?.refs || [])
-
-  for (const { optionKey, refKey, handler, refs, option } of exportOptions) {
+  for (const { optionKey, handler, refs, option } of exportOptions) {
     let exportSettings = selectExportSettings({ settings }, optionKey, (handler?.defaultExportSettings && handler?.defaultExportSettings()))
     if (exportSettings.customTemplates === false) {
       const { privateData } = exportSettings

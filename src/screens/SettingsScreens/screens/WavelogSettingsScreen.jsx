@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unstable-nested-components */
 /*
  * Copyright ©️ 2025 Emma Ruby <k0uwu@0xem.ma>
  *

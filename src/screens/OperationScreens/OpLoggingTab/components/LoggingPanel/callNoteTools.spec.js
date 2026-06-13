@@ -8,41 +8,41 @@
 import { combineCallNotes } from './callNoteTools'
 
 describe('combineCallNotes', () => {
-  const theirInfo = { baseCall: 'W1AW', call: 'W1AW' }
+  const wa1wInfo = { baseCall: 'W1AW', call: 'W1AW' }
 
   it('returns null when notes array is empty', () => {
-    expect(combineCallNotes([], theirInfo)).toBeNull()
+    expect(combineCallNotes([], wa1wInfo)).toBeNull()
   })
 
   it('returns null when notes is null', () => {
-    expect(combineCallNotes(null, theirInfo)).toBeNull()
+    expect(combineCallNotes(null, wa1wInfo)).toBeNull()
   })
 
   it('returns null when no notes match the call', () => {
     const notes = [
       { call: 'K2ABC', note: '🎉 Different call' }
     ]
-    expect(combineCallNotes(notes, theirInfo)).toBeNull()
+    expect(combineCallNotes(notes, wa1wInfo)).toBeNull()
   })
 
   describe('single note', () => {
     it('returns note with emoji', () => {
       const notes = [{ call: 'W1AW', note: '🍄 QRQ Crew #9' }]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('🍄 QRQ Crew #9')
       expect(result.emoji).toBe('🍄')
     })
 
     it('returns note without emoji and default star emoji', () => {
       const notes = [{ call: 'W1AW', note: 'Just text' }]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('Just text')
       expect(result.emoji).toBe('⭐️')
     })
 
     it('matches notes with undefined call', () => {
       const notes = [{ note: '🎉 Matches any call' }]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('🎉 Matches any call')
       expect(result.emoji).toBe('🎉')
     })
@@ -61,7 +61,7 @@ describe('combineCallNotes', () => {
         { call: 'W1AW', note: '🍄 DitDit Club' },
         { call: 'W1AW', note: '⚓ QRQ Crew #9' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('⚓🍄 DitDit Club')
       expect(result.emoji).toBe('🍄')
     })
@@ -71,7 +71,7 @@ describe('combineCallNotes', () => {
         { call: 'W1AW', note: '🍄 First note text' },
         { call: 'W1AW', note: '⚓ Last note text' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('⚓🍄 First note text')
     })
 
@@ -80,7 +80,7 @@ describe('combineCallNotes', () => {
         { call: 'W1AW', note: '🍄 Club A' },
         { call: 'W1AW', note: '🍄 Club B' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('🍄 Club A')
     })
 
@@ -90,7 +90,7 @@ describe('combineCallNotes', () => {
         { call: 'W1AW', note: 'No emoji here' },
         { call: 'W1AW', note: '⚓ Also has emoji' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('⚓🍄 Has emoji')
     })
   })
@@ -103,7 +103,7 @@ describe('combineCallNotes', () => {
         { call: 'W1AW', note: '🎉 Three' },
         { call: 'W1AW', note: '🐧 Four' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('🐧🎉⚓🍄 One')
     })
 
@@ -115,7 +115,7 @@ describe('combineCallNotes', () => {
         { call: 'W1AW', note: '🐧 Four' },
         { call: 'W1AW', note: '🌊 Five' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('🐧🎉⚓🍄+1 One')
     })
 
@@ -129,20 +129,20 @@ describe('combineCallNotes', () => {
         { call: 'W1AW', note: '❄️ Six' },
         { call: 'W1AW', note: '👑 Seven' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('🐧🎉⚓🍄+3 One')
     })
   })
 
   describe('multiple notes from multiple sources', () => {
-    const theirInfo = { baseCall: 'KI2D', call: 'KI2D' }
+    const ki2dInfo = { baseCall: 'KI2D', call: 'KI2D' }
     it('combines notes from multiple sources', () => {
       const notes = [
         { call: 'KI2D', note: '🌄 HVCDX Member', source: 'HVCDX Members' },
         { call: 'KI2D', note: '🤩 Ham2K PoLo Creator', source: 'Ham2K Notes' },
-        { call: 'KI2D', note: '☕️ Ham2K Supporter', source: 'Ham2K Notes' },
+        { call: 'KI2D', note: '☕️ Ham2K Supporter', source: 'Ham2K Notes' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, ki2dInfo)
       expect(result.note).toBe('🌄☕️🤩 Ham2K PoLo Creator')
       expect(result.emoji).toBe('🤩')
     })
@@ -151,9 +151,9 @@ describe('combineCallNotes', () => {
       const notes = [
         { call: 'KI2D', note: '🤩 Ham2K PoLo Creator', source: 'Ham2K Notes' },
         { call: 'KI2D', note: '☕️ Ham2K Supporter', source: 'Ham2K Notes' },
-        { call: 'KI2D', note: '🌄 HVCDX Member', source: 'HVCDX Members' },
+        { call: 'KI2D', note: '🌄 HVCDX Member', source: 'HVCDX Members' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, ki2dInfo)
       expect(result.note).toBe('☕️🤩🌄 HVCDX Member')
       expect(result.emoji).toBe('🌄')
     })
@@ -166,7 +166,7 @@ describe('combineCallNotes', () => {
         { call: 'K2XYZ', note: '⚓ Does not match' },
         { call: 'W1AW', note: '🎉 Also matches' }
       ]
-      const result = combineCallNotes(notes, theirInfo)
+      const result = combineCallNotes(notes, wa1wInfo)
       expect(result.note).toBe('🎉🍄 Matches')
     })
   })

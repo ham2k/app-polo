@@ -62,7 +62,7 @@ export const settingsSlice = createSlice({
 
 export const { setOperatorCall, setOnboarded, setAccountInfo, setSettings, setExtensionSettings, setExportSettings, mergeSettings } = settingsSlice.actions
 
-function deepMergeState(state, data, visited = undefined) {
+function deepMergeState (state, data, visited = undefined) {
   visited = visited || new Set()
   visited.add(data)
 

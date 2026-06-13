@@ -24,7 +24,7 @@ export const WWBOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (di
   const state = getState()
   let activatorCallsign = operation.stationCall || state.settings.operatorCall
   if (operation.local?.isMultiStation) {
-    activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? "0"}`
+    activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? '0'}`
   }
 
   const refs = filterRefs(operation, Info.activationType)

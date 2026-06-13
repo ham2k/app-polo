@@ -63,7 +63,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
     newRefs = replaceRef(newRefs, Info.key, { ...activityRef, location: value })
 
     setRefs(newRefs)
-  }, [activityRef, allRefs, setRefs])
+  }, [activityRef, operation, setRefs, sp.parkAbbreviations, sp.parkReferences])
 
   useEffect(() => {
     if (activityRef?.location === undefined && sp?.parkAbbreviations) {
@@ -73,7 +73,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
         setRefs(replaceRef(allRefs, Info.key, { ...activityRef, location: park }))
       }
     }
-  }, [activityRef?.location, sp?.parkAbbreviations])
+  }, [activityRef, activityRef?.location, allRefs, operation, setRefs, sp?.parkAbbreviations, sp.parks])
 
   const needsLocation = useMemo(() => {
     return !!sp?.parkAbbreviations
@@ -84,7 +84,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
     if (sp?.parkAbbreviations && sp?.parkAbbreviations[activityRef?.location]) {
       return [sp?.parkReferences[activityRef?.location], sp?.parkAbbreviations[activityRef?.location]].filter(Boolean).join(' ')
     }
-  }, [activityRef?.location, sp?.parkAbbreviations])
+  }, [activityRef?.location, sp?.parkAbbreviations, sp?.parkReferences])
 
   return (
     <>
@@ -117,7 +117,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
                 {locationLabel}
               </H2kMarkdown>
             ) : (
-              <H2kMarkdown style={{ padding: styles.oneSpace, color: 'red', marginHorizontal: styles.oneSpace  }}>
+              <H2kMarkdown style={{ padding: styles.oneSpace, color: 'red', marginHorizontal: styles.oneSpace }}>
                 Not found!
               </H2kMarkdown>
             )

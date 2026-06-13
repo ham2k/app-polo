@@ -15,7 +15,7 @@
  * The examples below use the shorter schema for brevity.
  *
  * # Present a QSO for logging:
- * 
+ *
  *   `com.ham2k://qso?their.call=N0CALL&frequency=7200000&mode=CW`
  *
  *   - `their.call`: The callsign of the other station
@@ -68,7 +68,7 @@ export function DeepLinks ({ navigationRef }) {
       } else if (params.frequency) {
         freq = Number(params.frequency) / 1000
       }
-      let band = freq ? bandForFrequency(freq) : params.band
+      const band = freq ? bandForFrequency(freq) : params.band
 
       const qso = {
         uuid: 'suggested-qso',
@@ -81,7 +81,7 @@ export function DeepLinks ({ navigationRef }) {
       }
 
       if (params['their.refs']) {
-        qso.refs = _parseRefs(params['their.refs'] || params['refs'])
+        qso.refs = _parseRefs(params['their.refs'] || params.refs)
       }
 
       if (DEBUG) console.log('🔗 Deep Link to QSO:', { ...qso, their: { ...qso?.their || {} } })

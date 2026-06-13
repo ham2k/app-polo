@@ -16,7 +16,7 @@ import { Info } from './ARRLVHFContestsInfo'
 export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
   const test = useMemo(() => VHF_CONTESTS_DATA[activityRef?.ref], [activityRef])
-  
+
   const testOptions = useMemo(() => {
     const now = new Date()
 

@@ -57,7 +57,7 @@ export const SCALE_ADJUSTMENTS = {
   xl: 1.25
 }
 
-export function computeSizes({ width, height, fontScale, pixelRatio, settingsScale }) {
+export function computeSizes ({ width, height, fontScale, pixelRatio, settingsScale }) {
   const smallestSize = Math.min(width, height)
 
   const settingsScaleAdjustment = SCALE_ADJUSTMENTS[settingsScale] ?? 1.0
@@ -101,7 +101,6 @@ export function computeSizes({ width, height, fontScale, pixelRatio, settingsSca
     landscape,
     fontScale,
     pixelRatio,
-    fontScale,
     settingsScale,
     settingsScaleAdjustment,
     fontScaleAdjustment,
@@ -112,11 +111,11 @@ export function computeSizes({ width, height, fontScale, pixelRatio, settingsSca
     lgOrLarger: sized({ xs: false, lg: true }),
     lgOrSmaller: sized({ xs: true, xl: false }),
     mdOrSmaller: sized({ xs: true, lg: false, xl: false }),
-    smOrSmaller: sized({ xs: true, lg: false, xl: false, md: false }),
+    smOrSmaller: sized({ xs: true, lg: false, xl: false, md: false })
   }
 }
 
-export function useComputeSizes({ settingsScale }) {
+export function useComputeSizes ({ settingsScale }) {
   const { width, height } = useSafeAreaFrame()
   // const { width, height } = useWindowDimensions() <-- broken on iOS, no rotation
 
