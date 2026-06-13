@@ -1,13 +1,9 @@
-/*
- * Copyright ©️ 2026 Ian Renton <ian@ianrenton.com>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
- *
- * Data was taken from the RSGB Contest Committee website page at https://www.rsgbcc.org/vhf/rules/2025/postcode.shtml
- * This supports an unofficial two-letter form for the single-letter postcode regions such as B for Birmingham is given
- * as BM. In this list I have included both forms.
- */
+// Copyright ©️ 2026 Ian Renton <ian@ianrenton.com>
+// SPDX-License-Identifier: MPL-2.0
+//
+// Data was taken from the RSGB Contest Committee website page at https://www.rsgbcc.org/vhf/rules/2025/postcode.shtml
+// This supports an unofficial two-letter form for the single-letter postcode regions such as B for Birmingham is given
+// as BM. In this list I have included both forms.
 
 export const RSGB_POSTCODE_DISTRICTS = {
   AB: 'Aberdeen',

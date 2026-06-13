@@ -1,10 +1,6 @@
-/*
- * Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
- * Copyright ©️ 2024-2026 Steven Hiscocks <steven@hiscocks.me.uk>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
+// Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
+// Copyright ©️ 2024-2026 Steven Hiscocks <steven@hiscocks.me.uk>
+// SPDX-License-Identifier: MPL-2.0
 
 import { fmtNumber, fmtPercent, fmtDateNiceZulu } from '@ham2k/lib-format-tools'
 import { locationToGrid6 } from '@ham2k/lib-geo-tools'

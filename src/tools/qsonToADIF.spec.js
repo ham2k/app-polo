@@ -1,9 +1,5 @@
-/*
- * Copyright ©️ 2026 Robert Jackson <me@rwjblue.com>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
+// Copyright ©️ 2026 Robert Jackson <me@rwjblue.com>
+// SPDX-License-Identifier: MPL-2.0
 
 import { qsonToADIF } from './qsonToADIF'
 

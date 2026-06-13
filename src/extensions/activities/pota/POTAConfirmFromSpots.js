@@ -1,9 +1,5 @@
-/*
- * Copyright ©️ 2024 Aldo Mendoza <NA7DO>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
+// Copyright ©️ 2024 Aldo Mendoza <NA7DO>
+// SPDX-License-Identifier: MPL-2.0
 
 import { findRef } from '@ham2k/lib-qson-tools'
 

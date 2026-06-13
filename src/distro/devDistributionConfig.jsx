@@ -1,14 +1,9 @@
-/*
- * Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
- *
- * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
- * If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
- */
+// Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+// SPDX-License-Identifier: MPL-2.0
 
 import React, { useEffect, useMemo } from 'react'
 import DeviceInfo from 'react-native-device-info'
 
-import { hashCode } from '../tools/hashCode'
 import packageJson from '../../package.json'
 import { addRuntimeMessage } from '../store/runtime'
 import { H2kListSection, H2kListItem } from '../ui'
