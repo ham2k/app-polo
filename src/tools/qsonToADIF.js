@@ -3,6 +3,7 @@
 
 import { escapeToUnicodeEntities, fmtADIFDate, fmtADIFTime, fmtISODateTime } from '@ham2k/lib-format-tools'
 import { adifModeAndSubmodeForMode, frequencyForBand, modeForFrequency } from '@ham2k/lib-operation-data'
+import { forEachQSOWithSectionContext } from '@ham2k/lib-qson-tools'
 
 import packageJson from '../../package.json'
 import { findBestHook } from '../extensions/registry'
@@ -47,8 +48,6 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
     common.operatorCall = operation.local?.operatorCall || operation.operatorCall
   }
 
-  // const eventQSOs = qsos.filter(qso => qso.event && !qso.deleted)
-
   let str = ''
   str += `ADIF for ${title || ([common.stationCall, operation?.title, operation.subTitle].filter(x => x).join(' ')) || 'Operation'} \n`
   str += adifField('ADIF_VER', '3.1.5', { newLine: true })
@@ -64,92 +63,98 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
 
   str += '<EOH>\n'
 
-  qsos.forEach(qso => {
-    if (qso.deleted) return
-    if (qso.event) {
-      if (privateData) {
-        if (qso.event.event === 'break' || qso.event.event === 'start') str += '\n'
+  forEachQSOWithSectionContext({
+    qsos,
+    operation,
+    withEvents: true,
+    callback: ({ qso, sectionRefs, sectionGrid }) => {
+      if (qso.deleted) return
+      if (qso.event) {
+        if (privateData) {
+          if (qso.event.event === 'break' || qso.event.event === 'start') str += '\n'
 
-        const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
-        str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
+          const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
+          str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
 
-        if (qso.event.data) {
-          str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event.data), { newLine: true })
-        } else {
-          const dataField = Object.keys(qso.event).find(key => key.endsWith('Data'))
-          if (dataField) {
-            str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event[dataField]), { newLine: true })
+          if (qso.event.data) {
+            str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event.data), { newLine: true })
+          } else {
+            const dataField = Object.keys(qso.event).find(key => key.endsWith('Data'))
+            if (dataField) {
+              str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event[dataField]), { newLine: true })
+            }
           }
+
+          if (qso.event.event === 'break' || qso.event.event === 'start') str += '\n'
         }
 
-        if (qso.event.event === 'break' || qso.event.event === 'start') str += '\n'
-      }
-
-      if (qso.event.event === 'break' || qso.event.event === 'start') {
-        if (combineSegmentRefs) {
-          // Update all operation attributes, including regs
-          operation = { ...operation, ...qso.event.operation }
-          common = { ...common, ...qso.event.operation }
-        } else {
+        if (qso.event.event === 'break' || qso.event.event === 'start') {
+          const segmentOperation = { ...qso.event.operation, refs: sectionRefs, grid: sectionGrid }
+          if (combineSegmentRefs) {
+          // Update all operation attributes, including refs
+            operation = { ...operation, ...segmentOperation }
+            common = { ...common, ...segmentOperation }
+          } else {
           // Combine other attributes, but keep refs as initialized
-          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
-          common = { ...common, ...qso.event.operation, refs: common.refs }
+            operation = { ...operation, ...segmentOperation, refs: operation.refs }
+            common = { ...common, ...segmentOperation, refs: common.refs }
+          }
+          templates.context = templateContextForOneExport({ settings, operation, handler })
         }
-        templates.context = templateContextForOneExport({ settings, operation, handler })
+        return
       }
-      return
-    }
 
-    // Get the base handler's field combinations for this QSO
-    // it might return an array of arrays,
-    // meaning this QSO has to be represented by multiple ADIF rows (think POTA P2P, or QSO Party county line operations)
-    let handlerFieldCombinations
-    if (handler?.adifFieldCombinationsForOneQSO) {
-      handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true, privateData, templates })
-    } else if (handler?.adifFieldsForOneQSO) {
-      handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType, mainHandler: true, templates, privateData })]
-    } else {
-      handlerFieldCombinations = [[]]
-    }
+      // Get the base handler's field combinations for this QSO
+      // it might return an array of arrays,
+      // meaning this QSO has to be represented by multiple ADIF rows (think POTA P2P, or QSO Party county line operations)
+      let handlerFieldCombinations
+      if (handler?.adifFieldCombinationsForOneQSO) {
+        handlerFieldCombinations = handler.adifFieldCombinationsForOneQSO({ qso, operation, common, exportType, mainHandler: true, privateData, templates })
+      } else if (handler?.adifFieldsForOneQSO) {
+        handlerFieldCombinations = [handler.adifFieldsForOneQSO({ qso, operation, common, exportType, mainHandler: true, templates, privateData })]
+      } else {
+        handlerFieldCombinations = [[]]
+      }
 
-    if (handlerFieldCombinations === false || handlerFieldCombinations[0] === false) return
+      if (handlerFieldCombinations === false || handlerFieldCombinations[0] === false) return
 
-    // Now, for each field combination, we will generate an ADIF row
-    handlerFieldCombinations.forEach((combinationFields, n) => {
+      // Now, for each field combination, we will generate an ADIF row
+      handlerFieldCombinations.forEach((combinationFields, n) => {
       // We start with the general ADIF fields
-      let fields = adifFieldsForOneQSO({ qso, operation, common, privateData, templates, timeOffset: n * 1000 })
-      // Then we append the fields from the main handler's combinations
-      fields = fields.concat(combinationFields)
+        let fields = adifFieldsForOneQSO({ qso, operation, common, privateData, templates, timeOffset: n * 1000 })
+        // Then we append the fields from the main handler's combinations
+        fields = fields.concat(combinationFields)
 
-      if (includeOtherRefs) {
+        if (includeOtherRefs) {
         // And finally, we look at any handlers for other refs in the operation, or refs in the QSO itself
         // and ask them for more fields to add to this QSO.
-        const refs = [...qso.refs || [], ...operation.refs || []]
-        refs.filter(ref => ref.type).forEach(ref => {
-          const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
+          const refs = [...qso.refs || [], ...operation.refs || []]
+          refs.filter(ref => ref.type).forEach(ref => {
+            const secondaryRefHandler = findBestHook(`ref:${ref.type}`)
 
-          if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
+            if (secondaryRefHandler?.key === handler.key) return // Skip if it happens to be the same as the main handler
 
-          if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
-            const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateData, templates }) || []
-            refFields.forEach(refField => {
-              const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
-              if (existingField) {
+            if (secondaryRefHandler && secondaryRefHandler.key !== handler.key && secondaryRefHandler.adifFieldsForOneQSO) {
+              const refFields = secondaryRefHandler.adifFieldsForOneQSO({ qso, operation, common, exportType, ref, privateData, templates }) || []
+              refFields.forEach(refField => {
+                const existingField = fields.find(field => Object.keys(field)[0] === Object.keys(refField)[0])
+                if (existingField) {
                 // If another field with the same name already exists. Keep the first one defined and ignore this one
                 // unless it is `false`, in which case the field should be removed.
-                if (refField[1] === false) {
-                  existingField[1] = false
+                  if (refField[1] === false) {
+                    existingField[1] = false
+                  }
+                } else {
+                  fields = fields.concat([refField])
                 }
-              } else {
-                fields = fields.concat([refField])
-              }
-            })
-          }
-        })
-      }
+              })
+            }
+          })
+        }
 
-      str += adifRow(fields)
-    })
+        str += adifRow(fields)
+      })
+    }
   })
 
   return str
