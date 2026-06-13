@@ -3,11 +3,12 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Mapbox, { StyleURL, Camera, CircleLayer, LineLayer, MapView, MarkerView, ShapeSource, Atmosphere } from '@rnmapbox/maps'
-import { Platform, View } from 'react-native'
+import { Platform, Pressable, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import Config from 'react-native-config'
 
 import { fmtShortTimeZulu } from '@ham2k/lib-format-tools'
+import { buildOriginFeatureCollection, buildOriginGroups, coordsFromLatLon } from './mapOriginGroups'
 
 if (Platform.OS === 'ios') {
   Mapbox.setWellKnownTileServer('mapbox')
@@ -25,6 +26,9 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
   }
 
   const qsosGeoJSON = useMemo(() => _geoJSONMarkersForQSOs({ mappableQSOs, qth, operation, styles }), [mappableQSOs, qth, operation, styles])
+  const originsGeoJSON = useMemo(() => buildOriginFeatureCollection({ mappableQSOs, styles }), [mappableQSOs, styles])
+  const originGroups = useMemo(() => buildOriginGroups({ mappableQSOs, styles }), [mappableQSOs, styles])
+  const numberedOriginGroups = useMemo(() => originGroups.filter(group => group.order), [originGroups])
   const linesGeoJSON = useMemo(() => _getJSONLinesForQSOs({ mappableQSOs, qth, operation, styles }), [mappableQSOs, qth, operation, styles])
 
   const circleStyles = useMemo(() => {
@@ -84,6 +88,23 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
       setSelectedFeature(null)
     }
   }, [selectedFeature])
+
+  const handleOriginMarkerPress = useCallback((group) => {
+    setSelectedFeature({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: group.coordinates
+      },
+      properties: {
+        markerType: 'origin',
+        color: group.color,
+        strengthFactor: 1,
+        orderLabel: group.order ? String(group.order) : '',
+        callout: group.callout
+      }
+    })
+  }, [])
 
   const mapRef = useRef()
   const [camera, setCamera] = useState(null)
@@ -149,6 +170,48 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
             <CircleLayer id="qsos-circles" style={circleStyles} layerIndex={100} />
           </ShapeSource>
         )}
+        {originsGeoJSON && numberedOriginGroups.length === 0 && (
+          <ShapeSource id="origins-source" shape={originsGeoJSON} onPress={handleMapPress}>
+            <CircleLayer id="origin-circles" style={circleStyles} layerIndex={100} />
+          </ShapeSource>
+        )}
+        {numberedOriginGroups.map(group => (
+          <MarkerView
+            key={group.key}
+            coordinate={group.coordinates}
+            anchor={{ x: 0.5, y: 0.5 }}
+            allowOverlap={true}
+            allowOverlapWithPuck={true}
+          >
+            <Pressable
+              onPress={() => handleOriginMarkerPress(group)}
+              style={{
+                width: styles.oneSpace * 2.5,
+                height: styles.oneSpace * 2.5,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: styles.oneSpace * 1.25,
+                borderWidth: 2,
+                borderColor: '#FFFFFF',
+                backgroundColor: group.color
+              }}
+            >
+              <Text
+                style={{
+                  color: '#FFFFFF',
+                  fontSize: 11,
+                  fontWeight: '900',
+                  lineHeight: 13,
+                  textShadowColor: '#000000',
+                  textShadowOffset: { width: 0, height: 1 },
+                  textShadowRadius: 2
+                }}
+              >
+                {group.order}
+              </Text>
+            </Pressable>
+          </MarkerView>
+        ))}
         {linesGeoJSON && (
           <ShapeSource id="qsos-lines-source" shape={linesGeoJSON} onPress={handleMapPress}>
             <LineLayer id="qsos-lines" style={linesStyles} layerIndex={99} />
@@ -190,30 +253,9 @@ const FeatureCallout = ({ feature, qth, operation, styles }) => {
   }
 }
 
-function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
-  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
-    return {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: _coordsFromLatLon(qth)
-      },
-      properties: {
-        color: styles.colors.bands.other,
-        strenghtFactor: 1,
-        callout: `QTH: ${operation.grid}`
-      }
-    }
-  }
-}
-
 function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
   const features = []
   features.push(...mappableQSOs.map(mappableQSO => _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles })).filter(x => x))
-
-  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
-    features.push(_geoJSONMarkerForQTH({ qth, operation, styles }))
-  }
 
   return {
     type: 'FeatureCollection',
@@ -227,7 +269,7 @@ function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: _coordsFromLatLon(mappableQSO.location)
+        coordinates: coordsFromLatLon(mappableQSO.location)
       },
       properties: {
         color: styles.colors.bands[mappableQSO.qso.band] || styles.colors.bands.default,
@@ -240,20 +282,21 @@ function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
 }
 
 function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
-  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
-    const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
+  const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
 
-    return {
-      type: 'FeatureCollection',
-      features
-    }
+  return {
+    type: 'FeatureCollection',
+    features
   }
 }
 
 function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
   if (mappableQSO?.location?.latitude !== undefined && mappableQSO?.location?.longitude !== undefined) {
-    const start = _coordsFromLatLon(mappableQSO.location)
-    const end = _coordsFromLatLon(qth)
+    const ourLocation = mappableQSO?.ourLocation ?? qth
+    if (ourLocation?.latitude === undefined || ourLocation?.longitude === undefined) return null
+
+    const start = coordsFromLatLon(mappableQSO.location)
+    const end = coordsFromLatLon(ourLocation)
 
     if (start[0] === end[0] && start[1] === end[1]) {
       return null
@@ -270,10 +313,6 @@ function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
       }
     }))
   }
-}
-
-function _coordsFromLatLon ({ latitude, longitude }) {
-  return [Number(longitude?.toFixed(5) ?? 0), Number(latitude?.toFixed(5) ?? 0)]
 }
 
 function _colorForText ({ qso, styles, mapStyles }) {
