@@ -190,30 +190,10 @@ const FeatureCallout = ({ feature, qth, operation, styles }) => {
   }
 }
 
-function _geoJSONMarkerForQTH ({ qth, operation, styles }) {
-  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
-    return {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: _coordsFromLatLon(qth)
-      },
-      properties: {
-        color: styles.colors.bands.other,
-        strenghtFactor: 1,
-        callout: `QTH: ${operation.grid}`
-      }
-    }
-  }
-}
-
 function _geoJSONMarkersForQSOs ({ mappableQSOs, qth, operation, styles }) {
   const features = []
   features.push(...mappableQSOs.map(mappableQSO => _geoJSONMarkerForQSO({ mappableQSO, qth, operation, styles })).filter(x => x))
-
-  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
-    features.push(_geoJSONMarkerForQTH({ qth, operation, styles }))
-  }
+  features.push(..._geoJSONMarkersForOrigins({ mappableQSOs, styles }))
 
   return {
     type: 'FeatureCollection',
@@ -239,21 +219,50 @@ function _geoJSONMarkerForQSO ({ mappableQSO, qth, operation, styles }) {
   }
 }
 
-function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
-  if (qth?.latitude !== undefined && qth?.longitude !== undefined) {
-    const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
+function _geoJSONMarkersForOrigins ({ mappableQSOs, styles }) {
+  const seen = new Set()
+
+  return mappableQSOs.map(mappableQSO => {
+    const origin = mappableQSO?.ourLocation
+    if (origin?.latitude === undefined || origin?.longitude === undefined) return null
+
+    const coordinates = _coordsFromLatLon(origin)
+    const originGrid = mappableQSO.ourGrid
+    const key = originGrid || coordinates.join(',')
+    if (seen.has(key)) return null
+    seen.add(key)
 
     return {
-      type: 'FeatureCollection',
-      features
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates
+      },
+      properties: {
+        color: styles.colors.bands.other,
+        strengthFactor: 1,
+        callout: `Origin: ${originGrid || coordinates.join(', ')}`
+      }
     }
+  }).filter(x => x)
+}
+
+function _getJSONLinesForQSOs ({ mappableQSOs, qth, operation, styles }) {
+  const features = mappableQSOs.map(mappableQSO => _geoJSONLineForQSO({ mappableQSO, qth, operation, styles })).flat().filter(x => x)
+
+  return {
+    type: 'FeatureCollection',
+    features
   }
 }
 
 function _geoJSONLineForQSO ({ mappableQSO, qth, operation, styles }) {
   if (mappableQSO?.location?.latitude !== undefined && mappableQSO?.location?.longitude !== undefined) {
+    const ourLocation = mappableQSO?.ourLocation ?? qth
+    if (ourLocation?.latitude === undefined || ourLocation?.longitude === undefined) return null
+
     const start = _coordsFromLatLon(mappableQSO.location)
-    const end = _coordsFromLatLon(qth)
+    const end = _coordsFromLatLon(ourLocation)
 
     if (start[0] === end[0] && start[1] === end[1]) {
       return null
