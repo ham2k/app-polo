@@ -101,7 +101,7 @@ export default function MapboxMapWithQSOs ({ styles, mappableQSOs, initialRegion
         color: group.color,
         strengthFactor: 1,
         orderLabel: group.order ? String(group.order) : '',
-        callout: `Origin: ${group.grid || group.coordinates.join(', ')}`
+        callout: group.callout
       }
     })
   }, [])

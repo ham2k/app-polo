@@ -23,8 +23,9 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     return mapQSOsWithSectionContext({
       qsos,
       operation,
-      map: ({ qso, sectionGrid }) => ({
+      map: ({ qso, sectionGrid, sectionRefs }) => ({
         ...qso,
+        sectionRefs,
         our: {
           ...qso.our,
           grid: sectionGrid,
@@ -41,14 +42,15 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
         const location = locationForQSONInfo(qso?.their)
         const ourLocation = qso?.our?.location ?? qth
         const ourGrid = qso?.our?.grid ?? operation.grid
+        const originRefs = qso?.sectionRefs ?? operation.refs
         const strength = strengthForQSO(qso)
         const distance = location && ourLocation ? distanceOnEarth(location, ourLocation, { units: settings.distanceUnits }) : null
         const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
-        return { qso, location, ourLocation, ourGrid, strength, distance, distanceStr }
+        return { qso, location, ourLocation, ourGrid, originRefs, strength, distance, distanceStr }
       })
       .filter(({ location }) => location)
       .sort((a, b) => b.strength - a.strength) // Weakest first
-  }, [operation.grid, qsosWithOriginContext, qth, settings])
+  }, [operation.grid, operation.refs, qsosWithOriginContext, qth, settings])
 
   const initialRegion = useMemo(() => {
     const { latitude, longitude } = qth
