@@ -1,6 +1,6 @@
 {
-  "26.6.0-pre5": {
-    "name": "June '26 - Pre 5",
+  "26.6.0-rc1": {
+    "name": "June '26 - RC 1",
     "photoCaption": "ON4VT at ONFF-0440",
     "changes": [
       "ARRL Field Day improvements for 2026",
@@ -10,6 +10,7 @@
       "Ohio State Parks On The Air (thanks to W8NI)",
       "Add QRZCALL.EU data lookup (thanks to PA4R)",
       "Support FT4, FT2 and other submodes when importing ADIF files",
+      "Option to ignore lookup data in ADIF exports",
       "Fix bug in contests with numbered exchanges",
       "Allow user-installed CA certificates on Android"
     ]

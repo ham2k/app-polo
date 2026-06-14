@@ -22,6 +22,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
 
   templates.exportSettings = { ...defaultSettings, ...handlerSettings }
   const privateData = (templates.exportSettings.privateData ?? handlerSettings.privateDataDefault)
+  const ignoreLookupData = (templates.exportSettings.ignoreLookupData ?? handlerSettings.ignoreLookupDataDefault)
 
   templates.context = templateContextForOneExport({ settings, operation, handler })
   templates.partials = basePartialTemplates({ settings })
@@ -98,6 +99,29 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
         templates.context = templateContextForOneExport({ settings, operation, handler })
       }
       return
+    }
+
+    if (ignoreLookupData) {
+      // We can't just delete all of `guess` because it also contains callsign parsing info like `entityPrefix`, `entityName`, etc.
+      if (qso.their?.guess) {
+        qso = {
+          ...qso,
+          their: {
+            ...qso.their,
+            guess: {
+              ...qso.their.guess,
+              name: undefined,
+              city: undefined,
+              state: undefined,
+              county: undefined,
+              country: undefined,
+              grid: undefined,
+              lat: undefined,
+              lon: undefined
+            }
+          }
+        }
+      }
     }
 
     // Get the base handler's field combinations for this QSO

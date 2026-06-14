@@ -147,6 +147,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
 
               const description = [
                 exportSettings.customTemplates ? t('screens.exportSettings.customTemplates', 'Custom templates') : t('screens.exportSettings.defaultTemplates', 'Default templates'),
+                exportSettings.ignoreLookupData ?? refHook?.ignoreLookupDataDefault ? t('screens.exportSettings.ignoreLookupData', 'Ignore Lookup data') : '',
                 exportSettings.privateData ?? refHook?.privateDataDefault ? t('screens.exportSettings.includePrivateData', 'Include Private data') : ''
               ].filter(x => x).join(' • ')
 
@@ -217,6 +218,7 @@ export default function ExportSettingsScreen ({ navigation, splitView }) {
 
           const description = [
             exportSettings.customTemplates ? t('screens.exportSettings.customTemplates', 'Custom templates') : t('screens.exportSettings.defaultTemplates', 'Default templates'),
+            exportSettings.ignoreLookupData ?? exportHook?.ignoreLookupDataDefault ? t('screens.exportSettings.ignoreLookupData', 'Ignore Lookup data') : '',
             exportSettings.privateData ?? exportHook?.privateDataDefault ? t('screens.exportSettings.includePrivateData', 'Include Private data') : ''
           ].filter(x => x).join(' • ')
 
@@ -334,13 +336,22 @@ Attributes for the log being exported
             {expanded[exportType.key] && (
               <View style={{ marginLeft: styles.oneSpace * 5, borderBottomWidth: 2, marginRight: styles.oneSpace * 2, paddingBottom: styles.oneSpace * 2, borderColor: styles.colors.border }}>
                 {(exportType.key === 'default' || exportType.defaults.format === 'adif') && (
-                  <H2kListItem
-                    title={t('screens.exportSettings.includePrivateData', 'Include Private data')}
-                    description={t('screens.exportSettings.includePrivateDataDescription', 'Names, notes, addresses, etc.')}
-                    rightSwitchValue={exportType.settings?.privateData ?? exportType.hook?.privateDataDefault}
-                    rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, privateData: value }))}
-                    onPress={() => dispatch(setExportSettings({ key: exportType.key, privateData: !exportType.settings?.privateData }))}
-                  />
+                  <>
+                    <H2kListItem
+                      title={t('screens.exportSettings.ignoreLookupData', 'Ignore Lookup data')}
+                      description={t('screens.exportSettings.ignoreLookupDataDescription', 'Ignore data from lookup services like QRZ.com')}
+                      rightSwitchValue={exportType.settings?.ignoreLookupData ?? exportType.hook?.ignoreLookupDataDefault}
+                      rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, ignoreLookupData: value }))}
+                      onPress={() => dispatch(setExportSettings({ key: exportType.key, ignoreLookupData: !exportType.settings?.ignoreLookupData }))}
+                    />
+                    <H2kListItem
+                      title={t('screens.exportSettings.includePrivateData', 'Include Private data')}
+                      description={t('screens.exportSettings.includePrivateDataDescription', 'Names, notes, addresses, etc.')}
+                      rightSwitchValue={exportType.settings?.privateData ?? exportType.hook?.privateDataDefault}
+                      rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, privateData: value }))}
+                      onPress={() => dispatch(setExportSettings({ key: exportType.key, privateData: !exportType.settings?.privateData }))}
+                    />
+                  </>
                 )}
                 {exportType.key !== 'default' && (
                   <H2kListItem
