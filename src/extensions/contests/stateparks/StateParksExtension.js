@@ -159,28 +159,45 @@ const ReferenceHandler = {
       theirLocation = sp.parks[theirLocation] || theirLocation
     }
 
-    if (!ourLocation) {
-      ourLocation = 'NOT' // At least for Ohio SP, this is what they expect
-    }
+    const entity = qso?.their?.entityPrefix ?? qso?.their?.guess?.entityPrefix
 
-    if (!theirLocation) {
-      const entity = qso?.their?.entityPrefix ?? qso?.their?.guess?.entityPrefix
-      if (entity === 'K' || entity === 'VE') {
-        theirLocation = qso?.their?.state ?? qso?.their?.guess?.state ?? 'NOT'
-      } else {
-        theirLocation = entity ?? 'DX'
+    if (sp.key === 'OHSP') {
+      if (!ourLocation) {
+        ourLocation = 'NOT' // At least for Ohio SP, this is what they expect
+      }
+      if (!theirLocation) {
+        if (entity === 'K') {
+          theirLocation = qso?.their?.state ?? qso?.their?.guess?.state ?? 'NOT'
+        } else {
+          theirLocation = 'DX'
+        }
+      }
+    } else {
+      if (!theirLocation) {
+        if (entity === 'K' || entity === 'VE') {
+          theirLocation = qso?.their?.state ?? qso?.their?.guess?.state
+        } else {
+          theirLocation = entity ?? 'DX'
+        }
       }
     }
 
     const ourCall = operation.stationCall || settings.operatorCall
 
     const row = []
-    row.push((ourCall ?? '-').padEnd(13, ' '))
-    row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
-    row.push((ourLocation ?? '-').padEnd(6, ' '))
-    row.push((qso?.their?.call ?? '-').padEnd(13, ' '))
-    row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
-    row.push((theirLocation ?? '-').padEnd(6, ' '))
+    if (sp.key === 'OHSP') {
+      row.push((ourCall ?? '-').padEnd(18, ' '))
+      row.push((ourLocation ?? '-').padEnd(12, ' '))
+      row.push((qso?.their?.call ?? '-').padEnd(17, ' '))
+      row.push((theirLocation ?? '-').padEnd(12, ' '))
+    } else {
+      row.push((ourCall ?? '-').padEnd(13, ' '))
+      row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
+      row.push((ourLocation ?? '-').padEnd(6, ' '))
+      row.push((qso?.their?.call ?? '-').padEnd(13, ' '))
+      row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
+      row.push((theirLocation ?? '-').padEnd(6, ' '))
+    }
 
     return [row]
   },
