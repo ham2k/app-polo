@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { PixelRatio, View } from 'react-native'
 import { Text } from 'react-native-paper'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
-import getItemLayout from 'react-native-get-item-layout-section-list'
 import { useTranslation } from 'react-i18next'
 
 import { fmtFreq, fmtShortTimeZulu, fmtTimeZulu } from '@ham2k/lib-format-tools'
@@ -20,6 +19,7 @@ import EventNoteItem from './entries/EventNoteItem'
 import EventSegmentItem from './entries/EventSegmentItem'
 import { SectionFlashList } from '../../../components/SectionFlashList'
 import { useScreenReaderEnabled } from '../../../../tools/a11yTools'
+import { hasMultipleSegmentsForQSOs, isActiveSegmentEvent } from './QSOListTools'
 
 const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, sections, operation, vfo, onHeaderPress, lastUUID, selectedUUID, onSelectQSO }) {
   const { t } = useTranslation()
@@ -172,10 +172,11 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     )
   }, [operation, settings, selectedUUID, ourInfo, handlePress, timeFormatFunction, refHandlers, styles])
 
-  const renderHeader = useCallback(({ section, index }) => {
+  const renderHeader = useCallback(({ section, contextItem, headerType, target }) => {
     return (
       <QSOHeader
         section={section}
+        contextItem={contextItem}
         operation={operation}
         settings={settings}
         styles={styles}
@@ -184,14 +185,13 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
     )
   }, [operation, settings, styles, onHeaderPress])
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- useCallback prefers to see an inline function
-  const calculateLayout = useCallback(
-    getItemLayout({
-      getItemHeight: styles.row.height + styles.row.borderBottomWidth,
-      getSectionHeaderHeight: styles.headerRow.height + styles.headerRow.borderBottomWidth
-    }),
-    [styles]
-  )
+  const hasMultipleSegments = useMemo(() => {
+    return hasMultipleSegmentsForQSOs(qsos)
+  }, [qsos])
+
+  const isStickyItem = useCallback(({ item }) => {
+    return hasMultipleSegments && isActiveSegmentEvent(item)
+  }, [hasMultipleSegments])
 
   const extractKey = useCallback((item, index) => item.uuid, [])
   const emptyComponent = useCallback(() => (
@@ -207,7 +207,7 @@ const QSOList = React.memo(function QSOList ({ style, ourInfo, settings, qsos, s
       sections={sections || []}
       renderItem={renderRow}
       renderSectionHeader={renderHeader}
-      getItemLayout={calculateLayout}
+      isStickyItem={isStickyItem}
       keyExtractor={extractKey}
       ListEmptyComponent={emptyComponent}
       keyboardShouldPersistTaps={'handled'} // Otherwise android closes the keyboard inbetween fields
