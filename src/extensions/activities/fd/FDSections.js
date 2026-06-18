@@ -267,3 +267,42 @@ export const CALL_AREA_FOR_SECTION = {
   SK: 'Canada',
   TER: 'Canada'
 }
+
+export const PREFIX_TO_LOCATION = {
+  KH1: 'PAC',
+  KH2: 'PAC',
+  KH3: 'PAC',
+  KH4: 'PAC',
+  KH5: 'PAC',
+  KH6: 'PAC',
+  KH7: 'PAC',
+  KH8: 'PAC',
+  KH9: 'PAC',
+  KL7: 'AK',
+  KP4: 'PR',
+  KP2: 'PR',
+  VE1: 'NS',
+  VA1: 'NS',
+  VE2: 'QC',
+  VA2: 'QC',
+  VE3: undefined, // Ontario has multiple sections
+  VA3: undefined, // Ontario has multiple sections
+  VE4: 'MB',
+  VA4: 'MB',
+  VE5: 'SK',
+  VA5: 'SK',
+  VE6: 'AB',
+  VA6: 'AB',
+  VE7: 'BC',
+  VA7: 'BC',
+  VE8: 'TER',
+  VA8: 'TER',
+  VE9: 'NB',
+  VA9: 'NB',
+  VO1: 'NL',
+  VO2: 'NL',
+  VY0: 'TER',
+  VY1: 'TER',
+  VY2: 'PE',
+  XE: 'MX'
+}

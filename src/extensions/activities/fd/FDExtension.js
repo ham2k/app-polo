@@ -8,7 +8,7 @@ import { fmtInteger, fmtNumber } from '@ham2k/lib-format-tools'
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { FDActivityOptions } from './FDActivityOptions'
-import { ABBREVIATED_SECTION_NAMES, RAC_SECTIONS, ARRL_SECTIONS } from './FDSections'
+import { ABBREVIATED_SECTION_NAMES, RAC_SECTIONS, ARRL_SECTIONS, PREFIX_TO_LOCATION } from './FDSections'
 import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 
 /*
@@ -329,7 +329,7 @@ export const K_LOCATION_SUGGESTIONS = Object.entries(ARRL_SECTIONS)
 export const VE_LOCATION_SUGGESTIONS = Object.entries(RAC_SECTIONS)
 export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
 export const ALL_LOCATION_SUGGESTIONS = Object.entries(FD_LOCATION_VALUES)
-
+console.log(ALL_LOCATION_SUGGESTIONS)
 function mainExchangeForOperation (props) {
   const { qso, qsos, operation, updateQSO, styles, refStack, disabled } = props
 
@@ -396,10 +396,11 @@ function processQSOBeforeSave ({ qso, qsos, operation }) {
 }
 
 function _suggestionsFor (qso) {
-  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
-  if (prefix === 'K') return K_LOCATION_SUGGESTIONS
-  else if (prefix === 'VE') return VE_LOCATION_SUGGESTIONS
-  else if (prefix) return OTHER_LOCATION_SUGGESTIONS
+  const entityPrefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+
+  if (entityPrefix?.startsWith('K')) return K_LOCATION_SUGGESTIONS
+  else if (entityPrefix === 'VE' || entityPrefix === 'CY0' || entityPrefix === 'CY9') return VE_LOCATION_SUGGESTIONS
+  else if (entityPrefix) return OTHER_LOCATION_SUGGESTIONS
   else return ALL_LOCATION_SUGGESTIONS
 }
 
@@ -413,9 +414,11 @@ function _defaultLocationFor ({ qso, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 
-  const prefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
-  if (prefix === 'K' || prefix === 'VE') return undefined
-  else if (prefix === 'XE') return 'MX'
+  const entityPrefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
+  const prefix = qso?.their?.prefix || qso?.their?.guess?.prefix
+
+  if (PREFIX_TO_LOCATION[prefix]) return PREFIX_TO_LOCATION[prefix]
+  else if (entityPrefix === 'XE') return 'MX'
   else if (prefix) return 'DX'
   else return undefined
 }
