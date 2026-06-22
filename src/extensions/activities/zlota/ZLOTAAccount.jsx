@@ -7,9 +7,9 @@ import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
 import { setAccountInfo } from '../../../store/settings'
-import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kCallsignInput, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kEnhancedTextInput } from '../../../ui'
 
-export function ZLOTAAccountSetting ({ settings, styles }) {
+export function ZLOTAAccountSetting({ settings, styles }) {
   const { t } = useTranslation()
 
   const [currentDialog, setCurrentDialog] = useState()
@@ -33,7 +33,7 @@ export function ZLOTAAccountSetting ({ settings, styles }) {
   )
 }
 
-function AccountsZLOTADialog ({ visible, settings, styles, onDialogDone }) {
+function AccountsZLOTADialog({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -84,7 +84,7 @@ function AccountsZLOTADialog ({ visible, settings, styles, onDialogDone }) {
           placeholder={t('extensions.zlota.account.callsignPlaceholder', 'your account callsign')}
           onChangeText={onChangeUserId}
         />
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={pin}
           label={t('extensions.zlota.account.pinLabel', 'PIN (not password)')}

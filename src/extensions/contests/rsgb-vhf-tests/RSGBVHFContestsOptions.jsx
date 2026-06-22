@@ -5,14 +5,14 @@ import React, { useCallback, useMemo } from 'react'
 
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { VHF_CONTESTS_DATA } from './RSGBVHFContestsExtension'
 import { Info } from './RSGBVHFContestsInfo'
 import { RSGB_CLASSES } from './RSGBVHFData'
 import { RSGB_POSTCODE_DISTRICTS } from './RSGBDistricts'
 
-export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const testOptions = useMemo(() => {
@@ -119,7 +119,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
         <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
           {gridExchange !== undefined && (
             <>
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 label="Grid Locator"
                 value={gridExchange}
                 disabled={true}
@@ -131,7 +131,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
           )}
           {districtExchange !== undefined && (
             <>
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 label="District"
                 value={activityRef?.exchange ?? ''}
                 placeholder="Enter your exchange"

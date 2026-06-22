@@ -16,14 +16,14 @@ import { selectSecondsTick, selectThirtySecondsTick } from '../../../../../../st
 import { selectRuntimeOnline } from '../../../../../../store/runtime'
 import { setOperationLocalData } from '../../../../../../store/operations'
 import { findHooks } from '../../../../../../extensions/registry'
-import { H2kButton, H2kIcon, H2kTextInput } from '../../../../../../ui'
+import { H2kButton, H2kIcon, H2kEnhancedTextInput } from '../../../../../../ui'
 import LoggerChip from '../../../../components/LoggerChip'
 
 const SECONDS_UNTIL_RESPOT = 30
 
 const MINUTES_FOR_AUTO_RESPOT = 10
 
-export function SpotterControlInputs (props) {
+export function SpotterControlInputs(props) {
   const { t } = useTranslation()
 
   const { qso, operation, vfo, styles, style, settings, setCurrentSecondaryControl, focusedRef } = props
@@ -156,7 +156,7 @@ export function SpotterControlInputs (props) {
   return (
     <View style={[style, { marginTop: styles.oneSpace * 1.1, flexDirection: 'row', flexWrap: 'wrap', gap: styles.oneSpace, alignItems: 'flex-end', width: '100%', maxWidth: styles.oneSpace * 120 }]}>
       {!spotterDisabled && (
-        <H2kTextInput
+        <H2kEnhancedTextInput
           innerRef={ref}
           focusedRef={focusedRef}
           style={{ marginLeft: styles.oneSpace, marginRight: styles.oneSpace, flex: 1 }}
@@ -173,7 +173,7 @@ export function SpotterControlInputs (props) {
         icon={online ? 'hand-wave' : 'cloud-off-outline'}
         onPress={handleSpotting}
         disabled={!online || spotterDisabled}
-        // minWidth={styles.oneSpace * 18}
+      // minWidth={styles.oneSpace * 18}
       >
         {spotterMessage}
       </H2kButton>
@@ -191,7 +191,7 @@ export function SpotterControlInputs (props) {
   )
 }
 
-export function retrieveHooksWithSpotting ({ isSelfSpotting, qso, operation, settings }) {
+export function retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }) {
   const spotMethodKey = isSelfSpotting ? 'postSelfSpot' : 'postOtherSpot'
   const spotEnabledKey = isSelfSpotting ? 'isSelfSpotEnabled' : 'isOtherSpotEnabled'
 
@@ -200,7 +200,7 @@ export function retrieveHooksWithSpotting ({ isSelfSpotting, qso, operation, set
       (isSelfSpotting ? operation : qso)?.refs,
       isSelfSpotting ? x.activationType : x.huntingType
     ) && x[spotMethodKey] &&
-        (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))
+    (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))
   ))
 
   const spottingHooks = findHooks('spots').filter((x) => x[spotMethodKey])
@@ -208,7 +208,7 @@ export function retrieveHooksWithSpotting ({ isSelfSpotting, qso, operation, set
   return [...activityHooks, ...spottingHooks]
 }
 
-export async function postSpots ({ t, isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings }) {
+export async function postSpots({ t, isSelfSpotting, qso, operation, vfo, comments, hooksWithSpotting, dispatch, setSpotterUI, setInProgress, setSpotStatus, setComments, setCurrentSecondaryControl, settings }) {
   hooksWithSpotting = hooksWithSpotting || []
   comments = comments || ''
 
@@ -253,15 +253,15 @@ export async function postSpots ({ t, isSelfSpotting, qso, operation, vfo, comme
   }
 }
 
-export function useAutoRespotting ({ t, operation, vfo, dispatch, settings }) {
+export function useAutoRespotting({ t, operation, vfo, dispatch, settings }) {
   const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings }), [operation, settings])
 
   const thirtySecondsTick = useSelector(selectThirtySecondsTick)
 
   useEffect(() => {
     dispatch(setOperationLocalData({ uuid: operation.uuid, autoRespotting: false }))
-  // Disable autoRespotting on start
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Disable autoRespotting on start
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -272,9 +272,9 @@ export function useAutoRespotting ({ t, operation, vfo, dispatch, settings }) {
         postSpots({ t, isSelfSpotting: true, operation, vfo, comments: operation?.local?.spottedComments ?? '', hooksWithSpotting, dispatch, settings })
       }
     }
-  // We want to be more selective with our deps.
-  // No need to include all `operation` or `vfo` or `settings`, even if they are passed to some functions
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // We want to be more selective with our deps.
+    // No need to include all `operation` or `vfo` or `settings`, even if they are passed to some functions
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [operation?.local?.autoRespotting, vfo?.freq, operation?.local?.spottedFreq, thirtySecondsTick])
 }
 

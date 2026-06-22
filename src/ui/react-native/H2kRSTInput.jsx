@@ -6,7 +6,7 @@ import React, { useMemo, useEffect } from 'react'
 import { useUIState } from '../../store/ui/useUIState'
 import { expandRSTValues } from '../../tools/callsignTools'
 
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 
 export function H2kRSTInput (props) {
   const { value, radioMode, settings } = props
@@ -26,13 +26,14 @@ export function H2kRSTInput (props) {
   }, [value, setMode])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       placeholder={placeholder}
       noSpaces={true}
       keyboard={'numbers'}
       rst={true}
       maxLength={rstLength + 3}
+      smartKeyboard={settings?.smartKeyboard}
     />
   )
 }

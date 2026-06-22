@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kEnhancedTextInput } from '../../../ui'
 
 const SERVERS = {
   prod: 'https://lofi.ham2k.net',
@@ -20,7 +20,7 @@ const OPTION_FOR_SERVER = Object.keys(SERVERS).reduce((acc, key) => {
   return acc
 }, {})
 
-export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) {
+export function SyncServiceDialog({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -80,7 +80,7 @@ export function SyncServiceDialog ({ visible, settings, styles, onDialogDone }) 
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="other" />
             <Text onPress={() => setServerOption('other')} style={styles.rowText}>{t('screens.syncSettings.syncServiceDialog.custom', 'Custom')}</Text>
-            <H2kTextInput keyboard="dumb"style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
+            <H2kEnhancedTextInput keyboard="dumb" style={{ marginLeft: styles.oneSpace, flex: 1 }} value={otherServer} onChangeText={setOtherServer} />
           </View>
         </RadioButton.Group>
       </H2kDialogContent>

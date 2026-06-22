@@ -16,9 +16,9 @@ import { selectOperation, setOperationData } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
 import { findBestHook } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
-import { H2kGridInput, H2kListItem, H2kListSection, H2kTextInput } from '../../../ui'
+import { H2kGridInput, H2kListItem, H2kListSection, H2kEnhancedTextInput } from '../../../ui'
 
-export default function OperationLocationScreen ({ navigation, route }) {
+export default function OperationLocationScreen({ navigation, route }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const styles = useThemedStyles()
@@ -76,10 +76,10 @@ export default function OperationLocationScreen ({ navigation, route }) {
         console.info('Geolocation error', error)
         setLocationMessage(t('screens.operationLocation.gpsError', 'GPS Error'))
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
 
     const watchId = Geolocation.watchPosition(
@@ -92,10 +92,10 @@ export default function OperationLocationScreen ({ navigation, route }) {
         console.info('Geolocation watch error', error)
         setLocationGrid(t('screens.operationLocation.noGps', 'NO GPS'))
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 60 * 3 /* 3 minutes */,
-        maximumAge: 1000 * 60 * 5 /* 5 minutes */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 60 * 3 /* 3 minutes */,
+      maximumAge: 1000 * 60 * 5 /* 5 minutes */
+    }
     )
     return () => {
       Geolocation.clearWatch(watchId)
@@ -140,13 +140,13 @@ export default function OperationLocationScreen ({ navigation, route }) {
           </H2kListSection>
 
           <H2kListSection title={t('screens.operationLocation.moreDetails', 'More Details')} style={{ marginTop: styles.oneSpace * 3 }}>
-            <H2kTextInput
+            <H2kEnhancedTextInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
               value={locationState || ''}
               label={t('screens.operationLocation.stateOrProvince', 'State or Province (optional)')}
               onChangeText={(text) => setLocationState(text)}
             />
-            <H2kTextInput
+            <H2kEnhancedTextInput
               style={[styles.input, { marginHorizontal: styles.oneSpace * 2 }]}
               value={locationCounty || ''}
               label={t('screens.operationLocation.county', 'County (optional)')}

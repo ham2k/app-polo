@@ -8,7 +8,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { useUIState } from '../../store/ui/useUIState'
 import { parseStackedCalls } from '../../tools/callsignTools'
 
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 
 const LETTERS_REGEX = /[A-Z]+/
 const ONLY_NUMBER_REGEX = /^\s*[+-]*\d+(\.\d+)*$/
@@ -49,7 +49,7 @@ export function H2kCallsignInput (props) {
   }, [value, setMode])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...moreProps}
       value={value}
       keyboard="dumb"

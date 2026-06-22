@@ -25,7 +25,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
       <H2kTimeInput
         innerRef={ref}
         themeColor={themeColor}
-        style={{ minWidth: styles.oneSpace * 11 }}
+        style={{ minWidth: styles.oneSpace * 12 }}
         valueInMillis={qso?.startAtMillis}
         disabled={disabled}
         label={t('screens.opLoggingTab.timeLabel', 'Time')}
@@ -36,7 +36,7 @@ const TimeControlInputs = ({ qso, operation, settings, disabled, icon, style, st
       />
       <H2kDateInput
         themeColor={themeColor}
-        style={{ minWidth: styles.oneSpace * 11 }}
+        style={{ minWidth: styles.oneSpace * 15 }}
         valueInMillis={qso?.startAtMillis}
         disabled={disabled}
         label={t('screens.opLoggingTab.dateLabel', 'Date')}

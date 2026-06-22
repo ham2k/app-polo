@@ -7,7 +7,7 @@ import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 
 import { Info, VALID_LOCATIONS, VALID_BANDS } from './NAQPInfo'
 import { ActivityOptions } from './NAQPActivityOptions'
@@ -248,7 +248,7 @@ function mainExchangeForOperation (props) {
   const fields = []
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/name`}
       innerRef={refStack.shift()}
@@ -269,7 +269,7 @@ function mainExchangeForOperation (props) {
   )
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/location`}
       innerRef={refStack.shift()}

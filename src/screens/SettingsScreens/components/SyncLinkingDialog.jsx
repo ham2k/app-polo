@@ -6,9 +6,9 @@ import { Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
-export function SyncLinkingDialog ({ visible, settings, styles, syncHook, onDialogDone, linkClientId, linkToken }) {
+export function SyncLinkingDialog({ visible, settings, styles, syncHook, onDialogDone, linkClientId, linkToken }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -151,7 +151,7 @@ export function SyncLinkingDialog ({ visible, settings, styles, syncHook, onDial
             <Text variant="bodyLarge" style={{ textAlign: 'left', marginBottom: styles.oneSpace }}>
               {t('screens.syncSettings.syncLinkingDialog.enterCode', 'Enter the code displayed on the other device to link it to this account.')}
             </Text>
-            <H2kTextInput
+            <H2kEnhancedTextInput
               keyboard="dumb"
               uppercase={true}
               style={{ marginTop: styles.oneSpace }}

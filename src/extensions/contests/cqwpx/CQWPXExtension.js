@@ -1,10 +1,12 @@
 // Copyright ©️ 2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
+import React from 'react'
+
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kTextInput } from '../../../ui/index.js'
+import { H2kEnhancedTextInput } from '../../../ui/index.js'
 import { setOperationData } from '../../../store/operations'
 
 import { ActivityOptions } from './CQWPXActivityOptions'
@@ -322,7 +324,7 @@ function mainExchangeForOperation (props) {
   const fields = []
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/ourNumber`}
       // innerRef={refStack.shift()}   // Don't use a `ref` so that this input cannot be focused using the space key
@@ -343,7 +345,7 @@ function mainExchangeForOperation (props) {
   )
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/theirNumber`}
       innerRef={refStack.shift()}

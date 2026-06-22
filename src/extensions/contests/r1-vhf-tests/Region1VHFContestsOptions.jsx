@@ -5,12 +5,12 @@ import React, { useCallback, useMemo } from 'react'
 
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { VHF_CONTESTS_DATA } from './Region1VHFContestsExtension'
 import { Info } from './Region1VHFContestsInfo'
 
-export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const testOptions = useMemo(() => {
@@ -77,7 +77,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
       {hasGridExchange && (
         <H2kListSection title={'Exchange'} style={{ marginBottom: styles.oneSpace * 4 }}>
           <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
-            <H2kTextInput
+            <H2kEnhancedTextInput
               label="Grid Locator"
               value={gridExchange ?? ''}
               disabled={true}

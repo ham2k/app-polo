@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 
 export function H2kFrequencyInput (props) {
   const { styles, textStyle, value, onChange, innerRef } = props
@@ -32,7 +32,7 @@ export function H2kFrequencyInput (props) {
   }, [setLocalValue, onChange])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       value={localValue}
       onChange={handleChange}

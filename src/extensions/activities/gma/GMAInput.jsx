@@ -4,7 +4,7 @@
 import React from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 
 export default function GMAInput (props) {
   const { textStyle } = props
@@ -12,7 +12,7 @@ export default function GMAInput (props) {
   const styles = useThemedStyles()
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}

@@ -12,9 +12,9 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { setAccountInfo } from '../../../store/settings'
 import { apiQRZ } from '../../../store/apis/apiQRZ'
 import { resetCallLookupCache } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
-export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) {
+export function AccountsQRZDialog({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -94,7 +94,7 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
       <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.accountsSettings.accountsQRZ.dialogTitle', 'QRZ.com Account')}</H2kDialogTitle>
       <H2kDialogContent>
         <Text variant="bodyMedium">{t('screens.accountsSettings.accountsQRZ.pleaseEnterDetails', 'Please enter the details for your QRZ.com account:')}</Text>
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={login}
           autoCapitalize={'none'}
@@ -107,7 +107,7 @@ export function AccountsQRZDialog ({ visible, settings, styles, onDialogDone }) 
           onChangeText={onChangeLogin}
         />
         {error && <Text style={{ marginTop: styles.oneSpace, color: 'red' }}>{error}</Text>}
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
           label={t('screens.accountsSettings.accountsQRZ.passwordLabel', 'Password')}

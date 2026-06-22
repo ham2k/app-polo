@@ -1,0 +1,39 @@
+// Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
+// SPDX-License-Identifier: MPL-2.0
+
+// AGP, Kotlin and the React Native gradle plugin are already on the root
+// project's buildscript classpath (see ../../../android/build.gradle), and
+// child projects inherit it — so we only need to apply the plugins here.
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+apply plugin: "com.facebook.react"
+
+def safeExtGet(prop, fallback) {
+  rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+android {
+  namespace "com.ham2k.nativetextinput"
+  compileSdkVersion safeExtGet("compileSdkVersion", 36)
+
+  defaultConfig {
+    minSdkVersion safeExtGet("minSdkVersion", 24)
+  }
+
+  buildFeatures {
+    buildConfig true
+  }
+
+  sourceSets {
+    main {
+      java.srcDirs += [
+        // Codegen output for this library (generated at build time).
+        "${project.buildDir}/generated/source/codegen/java"
+      ]
+    }
+  }
+}
+
+dependencies {
+  implementation "com.facebook.react:react-android"
+}

@@ -5,11 +5,11 @@ import React, { useCallback, useMemo } from 'react'
 
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kListSection, H2kListRow, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kListSection, H2kListRow, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { Info } from './SimpleContestExtension'
 
-export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const handleIdChange = useCallback((value) => {
@@ -25,13 +25,13 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
       <H2kListSection title={'Contest Details'}>
         <H2kListRow>
 
-          <H2kTextInput
+          <H2kEnhancedTextInput
             label="Contest Identifier"
             value={activityRef?.contestIdentifier || ''}
             uppercase={true}
             onChangeText={handleIdChange}
           />
-          <H2kTextInput
+          <H2kEnhancedTextInput
             label="Exchange Sent"
             value={activityRef?.exchange || ''}
             uppercase={false}

@@ -4,10 +4,10 @@
 import React from 'react'
 import { IconButton } from 'react-native-paper'
 
-import { H2kTextInput } from '../../../../../../ui'
+import { H2kEnhancedTextInput } from '../../../../../../ui'
 import { View } from 'react-native'
 
-export default function TodoEventFields ({
+export default function TodoEventFields({
   qso, qsos, operation, vfo, settings,
   style, styles, themeColor, isKeyboardVisible, splitView,
   disabled,
@@ -22,7 +22,7 @@ export default function TodoEventFields ({
           mode="outlined"
         />
       </View>
-      <H2kTextInput
+      <H2kEnhancedTextInput
         themeColor={themeColor}
         style={{ flex: 1 }}
         value={qso.event?.note}

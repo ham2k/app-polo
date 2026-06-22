@@ -3,7 +3,7 @@
 
 import React, { useMemo } from 'react'
 
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 
 const VALID_EMAIL_REGEX = /(\w+)@(\w+)\./
 
@@ -13,7 +13,7 @@ export default function H2kEmailInput (props) {
   const isValidValue = useMemo(() => VALID_EMAIL_REGEX.test(value), [value])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       value={value}
       keyboard="email"

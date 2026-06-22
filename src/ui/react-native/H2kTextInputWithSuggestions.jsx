@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 import { useUIState } from '../../store/ui'
 import createFuzzySearch from '@nozbe/microfuzz'
 import { useDispatch } from 'react-redux'
@@ -90,7 +90,7 @@ export function H2kTextInputWithSuggestions (props) {
   }, [actualInnerRef, bestSuggestion, fieldId, onChange, onChangeText, onSpace])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...moreProps}
       value={value}
       fieldId={fieldId}

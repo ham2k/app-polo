@@ -13,7 +13,7 @@ import { registerDataFile, unRegisterDataFile } from '../../../../store/dataFile
 import { selectExtensionSettings, setExtensionSettings } from '../../../../store/settings'
 import { useThemedStyles } from '../../../../styles/tools/useThemedStyles'
 import ScreenContainer from '../../../../screens/components/ScreenContainer'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../../ui'
 import { resetCallLookupCache } from '../../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 import { BUILT_IN_NOTES, CallNotesData, Info, createDataFileDefinition } from '../CallNotesExtension'
@@ -28,7 +28,7 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
 
   const currentIndex = useMemo(() =>
     extSettings.customFiles.findIndex(f => f.identifier === identifier),
-  [extSettings.customFiles, identifier])
+    [extSettings.customFiles, identifier])
 
   const totalFiles = extSettings.customFiles.length
   const isFirst = currentIndex === 0
@@ -107,19 +107,19 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
     <H2kDialog visible={true} onDismiss={onDialogDone}>
       <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.call-notes.notesFile', 'Callsign Notes File')}</H2kDialogTitle>
       <H2kDialogContent>
-        <H2kTextInput
+        <H2kEnhancedTextInput
           label={t('extensions.call-notes.nameLabel', 'Name')}
           value={def.name ?? ''}
           placeholder={t('extensions.call-notes.namePlaceholder', 'Name for your Callsign Notes File')}
-          onChangeText={(value) => updateDef({ name: value }) }
+          onChangeText={(value) => updateDef({ name: value })}
         />
-        <H2kTextInput
+        <H2kEnhancedTextInput
           label={t('extensions.call-notes.locationLabel', 'Location')}
           value={def.location ?? ''}
           inputMode={'url'}
           // multiline={true}  // TODO: Change to multiline when this bug is fixed https://github.com/facebook/react-native/issues/37784
           placeholder={t('extensions.call-notes.locationPlaceholder', 'https://example.com/dir/notes.txt')}
-          onChangeText={(value) => updateDef({ location: value }) }
+          onChangeText={(value) => updateDef({ location: value })}
         />
 
         {!isSingleFile && (
@@ -149,7 +149,7 @@ const FileDefinitionDialog = ({ identifier, extSettings, styles, dispatch, onDia
   )
 }
 
-export default function ManageCallNotesScreen ({ navigation, dispatch }) {
+export default function ManageCallNotesScreen({ navigation, dispatch }) {
   const { t } = useTranslation()
 
   useEffect(() => {

@@ -4,7 +4,7 @@
 import React, { useCallback } from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 
 const NO_PREFIX_REGEX = /(?:^|,)(\d\d+)/gi
 const ADD_COMMAS_REGEX = /X(\d+)[\s,]$/gi
@@ -22,7 +22,7 @@ export default function MOTAInput (props) {
   }, [])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}

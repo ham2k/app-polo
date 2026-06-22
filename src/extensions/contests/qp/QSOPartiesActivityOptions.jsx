@@ -8,12 +8,12 @@ import { fmtDateNice, fmtDateTimeNice, fmtTimeBetween, prepareDateValue } from '
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { selectOperatorCallInfo, selectSettings } from '../../../store/settings'
-import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { Info } from './QSOPartiesInfo'
 import { qpData, qpParseLocations, QSO_PARTY_DATA } from './QSOPartiesExtension'
 
-export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
   const settings = useSelector(selectSettings)
 
   const ourInfo = useSelector(selectOperatorCallInfo)
@@ -119,7 +119,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
           <H2kListSection title={'Your Exchange'}>
             {hasNames && (
               <H2kListRow>
-                <H2kTextInput
+                <H2kEnhancedTextInput
                   label="Name"
                   value={activityRef?.ourName || ''}
                   uppercase={true}
@@ -129,7 +129,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
             )}
 
             <H2kListRow>
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 label="Location"
                 value={activityRef?.location || ''}
                 uppercase={true}
@@ -150,7 +150,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
           </H2kListSection>
           <H2kListSection title={'Entry Information'}>
             <H2kListRow>
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 label="E-Mail"
                 autoComplete="email"
                 inputMode="email"
@@ -203,15 +203,15 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
 [${qp.url}](${qp.url})
 
 ${qp.secondStart ? (
-`**First Period:**
+                  `**First Period:**
 ${fmtTimeBetween(qp.start, qp.end, { roundTo: 'hours' })}: ${_fmtDateTimeNiceRange(qp.start, qp.end).replaceAll(/:00 /g, '')}
 **Second Period:**
 ${fmtTimeBetween(qp.secondStart, qp.secondEnd, { roundTo: 'hours' })}: ${_fmtDateTimeNiceRange(qp.secondStart, qp.secondEnd).replaceAll(/:00 /g, '')}
 `
-) : (
-`**Period:**
+                ) : (
+                  `**Period:**
 ${_fmtDateTimeNiceRange(qp.start, qp.end).replaceAll(/:00 /g, '')}`
-)}
+                )}
 
 ${qp.notes ? `**Notes:**\n${qp.notes}` : ''}
 
@@ -228,7 +228,7 @@ ${qp.status ? `**Status:** ${qp.status}` : ''}
   )
 }
 
-function _fmtDateTimeNiceRange (t1, t2) {
+function _fmtDateTimeNiceRange(t1, t2) {
   t1 = prepareDateValue(t1)
   t2 = prepareDateValue(t2)
   const diffInDays = (t2 - t1) / (1000 * 60 * 60 * 24)

@@ -7,7 +7,7 @@ import { superModeForMode } from '@ham2k/lib-operation-data'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
+import { H2kEnhancedTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 
 import { ABBREVIATED_SECTION_NAMES, ARRL_SECTIONS, PREFIX_TO_LOCATION, RAC_SECTIONS } from '../fd/FDSections'
 import { WFDActivityOptions } from './WFDActivityOptions'
@@ -309,7 +309,7 @@ function mainExchangeForOperation(props) {
   const fields = []
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/class`}
       innerRef={refStack.shift()}

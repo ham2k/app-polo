@@ -3,7 +3,7 @@
 
 import React, { useCallback, useMemo } from 'react'
 
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 
 const VALID_MAIDENHEAD_REGEX = /^([A-R]{2}|[A-R]{2}[0-9]{2}|[A-R]{2}[0-9]{2}[a-x]{2}||[A-R]{2}[0-9]{2}[a-x]{2}[0-9]{2})$/
 
@@ -19,7 +19,7 @@ export function H2kGridInput (props) {
   }, [])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       value={value}
       keyboard="dumb"

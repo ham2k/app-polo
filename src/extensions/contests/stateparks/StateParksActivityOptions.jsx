@@ -6,12 +6,12 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { fmtDateTimeNice, fmtTimeBetween, prepareDateValue } from '@ham2k/lib-format-tools'
 import { filterRefs, findRef, replaceRef, replaceRefs } from '@ham2k/lib-qson-tools'
 
-import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { Info } from './StateParksInfo'
 import { spData, STATE_PARKS_DATA } from './StateParksExtension'
 
-export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const sp = useMemo(() => spData({ ref: activityRef }), [activityRef])
@@ -101,7 +101,7 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
       {needsLocation && (
         <H2kListSection title={'Location'}>
           <H2kListRow>
-            <H2kTextInput
+            <H2kEnhancedTextInput
               label="Location (Park Abbreviation)"
               value={activityRef?.location || ''}
               uppercase={true}
@@ -133,15 +133,15 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
 [${sp.url}](${sp.url})
 
 ${sp.secondStart ? (
-`**First Period (Local Time):**
+                  `**First Period (Local Time):**
 ${fmtTimeBetween(sp.start, sp.end, { roundTo: 'hours' })}: ${_fmtDateTimeNiceRange(sp.start, sp.end).replaceAll(/:00 /g, '')}
 **Second Period (Local Time):**
 ${fmtTimeBetween(sp.secondStart, sp.secondEnd, { roundTo: 'hours' })}: ${_fmtDateTimeNiceRange(sp.secondStart, sp.secondEnd).replaceAll(/:00 /g, '')}
 `
-) : (
-`**Period (Local Time):**
+                ) : (
+                  `**Period (Local Time):**
 ${_fmtDateTimeNiceRange(sp.start, sp.end).replaceAll(/:00 /g, '')}`
-)}
+                )}
 
 ${sp.notes ? `**Notes:**\n${sp.notes}` : ''}
 
@@ -158,7 +158,7 @@ ${sp.status ? `**Status:** ${sp.status}` : ''}
   )
 }
 
-function _fmtDateTimeNiceRange (t1, t2) {
+function _fmtDateTimeNiceRange(t1, t2) {
   t1 = prepareDateValue(t1)
   t2 = prepareDateValue(t2)
   const diffInDays = (t2 - t1) / (1000 * 60 * 60 * 24)

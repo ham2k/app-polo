@@ -1,12 +1,14 @@
 // Copyright ©️ 2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
+import React from 'react'
+
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import { distanceForRSGBVHFContests } from '@ham2k/lib-geo-tools'
 import { filterNearDupes, findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kGridInput, H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
+import { H2kGridInput, H2kEnhancedTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
 
 import { Info } from './RSGBVHFContestsInfo.js'
 import { ActivityOptions } from './RSGBVHFContestsOptions.jsx'
@@ -349,7 +351,7 @@ function mainExchangeForOperation (props) {
   const fields = []
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/ourNumber`}
       // innerRef={refStack.shift()}   // Don't use a `ref` so that this input cannot be focused using the space key
@@ -370,7 +372,7 @@ function mainExchangeForOperation (props) {
   )
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/theirNumber`}
       innerRef={refStack.shift()}

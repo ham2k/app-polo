@@ -7,11 +7,11 @@ import { Text } from 'react-native-paper'
 
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kDropDown, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { Info } from './FDExtension'
 
-export function FDActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function FDActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
@@ -64,7 +64,7 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
     <>
       <H2kListSection title={t('extensions.fd.activityOptions.exchangeInformation', 'Exchange Information')}>
         <H2kListRow>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.fd.activityOptions.classLabel', 'Class')}
@@ -76,7 +76,7 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
           />
         </H2kListRow>
         <H2kListRow>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.fd.activityOptions.locationLabel', 'Location')}
@@ -88,7 +88,7 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
         </H2kListRow>
         <H2kListRow style={{ marginTop: styles.oneSpace * 4 }}>
           <H2kMarkdown>{t('extensions.fd.activityOptions.information-md',
-`
+            `
   Class for ARRL Field Day is, for example \`2A\`:
 
   - \`1\`, \`2\`, \`3\`… for the number of transmitters.
@@ -146,7 +146,7 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
                 rightSwitchValue={isNaN(activityRef[key]) ? false : (activityRef[key] > 0)}
                 rightSwitchDisabled={true}
               />
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 key={key}
                 label={bonus.countTitle}
                 value={isNaN(activityRef[key]) ? '' : activityRef[key]}
@@ -171,7 +171,7 @@ export function FDActivityOptions ({ styles, operation, settings, refs: allRefs,
   )
 }
 
-function _bonusesForRef ({ activityRef, classification, transmitters, t }) {
+function _bonusesForRef({ activityRef, classification, transmitters, t }) {
   const list = {
     bonusTransmitters: {
       title: t('extensions.fd.bonusName.transmitters', 'Transmitters'),

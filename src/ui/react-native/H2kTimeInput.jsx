@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import { fmtTimeZulu } from '@ham2k/lib-format-tools'
 
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 import { selectSecondsTick } from '../../store/time'
 
 export function H2kTimeInput (props) {
@@ -86,7 +86,7 @@ export function H2kTimeInput (props) {
   }, [fieldId, onChange, originalValue, valueInMillis])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       innerRef={actualInnerRef}
       value={localValue}
@@ -94,7 +94,6 @@ export function H2kTimeInput (props) {
       placeholder={nowStr}
       onChange={handleChange}
       onBlur={handleBlur}
-      onEndEditing={handleBlur}
       keyboard={'numbers'}
     />
   )

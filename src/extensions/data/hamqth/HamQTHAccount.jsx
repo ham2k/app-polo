@@ -11,10 +11,10 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import { setAccountInfo } from '../../../store/settings'
 import { apiHamQTH } from '../../../store/apis/apiHamQTH'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kMarkdown, H2kText, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kMarkdown, H2kText, H2kSimpleTextInput } from '../../../ui'
 import { resetCallLookupCache } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
-export function HamQTHAccountSetting ({ settings, styles }) {
+export function HamQTHAccountSetting({ settings, styles }) {
   const { t } = useTranslation()
 
   const [currentDialog, setCurrentDialog] = useState()
@@ -38,7 +38,7 @@ export function HamQTHAccountSetting ({ settings, styles }) {
   )
 }
 
-function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
+function AccountsHamQTHDialog({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -109,14 +109,14 @@ function AccountsHamQTHDialog ({ visible, settings, styles, onDialogDone }) {
       <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.hamqth.account.dialogTitle', 'HamQTH Account')}</H2kDialogTitle>
       <H2kDialogContent>
         <H2kText variant="bodyMedium">{t('extensions.hamqth.account.pleaseEnterDetails', 'Please enter the details for your HamQTH account:')}</H2kText>
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={login}
           label={t('extensions.hamqth.account.callsignLabel', 'Callsign')}
           placeholder={t('extensions.hamqth.account.callsignPlaceholder', 'your account callsign')}
           onChangeText={onChangeLogin}
         />
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={password}
           label={t('extensions.hamqth.account.passwordLabel', 'Password')}

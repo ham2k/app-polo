@@ -7,14 +7,14 @@ import Geolocation from '@react-native-community/geolocation'
 import { useTranslation } from 'react-i18next'
 
 import { selectOperationCallInfo, setOperationData } from '../../../../store/operations'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kPressable, H2kText, H2kTextInput } from '../../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kPressable, H2kText, H2kEnhancedTextInput } from '../../../../ui'
 
 import { locationToWABSquare } from '../WABLocation'
 
 const VALID_WAB_REGEX = /^(W[AV][0-9]{2}|[BCDFGHJLMNOQRSTVWX][0-9]{2}|[HJNOST][A-HJ-Z][0-9]{2}|)$/
 const PARTIAL_WAB_REGEX = /^([CDGHJNOSTW]{0,1}|W[AV][0-9]{0,2}|[BCDFGHJLMNOQRSTVWX][0-9]{0,2}|[HJNOST][A-Z][0-9]{0,2})$/
 
-export function WABSquareDialog ({ operation, visible, settings, styles, onDialogDone }) {
+export function WABSquareDialog({ operation, visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -70,10 +70,10 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
       error => {
         console.info('Geolocation error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
 
     const watchId = Geolocation.watchPosition(
@@ -84,10 +84,10 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
       error => {
         console.info('Geolocation watch error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 60 * 3 /* 3 minutes */,
-        maximumAge: 1000 * 60 * 5 /* 5 minutes */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 60 * 3 /* 3 minutes */,
+      maximumAge: 1000 * 60 * 5 /* 5 minutes */
+    }
     )
     return () => {
       Geolocation.clearWatch(watchId)
@@ -99,7 +99,7 @@ export function WABSquareDialog ({ operation, visible, settings, styles, onDialo
       <H2kDialogTitle style={{ textAlign: 'center' }}>{callInfo?.entityPrefix?.[0] === 'G' ? t('extensions.wab.workedAllBritainSquare', 'Worked All Britain Square') : t('extensions.wab.workedAllIrelandSquare', 'Worked All Ireland Square')}</H2kDialogTitle>
       <H2kDialogContent>
         <H2kText variant="bodyMedium">{t('extensions.wab.enterSquare', 'Enter Square')}</H2kText>
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={square}
           label="Square"

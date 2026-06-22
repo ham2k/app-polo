@@ -5,11 +5,11 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText, H2kEnhancedTextInput } from '../../../ui'
 import { setAccountInfo } from '../../../store/settings'
 import { useTranslation } from 'react-i18next'
 
-export function PnPAccountSetting ({ settings, styles }) {
+export function PnPAccountSetting({ settings, styles }) {
   const { t } = useTranslation()
 
   const [currentDialog, setCurrentDialog] = useState()
@@ -33,7 +33,7 @@ export function PnPAccountSetting ({ settings, styles }) {
   )
 }
 
-function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
+function AccountsPnPDialog({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -77,7 +77,7 @@ function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
       <H2kDialogTitle style={{ textAlign: 'center' }}>{t('extensions.spots.parksnpeaks.account.dialogTitle', 'ParksnPeaks Account')}</H2kDialogTitle>
       <H2kDialogContent>
         <H2kText variant="bodyMedium">{t('extensions.spots.parksnpeaks.account.pleaseEnterDetails', 'Please enter the details for your ParksnPeaks account:')}</H2kText>
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
           keyboard="email"
@@ -85,7 +85,7 @@ function AccountsPnPDialog ({ visible, settings, styles, onDialogDone }) {
           placeholder={t('extensions.spots.parksnpeaks.account.usernamePlaceholder', 'your account username')}
           onChangeText={onChangeUserId}
         />
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={apiKey}
           label={t('extensions.spots.parksnpeaks.account.apiKeyLabel', 'API Key (not password)')}

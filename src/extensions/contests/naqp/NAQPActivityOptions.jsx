@@ -5,11 +5,11 @@ import React, { useCallback, useMemo } from 'react'
 
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kListSection, H2kListRow, H2kMarkdown, H2kTextInput, H2kDropDown } from '../../../ui'
+import { H2kListSection, H2kListRow, H2kMarkdown, H2kEnhancedTextInput, H2kDropDown } from '../../../ui'
 
 import { Info } from './NAQPInfo'
 
-export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) {
+export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
 
   const handleModeChange = useCallback((value) => {
@@ -39,14 +39,14 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
             ]}
           />
 
-          <H2kTextInput
+          <H2kEnhancedTextInput
             label="Your Name"
             value={activityRef?.name || ''}
             uppercase={true}
             onChangeText={handleNameChange}
           />
 
-          <H2kTextInput
+          <H2kEnhancedTextInput
             label="Your Location"
             value={activityRef?.location || ''}
             uppercase={true}

@@ -8,7 +8,7 @@ import { View, findNodeHandle } from 'react-native'
 import { findRef } from '@ham2k/lib-qson-tools'
 
 import { findHooks } from '../../../../../extensions/registry'
-import { H2kCallsignInput, H2kGridInput, H2kRSTInput, H2kTextInput } from '../../../../../ui'
+import { H2kCallsignInput, H2kGridInput, H2kRSTInput, H2kEnhancedTextInput } from '../../../../../ui'
 import { expandRSTValues } from '../../../../../tools/callsignTools'
 import { valueOrFunction } from '../../../../../tools/valueOrFunction'
 
@@ -206,7 +206,7 @@ export const MainExchangePanel = ({
 
   if (extraFields.state) {
     fields.push(
-      <H2kTextInput
+      <H2kEnhancedTextInput
         key="state"
         innerRef={refStack.shift()}
         themeColor={themeColor}
@@ -230,7 +230,7 @@ export const MainExchangePanel = ({
 
   return (
     <View style={styles.mainExchangePanel.container}>
-      {fields}
+      {fields.filter(Boolean)}
     </View>
   )
 }

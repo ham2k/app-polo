@@ -10,10 +10,10 @@ import React, { useState, useCallback, Fragment, useEffect, useMemo } from 'reac
 
 import { LayoutChangeEvent, ScrollView, TouchableHighlight, View } from 'react-native'
 import { Divider, Menu } from 'react-native-paper'
-import { H2kTextInput } from '../H2kTextInput'
+import { H2kEnhancedTextInput } from '../..'
 import { H2kIcon } from '../H2kIcon'
 
-export function PaperDropDown (props, _ref) {
+export function PaperDropDown(props, _ref) {
   const {
     value,
     onChangeValue,
@@ -138,7 +138,7 @@ export function PaperDropDown (props, _ref) {
               flexDirection: 'row'
             }}
           >
-            <H2kTextInput
+            <H2kEnhancedTextInput
               value={displayValue}
               label={label}
               placeholder={placeholder}
@@ -157,7 +157,7 @@ export function PaperDropDown (props, _ref) {
             />
           </View>
         </TouchableHighlight>
-        }
+      }
       style={{
         maxWidth: inputLayout?.width,
         width: inputLayout?.width,
@@ -171,11 +171,11 @@ export function PaperDropDown (props, _ref) {
         style={{
           ...(dropDownContainerHeight
             ? {
-                height: dropDownContainerHeight
-              }
+              height: dropDownContainerHeight
+            }
             : {
-                maxHeight: dropDownContainerMaxHeight || 200
-              })
+              maxHeight: dropDownContainerMaxHeight || 200
+            })
         }}
       >
         {list.map((item) => (

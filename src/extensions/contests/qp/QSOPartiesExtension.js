@@ -8,7 +8,7 @@ import { superModeForMode } from '@ham2k/lib-operation-data'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
+import { H2kEnhancedTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
 import { setOperationData } from '../../../store/operations'
 import RAW_US_STATES from '../../../data/usStates.json'
 import RAW_CANADIAN_PROVINCES from '../../../data/canadianProvinces.json'
@@ -729,7 +729,7 @@ function mainExchangeForOperation (props) {
   const fields = []
   if (hasNumbers) {
     fields.push(
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...moreProps}
         key={`${Info.key}/ourNumber`}
         // innerRef={refStack.shift()}   // Don't use a `ref` so that this input cannot be focused using the space key
@@ -750,7 +750,7 @@ function mainExchangeForOperation (props) {
     )
 
     fields.push(
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...moreProps}
         key={`${Info.key}/theirNumber`}
         innerRef={refStack.shift()}
@@ -772,7 +772,7 @@ function mainExchangeForOperation (props) {
 
   if (hasNames) {
     fields.push(
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...moreProps}
         key={`${Info.key}/theirName`}
         innerRef={refStack.shift()}

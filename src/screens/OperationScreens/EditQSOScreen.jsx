@@ -15,7 +15,7 @@ import { parseFreq } from '@ham2k/lib-format-tools'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { selectOperation } from '../../store/operations'
 import { selectSettings } from '../../store/settings'
-import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kTextInput, H2kTimeInput } from '../../ui'
+import { H2kCallsignInput, H2kDateInput, H2kFrequencyInput, H2kGridInput, H2kListSection, H2kRSTInput, H2kEnhancedTextInput, H2kTimeInput } from '../../ui'
 import ScreenContainer from '../components/ScreenContainer'
 import { useUIState } from '../../store/ui'
 
@@ -80,7 +80,7 @@ const QSO_SECTIONS = [
   }
 ]
 
-export default function EditQSOScreen ({ navigation, route }) {
+export default function EditQSOScreen({ navigation, route }) {
   const { t } = useTranslation()
   const styles = useThemedStyles()
   const settings = useSelector(selectSettings)
@@ -90,7 +90,7 @@ export default function EditQSOScreen ({ navigation, route }) {
   const operationSelector = useCallback((state) => selectOperation(state, route.params.operation?.uuid ?? route.params.operation), [route.params.operation])
   const operation = useSelector(operationSelector)
 
-  const [qso,, updateQSO] = useUIState('OpLoggingTab', 'qso')
+  const [qso, , updateQSO] = useUIState('OpLoggingTab', 'qso')
   const [originalQSO] = useUIState('OpLoggingTab', 'originalQSO')
   const [, setHasChanges] = useUIState('OpLoggingTab', 'hasChanges')
 
@@ -144,7 +144,7 @@ export default function EditQSOScreen ({ navigation, route }) {
   )
 }
 
-function QSOSection ({ t, qso, section, styles, onChange, style, settings }) {
+function QSOSection({ t, qso, section, styles, onChange, style, settings }) {
   return (
     <H2kListSection title={t(`screens.editQSO.sections.${section.key}`, section.section)} style={style}>
       <View
@@ -172,7 +172,7 @@ function QSOSection ({ t, qso, section, styles, onChange, style, settings }) {
   )
 }
 
-function getValueForField ({ qso, field, section }) {
+function getValueForField({ qso, field, section }) {
   if (field.key === 'power') {
     console.log('getValueForField', qso)
   }
@@ -187,7 +187,7 @@ function getValueForField ({ qso, field, section }) {
   }
 }
 
-function QSOField ({ t, qso, field, section, styles, onChange, settings }) {
+function QSOField({ t, qso, field, section, styles, onChange, settings }) {
   const value = getValueForField({ qso, field, section })
 
   const props = {
@@ -204,21 +204,22 @@ function QSOField ({ t, qso, field, section, styles, onChange, settings }) {
   }
   if (field.type === 'text') {
     return (
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
       />
     )
   } else if (field.type === 'upcasedText') {
     return (
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
         uppercase={true}
       />
     )
   } else if (field.type === 'number') {
     return (
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
+        numeric={true}
       />
     )
   } else if (field.type === 'callsign') {
@@ -249,13 +250,13 @@ function QSOField ({ t, qso, field, section, styles, onChange, settings }) {
     )
   } else if (field.type === 'mode') {
     return (
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
       />
     )
   } else if (field.type === 'band') {
     return (
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
       />
     )
@@ -275,7 +276,7 @@ function QSOField ({ t, qso, field, section, styles, onChange, settings }) {
     )
   } else {
     return (
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
       />
     )
@@ -293,7 +294,7 @@ export const editQSOControl = {
   optionType: 'mandatory'
 }
 
-function callParsingSetter ({ qso, field, section, value, changes }) {
+function callParsingSetter({ qso, field, section, value, changes }) {
   let guess = parseCallsign(value)
   if (guess?.baseCall) {
     annotateFromCountryFile(guess)
@@ -303,7 +304,7 @@ function callParsingSetter ({ qso, field, section, value, changes }) {
   return { ...changes, [section.key]: { call: value, guess } }
 }
 
-function frequencySetter ({ qso, field, section, value, changes, vfo }) {
+function frequencySetter({ qso, field, section, value, changes, vfo }) {
   const freq = value ? parseFreq(value) : undefined
   const band = freq ? bandForFrequency(freq) : undefined
   const mode = freq ? (modeForFrequency(freq, qso.our) ?? qso?.mode ?? 'SSB') : qso?.mode

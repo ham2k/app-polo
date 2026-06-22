@@ -27,9 +27,9 @@ import { setLocalData } from '../../../store/local'
 import { fetchAndProcessURL } from '../../../store/dataFiles/actions/dataFileFS'
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kIconButton, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kIconButton, H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
-function prepareStyles (baseStyles) {
+function prepareStyles(baseStyles) {
   return {
     ...baseStyles,
     listRow: {
@@ -40,7 +40,7 @@ function prepareStyles (baseStyles) {
   }
 }
 
-export default function DevModeSettingsScreen ({ navigation, splitView }) {
+export default function DevModeSettingsScreen({ navigation, splitView }) {
   const { t, i18n } = useTranslation()
 
   const styles = useThemedStyles(prepareStyles)
@@ -99,7 +99,7 @@ export default function DevModeSettingsScreen ({ navigation, splitView }) {
 
   const handleWipeDB = useCallback(() => {
     Alert.alert(t('screens.devModeSettings.wipeDatabase.title', 'Wipe Database?'), t('screens.devModeSettings.wipeDatabase.description', 'Are you sure you want to delete all Operations, QSOs and other data?'), [
-      { text: t('screens.devModeSettings.wipeDatabase.noCancel', 'No, Cancel'), onPress: () => {} },
+      { text: t('screens.devModeSettings.wipeDatabase.noCancel', 'No, Cancel'), onPress: () => { } },
       {
         text: t('screens.devModeSettings.wipeDatabase.yesWipeIt', 'Yes, Wipe It!'),
         onPress: () => {
@@ -276,7 +276,7 @@ ${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
         {Config.CROWDIN_PROJECT_ID && (
           <H2kListSection title={t('screens.devModeSettings.internationalization.title', 'Internationalization')}>
             <H2kListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 label={t('screens.devModeSettings.internationalization.crowdInPersonalTokenLabel', 'CrowdIn Personal Access Token')}
                 value={settings.crowdInPersonalToken ?? ''}
                 keyboard={'normal'}
@@ -295,12 +295,12 @@ ${DeviceInfo.isKeyboardConnectedSync() ? '* Keyboard connected\n' : ''}
 
         <H2kListSection title={'Download Advanced Settings'}>
           <H2kListRow style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
-            <H2kTextInput
+            <H2kEnhancedTextInput
               label={t('screens.devModeSettings.downloadAdvancedSettings.locationLabel', 'Location')}
               value={settings.devSettingsLocation ?? ''}
               inputMode={'url'}
               placeholder={t('screens.devModeSettings.downloadAdvancedSettings.locationPlaceholder', 'https://example.com/dir/settings.yml')}
-              onChangeText={(value) => dispatch(setSettings({ devSettingsLocation: value })) }
+              onChangeText={(value) => dispatch(setSettings({ devSettingsLocation: value }))}
               style={{ flex: 1 }}
             />
             <H2kIconButton icon="download" mode="contained"

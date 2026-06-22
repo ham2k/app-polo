@@ -4,7 +4,7 @@
 import React, { useCallback } from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 
 const ADD_DASHES_REGEX = /([A-Z0-9]+R)(\d+)/gi
 
@@ -21,7 +21,7 @@ export default function TOTAInput (props) {
   }, [])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}

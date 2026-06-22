@@ -21,7 +21,7 @@ const SIGN_AFTER_A_DIGIT_REGEX = /([\d,.])[+-]/g
 
 const DEBUG = false
 
-export function H2kTextInput (props) {
+export function H2kSimpleTextInput (props) {
   const {
     style, textStyle, themeColor, disabled, mode,
     label, placeholder, value, error,
@@ -416,7 +416,7 @@ export function H2kTextInput (props) {
   )
 }
 
-function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disabled }) {
+export function prepareStyles (themeStyles, { style, textStyle, error, themeColor, disabled }) {
   let textColor = themeStyles.theme.colors.onBackground
   let labelColor = themeStyles.theme.colors.onBackground
   let borderColor = themeStyles.theme.colors.outline

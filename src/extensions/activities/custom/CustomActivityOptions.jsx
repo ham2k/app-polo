@@ -6,12 +6,12 @@ import { useTranslation } from 'react-i18next'
 
 import { filterRefs, replaceRefs } from '@ham2k/lib-qson-tools'
 
-import { H2kButton, H2kListRow, H2kListSection, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kListRow, H2kListSection, H2kEnhancedTextInput } from '../../../ui'
 
 import { Info } from './CustomInfo'
 import { CustomListItem } from './CustomListItem'
 
-export function CustomActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function CustomActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
@@ -53,7 +53,7 @@ export function CustomActivityOptions ({ styles, operation, settings, refs: allR
       </H2kListSection>
       <H2kListSection title={activityRefs?.length === 0 ? t('extensions.custom.activityOptions.addMoreReferences', 'Add more references') : t('extensions.custom.activityOptions.addReference', 'Add a reference')}>
         <H2kListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             label={t('extensions.custom.activityOptions.activityLabel', 'Activity - MY_SIG in ADIF (Optional)')}
             placeholder={t('extensions.custom.activityOptions.activityPlaceholder', 'i.e. COTA…')}
             value={mySig}
@@ -61,7 +61,7 @@ export function CustomActivityOptions ({ styles, operation, settings, refs: allR
           />
         </H2kListRow>
         <H2kListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             label={t('extensions.custom.activityOptions.referenceLabel', 'Reference - MY_SIG_INFO in ADIF')}
             placeholder={t('extensions.custom.activityOptions.referencePlaceholder', 'i.e. XY-1234…')}
             value={mySigInfo}
@@ -69,7 +69,7 @@ export function CustomActivityOptions ({ styles, operation, settings, refs: allR
           />
         </H2kListRow>
         <H2kListRow style={{ paddingBottom: styles.oneSpace * 1 }}>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             label={t('extensions.custom.activityOptions.nameLabel', 'Name (Optional)')}
             placeholder={t('extensions.custom.activityOptions.namePlaceholder', 'i.e. XYZ Castle…')}
             value={name}
@@ -77,7 +77,7 @@ export function CustomActivityOptions ({ styles, operation, settings, refs: allR
           />
         </H2kListRow>
         <H2kListRow>
-          <H2kButton icon="plus-circle" mode="contained" onPress = {() => handleAddReference(mySigInfo, name, mySig) }>{t('extensions.custom.activityOptions.addButton', 'Add {{mySig}} {{mySigInfo}}', { mySig, mySigInfo })}</H2kButton>
+          <H2kButton icon="plus-circle" mode="contained" onPress={() => handleAddReference(mySigInfo, name, mySig)}>{t('extensions.custom.activityOptions.addButton', 'Add {{mySig}} {{mySigInfo}}', { mySig, mySigInfo })}</H2kButton>
         </H2kListRow>
       </H2kListSection>
     </>

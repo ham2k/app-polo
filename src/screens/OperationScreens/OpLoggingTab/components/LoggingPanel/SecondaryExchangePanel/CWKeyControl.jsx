@@ -9,7 +9,7 @@ import { fmtNumber } from '@ham2k/lib-format-tools'
 
 import GLOBAL from '../../../../../../GLOBAL'
 
-import { H2kTextInput } from '../../../../../../ui'
+import { H2kEnhancedTextInput } from '../../../../../../ui'
 
 const KEY_TYPES = {
   SK: 'Straight Key',
@@ -40,7 +40,7 @@ const CWKeyControlComponent = ({ qso, operation, settings, disabled, icon, style
 
   return (
     <View style={[style, { flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }]}>
-      <H2kTextInput
+      <H2kEnhancedTextInput
         innerRef={ref}
         themeColor={themeColor}
         style={[styles.input, { minWidth: styles.oneSpace * 10, width: '100%' }]}

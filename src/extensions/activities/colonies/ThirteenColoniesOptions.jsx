@@ -6,11 +6,11 @@ import { useTranslation } from 'react-i18next'
 
 import { findRef } from '@ham2k/lib-qson-tools'
 
-import { H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { Info } from './ThirteenColoniesExtension'
 
-export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, setRefs }) {
+export function ThirteenColoniesOptions({ styles, operation, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
@@ -27,7 +27,7 @@ export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, set
     <>
       <H2kListSection title={t('extensions.colonies.activityOptions.settings', 'Settings')}>
         <H2kListRow>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.colonies.activityOptions.year', 'Year')}
@@ -54,7 +54,7 @@ export function ThirteenColoniesOptions ({ styles, operation, refs: allRefs, set
       <H2kListRow style={{ marginTop: styles.oneSpace * 2, marginBottom: styles.oneSpace }}>
         <H2kMarkdown>
           {t('extensions.colonies.activityOptions.info-md',
-`
+            `
 The 13 Colonies Special Event runs every year from 9am ET July 1st to midnight ET July 7th.
 
 More info at [http://www.13colonies.us/](http://www.13colonies.us/)

@@ -15,9 +15,9 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { basePartialTemplates, DATA_FORMAT_DESCRIPTIONS, runTemplateForOperation } from '../../../store/operations'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kListItem, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
-export default function ExportSettingsScreen ({ navigation, splitView }) {
+export default function ExportSettingsScreen({ navigation, splitView }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -380,7 +380,7 @@ Attributes for the log being exported
   )
 }
 
-function OneExportSetting ({ setting, settings, styles, sampleData, dispatch, exportType }) {
+function OneExportSetting({ setting, settings, styles, sampleData, dispatch, exportType }) {
   const example = useMemo(() => {
     return runTemplateForOperation(exportType?.settings?.[setting.key] || setting.default, { settings, ...sampleData })
   }, [exportType, sampleData, setting.default, setting.key, settings])
@@ -393,7 +393,7 @@ function OneExportSetting ({ setting, settings, styles, sampleData, dispatch, ex
     <View key={setting.key} style={{ marginLeft: styles.oneSpace * 1, marginBottom: styles.oneSpace * 2 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={{ flex: 1, fontWeight: isDefault ? 'regular' : 'bold' }}
           label={setting.label}
           keyboard="code"

@@ -7,11 +7,11 @@ import { Text } from 'react-native-paper'
 
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kListItem, H2kListRow, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
 import { Info } from './WFDExtension'
 
-export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs }) {
+export function WFDActivityOptions({ styles, operation, settings, refs: allRefs, setRefs }) {
   const { t } = useTranslation()
 
   const activityRef = useMemo(() => findRef(allRefs, Info.key) ?? {}, [allRefs])
@@ -100,7 +100,7 @@ export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs
     <>
       <H2kListSection title={t('extensions.wfd.activityOptions.exchangeInformation', 'Exchange Information')}>
         <H2kListRow>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.wfd.activityOptions.classLabel', 'Class')}
@@ -111,7 +111,7 @@ export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs
           />
         </H2kListRow>
         <H2kListRow>
-          <H2kTextInput
+          <H2kEnhancedTextInput
             style={[styles.input, { marginTop: styles.oneSpace, flex: 1 }]}
             textStyle={styles.text.callsign}
             label={t('extensions.wfd.activityOptions.locationLabel', 'Location')}
@@ -123,7 +123,7 @@ export function WFDActivityOptions ({ styles, operation, settings, refs: allRefs
         </H2kListRow>
         <H2kListRow style={{ marginTop: styles.oneSpace * 4 }}>
           <H2kMarkdown>{t('extensions.wfd.activityOptions.information-md',
-`
+            `
   Class for Winter Field Day is, for example \`2M\`:
 
   - \`1\`, \`2\`, \`3\`… for the number of transmitters.

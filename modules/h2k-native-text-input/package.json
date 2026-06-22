@@ -1,0 +1,32 @@
+{
+  "name": "@ham2k/h2k-native-text-input",
+  "version": "0.0.1",
+  "description": "Native enhanced text input for Ham2K POLO (uppercase, cursor-preserving formatting, space/tab events, insert-at-cursor, keyboard control)",
+  "private": true,
+  "main": "src/index.js",
+  "files": [
+    "src",
+    "android",
+    "ios",
+    "h2k-native-text-input.podspec",
+    "!**/__tests__"
+  ],
+  "license": "MPL-2.0",
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  },
+  "codegenConfig": {
+    "name": "H2kNativeTextInputSpec",
+    "type": "components",
+    "jsSrcsDir": "src/specs",
+    "android": {
+      "javaPackageName": "com.ham2k.nativetextinput"
+    },
+    "ios": {
+      "componentProvider": {
+        "H2kNativeTextInput": "H2kNativeTextInputComponentView"
+      }
+    }
+  }
+}

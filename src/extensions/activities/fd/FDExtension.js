@@ -9,7 +9,7 @@ import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { FDActivityOptions } from './FDActivityOptions'
 import { ABBREVIATED_SECTION_NAMES, RAC_SECTIONS, ARRL_SECTIONS, PREFIX_TO_LOCATION } from './FDSections'
-import { H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui'
+import { H2kEnhancedTextInput, H2kTextInputWithSuggestions } from '../../../ui'
 
 /*
  NOTES:
@@ -338,7 +338,7 @@ function mainExchangeForOperation(props) {
   const fields = []
 
   fields.push(
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       key={`${Info.key}/class`}
       innerRef={refStack.shift()}

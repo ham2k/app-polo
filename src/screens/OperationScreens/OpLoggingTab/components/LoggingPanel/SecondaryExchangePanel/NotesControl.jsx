@@ -5,7 +5,7 @@ import React, { useEffect, useRef } from 'react'
 import { View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
-import { H2kTextInput } from '../../../../../../ui'
+import { H2kEnhancedTextInput } from '../../../../../../ui'
 
 const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const { t } = useTranslation()
@@ -15,7 +15,7 @@ const NotesControlInputs = ({ qso, operation, settings, disabled, icon, style, s
 
   return (
     <View style={[style, { flexDirection: 'row', paddingHorizontal: 0, gap: styles.oneSpace }]}>
-      <H2kTextInput
+      <H2kEnhancedTextInput
         innerRef={ref}
         themeColor={themeColor}
         style={[styles.input, { minWidth: styles.oneSpace * 20, width: '100%' }]}

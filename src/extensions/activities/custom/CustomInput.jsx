@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
 export default function CustomInput (props) {
@@ -12,7 +12,7 @@ export default function CustomInput (props) {
   const styles = useThemedStyles()
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       keyboard="dumb"
       uppercase={false}

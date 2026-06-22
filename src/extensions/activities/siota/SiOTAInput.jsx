@@ -4,7 +4,7 @@
 import React, { useCallback } from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 
 const ADD_DASHES_REGEX = /(?<!VK-)VK([A-Z]+)/gi
 const ADD_COMMAS_REGEX = /(VK-[A-Z]{3}\d+)\s*[,]*\s*VK-/gi
@@ -25,7 +25,7 @@ export default function SiOTAInput (props) {
   }, [])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}

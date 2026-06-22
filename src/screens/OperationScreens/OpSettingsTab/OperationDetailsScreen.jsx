@@ -10,9 +10,9 @@ import { useTranslation } from 'react-i18next'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 import { selectOperation, setOperationData } from '../../../store/operations'
 import ScreenContainer from '../../components/ScreenContainer'
-import { H2kListSection, H2kTextInput } from '../../../ui'
+import { H2kListSection, H2kEnhancedTextInput } from '../../../ui'
 
-export default function OperationDetailsScreen ({ navigation, route }) {
+export default function OperationDetailsScreen({ navigation, route }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const styles = useThemedStyles()
@@ -59,7 +59,7 @@ export default function OperationDetailsScreen ({ navigation, route }) {
         <ScrollView style={{ flex: 1, paddingVertical: styles.oneSpace }}>
           <H2kListSection title={t('screens.operationDetails.operationTitle', 'Title')}>
             <View style={{ marginHorizontal: styles.oneSpace * 2 }}>
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 value={title ?? ''}
                 placeholder={t('screens.operationDetails.newOperation', 'New Operation')}
                 onChangeText={handleChangeTitle}
@@ -68,7 +68,7 @@ export default function OperationDetailsScreen ({ navigation, route }) {
           </H2kListSection>
           <H2kListSection title={t('screens.operationDetails.operationNotes', 'Notes')}>
             <View style={{ marginHorizontal: styles.oneSpace * 2 }}>
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 value={notes ?? ''}
                 placeholder={t('screens.operationDetails.anythingYouWantToWriteAboutThisOperation', 'Anything you want to write about this operation')}
                 onChangeText={handleChangeNotes}

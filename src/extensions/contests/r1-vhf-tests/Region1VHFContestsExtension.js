@@ -1,12 +1,14 @@
 // Copyright ©️ 2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
+import React from 'react'
+
 import { fmtNumber, fmtTimestamp } from '@ham2k/lib-format-tools'
 
 import { distanceForRegion1VHFContests } from '@ham2k/lib-geo-tools'
 import { filterNearDupes, replaceRef, findRef } from '@ham2k/lib-qson-tools'
 
-import { H2kGridInput, H2kTextInput } from '../../../ui'
+import { H2kGridInput, H2kEnhancedTextInput } from '../../../ui'
 import { REG1TEST_BAND } from '../../../tools/qsonToReg1test'
 
 import { Info } from './Region1VHFContestsInfo'
@@ -313,7 +315,7 @@ function mainExchangeForOperation (props) {
 
   if (_hasNumberExchange(test)) {
     fields.push(
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
         key={`${Info.key}/ourNumber`}
         skipFocus={true}
@@ -333,7 +335,7 @@ function mainExchangeForOperation (props) {
     )
 
     fields.push(
-      <H2kTextInput
+      <H2kEnhancedTextInput
         {...props}
         key={`${Info.key}/theirNumber`}
         innerRef={refStack.shift()}

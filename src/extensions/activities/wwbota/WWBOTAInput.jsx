@@ -4,7 +4,7 @@
 import React, { useCallback } from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 
 const ADD_DASHES_REGEX = /(?:B?\/)?([0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*)(\d+)(?!-)$/gi
 const ADD_SLASHES_REGEX = /^B?((?<!\/)(?:[0-9][A-Z][0-9A-Z]*|[A-Z][0-9A-Z]*)-)$/gi
@@ -29,7 +29,7 @@ export default function WWBOTAInput (props) {
   }, [defaultPrefix])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}

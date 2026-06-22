@@ -10,12 +10,12 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 
 import { setAccountInfo } from '../../../store/settings'
 import { apiQRZCALL } from '../../../store/apis/apiQRZCALL'
-import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kMarkdown, H2kText, H2kTextInput } from '../../../ui'
+import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kMarkdown, H2kText, H2kEnhancedTextInput } from '../../../ui'
 import { resetCallLookupCache } from '../../../screens/OperationScreens/OpLoggingTab/components/LoggingPanel/useCallLookup'
 
 const TOKEN_PORTAL_URL = 'https://qrzcall.eu/'
 
-export function QRZCALLAccountSetting ({ settings, styles }) {
+export function QRZCALLAccountSetting({ settings, styles }) {
   const { t } = useTranslation()
 
   const [currentDialog, setCurrentDialog] = useState()
@@ -47,7 +47,7 @@ export function QRZCALLAccountSetting ({ settings, styles }) {
   )
 }
 
-function AccountsQRZCALLDialog ({ visible, settings, styles, onDialogDone }) {
+function AccountsQRZCALLDialog({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -73,7 +73,7 @@ function AccountsQRZCALLDialog ({ visible, settings, styles, onDialogDone }) {
   }, [setToken])
 
   const openTokenPortal = useCallback(() => {
-    Linking.openURL(TOKEN_PORTAL_URL).catch(() => {})
+    Linking.openURL(TOKEN_PORTAL_URL).catch(() => { })
   }, [])
 
   const handleTest = useCallback(async () => {
@@ -118,7 +118,7 @@ function AccountsQRZCALLDialog ({ visible, settings, styles, onDialogDone }) {
           {t('extensions.qrzcall.account.pleaseEnterToken',
             'Paste a Personal Access Token from your QRZCALL.EU account. Generate one at qrzcall.eu → My Profile → Account → API Tokens (requires a Data or Extra subscription).')}
         </H2kText>
-        <H2kTextInput
+        <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace, fontFamily: 'monospace' }]}
           value={token}
           label={t('extensions.qrzcall.account.tokenLabel', 'API Token')}

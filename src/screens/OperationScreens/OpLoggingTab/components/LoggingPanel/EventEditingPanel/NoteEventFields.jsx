@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-import { H2kTextInput } from '../../../../../../ui'
+import { H2kEnhancedTextInput } from '../../../../../../ui'
 
 export default function NoteEventFields ({
   qso, qsos, operation, vfo, settings,
@@ -12,7 +12,7 @@ export default function NoteEventFields ({
   onSubmitEditing, handleFieldChange, updateQSO, mainFieldRef, focusedRef
 }) {
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       themeColor={themeColor}
       style={{ flex: 1 }}
       value={qso.event?.note}
@@ -21,7 +21,7 @@ export default function NoteEventFields ({
       label="Note"
       fieldId="eventNote"
       uppercase={true}
-      ref={mainFieldRef}
+      innerRef={mainFieldRef}
       focusedRef={focusedRef}
     />
   )

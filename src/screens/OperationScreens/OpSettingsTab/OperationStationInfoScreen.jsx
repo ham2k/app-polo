@@ -16,9 +16,9 @@ import { selectOperation, setOperationData, setOperationLocalData } from '../../
 import { batchUpdateQSOs, selectQSOs } from '../../../store/qsos'
 import ScreenContainer from '../../components/ScreenContainer'
 import { joinCalls } from '../../../tools/joinCalls'
-import { H2kCallsignInput, H2kListItem, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
+import { H2kCallsignInput, H2kListItem, H2kListSection, H2kMarkdown, H2kEnhancedTextInput } from '../../../ui'
 
-export default function OperationStationInfoScreen ({ navigation, route }) {
+export default function OperationStationInfoScreen({ navigation, route }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const styles = useThemedStyles()
@@ -286,7 +286,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
             )}
             {actionForOperatorCall && (
               <View style={{ marginTop: styles.oneSpace * 2, alignItems: 'center' }}>
-                <Button mode="outlined" style={{ flex: 0 }}onPress={handleReplaceOperatorInAllQSOs}>{actionForOperatorCall}</Button>
+                <Button mode="outlined" style={{ flex: 0 }} onPress={handleReplaceOperatorInAllQSOs}>{actionForOperatorCall}</Button>
               </View>
             )}
           </H2kListSection>
@@ -303,7 +303,7 @@ export default function OperationStationInfoScreen ({ navigation, route }) {
                 titleStyle={{ color: styles.colors.devMode }}
                 descriptionStyle={{ color: styles.colors.devMode }}
               />
-              <H2kTextInput
+              <H2kEnhancedTextInput
                 value={values.multiIdentifier ?? ''}
                 onChangeText={handleUpdateMultiIdentifier}
                 label={t('screens.operationStationInfo.identifierForThisStation', 'Identifier for this station (numbers only)')}

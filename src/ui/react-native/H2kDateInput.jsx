@@ -7,7 +7,7 @@ import { fmtISODate } from '@ham2k/lib-format-tools'
 
 import { useSelector } from 'react-redux'
 import { selectSecondsTick } from '../../store/time'
-import { H2kTextInput } from './H2kTextInput'
+import { H2kEnhancedTextInput } from './H2kEnhancedTextInput'
 
 export function H2kDateInput (props) {
   const { label, valueInMillis, onChange, onBlur, fieldId, innerRef } = props
@@ -94,7 +94,7 @@ export function H2kDateInput (props) {
   }, [fieldId, onChange, originalValue, valueInMillis])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       innerRef={actualInnerRef}
       value={localValue}
@@ -102,7 +102,6 @@ export function H2kDateInput (props) {
       placeholder={nowStr}
       onChange={handleChange}
       onBlur={handleBlur}
-      onEndEditing={handleBlur}
       keyboard={'numbers'}
     />
   )

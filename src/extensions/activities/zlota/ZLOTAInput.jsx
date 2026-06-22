@@ -5,7 +5,7 @@
 import React, { useCallback } from 'react'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { H2kTextInput } from '../../../ui'
+import { H2kEnhancedTextInput } from '../../../ui'
 
 const ADD_PREFIX_REGEX = /(?<=^|,)([BHILPV])/gi
 const ADD_DASHES_REGEX = /\bZL([BHILPV]\/[A-Z]+)([0-9]+)$/gi
@@ -30,7 +30,7 @@ export default function ZLOTAInput (props) {
   }, [])
 
   return (
-    <H2kTextInput
+    <H2kEnhancedTextInput
       {...props}
       keyboard="dumb"
       uppercase={true}
