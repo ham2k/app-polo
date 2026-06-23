@@ -559,7 +559,7 @@
       "syncAccountDialog": {
         "title": "Cuenta de Ham2K LoFi",
         "changeEmailText": "Cambia el correo electrónico de recuperación para esta cuenta:",
-        "setEmailText": "Establezca un correo electrónico para su cuenta. Se puede utilizar para identificarla y facilitar su recuperación más tarde.",
+        "setEmailText": "Establece un correo electrónico para su cuenta. Se puede utilizar para identificarla y facilitar su recuperación más tarde.",
         "emailAddressLabel": "Dirección de correo electrónico",
         "linkWithOtherButton": "O… conéctate con una cuenta existente",
         "linkAccountText": "Conéctate con una cuenta existente:",

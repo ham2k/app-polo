@@ -204,14 +204,14 @@
       "accept-a11y": "Prijať zmeny",
       "revert": "Vrátiť späť",
       "revert-a11y": "Vrátiť späť zmeny",
-      "apply": "Aplikovať",
+      "apply": "Použiť",
       "connect": "Pripojiť",
       "save": "Uložiť",
       "export": "Exportovať"
     },
     "errors": {
       "generic": "Nastala chyba. Skúste to neskôr znova.",
-      "genericShort": "Nastala chyba."
+      "genericShort": "Niečo sa pokazilo."
     },
     "version": {
       "general": "{{month}} '{{year}}",
@@ -294,7 +294,7 @@
         "core": "Základné funkcie",
         "locationBased": "Aktivity založené na polohe",
         "contestsAndFieldOps": "Súťaže a terénne operácie",
-        "lookup": "Vyhľadávanie dát a označovanie",
+        "lookup": "Vyhľadávanie dát a sledovanie",
         "devmode": "Režim vývojára",
         "other": "Ostatné funkcie"
       }

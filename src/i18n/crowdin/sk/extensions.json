@@ -31,8 +31,8 @@
         "huntedRefsCount_zero": "Žiadne lovené hrady",
         "huntedRefsCount_one": "1 lovený hrad",
         "huntedRefsCount_other": "{{fmtCount}} lovených hradov",
-        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
-        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_zero": "Žiadne aktivátorské QSOs",
+        "activatorQSOsCount_one": "1 aktivátorské QSO",
         "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
         "huntedQSOsCount_zero": "Žiadne lovené QSOs",
         "huntedQSOsCount_one": "1 lovené QSO",
@@ -43,7 +43,7 @@
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných hradov",
         "referencesMissedCount_zero": "Žiadne neúplné hrady",
         "referencesMissedCount_one": "1 neúplný hrad",
-        "referencesMissedCount_other": "{{fmtCount}} neúplnych hradov",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných hradov",
         "referencesHuntedCount_zero": "Žiadne lovené hrady",
         "referencesHuntedCount_one": "1 lovený hrad",
         "referencesHuntedCount_other": "{{fmtCount}} lovených hradov"
@@ -80,7 +80,7 @@
         "huntedQSOsCount_zero": "Žiadne lovené QSOs",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
-        "operationTotals": "Celkové operácie",
+        "operationTotals": "Celkový počet prevádzok",
         "referencesActivatedCount_zero": "Žiadne aktivované majáky",
         "referencesActivatedCount_one": "1 aktivovaný maják",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných majákov",
@@ -93,8 +93,8 @@
       }
     },
     "call-history": {
-      "name": "História hovorov",
-      "description": "Nahrať historický ADIF a použiť na offline vyhľadávania"
+      "name": "História volacieho znaku",
+      "description": "Nahrajte historické údaje ADIF a využite ich na vyhľadávanie v režime offline"
     },
     "call-notes": {
       "name": "Poznámky k volacím znakom",
@@ -107,7 +107,7 @@
       "failedToLoad": "Načítanie zlyhalo!",
       "notesFile": "Súbor poznámok k volacím znakom",
       "nameLabel": "Meno",
-      "namePlaceholder": "Názov súbor poznámok k volacím znakom",
+      "namePlaceholder": "Názov súboru poznámok k volacím znakom",
       "locationLabel": "Poloha",
       "locationPlaceholder": "https://example.com/dir/notes.txt",
       "builtinTitle": "Vstavaný",
@@ -118,7 +118,7 @@
         "ham2k-hams-of-note": "Ham2K's Hams of Note"
       },
       "descriptions": {
-        "ham2k-hams-of-note": "Ukážkový príklad, kto je kto a kto nie je vo svete rádiá"
+        "ham2k-hams-of-note": "Ukážkový príklad, kto je kto a kto nie je vo svete rádia"
       },
       "help-md": "Poznámky k volacím znakom sú uložené v jednoduchých textových súboroch, jeden volací znak na riadok, za ktorým nasledujú informácie, ktoré chcete zobraziť na obrazovke denníka. Môžete použiť vstavané súbory alebo pridať svoje vlastné.\n\nPoskytnite priamy odkaz na obyčajný textový súbor alebo \"zdieľací odkaz\" zo služby ako:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nRiadky v tomto súbore by mali vyzerať ako tento a môžu podporovať základné formátovanie markdown:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nAk položka začína emoji, bude použitá namiesto predvolenej ⭐.\n\nPoložky je možné použiť na \"rozšírenie volacieho znaku\", ak najskôr napíšete `..` alebo `//` do poľa volacieho znaku, ako napríklad `//DAN` v príklade vyššie."
     },
@@ -152,7 +152,7 @@
       "sendChatConfirm": "Správa odoslaná!"
     },
     "commands-debug": {
-      "syncall": "Vymazať všetky operácie a vynulovať stav synchronizácie?",
+      "syncall": "Vymazať všetky prevádzky a resetovať stav synchronizácie?",
       "syncallConfirm": "Vymazanie údajov a opätovná synchronizácia všetkého…",
       "syncup": "Znova poslať lokálne údaje do synchronizačnej služby?",
       "syncupConfirm": "Znovu sa posiela…",
@@ -187,8 +187,8 @@
       "start": "Spustiť prevádzku?",
       "startConfirm": "Prevádzka začala!",
       "break": "Pridať si pauzu?",
-      "breakConfirm": "Pridaná prestávka v prevádzke!",
-      "stop": "Ukončiť operáciu?",
+      "breakConfirm": "Prestávka v prevádzke pridaná!",
+      "stop": "Ukončiť prevádzku?",
       "stopConfirm": "Prevádzka ukončená!"
     },
     "commands-operator": {
@@ -208,7 +208,7 @@
       "modeConfirm": "Mód nastavený na {{mode}}"
     },
     "commands-settings": {
-      "set": "Nastavuje sa {{name}}?",
+      "set": "Nastaviť {{name}}?",
       "setChange": "Zmeniť {{label}} na {{value}}?",
       "setCurrent": "{{label}}: {{value}}",
       "setConfirm": "{{label}} nastavené na {{value}}",
@@ -233,7 +233,7 @@
     },
     "custom": {
       "activityOptions": {
-        "title_zero": "Neboli žiadne referencie vybrané na aktiváciu",
+        "title_zero": "Žiadne referencie vybrané pre aktiváciu",
         "title_one": "Aktivácia 1 referencie",
         "title_other": "Aktivácia {{count}} referencií",
         "addMoreReferences": "Pridať ďalšie referencie",
@@ -267,7 +267,7 @@
       "entitiesCount_other": "{{count}} DXCC entít"
     },
     "eca": {
-      "name": "ECA: Anglické hradné ocenenia",
+      "name": "ECA: Anglické ocenenia hradov",
       "shortName": "ECA",
       "exportName": "Aktivácia ECA",
       "activityOptions": {
@@ -319,7 +319,7 @@
         "powerSourcePlaceholder": "Vyberte zdroj napájania",
         "batteriesOption": "Batérie, solárne, veterné",
         "commercialPowerOption": "Komerčné napájanie, generátor",
-        "information-md": "Trieda pre ARRL Field Day je napríklad „2A“:\n\n- „1“, „2“, „3“… pre počet vysielačov.\n  - „A“ pre skupinu (3 alebo viac) poratblových staníc\n  - „B“ pre jednu alebo dve osoby portablových stanice\n  - „C“ pre mobilnú stanicu\n  - „D“ pre domáce stanice\n  - „E“ pre domáce stanice s núdzovým napájaním\n  - „F“ pre núdzové operačné stredisko\n\nPoloha je ARRL sekcia, sekcia RAC, „MX“ pre Mexiko alebo „DX“ pre všetky ostatné krajiny.\n\nViac informácií nájdete v **[oficiálnych pravidlách](https://www.arrl.org/field-day-rules)**."
+        "information-md": "Trieda pre ARRL Poľný deň je napríklad „2A“:\n\n- „1“, „2“, „3“… pre počet staníc.\n  - „A“ pre skupinu (3 alebo viac) poratblových staníc\n  - „B“ pre jednu alebo dve osoby portablových stanice\n  - „C“ pre mobilnú stanicu\n  - „D“ pre domáce stanice\n  - „E“ pre domáce stanice s núdzovým napájaním\n  - „F“ pre núdzové operačné stredisko\n\nPoloha je ARRL sekcia, sekcia RAC, „MX“ pre Mexiko alebo „DX“ pre všetky ostatné krajiny.\n\nViac informácií nájdete v **[oficiálnych pravidlách](https://www.arrl.org/field-day-rules)**."
       }
     },
     "gma": {
@@ -344,14 +344,14 @@
     },
     "hamdb": {
       "name": "Vyhľadávanie volacích znakov na HamDB.org",
-      "description": "Bezplatná služba, ale obmedzená na volania v USA, Kanade a Nemecku"
+      "description": "Bezplatná služba, ale obmedzená len na volacie znaky v USA, Kanade a Nemecku"
     },
     "hamqth": {
       "name": "Vyhľadávanie volacích znakov na HamQTH.com",
       "description": "Vyžaduje bezplatný účet na vyhľadávanie"
     },
     "llota": {
-      "name": "LLOTA: Jazerá a lagúny na vzduchu",
+      "name": "LLOTA: Jazerá a lagúny v éteri",
       "shortName": "LLOTA",
       "exportName": "Aktivácia LLOTA",
       "activityOptions": {
@@ -375,16 +375,16 @@
         "huntedRefsCount_zero": "Žiadne lovené jazerá",
         "huntedRefsCount_one": "1 lovené jazero",
         "huntedRefsCount_other": "{{fmtCount}} lovených jazier",
-        "activatorQSOsCount_zero": "Žiadne spojenia aktivátorov",
-        "activatorQSOsCount_one": "1 spojenie aktivátora",
-        "activatorQSOsCount_other": "{{fmtCount}} spojení aktivátorov",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
         "ref2refQSOsCount_zero": "Žiadne spojenia L2L",
         "ref2refQSOsCount_one": "1 spojenie L2L",
         "ref2refQSOsCount_other": "{{fmtCount}} spojení L2L",
-        "huntedQSOsCount_zero": "Žiadne lovené spojenia",
-        "huntedQSOsCount_one": "1 lovené spojenie",
-        "huntedQSOsCount_other": "{{fmtCount}} lovených spojení",
-        "operationTotals": "Súhrn prevádzok",
+        "huntedQSOsCount_zero": "Žiadne lovené QSOs",
+        "huntedQSOsCount_one": "1 lovené QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "operationTotals": "Celkový počet prevádzok",
         "referencesActivatedCount_zero": "Žiadne aktivované jazerá",
         "referencesActivatedCount_one": "1 aktivované jazero",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných jazier",
@@ -407,7 +407,7 @@
       "noRefsNearby": "Žiadne jazerá v okolí!"
     },
     "mota": {
-      "name": "MOTA: Mlyny na Nadvýšeniny",
+      "name": "MOTA: Mlyny v éteri",
       "shortName": "MOTA",
       "exportName": "Aktivácia MOTA",
       "activityOptions": {
@@ -430,18 +430,18 @@
       }
     },
     "parksnpeaks": {
-      "name": "ParksnPeaks spoty",
+      "name": "ParksnPeaks spotovanie",
       "description": "Používa sa hlavne vo VK a ZL",
       "shortName": "PnP",
       "account": {
-        "title": "ParksnPeaks (VK/ZL spottingu)",
+        "title": "ParksnPeaks (VK/ZL spotovanie)",
         "dialogTitle": "Účet ParksnPeaks",
         "description": "Účet: {{username}}",
         "noAccount": "Žiadny účet",
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ParksnPeaks:"
       },
       "usernameLabel": "Používateľské meno (nie volací znak)",
-      "usernamePlaceholder": "používateľské meno vašeho  účtu",
+      "usernamePlaceholder": "používateľské meno vášho účtu",
       "apiKeyLabel": "API kľúč (nie heslo)",
       "apiKeyPlaceholder": "váš API kľúč"
     },
@@ -466,7 +466,7 @@
       }
     },
     "pota": {
-      "name": "POTA: Parks on the Air",
+      "name": "POTA: Parky v éteri",
       "shortName": "POTA",
       "exportName": "Aktivácia POTA",
       "activityOptions": {
@@ -499,13 +499,13 @@
         "huntedQSOsCount_zero": "Žiadne lovené QSOs",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
-        "operationTotals": "Celkové operácie",
+        "operationTotals": "Celkový počet prevádzok",
         "referencesActivatedCount_zero": "Žiadne aktivované parky",
         "referencesActivatedCount_one": "1 aktivovaný park",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných parkov",
         "referencesMissedCount_zero": "Žiadne neúplné parky",
         "referencesMissedCount_one": "1 neúplný park",
-        "referencesMissedCount_other": "{{fmtCount}} neúplné parky",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných parkov",
         "referencesHuntedCount_zero": "Žiadne lovené parky",
         "referencesHuntedCount_one": "1 lovený park",
         "referencesHuntedCount_other": "{{fmtCount}} lovených parkov"
@@ -526,14 +526,14 @@
       "description": "Vyžaduje bezplatný účet na mená a platený účet na lokácie"
     },
     "sats": {
-      "name": "Satelitné operácie"
+      "name": "Satelitné prevádzky"
     },
     "siota": {
-      "name": "SiOTA: Sila na Nadvýšeniny",
+      "name": "SiOTA: Silá v éteri",
       "shortName": "SIOTA",
       "exportName": "Aktivácia SIOTA",
       "account": {
-        "title": "ParksnPeaks (nájdenie SiOTA)",
+        "title": "ParksnPeaks (SiOTA spotovanie)",
         "dialogTitle": "Účet ParksnPeaks",
         "description": "Účet: {{username}}",
         "noAccount": "Bez účtu",
@@ -567,9 +567,9 @@
       }
     },
     "sota": {
-      "name": "SOTA: Summit na Nadvýšeniny",
+      "name": "SOTA: Vrcholy v éteri",
       "account": {
-        "title": "SOTA (pre samo-nájsť SOTAWatch)",
+        "title": "SOTA (pre samo-spotovanie SOTAWatch)",
         "dialogTitle": "Účet SOTA",
         "description": "Účet: {{callsign}}",
         "noAccount": "Bez účtu",
@@ -577,7 +577,7 @@
         "connect": "Pripojte si svoj účet SOTA"
       },
       "notLoggedInAlertTitle": "Upozornenie",
-      "notLoggedInAlertText": "Nie ste prihlásený do SOTAWatch pre vlastnú aktualizáciu. Navštívte nastavenia PoLo",
+      "notLoggedInAlertText": "Nie ste prihlásený do SOTAWatch pre samo-spotovanie. Choďte do PoLo nastavení",
       "activityOptions": {
         "title_zero": "Žiadne vrcholy vybrané pre aktiváciu",
         "title_one": "Aktivácia 1 vrcholu",
@@ -599,7 +599,7 @@
         "ref2refCount_other": "{{fmtCount}} S2S",
         "huntedRefsCount_zero": "Žiadne lovené vrcholy",
         "huntedRefsCount_one": "1 lovený vrchol",
-        "huntedRefsCount_other": "{{fmtCount}} lovené vrcholy",
+        "huntedRefsCount_other": "{{fmtCount}} lovených vrcholov",
         "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
         "activatorQSOsCount_one": "1 aktivátorové QSO",
         "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
@@ -609,16 +609,16 @@
         "huntedQSOsCount_zero": "Žiadne lovené QSOs",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
-        "operationTotals": "Celkové operácie",
+        "operationTotals": "Celkový počet prevádzok",
         "referencesActivatedCount_zero": "Žiadne aktivované vrcholy",
         "referencesActivatedCount_one": "1 aktivovaný vrchol",
-        "referencesActivatedCount_other": "{{fmtCount}} aktivované vrcholy",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných vrcholov",
         "referencesMissedCount_zero": "Žiadne neúplné vrcholy",
         "referencesMissedCount_one": "1 neúplný vrchol",
-        "referencesMissedCount_other": "{{fmtCount}} neúplné vrcholy",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných vrcholov",
         "referencesHuntedCount_zero": "Žiadne lovené vrcholy",
         "referencesHuntedCount_one": "1 lovený vrchol",
-        "referencesHuntedCount_other": "{{fmtCount}} lovené vrcholy"
+        "referencesHuntedCount_other": "{{fmtCount}} lovených vrcholov"
       },
       "loggingControl": {
         "theirRefLabel": "Ich SOTA"
@@ -633,19 +633,19 @@
       "noRefsNearby": "Žiadne vrcholy v okolí!"
     },
     "tota": {
-      "name": "TOTA: Veže na Nadvýšeniny",
+      "name": "TOTA: Rozhľadne v éteri",
       "activityOptions": {
         "title_zero": "Žiadne vybrané veže na aktiváciu",
         "title_one": "Aktivácia 1 veže",
         "title_other": "Aktivácia {{count}} veží",
-        "noTowersFound": "Nenašli sa žiadne veže",
+        "noTowersFound": "Nenašli sa žiadne rozhľadne",
         "nearestMatches": "Najbližších {{limit}} z {{count}} zhôd",
         "matchingTowers_zero": "Žiadne zodpovedajúce veže",
         "matchingTowers_one": "1 zodpovedajúca veža",
         "matchingTowers_other": "{{count}} zodpovedajúcich veží",
-        "searchForTowers": "Vyhľadajte veže na aktiváciu!",
+        "searchForTowers": "Vyhľadajte rozhľadne pre aktiváciu!",
         "noTowersNearby": "Žiadne veže v blízkosti",
-        "nearbyTowers": "Veže v okolí",
+        "nearbyTowers": "Rozhľadne v okolí",
         "searchPlaceholder": "Názov alebo referenčné číslo…",
         "unknownTower": "Neznáma veža"
       },
@@ -656,9 +656,9 @@
         "huntedRefsCount_zero": "Žiadne lovené veže",
         "huntedRefsCount_one": "1 lovená veža",
         "huntedRefsCount_other": "{{fmtCount}} lovených veží",
-        "activatorQSOsCount_zero": "Žiadne QSO aktivátora",
-        "activatorQSOsCount_one": "1 QSO aktivátora",
-        "activatorQSOsCount_other": "{{fmtCount}} aktivovaných QSOs",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
         "ref2refQSOsCount_zero": "Žiadne R2R QSOs",
         "ref2refQSOsCount_one": "1 R2R QSO",
         "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
@@ -666,22 +666,22 @@
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
         "operationTotals": "Súhrn prevádzok",
-        "referencesActivatedCount_zero": "Žiadne aktivované veže",
-        "referencesActivatedCount_one": "1 aktivovaná veža",
-        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných veží",
-        "referencesMissedCount_zero": "Žiadne nekompletné veže",
-        "referencesMissedCount_one": "1 nekompletná veža",
-        "referencesMissedCount_other": "{{fmtCount}} nekompletných veží",
-        "referencesHuntedCount_zero": "Žiadne lovené veže",
-        "referencesHuntedCount_one": "1 lovená veža",
-        "referencesHuntedCount_other": "{{fmtCount}} lovených veží"
+        "referencesActivatedCount_zero": "Žiadne aktivované rozhľadne",
+        "referencesActivatedCount_one": "1 aktivovaná rozhľadňa",
+        "referencesActivatedCount_other": "{{fmtCount}} aktivovaných rozhľadní",
+        "referencesMissedCount_zero": "Žiadne neúplné rozhľadne",
+        "referencesMissedCount_one": "1 neúplná rozhľadňa",
+        "referencesMissedCount_other": "{{fmtCount}} neúplných rozhľadní",
+        "referencesHuntedCount_zero": "Žiadne lovené rozhľadne",
+        "referencesHuntedCount_one": "1 lovená rozhľadňa",
+        "referencesHuntedCount_other": "{{fmtCount}} lovených rozhľadní"
       },
       "loggingControl": {
-        "theirRefLabel": "Ich veža"
+        "theirRefLabel": "Ich rozhľadňa"
       },
-      "exampleRefName": "Príklad veže",
-      "unknownRefName": "Neznáma veža",
-      "noRefsNearby": "Žiadne veže v blízkosti!",
+      "exampleRefName": "Príklad rozhľadne",
+      "unknownRefName": "Neznáma rozhľadňa",
+      "noRefsNearby": "Žiadne rozhľadne v blízkosti!",
       "postSpotAPI": {
         "error": "Chyba pri odosielaní spotu TOTA",
         "serverResponse": "Server odpovedal so stavom {{status}} {{message}}"
@@ -694,7 +694,7 @@
     },
     "wab": {
       "name": "Worked All Britain/Ireland",
-      "description": "Pridať štvorca WAB/WAI k operácii",
+      "description": "Pridať štvorec WAB/WAI k prevádzke",
       "workedAllBritainSquare": "Worked All Britain Square",
       "workedAllIrelandSquare": "Worked All Ireland Square",
       "enterSquare": "Zadať štvorec",
@@ -704,7 +704,7 @@
       "noSquareSet": "Nebol zadaný žiaden štvorec"
     },
     "wca": {
-      "name": "WCA: Svetové hradné ocenenia",
+      "name": "WCA: Svetové ocenenia hradov",
       "shortName": "WCA",
       "exportName": "Aktivácia WCA",
       "activityOptions": {
@@ -727,7 +727,7 @@
         "huntedRefsCount_other": "{{fmtCount}} lovených hradov",
         "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
         "activatorQSOsCount_one": "1 aktivátorové QSO",
-        "activatorQSOsCount_other": "{{fmtCount}} lovených QSOs",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
         "huntedQSOsCount_zero": "Žiadne lovené QSOs",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
@@ -754,11 +754,11 @@
         "exchangeInformation": "Vymeniť informácie",
         "classLabel": "Trieda",
         "locationLabel": "Poloha",
-        "objectives_zero": "Žiadne ciele dosiahnuté",
-        "objectives_one": "1 cieľ dosiahnutý, OM ×{{multiplier}}",
-        "objectives_other": "{{count}} cieľov dosiahnutých, OM ×{{multiplier}}",
-        "objectivesTitle": "Ciele: {{count}} dosiahnuté, OM ×{{multiplier}}",
-        "objectivesDescription": "Nezabudnite tiež zadať tieto ciele pri odoslaní svojho záznamu!",
+        "objectives_zero": "Žiadne dosiahnuté ciele",
+        "objectives_one": "1 dosiahnutý cieľ, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} dosiahnutých cieľov, OM ×{{multiplier}}",
+        "objectivesTitle": "Ciele: {{count}} dosiahnutých, OM ×{{multiplier}}",
+        "objectivesDescription": "Nezabudnite tieto ciele uviesť aj pri odosielaní svojho denníka!",
         "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
       },
       "objectiveName": {
@@ -770,7 +770,7 @@
         "specialBulletin": "Špeciálny Bulletin",
         "sixBands": "Šesť pásiem",
         "twelveBands": "Dvanásť pásiem",
-        "multipleModes": "Viacnásobné módy",
+        "multipleModes": "Viac módov",
         "qrpOperation": "QRP prevádzka",
         "sixContinuousHours": "Šesť nepretržitých hodín"
       },
@@ -780,7 +780,7 @@
         "fmSatelliteContact": "Vytvorte aspoň 1 FM satelitný kontakt počas prevádzkového obdobia.",
         "ssbSatelliteContact": "Vytvorte aspoň jeden kontakt pomocou SSB alebo CW.",
         "winlinkEmails": "Odošlite a prijmite aspoň jeden e-mail pomocou Winlink cez RF.",
-        "specialBulletin": "Presne prekopírujte správu WFD špeciálneho bulletinu a spolu so záznamom ju odovzdajte do svojho denníka.",
+        "specialBulletin": "Presne prekopírujte správu zo špeciálneho bulletinu WFD a spolu so záznamom ju odovzdajte do svojho denníka.",
         "sixBands": "Vytvorte aspoň tri kontakty na každom z minimálne šesť rôznych pásiem.",
         "twelveBands": "Vytvorte aspoň tri kontakty na každom z minimálne dvanásť rôznych pásiem.",
         "multipleModes": "Používajte viaceré módy počas prevádzkového obdobia.",
@@ -851,7 +851,7 @@
         "huntedQSOsCount_zero": "Žiadne lovené QSOs",
         "huntedQSOsCount_one": "1 lovené QSO",
         "huntedQSOsCount_other": "{{fmtCount}} lovených QSOs",
-        "operationTotals": "Celkové operácie",
+        "operationTotals": "Celkový počet prevádzok",
         "referencesActivatedCount_zero": "Žiadne aktivované parky",
         "referencesActivatedCount_one": "1 aktivovaný park",
         "referencesActivatedCount_other": "{{fmtCount}} aktivovaných parkov",
@@ -874,15 +874,15 @@
       }
     },
     "zlota": {
-      "name": "ZLOTA: ZL na Nadvýšeniny",
+      "name": "ZLOTA: ZL v éteri",
       "account": {
-        "title": "ZLOTA (spotting ZLOTA)",
+        "title": "ZLOTA (ZLOTA spotovanie)",
         "dialogTitle": "Účet ZLOTA",
         "description": "Účet: {{callsign}}",
         "noAccount": "Bez účtu",
         "pleaseEnterDetails": "Zadajte podrobnosti vášho účtu ZLOTA:",
         "callsignLabel": "Volací znak",
-        "callsignPlaceholder": "volací znak vašeho účtu",
+        "callsignPlaceholder": "volací znak vášho účtu",
         "pinLabel": "PIN kód (nie heslo)",
         "pinPlaceholder": "váš PIN kód"
       },
@@ -920,9 +920,9 @@
         "huntedRefsCount_zero": "Žiadne lovené referencie",
         "huntedRefsCount_one": "1 lovená referencia",
         "huntedRefsCount_other": "{{fmtCount}} lovených referencií",
-        "activatorQSOsCount_zero": "Žiadne QSOs aktivátora",
-        "activatorQSOsCount_one": "1 QSO aktivátora",
-        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktivátora",
+        "activatorQSOsCount_zero": "Žiadne aktivátorové QSOs",
+        "activatorQSOsCount_one": "1 aktivátorové QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivátorových QSOs",
         "ref2refQSOsCount_zero": "Žiadne Ref2Ref QSOs",
         "ref2refQSOsCount_one": "1 Ref2Ref QSO",
         "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSOs",

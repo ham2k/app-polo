@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "BLHA: Faros y Barcos-faro Belgas",
+      "name": "BLHA: Diplomas de Faros Belgas",
       "shortName": "BLHA",
       "exportName": "Activación BLHA",
       "activityOptions": {
@@ -93,7 +93,7 @@
       }
     },
     "call-history": {
-      "name": "Historial de Llamadas",
+      "name": "Historial de Indicativos",
       "description": "Subir ADIF histórico y usar para búsquedas offline"
     },
     "call-notes": {
@@ -267,7 +267,7 @@
       "entitiesCount_other": "{{count}} entidades DXCC"
     },
     "eca": {
-      "name": "ECA: Premios de Castillos Ingleses",
+      "name": "ECA: Diplomas de Castillos Ingleses",
       "shortName": "ECA",
       "exportName": "Activación ECA",
       "activityOptions": {
@@ -286,7 +286,7 @@
       }
     },
     "ela": {
-      "name": "ELA: Premios de Faros Ingleses",
+      "name": "ELA: Diplomas de Faros Ingleses",
       "shortName": "ELA",
       "exportName": "Activación ELA",
       "activityOptions": {
@@ -344,7 +344,7 @@
     },
     "hamdb": {
       "name": "Búsquedas de indicativo en HamDB.org",
-      "description": "Servicio gratuito, pero limitado a llamadas de EE.UU., Canadá y Alemania"
+      "description": "Servicio gratuito, pero limitado a indicativos de EE.UU., Canadá y Alemania"
     },
     "hamqth": {
       "name": "Búsquedas de indicativo en HamQTH.com",

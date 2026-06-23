@@ -98,7 +98,7 @@
     },
     "call-notes": {
       "name": "Roepnaam notities",
-      "description": "Opslaan van roepnaamnotities in een bestand en deze gebruiken voor offline opzoekingen",
+      "description": "Opslaan van roepnaam notities in een bestand en deze gebruiken voor offline opzoekingen",
       "description-md_zero": "Geen notities geladen.",
       "description-md_one": "{{fmtCount}} {{type}} Geladen.",
       "description-md_other": "{{fmtCount}} {{type}} geladen.",

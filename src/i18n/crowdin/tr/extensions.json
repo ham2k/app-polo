@@ -10,7 +10,7 @@
       "total": "Toplam {{count}}"
     },
     "bca": {
-      "name": "BCA: Belçika Kaleleri ve Hisarları",
+      "name": "Belçika Kaleleri ve Hisarları",
       "shortName": "BCA",
       "exportName": "BCA Aktivasyonu",
       "activityOptions": {
@@ -30,30 +30,30 @@
       "scoring": {
         "huntedRefsCount_zero": "Avlanan kale yok",
         "huntedRefsCount_one": "1 kale avlandı",
-        "huntedRefsCount_other": "{{fmtCount}} kale avlandı",
-        "activatorQSOsCount_zero": "Hiç avlayıcı QSO yok",
-        "activatorQSOsCount_one": "1 avlayıcı QSO",
-        "activatorQSOsCount_other": "{{fmtCount}} avlayıcı QSO",
-        "huntedQSOsCount_zero": "Hiç avlanan QSO yok",
-        "huntedQSOsCount_one": "1 avlanan QSO",
-        "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
-        "operationTotals": "İşletim Toplamları",
-        "referencesActivatedCount_zero": "Aktive edilen kale yok",
-        "referencesActivatedCount_one": "1 kale aktive edildi",
-        "referencesActivatedCount_other": "{{fmtCount}} kale aktive edildi",
-        "referencesMissedCount_zero": "Tamamlanmamış kale yok",
-        "referencesMissedCount_one": "1 tamamlanmamış kale",
-        "referencesMissedCount_other": "{{fmtCount}} tamamlanmamış kale",
-        "referencesHuntedCount_zero": "Avlanan kale yok",
-        "referencesHuntedCount_one": "1 kale avlandı",
-        "referencesHuntedCount_other": "{{fmtCount}} kale avlandı"
+        "huntedRefsCount_other": "{{fmtCount}} göl avlanmış",
+        "activatorQSOsCount_zero": "{} Ref2Ref QSO",
+        "activatorQSOsCount_one": "{} Ref2Ref QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} Ref2Ref QSO",
+        "huntedQSOsCount_zero": "{} Ref2Ref QSO",
+        "huntedQSOsCount_one": "{} Ref2Ref QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "operationTotals": "Operasyon Toplamları",
+        "referencesActivatedCount_zero": "{} kale etkinleştirildi.",
+        "referencesActivatedCount_one": "{} kale etkinleştirildi.",
+        "referencesActivatedCount_other": "{{fmtCount}} kale avlanmış",
+        "referencesMissedCount_zero": "{} tamamlanmayan kale",
+        "referencesMissedCount_one": "{} tamamlanmayan kale",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmamış kaleler",
+        "referencesHuntedCount_zero": "{} kale avlanmış",
+        "referencesHuntedCount_one": "{} kale avlanmış",
+        "referencesHuntedCount_other": "{{fmtCount}} kaleler avlandı"
       },
       "loggingControl": {
-        "theirRefLabel": "BCA’lar"
+        "theirRefLabel": "Onların POTA'sı."
       }
     },
     "blha": {
-      "name": "BLHA: Belçika Deniz Fenerleri ve Fener Gemileri",
+      "name": "Belçika Deniz Fenerleri ve Fener Gemileri",
       "shortName": "BLHA",
       "exportName": "BLHA Aktivasyonu",
       "activityOptions": {
@@ -94,7 +94,7 @@
     },
     "call-history": {
       "name": "Çağrı Geçmişi",
-      "description": "Tarihî ADIF yükle ve çevrimdışı aramalar için kullan"
+      "description": "Tarihi ADIF yükle ve çevrimdışı aramalar için kullan"
     },
     "call-notes": {
       "name": "Çağrı Yazısı Notları",
@@ -165,16 +165,16 @@
       "switchLanguageConfirm": "'{{lang}}' dili {{name}}' ye geçiliyor…"
     },
     "commands-devmode": {
-      "activate": "Geliştirici modunu etkinleştirmek istiyor musunuz?",
-      "activateConfirm": "Geliştirici modu etkinleştirildi!",
-      "deactivate": "Geliştirici modunu devre dışı bırakmak istiyor musunuz?",
+      "activate": "Geliştirici modunu aktif etmek istiyor musunuz?",
+      "activateConfirm": "Geliştirici modu etkinleştirildi.",
+      "deactivate": "Geliştirici modunu devre dışı bırakmak ister misiniz?",
       "deactivateConfirm": "Geliştirici modu devre dışı bırakıldı!",
-      "on": "Geliştirici Modu: AÇIK!!!",
-      "off": "Geliştirici Modu: KAPALI"
+      "on": "Geliştirici Modu: AÇIK",
+      "off": "Geliştirici Modu: KAPALI!"
     },
     "commands-misc": {
-      "rtfm": "İnce kılavuzu okumak ister misiniz?",
-      "rtfmConfirm": "İnce kılavuz açılıyor",
+      "rtfm": "Kılavuzu İnceleyin?",
+      "rtfmConfirm": "Kılavuzu İnceleyin",
       "spot": {
         "cannotSelfSpotWithoutFrequency": "Frekans olmadan kendi kendine nokta yapılamaz",
         "selfSpotWithComments": "‘{{comments}}’ ile kendi kendine nokta yapmak mı?",
@@ -229,15 +229,15 @@
       "changeTimeToYesterday": "Zamanı düne değiştirmek istiyor musunuz?",
       "timeSetToNow": "Zaman şu anki zamana ayarlandı",
       "timeSetToToday": "Zaman bugüne ayarlandı",
-      "timeSetToYesterday": "Zaman düne ayarlandı"
+      "timeSetToYesterday": "Zaman dün'e ayarlandı"
     },
     "custom": {
       "activityOptions": {
-        "title_zero": "Aktivasyon için referans seçilmedi",
-        "title_one": "1 referans aktifleştiriliyor",
-        "title_other": "{{count}} referans aktifleştiriliyor",
-        "addMoreReferences": "Daha fazla referans ekle",
-        "addReference": "Bir referans ekle",
+        "title_zero": "Etkinleştirilmek üzere seçilmiş referans yok",
+        "title_one": "1 referans etkinleştiriliyor",
+        "title_other": "{{count}} referans etkinleştiriliyor",
+        "addMoreReferences": "Bir referans ekle",
+        "addReference": "Bir referans ekle.",
         "activityLabel": "Etkinlik - ADIF'te MY_SIG (Opsiyonel)",
         "activityPlaceholder": "ör. COTA…",
         "referenceLabel": "Referans - ADIF'te MY_SIG_INFO",
@@ -375,12 +375,12 @@
         "huntedRefsCount_zero": "Hiç göl avlanmadı",
         "huntedRefsCount_one": "1 göl avlanmış",
         "huntedRefsCount_other": "{{fmtCount}} göl avlanmış",
-        "activatorQSOsCount_zero": "Hiç etkinleştirici QSO yok",
-        "activatorQSOsCount_one": "1 aktivatör QSO",
-        "activatorQSOsCount_other": "{{fmtCount}} aktivatör QSOs",
-        "ref2refQSOsCount_zero": "Hiç L2L QSO yok",
-        "ref2refQSOsCount_one": "1 L2L QSO",
-        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSOs",
+        "activatorQSOsCount_zero": "{} etkinleştirici QSO",
+        "activatorQSOsCount_one": "{} etkinleştirici QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} Ref2Ref QSO",
+        "ref2refQSOsCount_zero": "Hiç P2P QSO yok",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSO",
         "huntedQSOsCount_zero": "Avlanan QSOs yok",
         "huntedQSOsCount_one": "1 avlanan QSO",
         "huntedQSOsCount_other": "{{fmtCount}} avlanan QSOs",
@@ -442,7 +442,7 @@
       },
       "usernameLabel": "Kullanıcı Adı (çağrı işareti değil)",
       "usernamePlaceholder": "hesap kullanıcı adınız",
-      "apiKeyLabel": "API Anahtarı (şifre değil)",
+      "apiKeyLabel": "PIN (şifre değil)",
       "apiKeyPlaceholder": "API anahtarınız"
     },
     "pga": {
@@ -501,21 +501,21 @@
         "huntedQSOsCount_other": "{{fmtCount}} avlanan QSO",
         "operationTotals": "Operasyon Toplamları",
         "referencesActivatedCount_zero": "Hiç park etkinleştirilmedi",
-        "referencesActivatedCount_one": "1 park etkinleştirilmiş",
-        "referencesActivatedCount_other": "{{fmtCount}} park etkinleştirilmiş",
-        "referencesMissedCount_zero": "Hiç tamamlanmayan park yok",
-        "referencesMissedCount_one": "1 tamamlanmayan park",
-        "referencesMissedCount_other": "{{fmtCount}} tamamlanmayan park",
-        "referencesHuntedCount_zero": "Hiç park avlanmadı",
-        "referencesHuntedCount_one": "1 park avlanmış",
-        "referencesHuntedCount_other": "{{fmtCount}} park avlanmış"
+        "referencesActivatedCount_one": "1 park etkinleştirildi",
+        "referencesActivatedCount_other": "{{fmtCount}} park etkinleştirilmiş.",
+        "referencesMissedCount_zero": "{} tamamlanmayan park",
+        "referencesMissedCount_one": "{} tamamlanmayan park",
+        "referencesMissedCount_other": "{{fmtCount}} tamamlanmayan parklar",
+        "referencesHuntedCount_zero": "{} park avlanmış",
+        "referencesHuntedCount_one": "1 park avlandı",
+        "referencesHuntedCount_other": "{{fmtCount}} park avlandı"
       },
       "loggingControl": {
-        "theirRefLabel": "Onların POTA faaliyeti"
+        "theirRefLabel": "Onların POTA'sı."
       },
       "postSpotAPI": {
-        "error": "POTA yerleştirmesi hatası",
-        "serverResponse": "Sunucu {{status}} hatasıyla yanıt verdi: {{body}}"
+        "error": "POTA yerleştirme hatası",
+        "serverResponse": "Sunucu {{status}} {{body}} durumuyla yanıt verdi"
       },
       "exampleRefName": "Örnek Milli Park",
       "unknownRefName": "Bilinmeyen Park",
@@ -582,7 +582,7 @@
         "title_zero": "Etkinleştirilmek üzere hiçbir zirve seçilmedi",
         "title_one": "1 zirve etkinleştiriliyor",
         "title_other": "{{count}} zirve etkinleştiriliyor",
-        "noSummitsFound": "Zirve bulunamadı",
+        "noSummitsFound": "Hiç zirve avlanmadı",
         "nearestMatches": "En yakından {{limit}} yada {{count}} tanesi",
         "matchingSummits_zero": "Eşleşen zirve yok",
         "matchingSummits_one": "1 eşleşen zirve",
@@ -643,9 +643,9 @@
         "matchingTowers_zero": "Eşleşen kule yok",
         "matchingTowers_one": "1 eşleşen kule",
         "matchingTowers_other": "{{count}} eşleşen kule",
-        "searchForTowers": "Bazı kuleleri etkinleştirmek için arayın!",
-        "noTowersNearby": "Yakında kule yok",
-        "nearbyTowers": "Yakındaki kule",
+        "searchForTowers": "Kule etkinleştirmek için arayın!",
+        "noTowersNearby": "Yakında kule yok.",
+        "nearbyTowers": "Yakındaki kuleler",
         "searchPlaceholder": "Ad veya referans…",
         "unknownTower": "Bilinmeyen kule"
       },
@@ -708,10 +708,10 @@
       "shortName": "WCA",
       "exportName": "WCA Aktivasyonu",
       "activityOptions": {
-        "title_zero": "Aktive edilecek kale seçilmedi",
-        "title_one": "1 kale aktif ediliyor",
-        "title_other": "{{count}} kaleler aktif ediliyor",
-        "noCastlesFound": "Uygun kale bulunamadı",
+        "title_zero": "Etkinleştirilmek üzere kale seçilmedi",
+        "title_one": "{} kaleler aktif ediliyor",
+        "title_other": "{{count}} kale etkinleştiriliyor",
+        "noCastlesFound": "{} kaleler avlanmadı",
         "nearestMatches": "En yakın {{limit}} dizideki {{count}} eşleşmeler",
         "matchingCastles_zero": "Eşleşen kale yok",
         "matchingCastles_one": "1 eşleşen kale",
@@ -830,8 +830,8 @@
         "matchingParks_one": "1 eşleşen park",
         "matchingParks_other": "{{count}} eşleşen park",
         "searchForParks": "Bazı parkları etkinleştirmek için arayın!",
-        "noParksNearby": "Yakında park yok",
-        "nearbyParks": "Yakındaki parklar",
+        "noParksNearby": "Yakınlarda park yok",
+        "nearbyParks": "Yakındaki parklar.",
         "searchPlaceholder": "Ad veya referans…",
         "unknownPark": "Bilinmeyen park"
       },
@@ -894,9 +894,9 @@
         "nearestMatches": "En yakından {{limit}} {{count}} tanesi",
         "matchingReferences_zero": "Eşleşen referans yok",
         "matchingReferences_one": "1 eşleşen referans",
-        "matchingReferences_other": "{{count}} eşleşen referans",
-        "searchForReferences": "Bazı referansları etkinleştirmek için arayın!",
-        "noReferencesNearby": "Yakında referans yok",
+        "matchingReferences_other": "{{count}} eşleşen referans.",
+        "searchForReferences": "Kule etkinleştirmek için arayın!",
+        "noReferencesNearby": "Referans bulunamadı",
         "nearbyReferences": "Yakındaki referanslar",
         "searchPlaceholder": "Ad veya referans…",
         "unknownReference": "Bilinmeyen referans"

@@ -498,7 +498,7 @@
       "syncService.enabled": "Zapnuté",
       "syncService.disabled": "Vypnuté",
       "syncServiceDialog": {
-        "title": "Služba synchronizácie Ham2K Log Filer",
+        "title": "Služba synchronizácie súborov Ham2K Log Filer",
         "custom": "Vlastný"
       },
       "syncLinkingDialog": {
@@ -518,7 +518,7 @@
       "checkEmailInboxForConfirmation": "(skontrolujte svoju e-mailovú schránku pre potvrdenie)",
       "accountNumber": "Účet #{{id}}",
       "pendingEmailConfirmation": "(čaká sa na potvrdenie e-mailom)",
-      "accountPendingConfirmation": "(čaká na potvrdenie)",
+      "accountPendingConfirmation": "(čakajúce na potvrdenie)",
       "tapToConfigure": "Ťuknite pre konfiguráciu",
       "serverLabels": {
         "https://dev.lofi.ham2k.net": "Ham2K LoFi (vývoj)",
@@ -540,14 +540,14 @@
       },
       "combineDataAlert": {
         "title": "Kombinovať lokálne dáta?",
-        "text": "Naozaj chcete kombinovať tieto operácie a QSO s novým účtom?\n\nToto skombinuje QSOS na tomto zariadení s tým, čo už je v synchronizačnej službe pre nový účet, a môže neúmyselne viesť k miešaniu nesúvisiacich záznamov.\n\nTáto operácia sa nedá vrátiť späť.",
+        "text": "Naozaj chcete kombinovať tieto prevádzky a spojenia s novým účtom?\n\nToto skombinuje spojenia na tomto zariadení s tým, čo už je v synchronizačnej službe pre nový účet, a môže neúmyselne viesť k miešaniu nesúvisiacich záznamov.\n\nTáto operácia sa nedá vrátiť späť.",
         "buttonCancel": "Nie, Zrušiť",
         "buttonText": "Áno, riskujem! Kombinovať ich!",
         "buttonProcees": "Áno, riskujem! Kombinovať ich!"
       },
       "replaceDataAlert": {
         "title": "Nahradiť miestne dáta?",
-        "text": "Ste si istí, že chcete nahradiť všetky dáta na tomto zariadení operáciami a QSO pre nový účet zo synchronizačnej služby?\n\nAplikácia sa reštartuje.\n\nAk máte nesynchronizované dáta, BUDÚ STRATENÉ.",
+        "text": "Ste si istí, že chcete nahradiť všetky dáta na tomto zariadení prevádzkami a spojeniami pre nový účet zo synchronizačnej služby?\n\nAplikácia sa reštartuje.\n\nAk máte nesynchronizované dáta, BUDÚ ODSTRÁNENÉ.",
         "buttonCancel": "Nie, Zrušiť",
         "buttonProcees": "Áno, riskujem! Nahradiť všetko!"
       },
@@ -572,16 +572,16 @@
         "connectViaEmailButton": "Alebo... pripojte sa cez email",
         "linkViaQRAccountText": "Naskenujte tento QR kód zo zariadenia s existujúcim účtom Ham2K LoFi",
         "linkViaQRButton": "Alebo... pripojte sa cez QR kód",
-        "confirmViaEmailButton": "Potvrdiť cez email",
+        "confirmViaEmailButton": "Potvrdiť prostredníctvom emailovej adresy",
         "changeAccountButton": "Zmeniť účet",
         "resendButton": "Poslať email znovu",
-        "revertButton": "Zmeniť email",
+        "revertButton": "Zmeniť emailovú adresu",
         "syncFirstButton": "Najprv sa vrátiť a dokončiť synchronizáciu",
         "continueAnywayButton": "Viem, čo robím! Napriek tomu pokračovať",
         "potentialForDataLoss": "Možnosť straty údajov!!!",
         "potentialForDataLossDescription": "Na tomto zariadení ste nesynchronizovali všetky údaje.\n\nAk toto zariadenie spojíte s novým účtom, bude sa vás pýtať, či chcete jeho údaje nahradiť údajmi z nového účtu.\n\nV takom prípade, možno nebudete môcť obnoviť žiadne existujúce aktivity, ktoré ešte neboli synchronizované.\n\nOdporúčame vám najprv dokončiť synchronizáciu tohto zariadenia!"
       },
-      "syncServiceDescription-md": "Základná služba je zdarma a umožňuje synchronizáciu najnovších údajov (až 7 dní) medzi dvoma zariadeniami alebo aplikáciami s obmedzenou rýchlosťou.\n\nPlná služba vyžaduje platené predplatné a zahŕňa všetky vaše operácie synchronizované medzi akýmkoľvek rozumným počtom zariadení alebo aplikácií s plnou rýchlosťou.\n\nPočas TESTOVACEJ PERIÓDY služby LoFi v nasledujúcich niekoľkých mesiacoch zostane služba zadarmo. Potom ceny závisia od krajiny a meny, ale nemali by byť vyššie ako 30 USD/rok alebo ekvivalent, a pravdepodobne nižšie.",
+      "syncServiceDescription-md": "Základná služba je zdarma a umožňuje synchronizáciu najnovších údajov (až 7 dní) medzi dvoma zariadeniami alebo aplikáciami s obmedzenou rýchlosťou.\n\nPlná služba vyžaduje platené predplatné a zahŕňa všetky vaše operácie synchronizované medzi akýmkoľvek rozumným počtom zariadení alebo aplikácií s plnou rýchlosťou.\n\nPočas TESTOVACIEHO OBDOBIA služby LoFi v nasledujúcich niekoľkých mesiacoch zostane služba zadarmo. Potom ceny závisia od krajiny a meny, ale nemali by byť vyššie ako 30 USD/rok alebo ekvivalent, a pravdepodobne nižšie.",
       "thisDevice": "Toto zariadenie",
       "notAuthenticated": "Neprihlásený",
       "lofiServer": "LoFi server",
@@ -594,10 +594,10 @@
         "qsos": "QSOs: {{synced}} synchronizované, {{pending}} čaká"
       },
       "cloudCountDescription": {
-        "operations": "Operácie: {{total}} celkom",
-        "operationsSyncable": "Operácie: {{total}} uložené, {{syncable}} synchronizovateľné",
+        "operations": "Prevádzky: {{total}} celkom",
+        "operationsSyncable": "Prevádzky: {{total}} uložené, {{syncable}} synchronizovateľné",
         "qsos": "QSOs: {{total}} uložené",
-        "qsosSyncable": "QSOs: {{total}} uložené, {{syncable}} synchronizovateľné"
+        "qsosSyncable": "Spojenia: {{total}} uložené, {{syncable}} synchronizovateľné"
       }
     },
     "versionSettings": {
@@ -725,9 +725,9 @@
       "adifNotes": "ADIF QSO poznámky",
       "adifComments": "ADIF QSO komentáre",
       "adifQslMessage": "ADIF QSL správa",
-      "templateHelpTitle": "Nápoveda k šablónam",
+      "templateHelpTitle": "Nápoveda k šablóne",
       "includePrivateDataDescription": "Mená, poznámky, adresy, atď.",
-      "templateHelp-md": "Niektoré príklady prvkov šablóny…\n\n### Export protokolu\nAtribúty exportovaného logu\n`{{log.station}}` → `{{call}}` Stanica pre tento export\n`{{log.ref}}` → `XX-1234` Referencia pre tento export\n`{{log.refName}}` → `Príklad národného parku` Referenčné meno pre tento export\n`{{log.refShortName}}` → `Príklad NP` Krátky referenčný názov pre tento export\n`{{log.handlerType}}` → `pota` Typ obsluhy pre tento export\n`{{log.handlerName}}` → `Parks On The Air` Názov obsluhy pre tento export\n`{{log.handlerShortName}}` → `POTA` Krátky názov obsluhy pre tento export\n\n### Volacie znaky operácie\n`{{op.station}}` → `{{call}}` Prvá stanica pre operáciu\n`{{op.operator}}` → `{{call}}` Operátor pre operáciu\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Všetky stanice pre operáciu\n`{{op.otherStations}}` → `{{otherCalls}}` Ostatné stanice pre operáciu\n\n### Dátum operácie\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Ďalšie podrobnosti operácie\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Moja špeciálna operácia`\n`{{op.userNotes}}` → `Vyrazil som skoro ráno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Lokátor pre túto operáciu\n\n### Informácie o QSO\n`{{qso.notes}}` → `Hrozný zvuk!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Správa o signále, ktorú poslali\n`{{qso.our.sent}}` → `55` Správa o signále, ktorú sme poslali\n`{{qso.their.grid}}` → `FF99` Lokátor, ktorú nahlásili\n`{{qso.refs}}` → Zoznam všetkých referencií pre QSO (zahŕňa referencie operácie aj referencie iba pre QSO)\n`{{first8 qso.uuid}}` → `123e4567`",
+      "templateHelp-md": "Niektoré príklady prvkov šablóny…\n\n### Export denníku\nAtribúty exportovaného denníku\n`{{log.station}}` → `{{call}}` Stanica pre tento export\n`{{log.ref}}` → `XX-1234` Referencia pre tento export\n`{{log.refName}}` → `Príklad národného parku` Referenčné meno pre tento export\n`{{log.refShortName}}` → `Príklad NP` Krátky referenčný názov pre tento export\n`{{log.handlerType}}` → `pota` Typ obsluhy pre tento export\n`{{log.handlerName}}` → `Parks On The Air` Názov obsluhy pre tento export\n`{{log.handlerShortName}}` → `POTA` Krátky názov obsluhy pre tento export\n\n### Volacie znaky prevádzky\n`{{op.station}}` → `{{call}}` Prvá stanica pre prevádzku\n`{{op.operator}}` → `{{call}}` Operátor pre prevádzku\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Všetky stanice pre prevádzku\n`{{op.otherStations}}` → `{{otherCalls}}` Ostatné stanice pre prevádzku\n\n### Dátum prevádzky\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Ďalšie podrobnosti prevádzky\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Moja špeciálna prevádzka`\n`{{op.userNotes}}` → `Vyrazil som skoro ráno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Lokátor pre túto prevádzku\n\n### Informácie o QSO\n`{{qso.notes}}` → `Hrozný zvuk!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Report signálu, ktorý poslali oni\n`{{qso.our.sent}}` → `55` Správa o signále, ktorý sme poslali my\n`{{qso.their.grid}}` → `FF99` Lokátor, ktorý nahlásili oni\n`{{qso.refs}}` → Zoznam všetkých referencií pre QSO (zahŕňa referencie prevádzky aj referencie iba pre QSO)\n`{{first8 qso.uuid}}` → `123e4567`",
       "default": {
         "name": "Predvolené",
         "description": "Základné nastavenia pre všetky exporty",
@@ -735,8 +735,8 @@
         "fileNameCompact": "Názov súboru pre referenčné aktivity (Kompaktné)",
         "titleReferenceActivities": "Názov pre referenčné aktivity",
         "fileNameOtherActivitiesNormal": "Názov súboru pre ďalšie činnosti (Normálne)",
-        "fileNameOtherActivitiesCompact": "Názov súboru pre ďalšie činnosti (Kompaktné)",
-        "titleOtherActivities": "Titul pre Ďalšie Činnosti",
+        "fileNameOtherActivitiesCompact": "Názov súboru pre ďalšie aktivity (Kompaktné)",
+        "titleOtherActivities": "Názov pre ďalšie aktivity",
         "adifNotes": "ADIF QSO Poznámky",
         "adifComments": "ADIF QSO Komentáre",
         "adifQSLMessage": "ADIF QSL Správa"
@@ -763,17 +763,17 @@
       "mapTab-a11y": "Záložka Mapa",
       "settingsTab": "Operácia",
       "settingsCompactTab": "Oper.",
-      "settingsTab-a11y": "Tab Nastavení Operácie",
+      "settingsTab-a11y": "Tab nastavení prevádzky",
       "menu": {
         "loggingSettings": "Nastavenia denníka",
         "rstFields": "RST Polia",
-        "stateField": "Štát pole",
-        "gridField": "Mriežkové pole",
+        "stateField": "Pole pre štát",
+        "gridField": "Pole lokátorového štvorca",
         "showDeletedQSOs": "Zobraziť vymazané QSOs",
         "numbersRow": "Rada čísel",
         "actions": "Akcie",
         "lookupAllQSOs": "Vyhľadať všetky QSOs",
-        "confirmSpots": "Potvrdiť Miesta"
+        "confirmSpots": "Potvrdiť spoty"
       }
     },
     "opLoggingTab": {
@@ -786,7 +786,7 @@
       "noQSOsYet": "Zatiaľ žiadne QSOs!",
       "currentlySetTo": "Aktuálne nastavené na",
       "missingInfoError": {
-        "message": "CHYBA: Zadajte **{{errors}}** pre platnú operáciu",
+        "message": "CHYBA: Zadajte **{{errors}}** pre platnú prevádzku",
         "errors": {
           "band": "pásmo",
           "callsign": "volací znak"
@@ -825,7 +825,7 @@
       "bandLabel": "Pásmo",
       "frequencyLabel": "Frekvencia",
       "bandMissing": "Pásmo???",
-      "radioControls-a11y": "Radiové ovládanie {{parts}}",
+      "radioControls-a11y": "Ovládanie stanice {{parts}}",
       "notesLabel": "Poznámky",
       "notesLabel-a11y": "Poznámky",
       "activeControlsLabel": "Aktívne ovládanie",
@@ -872,7 +872,7 @@
       "sections": {
         "specialSpots": "Špeciálne spoty",
         "newMultipliers": "Nové násobiče",
-        "callsOfNote": "Pozoruhodné Volania",
+        "callsOfNote": "Poznámky k volacím znakom",
         "mostRecentSpots": "Najnovšie spoty"
       },
       "allBands": "Všetky pásma",
@@ -895,7 +895,7 @@
       "filtersSorting": "Triedenie",
       "filtersSortByTime": "Podľa času spotu",
       "filtersSortByFrequency": "Podľa frekvencie",
-      "filtersGroupSpecialSpots": "Zoskupiť špeciálne spoty najprv",
+      "filtersGroupSpecialSpots": "Zoskupiť najprv špeciálne spoty",
       "filtersGroupCallsWithNotes": "Skupina volacích znakov s poznámkami",
       "filtersSpotSources": "Zdroje pre spoty",
       "filtersFilterByContinent": "Filtrovať podľa kontinentu",
