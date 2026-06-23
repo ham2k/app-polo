@@ -472,7 +472,7 @@ function mainExchangeForOperation (props) {
         innerRef={refStack.shift()}
         style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
         textStyle={styles.text.callsign}
-        label={'SP Location'}
+        label={'SP Loc'}
         placeholder={''}
         keyboard={'dumb'}
         uppercase={true}
