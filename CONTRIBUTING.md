@@ -124,7 +124,7 @@ In-app translation testing:
 
 To test deep linking, you can use the following commands:
 ```
-export POLO_URL="com.ham2k://qso?their.call=W1WC\&mode=CW\&freq=7200"
+export POLO_URL="com.ham2k:///qso?their.call=W1WC&mode=CW&freq=7200"
 
 # iOS
 xcrun simctl openurl booted "$POLO_URL"

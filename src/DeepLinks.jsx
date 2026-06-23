@@ -41,7 +41,8 @@ export function DeepLinks ({ navigationRef }) {
     if (DEBUG) console.log('🔗 Deep link received:', url)
 
     const [schema, rest] = url.split('://')
-    const [hostname, relativeUrl] = rest.split('/', 2)
+    const [hostname, ...restParts] = rest.split('/')
+    const relativeUrl = restParts.join('/')
 
     if (!schema.startsWith('com.ham2k')) return
 
@@ -71,7 +72,7 @@ export function DeepLinks ({ navigationRef }) {
         their: { call: params['their.call'] },
         band,
         freq,
-        mode: params.mode.toUpperCase(),
+        mode: params.mode?.toUpperCase(),
         startAtMillis: params.startAtMillis ? Number(params.startAtMillis) : undefined,
         _suggestedKey: url
       }
