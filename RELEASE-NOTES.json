@@ -3,7 +3,9 @@
     "name": "June '26 (patch 1)",
     "photoCaption": "ON4VT at ONFF-0440",
     "changes": [
-      "Fixed bug in FD and WFD location suggestions"
+      "Fixed bug in FD and WFD location suggestions",
+      "Fixed issues with Ohip State Parks on the Air",
+      "Fixed issues with deep links"
     ]
   },
   "26.6.0": {
