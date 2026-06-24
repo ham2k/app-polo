@@ -5,7 +5,7 @@ import React, { useCallback, useMemo } from 'react'
 
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
-import { H2kDropDown, H2kListRow, H2kListSection } from '../../../ui'
+import { H2kDropDown, H2kListRow, H2kListSection, H2kMarkdown, H2kTextInput } from '../../../ui'
 
 import { VHF_CONTESTS_DATA } from './Region1VHFContestsExtension'
 import { Info } from './Region1VHFContestsInfo'
@@ -46,6 +46,19 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
     setRefs(replaceRef(allRefs, Info.key, { ...activityRef, ref: value }))
   }, [activityRef, allRefs, setRefs])
 
+  const test = useMemo(() => {
+    return VHF_CONTESTS_DATA[activityRef?.ref]
+  }, [activityRef])
+
+  const hasGridExchange = useMemo(() => {
+    return test?.exchange?.some(t => t === 'grid' || t === 'grid4' || t === 'grid6') ?? false
+  }, [test])
+
+  const gridExchange = useMemo(() => {
+    if (hasGridExchange) return operation.grid
+    return undefined
+  }, [hasGridExchange, operation.grid])
+
   return (
     <>
       <H2kListSection title={'Which VHF Contest?'}>
@@ -60,6 +73,21 @@ export function ActivityOptions ({ styles, operation, refs: allRefs, setRefs }) 
           />
         </H2kListRow>
       </H2kListSection>
+
+      {hasGridExchange && (
+        <H2kListSection title={'Exchange'} style={{ marginBottom: styles.oneSpace * 4 }}>
+          <H2kListRow style={{ maxWidth: styles.oneSpace * 80 }}>
+            <H2kTextInput
+              label="Grid Locator"
+              value={gridExchange ?? ''}
+              disabled={true}
+            />
+            <H2kMarkdown style={{ padding: styles.oneSpace }}>
+              Update your grid locator in the operation settings
+            </H2kMarkdown>
+          </H2kListRow>
+        </H2kListSection>
+      )}
 
       {/* {test && (
         <>

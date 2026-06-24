@@ -3,6 +3,8 @@
 
 import { VHF_BANDS, UHF_BANDS, SHF_BANDS, EHF_BANDS } from '@ham2k/lib-operation-data'
 
+const R1_EXCHANGE = ['number', 'grid6']
+
 export default [
   {
     key: 'R1-VHF-SUB1-MARCH',
@@ -10,7 +12,8 @@ export default [
     short: 'March VHF Test',
     start: '2026-03-07 14:00Z',
     end: '2026-03-08 13:59Z',
-    bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS]
+    bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS],
+    exchange: R1_EXCHANGE
   },
   {
     key: 'R1-VHF-SUB2-MAY',
@@ -18,7 +21,8 @@ export default [
     short: 'May VHF Test',
     start: '2026-05-02 14:00Z',
     end: '2026-05-03 13:59Z',
-    bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS]
+    bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS],
+    exchange: R1_EXCHANGE
   },
   {
     key: 'R1-VHF-SUB3-JULY',
@@ -26,7 +30,8 @@ export default [
     short: 'July VHF Test',
     start: '2026-07-01 14:00Z',
     end: '2026-05-31',
-    bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS]
+    bands: [...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS],
+    exchange: R1_EXCHANGE
   },
   {
     key: 'R1-VHF-50-JUNE',
@@ -34,7 +39,8 @@ export default [
     short: '50 MHz Test',
     start: '2026-06-20 14:00Z',
     end: '2026-06-21 13:59Z',
-    bands: ['6m']
+    bands: ['6m'],
+    exchange: R1_EXCHANGE
   },
   {
     key: 'R1-VHF-70-JULY',
@@ -42,7 +48,8 @@ export default [
     short: '70 MHz Test',
     start: '2026-07-18 14:00Z',
     end: '2026-07-19 13:59Z',
-    bands: ['4m']
+    bands: ['4m'],
+    exchange: R1_EXCHANGE
   },
   {
     key: 'R1-VHF-145-SEPTEMBER',
@@ -50,7 +57,8 @@ export default [
     short: '145 MHz Test',
     start: '2026-09-05 14:00Z',
     end: '2026-09-06 13:59Z',
-    bands: ['2m']
+    bands: ['2m'],
+    exchange: R1_EXCHANGE
   },
   {
     key: 'R1-VHF-UHF-OCTOBER',
@@ -58,7 +66,8 @@ export default [
     short: 'UHF Test',
     start: '2026-10-03 14:00Z',
     end: '2026-10-04 13:59Z',
-    bands: [...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS]
+    bands: [...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS],
+    exchange: R1_EXCHANGE
   },
   {
     key: 'R1-VHF-MARCONI-NOVEMBER',
@@ -66,6 +75,7 @@ export default [
     short: 'Marconi Memorial',
     start: '2026-11-07 14:00Z',
     end: '2026-11-08 13:59Z',
-    bands: ['2m']
+    bands: ['2m'],
+    exchange: R1_EXCHANGE
   }
 ]

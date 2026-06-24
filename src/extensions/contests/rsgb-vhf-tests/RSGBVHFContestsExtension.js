@@ -3,7 +3,7 @@
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import { distanceForQSON } from '@ham2k/lib-geo-tools'
+import { distanceForRSGBVHFContests } from '@ham2k/lib-geo-tools'
 import { filterNearDupes, findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kGridInput, H2kTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
@@ -207,9 +207,9 @@ const ReferenceHandler = {
         scoring.distance = 50
         scoring.value = 50 * BAND_MULTIPLIERS[band]
       } else {
-        const distance = distanceForQSON({ our: { grid: operation.grid }, their: { grid: theirGrid } }, { units: 'km' })
-        scoring.distance = Math.round(distance)
-        scoring.value = Math.round(distance) * BAND_MULTIPLIERS[band]
+        const distance = distanceForRSGBVHFContests(operation.grid, theirGrid)
+        scoring.distance = distance
+        scoring.value = distance * BAND_MULTIPLIERS[band]
       }
       scoring.gridBonus = `${band}-${theirGrid.slice(0, 4)}`
       if (test?.bonus?.newGrid && !score?.grids?.[scoring.gridBonus]) {
