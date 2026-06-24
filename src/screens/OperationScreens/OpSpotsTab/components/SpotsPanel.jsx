@@ -45,7 +45,7 @@ export const LONG_LABEL_FOR_MODE = {
 
 const REFRESH_INTERVAL_IN_SECONDS = 60
 
-export default function SpotsPanel ({ operation, qsos, sections, onSelect, style }) {
+export default function SpotsPanel({ operation, qsos, sections, onSelect, style }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
@@ -66,12 +66,6 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   const [spotsState, , updateSpotsState] = useUIStateConditionally(isFocused, 'OpSpotsTab', 'spotsState', { spots: {}, lastFetched: 0, loading: false })
   // The keys used to get this state are also referenced in `SpotHistoryExtension`
 
-  console.log('SpotsPanel render', isFocused)
-  useEffect(() => {
-    console.log('SpotsPanel')
-    console.log('-- spotsState', { ...spotsState })
-  }, [spotsState])
-
   const allOperations = useSelectorConditionally(isFocused, selectAllOperations)
 
   const ourInfoSelector = useCallback((state) => selectOperationCallInfo(state, operation.uuid), [operation.uuid])
@@ -82,15 +76,15 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   const spotsHooks = useMemo(() => {
     const hooks = findHooks('spots', { withFunction: 'fetchSpots' })
 
-    ;(operation?.refs || []).filter(ref => ref?.type).forEach(ref => {
-      const refHook = findBestHook(`ref:${ref.type}`)
-      if (refHook?.activitySpecificSpots?.fetchSpots) {
-        hooks.push({
-          ...refHook.activitySpecificSpots,
-          sourceName: refHook.activitySpecificSpots.sourceNameForRef({ ref, operation })
-        })
-      }
-    })
+      ; (operation?.refs || []).filter(ref => ref?.type).forEach(ref => {
+        const refHook = findBestHook(`ref:${ref.type}`)
+        if (refHook?.activitySpecificSpots?.fetchSpots) {
+          hooks.push({
+            ...refHook.activitySpecificSpots,
+            sourceName: refHook.activitySpecificSpots.sourceNameForRef({ ref, operation })
+          })
+        }
+      })
 
     return hooks
   }, [operation])
@@ -104,7 +98,6 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
   useEffect(() => { // Ensure we refresh if we've been offline for too long
     if (spotsState.lastFetched - Date.now() > 1000 * 2 * REFRESH_INTERVAL_IN_SECONDS) {
-      console.log('SpotsPanel reset last fetched')
       updateSpotsState({ lastFetched: 0 })
     }
   }, [spotsState.lastFetched, updateSpotsState])
@@ -115,7 +108,6 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
   useEffect(() => {
     if (spotsState.lastFetched === 0 && !spotsState.loading) {
-      console.log('SpotsPanel do refresh')
       updateSpotsState({ loading: true })
       setTimeout(async () => {
         await Promise.all(
@@ -132,7 +124,6 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
 
                 annotatedSpots.push(await annotateQSO({ qso: spot, online: false, settings, operation, qsos, dispatch, mode: 'spots' }))
               }
-              console.log('SpotsPanel fetched', hook.key, annotatedSpots)
               updateSpotsState({ spots: { [hook.key]: annotatedSpots } })
             })
           })
@@ -162,8 +153,8 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       // Assume divergence in frequency different spot: don't merge
       // and reasonable 30 mins between spots
       if (!existingSpot ||
-          Math.abs(spot.freq - existingSpot.freq) > 0.5 || // 0.5 kHz
-          Math.abs(spot.spot.timeInMillis - existingSpot.spot.timeInMillis) > 1000 * 60 * 30) { // 30mins
+        Math.abs(spot.freq - existingSpot.freq) > 0.5 || // 0.5 kHz
+        Math.abs(spot.spot.timeInMillis - existingSpot.spot.timeInMillis) > 1000 * 60 * 30) { // 30mins
         const newSpot = { ...spot, refs: [...spot.refs], spots: [spot.spot] }
         if (!existingSpot) callSpots[spot.their.call] = newSpot
         mergedSpots.push(newSpot)
@@ -215,10 +206,6 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
           if (score.newMult) {
             spot.spot.flags.newMult = true
           }
-
-          // if (spot?.their?.call === 'KI2D') {
-          //   console.log('KI2D spot', handler.key, score, { ...spot.spot.flags })
-          // }
         })
       }
 
@@ -242,10 +229,10 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
       // Not digital as could be multiple people on one freq. e.g. FT8
       const matchingSpot = superModeForMode(spot.mode) !== 'DATA' && _mergedSpots.find(otherSpot => (
         spot.spot.type === otherSpot.spot.type && // Don't mix scoring and dupes
-          Math.abs(spot.freq - otherSpot.freq) <= 0.1 && // 0.1 kHz
-          Math.abs(spot.spot.timeInMillis - otherSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
-          spot.refs.length === otherSpot.refs.length && // all refs match
-          otherSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
+        Math.abs(spot.freq - otherSpot.freq) <= 0.1 && // 0.1 kHz
+        Math.abs(spot.spot.timeInMillis - otherSpot.spot.timeInMillis) <= 1000 * 60 * 10 && // 10 minutes
+        spot.refs.length === otherSpot.refs.length && // all refs match
+        otherSpot.refs.every(ref => spot.refs.find(x => x.ref === ref.ref))
       ))
       if (matchingSpot) {
         matchingSpot.their = { ...matchingSpot.their, call: `${matchingSpot.their.call},${spot.their.call}` }
@@ -396,7 +383,7 @@ export default function SpotsPanel ({ operation, qsos, sections, onSelect, style
   )
 }
 
-export function filterAndCount (rawSpots, filterState, vfo) {
+export function filterAndCount(rawSpots, filterState, vfo) {
   const results = { options: {}, spots: rawSpots || [], counts: {} }
 
   results.counts.all = rawSpots.length
@@ -486,7 +473,7 @@ export function filterAndCount (rawSpots, filterState, vfo) {
   return results
 }
 
-function _prepareStyles (baseStyles, themeColor, style) {
+function _prepareStyles(baseStyles, themeColor, style) {
   return {
     ...baseStyles,
     panel: {
