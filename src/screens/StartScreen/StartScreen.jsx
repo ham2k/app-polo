@@ -176,7 +176,7 @@ function prepareStyles (baseTheme, height, dialogVisible) {
     },
     titleBoxTop: {
       // justifyContent: 'flex-end',
-      marginTop: baseTheme.portrait ? baseTheme.oneSpace * 6 : baseTheme.oneSpace,
+      marginTop: baseTheme.portrait ? baseTheme.oneSpace * 2 : baseTheme.oneSpace,
       backgroundColor: topBackColor
     },
     titleBoxBottom: {
