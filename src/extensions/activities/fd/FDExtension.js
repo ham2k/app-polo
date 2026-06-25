@@ -370,7 +370,7 @@ function mainExchangeForOperation (props) {
       uppercase={true}
       noSpaces={true}
       disabled={disabled}
-      value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
+      value={ref?.location || _defaultLocationFor({ qso, qsos, operation }) || ''}
       error={ref?.location && !FD_LOCATIONS.includes(ref.location)}
       suggestions={_suggestionsFor(qso)}
       minimumLengthForSuggestions={3}
@@ -412,6 +412,7 @@ function _defaultClassFor ({ qso, qsos, operation }) {
 
 function _defaultLocationFor ({ qso, qsos, operation }) {
   const matching = qsos.filter(q => q.their?.call === qso?.their?.call)
+
   if (matching.length > 0) return matching[matching.length - 1].refs?.find(r => r.type === Info.key)?.location
 
   const entityPrefix = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
@@ -419,6 +420,6 @@ function _defaultLocationFor ({ qso, qsos, operation }) {
 
   if (PREFIX_TO_LOCATION[prefix]) return PREFIX_TO_LOCATION[prefix]
   else if (entityPrefix === 'XE') return 'MX'
-  else if (prefix) return 'DX'
+  else if (entityPrefix !== 'K' && entityPrefix !== 'VE') return 'DX'
   else return undefined
 }
