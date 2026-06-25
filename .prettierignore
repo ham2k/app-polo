@@ -1,0 +1,13 @@
+node_modules
+android
+ios
+build
+dist
+coverage
+*.snap
+*.md
+*.json
+*.lock
+*.log
+.DS_Store
+eslint.config.mjs
