@@ -131,30 +131,25 @@ export default function OperationScreen (props) {
     }
   }, [dimensions, panesState, styles.oneSpace])
 
-  const panResponder = useMemo(() => {
-    return PanResponder.create({
-      onStartShouldSetPanResponder: (event, gestureState) => true,
-      onStartShouldSetPanResponderCapture: (event, gestureState) => true,
-      onMoveShouldSetPanResponder: (event, gestureState) => true,
-      onMoveShouldSetPanResponderCapture: (event, gestureState) => true,
-      onMoveShouldSetResponderCapture: (event, gestureState) => true,
-
-      onPanResponderGrant: (event, gestureState) => {
-        updatePanesState({ mainPaneDelta: 0, resizingActive: true })
-      },
-
-      onPanResponderMove: (event, gestureState) => {
-        updatePanesState({ mainPaneDelta: gestureState.dx })
-      },
-
-      onPanResponderRelease: (event, gestureState) => {
-        updatePanesState({ resizingActive: false })
-      }
-    })
-  }, [updatePanesState])
+  const panGesture = usePanGesture({
+    runOnJS: true,
+    onBegin: () => {
+      console.log('onBegin')
+      updatePanesState({ mainPaneDelta: 0, resizingActive: true })
+    },
+    onUpdate: (event) => {
+      updatePanesState({ mainPaneDelta: event.translationX })
+    },
+    onFinalize: () => {
+      console.log('onFinalize')
+      updatePanesState({ resizingActive: false })
+    }
+  })
 
   useEffect(() => {
     if (panesState.resizingActive === false && panesState.mainPaneDelta !== 0) {
+      console.log('effect')
+      console.log('-- mainPaneWidth', mainPaneWidth)
       updatePanesState({ mainPaneWidth, mainPaneDelta: 0 })
       dispatch(setSettings({ loggingPaneWidth: mainPaneWidth }))
     }
@@ -176,21 +171,22 @@ export default function OperationScreen (props) {
               <HeaderBar options={headerOptions} navigation={navigation} back={true} rightAction={'cog'} splitView={splitView} />
               <OpLoggingTab navigation={navigation} route={{ params: { operation, splitView } }} splitView={splitView} />
             </Animated.View>
-            <View
-              style={{
-                backgroundColor: panesState.resizingActive ? styles.colors.primaryLighter : styles.colors.primary,
-                width: styles.oneSpace * 2,
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-              accessibilityLabel={t('screens.operationScreen.paneSeparator-a11y', 'Pane Separator')}
-              {...panResponder.panHandlers}
-            >
-              <View style={{ marginLeft: styles.oneSpace * -0.7, opacity: 0.8 }}>
-                <Icon source="dots-vertical" color={styles.colors.onPrimary} size={styles.oneSpace * 3.5} />
+            <GestureDetector gesture={panGesture}>
+              <View
+                style={{
+                  backgroundColor: panesState.resizingActive ? styles.colors.primaryLighter : styles.colors.primary,
+                  width: styles.oneSpace * 2,
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+                accessibilityLabel={t('screens.operationScreen.paneSeparator-a11y', 'Pane Separator')}
+              >
+                <View style={{ marginLeft: styles.oneSpace * -0.7, opacity: 0.8 }}>
+                  <Icon source="dots-vertical" color={styles.colors.onPrimary} size={styles.oneSpace * 3.5} />
+                </View>
               </View>
-            </View>
+            </GestureDetector>
             <Animated.View
               style={{
                 backgroundColor: styles.colors.primary,
