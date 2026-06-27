@@ -2,7 +2,13 @@
   "26.7.0-pre0": {
     "name": "July '26 (pre 0)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
-    "changes": []
+    "changes": [
+      "Improved performance of text input controls",
+      "QSO Party updates (Colorado)",
+      "Quick link to SOTA login screen when account is not logged in",
+      "Fixes to VHF Contests Cabrillo exports (thanks to 2E0FRU)",
+      "Assorted bug fixes"
+    ]
   },
   "26.6.3": {
     "name": "June '26 (patch 3)",
@@ -48,7 +54,9 @@
   "26.5.1": {
     "name": "May '26 (patch 1)",
     "photoCaption": "F4WFI at FR-13916",
-    "changes": ["Fixed bug in SOTA reference entry (thanks to OE5JFE)"]
+    "changes": [
+      "Fixed bug in SOTA reference entry (thanks to OE5JFE)"
+    ]
   },
   "26.5.0": {
     "name": "May '26",
@@ -88,7 +96,9 @@
   "26.2.8": {
     "name": "February '26 (patch 8)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",
-    "changes": ["State Parks Events: Florida, Georgia, Texas"]
+    "changes": [
+      "State Parks Events: Florida, Georgia, Texas"
+    ]
   },
   "26.2.7": {
     "name": "February '26 (patch 7)",
@@ -109,7 +119,9 @@
   "26.2.5": {
     "name": "February '26 (patch 5)",
     "photoCaption": "HB9/OK1PTR/P at CH-0165",
-    "changes": ["CQ WPX Contest"]
+    "changes": [
+      "CQ WPX Contest"
+    ]
   },
   "26.2.4": {
     "name": "February '26 (patch 4)",
@@ -180,17 +192,25 @@
   "25.12.6": {
     "name": "December '25 (patch 6)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
-    "changes": ["Fixed bugs in Cabrillo exports", "Assorted tweaks and fixes"]
+    "changes": [
+      "Fixed bugs in Cabrillo exports",
+      "Assorted tweaks and fixes"
+    ]
   },
   "25.12.5": {
     "name": "December '25 (patch 5)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
-    "changes": ["Lakes and Lagoons on the Air (LLOTA)", "Assorted bug fixes"]
+    "changes": [
+      "Lakes and Lagoons on the Air (LLOTA)",
+      "Assorted bug fixes"
+    ]
   },
   "25.12.4": {
     "name": "December '25 (patch 4)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
-    "changes": ["Fixed accessibility issues for users with vision impairments"]
+    "changes": [
+      "Fixed accessibility issues for users with vision impairments"
+    ]
   },
   "25.12.3": {
     "name": "December '25 (patch 3)",
@@ -204,12 +224,17 @@
   "25.12.2": {
     "name": "December '25 (patch 2)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
-    "changes": ["Fixed bug in SOTA ADIF exports"]
+    "changes": [
+      "Fixed bug in SOTA ADIF exports"
+    ]
   },
   "25.12.1": {
     "name": "December '25 (patch 1)",
     "photoCaption": "NG2B and KC2OQV with K2SUL for WFD '22",
-    "changes": ["Fixed crash on Android", "Translation updates"]
+    "changes": [
+      "Fixed crash on Android",
+      "Translation updates"
+    ]
   },
   "25.12.0": {
     "name": "December '25 (11)",
@@ -236,12 +261,16 @@
   "25.10.6": {
     "name": "October '25 (patch 6)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
-    "changes": ["Fixed bugs in sync service"]
+    "changes": [
+      "Fixed bugs in sync service"
+    ]
   },
   "25.10.5": {
     "name": "October '25 (patch 5)",
     "photoCaption": "NK2Y as N2Y with KI2D for NYQP at US-2010",
-    "changes": ["Added font scale settings"]
+    "changes": [
+      "Added font scale settings"
+    ]
   },
   "25.10.4": {
     "name": "October '25 (patch 4)",
@@ -312,12 +341,16 @@
   "25.9.2": {
     "name": "September '25 (patch 2)",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
-    "changes": ["Fixed bug in NH QP handling"]
+    "changes": [
+      "Fixed bug in NH QP handling"
+    ]
   },
   "25.9.1": {
     "name": "September '25 (patch 1)",
     "photoCaption": "2M0LVY and LB5JJ operating 5P0TA at DK-0188",
-    "changes": ["Last minute fixes for New Hampshire & Salmon Run QSO Parties"]
+    "changes": [
+      "Last minute fixes for New Hampshire & Salmon Run QSO Parties"
+    ]
   },
   "25.9.0": {
     "name": "September '25",
@@ -409,7 +442,10 @@
   "25.5.2": {
     "name": "May '25 (patch 2)",
     "photoCaption": "G1JPV at POTA GB-1012",
-    "changes": ["Corrected WWFF Spots service name", "Tweaks to Map and Spots"]
+    "changes": [
+      "Corrected WWFF Spots service name",
+      "Tweaks to Map and Spots"
+    ]
   },
   "25.5.1": {
     "name": "May '25 (patch 1)",
@@ -500,15 +536,21 @@
   },
   "25.2.3": {
     "name": "February '25",
-    "changes": ["Fixed problem with layout of notices in call info panel"]
+    "changes": [
+      "Fixed problem with layout of notices in call info panel"
+    ]
   },
   "25.2.2": {
     "name": "February '25",
-    "changes": ["Bug fixes for QSO Parties (Early Access)"]
+    "changes": [
+      "Bug fixes for QSO Parties (Early Access)"
+    ]
   },
   "25.2.1": {
     "name": "February '25",
-    "changes": ["QSO Parties: NC, SC, OK, ID and WI (Early Access)"]
+    "changes": [
+      "QSO Parties: NC, SC, OK, ID and WI (Early Access)"
+    ]
   },
   "25.2.0": {
     "name": "February '25",
@@ -531,7 +573,9 @@
   },
   "25.1.2": {
     "name": "January '25",
-    "changes": ["Fixed ADIF export for Winter Field Day"]
+    "changes": [
+      "Fixed ADIF export for Winter Field Day"
+    ]
   },
   "25.1.1": {
     "name": "January '25",
@@ -565,7 +609,9 @@
   },
   "24.12.1": {
     "name": "December '24",
-    "changes": ["Fixed issue with spots for multi-operator activations"]
+    "changes": [
+      "Fixed issue with spots for multi-operator activations"
+    ]
   },
   "24.12.0": {
     "name": "December '24",
@@ -590,11 +636,15 @@
   },
   "24.11.2": {
     "name": "November '24",
-    "changes": ["Fix crash for some devices when opening an operation"]
+    "changes": [
+      "Fix crash for some devices when opening an operation"
+    ]
   },
   "24.11.1": {
     "name": "November '24",
-    "changes": ["Fix problems with name lookups and POTA references"]
+    "changes": [
+      "Fix problems with name lookups and POTA references"
+    ]
   },
   "24.11.0": {
     "name": "November '24",
@@ -616,7 +666,9 @@
   },
   "24.10.3": {
     "name": "October '24",
-    "changes": ["NY QSO Party (Experimental)"]
+    "changes": [
+      "NY QSO Party (Experimental)"
+    ]
   },
   "24.10.2": {
     "name": "October '24",
@@ -628,7 +680,9 @@
   },
   "24.10.1": {
     "name": "October '24",
-    "changes": ["Fixed crash on operations where all QSOs are deleted"]
+    "changes": [
+      "Fixed crash on operations where all QSOs are deleted"
+    ]
   },
   "24.10.0": {
     "name": "October '24",
@@ -666,11 +720,15 @@
   },
   "24.9.4": {
     "name": "September '24 (24.9.4)",
-    "changes": ["Fixed crash when selecting certain spotted calls"]
+    "changes": [
+      "Fixed crash when selecting certain spotted calls"
+    ]
   },
   "24.9.3": {
     "name": "September '24 (24.9.3)",
-    "changes": ["Further fixes for crash in Callsign Notes Settings"]
+    "changes": [
+      "Further fixes for crash in Callsign Notes Settings"
+    ]
   },
   "24.9.2": {
     "name": "September '24 (24.9.2)",
@@ -682,7 +740,9 @@
   },
   "24.9.1": {
     "name": "September '24 (24.9.1)",
-    "changes": ["Fixed bug where QSO names and locations were not being saved."]
+    "changes": [
+      "Fixed bug where QSO names and locations were not being saved."
+    ]
   },
   "24.9.0": {
     "name": "September '24",
@@ -850,13 +910,20 @@
     ]
   },
   "0.7.1": {
-    "changes": ["Minor style tweaks"]
+    "changes": [
+      "Minor style tweaks"
+    ]
   },
   "0.7.0": {
-    "changes": ["New Base Release", "Updated fonts"]
+    "changes": [
+      "New Base Release",
+      "Updated fonts"
+    ]
   },
   "0.6.7": {
-    "changes": ["Fixed SOTA reference entry for 3-character prefixes"]
+    "changes": [
+      "Fixed SOTA reference entry for 3-character prefixes"
+    ]
   },
   "0.6.6": {
     "changes": [
@@ -895,7 +962,10 @@
     ]
   },
   "0.6.1": {
-    "changes": ["Operation Map!!!", "Enable or disable offline data files"]
+    "changes": [
+      "Operation Map!!!",
+      "Enable or disable offline data files"
+    ]
   },
   "0.6.0": {
     "changes": [
@@ -956,16 +1026,25 @@
     ]
   },
   "0.4.11": {
-    "changes": ["Dark Mode settings", "Fixed dark mode colors"]
+    "changes": [
+      "Dark Mode settings",
+      "Fixed dark mode colors"
+    ]
   },
   "0.4.10": {
-    "changes": ["New version information screen"]
+    "changes": [
+      "New version information screen"
+    ]
   },
   "0.4.9": {
-    "changes": ["Internal changes and bug fixes"]
+    "changes": [
+      "Internal changes and bug fixes"
+    ]
   },
   "0.4.8": {
-    "changes": ["Internal changes and bug fixes"]
+    "changes": [
+      "Internal changes and bug fixes"
+    ]
   },
   "0.4.7": {
     "changes": [
