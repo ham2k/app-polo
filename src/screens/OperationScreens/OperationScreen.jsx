@@ -3,8 +3,9 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Animated, PanResponder, View } from 'react-native'
+import { Animated, View } from 'react-native'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
+import { GestureDetector, usePanGesture } from 'react-native-gesture-handler'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useTranslation } from 'react-i18next'
@@ -38,7 +39,7 @@ const Tab = createMaterialTopTabNavigator()
 const MIN_WIDTH_LEFT = 60
 const MIN_WIDTH_RIGHT = 40
 
-export default function OperationScreen (props) {
+export default function OperationScreen(props) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { navigation, route } = props
@@ -208,7 +209,7 @@ export default function OperationScreen (props) {
                 <Tab.Navigator
                   id={'OperationScreen_TabNavigator'}
                   initialLayout={{ width: (dimensions.width - mainPaneWidth), height: dimensions.height }}
-                  initialRouteName={ operation?.qsoCount > 0 ? 'OpInfo' : 'OpSettings' }
+                  initialRouteName={operation?.qsoCount > 0 ? 'OpInfo' : 'OpSettings'}
                   screenOptions={{
                     tabBarItemStyle: [{ width: (dimensions.width - mainPaneWidth - safeAreaInsets.right) / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 6, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                     tabBarLabelStyle: styles.screenTabBarLabel,
@@ -279,7 +280,7 @@ export default function OperationScreen (props) {
             <Tab.Navigator
               id={'OperationScreen_TabNavigator'}
               initialLayout={{ width: dimensions.width, height: dimensions.height }}
-              initialRouteName={ operation?.stationCall && operation?.qsoCount > 0 ? 'OpLog' : 'OpSettings' }
+              initialRouteName={operation?.stationCall && operation?.qsoCount > 0 ? 'OpLog' : 'OpSettings'}
               screenOptions={{
                 tabBarItemStyle: [{ width: dimensions.width / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 4, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                 tabBarLabelStyle: styles.screenTabBarLabel,
@@ -303,7 +304,7 @@ export default function OperationScreen (props) {
                 options={{ title: t('screens.operationScreen.spotsTab', 'Spots'), tabBarAccessibilityLabel: t('screens.operationScreen.spotsTab-a11y', 'Spots Tab') }}
                 component={OpSpotsTab}
                 initialParams={{ uuid: operation.uuid, operation }}
-                screenOptions={ { lazy: true }}
+                screenOptions={{ lazy: true }}
               />
 
               <Tab.Screen
@@ -311,7 +312,7 @@ export default function OperationScreen (props) {
                 options={{ title: t('screens.operationScreen.mapTab', 'Map'), tabBarAccessibilityLabel: t('screens.operationScreen.mapTab-a11y', 'Map Tab') }}
                 component={OpMapTab}
                 initialParams={{ uuid: operation.uuid, operation }}
-                screenOptions={ { lazy: true }}
+                screenOptions={{ lazy: true }}
               />
 
               <Tab.Screen
@@ -336,7 +337,7 @@ export default function OperationScreen (props) {
   }
 }
 
-export function buildTitleForOperation (operationAttrs, { includeCall = true } = {}) {
+export function buildTitleForOperation(operationAttrs, { includeCall = true } = {}) {
   if (operationAttrs.stationCall) {
     let call = operationAttrs.stationCall
     if (operationAttrs?.operatorCall && operationAttrs.operatorCall !== operationAttrs.stationCall) {
@@ -368,7 +369,7 @@ export function buildTitleForOperation (operationAttrs, { includeCall = true } =
   }
 }
 
-function OperationMenuItems ({ operation, settings, styles, dispatch, online, setShowMenu }) {
+function OperationMenuItems({ operation, settings, styles, dispatch, online, setShowMenu }) {
   const { t } = useTranslation()
 
   const hideAndRun = useCallback((action) => {
@@ -384,7 +385,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="signal"
         trailingIcon={_iconForBinarySetting(settings.showRSTFields, true)}
-        onPress={() => dispatch(setSettings({ showRSTFields: _nextBinaryValue(settings.showRSTFields, true) })) }
+        onPress={() => dispatch(setSettings({ showRSTFields: _nextBinaryValue(settings.showRSTFields, true) }))}
         title={t('screens.operationScreen.menu.rstFields', 'RST Fields')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -392,7 +393,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="selection-marker"
         trailingIcon={_iconForBinarySetting(settings.showStateField, true)}
-        onPress={() => dispatch(setSettings({ showStateField: _nextBinaryValue(settings.showStateField, true) })) }
+        onPress={() => dispatch(setSettings({ showStateField: _nextBinaryValue(settings.showStateField, true) }))}
         title={t('screens.operationScreen.menu.stateField', 'State Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -400,7 +401,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="select-marker"
         trailingIcon={_iconForBinarySetting(settings.showGridField, false)}
-        onPress={() => dispatch(setSettings({ showGridField: _nextBinaryValue(settings.showGridField, false) })) }
+        onPress={() => dispatch(setSettings({ showGridField: _nextBinaryValue(settings.showGridField, false) }))}
         title={t('screens.operationScreen.menu.gridField', 'Grid Field')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -408,7 +409,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="delete-off-outline"
         trailingIcon={_iconForBinarySetting(settings.showDeletedQSOs)}
-        onPress={() => dispatch(setSettings({ showDeletedQSOs: settings.showDeletedQSOs === false })) }
+        onPress={() => dispatch(setSettings({ showDeletedQSOs: settings.showDeletedQSOs === false }))}
         title={t('screens.operationScreen.menu.showDeletedQSOs', 'Show Deleted QSOs')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -416,7 +417,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
       <Menu.Item
         leadingIcon="numeric"
         trailingIcon={_iconForBinarySetting(settings.showNumbersRow)}
-        onPress={() => dispatch(setSettings({ showNumbersRow: settings.showNumbersRow === false })) }
+        onPress={() => dispatch(setSettings({ showNumbersRow: settings.showNumbersRow === false }))}
         title={t('screens.operationScreen.menu.numbersRow', 'Numbers Row')}
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
@@ -446,7 +447,7 @@ function OperationMenuItems ({ operation, settings, styles, dispatch, online, se
   )
 }
 
-function _iconForBinarySetting (value, defaultValue) {
+function _iconForBinarySetting(value, defaultValue) {
   if (value === true) {
     return 'check-circle-outline'
   } else if (value === false) {
@@ -458,7 +459,7 @@ function _iconForBinarySetting (value, defaultValue) {
   }
 }
 
-function _nextBinaryValue (value, defaultValue) {
+function _nextBinaryValue(value, defaultValue) {
   if (value === false) {
     return true
   } else if (value === true) {
