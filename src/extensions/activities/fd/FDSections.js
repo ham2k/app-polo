@@ -280,7 +280,7 @@ export const PREFIX_TO_LOCATION = {
   KH9: 'PAC',
   KL7: 'AK',
   KP4: 'PR',
-  KP2: 'PR',
+  KP2: 'VI',
   VE1: 'NS',
   VA1: 'NS',
   VE2: 'QC',

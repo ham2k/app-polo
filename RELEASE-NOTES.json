@@ -1,4 +1,12 @@
 {
+  "26.6.3": {
+    "name": "June '26 (patch 3)",
+    "photoCaption": "ON4VT at ONFF-0440",
+    "changes": [
+      "Last minute fixes for Field Day",
+      "Fixed split view resizing"
+    ]
+  },
   "26.6.2": {
     "name": "June '26 (patch 2)",
     "photoCaption": "ON4VT at ONFF-0440",

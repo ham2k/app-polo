@@ -389,6 +389,6 @@ function _defaultLocationFor({ qso, qsos, operation }) {
 
   if (PREFIX_TO_LOCATION[prefix]) return PREFIX_TO_LOCATION[prefix]
   else if (entityPrefix === 'XE') return 'MX'
-  else if (entityPrefix !== 'K' && entityPrefix !== 'VE') return 'DX'
+  else if (entityPrefix && (entityPrefix !== 'K' && entityPrefix !== 'VE')) return 'DX'
   else return undefined
 }
