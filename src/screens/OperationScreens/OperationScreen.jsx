@@ -68,12 +68,17 @@ export default function OperationScreen(props) {
     if (route?.params?.qso && lastSuggestedQSO !== route?.params?.qso) {
       setLastSuggestedQSO(route?.params?.qso)
       dispatch(manageNextQSO({ suggestedQSO: route?.params?.qso, qsos, operation, settings }))
+      // Clear the consumed suggestion from the route params so it cannot be
+      // re-injected if this screen later remounts (e.g. when the app is resumed
+      // from the background after a deep link). Otherwise a stale suggested QSO
+      // reappears as a duplicate of the previously logged contact.
+      navigation.setParams({ qso: undefined })
     }
     if (route?.params?.selectedUUID && lastSelectedUUID !== route?.params?.selectedUUID) {
       setLastSelectedUUID(route?.params?.selectedUUID)
       dispatch(manageNextQSO({ selectedUUID: route?.params?.selectedUUID, qsos, operation, settings }))
     }
-  }, [route?.params?.qso, route?.params?.selectedUUID, lastSuggestedQSO, lastSelectedUUID, dispatch, operation, settings, qsos])
+  }, [route?.params?.qso, route?.params?.selectedUUID, lastSuggestedQSO, lastSelectedUUID, dispatch, navigation, operation, settings, qsos])
 
   useEffect(() => { // Ensure the clock is ticking
     dispatch(startTickTock())

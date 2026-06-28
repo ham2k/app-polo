@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RNAppAuthAuthorizationFlo
     return true
   }
 
-  // "open url" delegate function, for deeplinks like com.ham2k.polo://qso?... or com.ham2k.polo.auth://sota (using react-native-app-auth)
+  // "open url" delegate function, for deeplinks like com.ham2k.polo:///qso?... (command in the path; host reserved) or com.ham2k.polo.auth://sota (using react-native-app-auth)
   public weak var authorizationFlowManagerDelegate: RNAppAuthAuthorizationFlowManagerDelegate?
   func application(
     _ application: UIApplication,

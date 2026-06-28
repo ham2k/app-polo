@@ -6,6 +6,7 @@ import reducer from './operationsSlice'
 export * from './operationsSlice'
 export * from './actions/operationsDB'
 export * from './actions/setOperationData'
+export * from './actions/findOrCreateOperation'
 export * from './actions/dataExchangeActions'
 export * from './actions/operationTemplates'
 
