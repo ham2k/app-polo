@@ -69,7 +69,6 @@ const ReferenceHandler = {
 
   descriptionPlaceholder: '',
   description: (operation) => {
-    console.log('WFD description', operation)
     let date
     if (operation?.startAtMillisMax) date = new Date(operation.startAtMillisMax)
     else date = new Date()
@@ -345,9 +344,12 @@ function mainExchangeForOperation(props) {
       error={ref?.location && !WFD_LOCATIONS.includes(ref.location)}
       suggestions={_suggestionsFor(qso)}
       minimumLengthForSuggestions={3}
-      onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
-      })}
+      onChangeText={(text) => {
+        if (ref?.location === undefined && text === '') return
+        updateQSO({
+          refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
+        })
+      }}
     />
   )
   return fields

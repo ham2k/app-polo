@@ -329,7 +329,7 @@ export const K_LOCATION_SUGGESTIONS = Object.entries(ARRL_SECTIONS)
 export const VE_LOCATION_SUGGESTIONS = Object.entries(RAC_SECTIONS)
 export const OTHER_LOCATION_SUGGESTIONS = [['MX', 'Mexico'], ['DX', 'Other DX']]
 export const ALL_LOCATION_SUGGESTIONS = Object.entries(FD_LOCATION_VALUES)
-console.log(ALL_LOCATION_SUGGESTIONS)
+
 function mainExchangeForOperation(props) {
   const { qso, qsos, operation, updateQSO, styles, refStack, disabled } = props
 
@@ -357,6 +357,7 @@ function mainExchangeForOperation(props) {
       })}
     />
   )
+
   fields.push(
     <H2kTextInputWithSuggestions
       {...props}
@@ -370,13 +371,16 @@ function mainExchangeForOperation(props) {
       uppercase={true}
       noSpaces={true}
       disabled={disabled}
-      value={ref?.location || _defaultLocationFor({ qso, qsos, operation }) || ''}
+      value={ref?.location ?? _defaultLocationFor({ qso, qsos, operation }) ?? ''}
       error={ref?.location && !FD_LOCATIONS.includes(ref.location)}
       suggestions={_suggestionsFor(qso)}
       minimumLengthForSuggestions={3}
-      onChangeText={(text) => updateQSO({
-        refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
-      })}
+      onChangeText={(text) => {
+        if (ref?.location === undefined && text === '') return
+        updateQSO({
+          refs: replaceRef(qso?.refs, Info.key, { ...ref, location: text })
+        })
+      }}
     />
   )
   return fields
