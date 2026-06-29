@@ -104,8 +104,6 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   const allQsosSelector = useCallback((state) => selectQSOs(state, route.params.operation.uuid), [route.params.operation.uuid])
   const allQsos = useSelector(allQsosSelector)
 
-  const qsos = useMemo(() => allQsos.filter(qso => !qso.deleted && !qso.event), [allQsos])
-
   const qth = useMemo(() => {
     try {
       if (!operation?.grid) return {}
@@ -121,9 +119,9 @@ export default function OperationBadgeScreen ({ navigation, route }) {
   }, [operation])
 
   const opStats = useMemo(() => {
-    const activeQSOsLength = qsos.filter(qso => !qso.deleted).length
+    const activeQSOsLength = allQsos.filter(qso => !qso.deleted).length
     return `${activeQSOsLength} ${activeQSOsLength === 1 ? 'QSO' : 'QSOs'} in ${fmtTimeBetween(operation.startAtMillisMin, operation.startAtMillisMax)}`
-  }, [qsos, operation])
+  }, [allQsos, operation])
 
   const [projection, setProjection] = useState('mercator')
 
@@ -135,7 +133,7 @@ export default function OperationBadgeScreen ({ navigation, route }) {
         styles={styles}
         operation={operation}
         qth={qth}
-        qsos={qsos}
+        qsos={allQsos}
         settings={settings}
         projection={projection}
       />

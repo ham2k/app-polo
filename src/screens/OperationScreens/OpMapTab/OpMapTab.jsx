@@ -55,8 +55,6 @@ export default function OpMapTab ({ navigation, route }) {
   const allQsosSelector = useCallback((state) => selectQSOs(state, route.params.operation.uuid), [route.params.operation.uuid])
   const allQsos = useSelector(allQsosSelector)
 
-  const qsos = useMemo(() => allQsos.filter(qso => !qso.deleted && !qso.event), [allQsos])
-
   const [dismissedWarnings, setDismissedWarnings] = useState({})
 
   const warnings = useMemo(() => {
@@ -76,9 +74,9 @@ Tap here to do it.`),
       })
     }
 
-    const qsosWithNoLocation = qsos.filter(qso => !qso.their?.grid && !qso.their?.guess?.grid)
+    const qsosWithNoLocation = allQsos.filter(qso => !qso.their?.grid && !qso.their?.guess?.grid)
 
-    if (qsosWithNoLocation.length / qsos.length > 0.5 && qsos.length > 5) {
+    if (qsosWithNoLocation.length / allQsos.length > 0.5 && allQsos.length > 5) {
       _warnings.push({
         key: 'many-no-location',
         text: t('screens.opMapTab.manyNoLocation', `Many of these QSOs have no precise location.
@@ -88,7 +86,7 @@ You might need a paid QRZ.com account for location lookups.`),
       })
     }
     return _warnings
-  }, [navigation, operation.uuid, qsos, qth?.latitude, t])
+  }, [allQsos, navigation, operation.uuid, qth?.latitude, t])
 
   const [keyboardPaddingBottom, setKeyboardPaddingBottom] = useState(0)
   useEffect(() => {
@@ -129,7 +127,7 @@ You might need a paid QRZ.com account for location lookups.`),
         projection={projection}
         operation={operation}
         qth={qth}
-        qsos={qsos}
+        qsos={allQsos}
         settings={settings}
         selectedUUID={selectedUUID}
       />

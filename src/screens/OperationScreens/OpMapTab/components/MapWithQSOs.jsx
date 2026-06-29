@@ -3,24 +3,52 @@
 
 import React, { useMemo } from 'react'
 
-import { distanceOnEarth, fmtDistance, locationForQSONInfo } from '@ham2k/lib-geo-tools'
+import { distanceOnEarth, fmtDistance, gridToLocation, locationForQSONInfo } from '@ham2k/lib-geo-tools'
+import { mapQSOsWithSectionContext } from '@ham2k/lib-qson-tools'
 
 import MapboxMapWithQSOs from './MapboxMapWithQSOs'
 
 export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, selectedUUID, projection }) {
+  const qsosWithOriginContext = useMemo(() => {
+    const locationForGrid = (grid) => {
+      if (!grid) return qth
+      try {
+        const [latitude, longitude] = gridToLocation(grid)
+        return { latitude, longitude }
+      } catch (e) {
+        return qth
+      }
+    }
+
+    return mapQSOsWithSectionContext({
+      qsos,
+      operation,
+      map: ({ qso, sectionGrid }) => ({
+        ...qso,
+        our: {
+          ...qso.our,
+          grid: sectionGrid,
+          location: locationForGrid(sectionGrid)
+        }
+      })
+    })
+  }, [operation, qsos, qth])
+
   const mappableQSOs = useMemo(() => {
-    const activeQSOs = qsos.filter(qso => !qso.deleted && !qso.event)
+    const activeQSOs = qsosWithOriginContext.filter(qso => !qso.deleted && !qso.event)
     return activeQSOs
       .map(qso => {
         const location = locationForQSONInfo(qso?.their)
+        const ourLocation = qso?.our?.location ?? qth
+        const ourGrid = qso?.our?.grid ?? operation.grid
         const strength = strengthForQSO(qso)
-        const distance = location && qth ? distanceOnEarth(location, qth, { units: settings.distanceUnits }) : null
+        const distance = location && ourLocation ? distanceOnEarth(location, ourLocation, { units: settings.distanceUnits }) : null
         const distanceStr = distance ? fmtDistance(distance, { units: settings.distanceUnits }) : ''
-        return { qso, location, strength, distance, distanceStr }
+        return { qso, location, ourLocation, ourGrid, strength, distance, distanceStr }
       })
       .filter(({ location }) => location)
       .sort((a, b) => b.strength - a.strength) // Weakest first
-  }, [qsos, qth, settings])
+  }, [operation.grid, qsosWithOriginContext, qth, settings])
 
   const initialRegion = useMemo(() => {
     const { latitude, longitude } = qth
@@ -28,11 +56,15 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     let latitudeMax = latitude ?? 0
     let longitudeMin = longitude ?? 0
     let longitudeMax = longitude ?? 0
-    for (const { location } of mappableQSOs) {
+    for (const { location, ourLocation } of mappableQSOs) {
       latitudeMin = Math.min(latitudeMin, location?.latitude ?? 0)
       latitudeMax = Math.max(latitudeMax, location?.latitude ?? 0)
       longitudeMin = Math.min(longitudeMin, location?.longitude ?? 0)
       longitudeMax = Math.max(longitudeMax, location?.longitude ?? 0)
+      latitudeMin = Math.min(latitudeMin, ourLocation?.latitude ?? 0)
+      latitudeMax = Math.max(latitudeMax, ourLocation?.latitude ?? 0)
+      longitudeMin = Math.min(longitudeMin, ourLocation?.longitude ?? 0)
+      longitudeMax = Math.max(longitudeMax, ourLocation?.longitude ?? 0)
     }
     return {
       latitude: latitudeMin + (latitudeMax - latitudeMin) / 2,
@@ -46,7 +78,7 @@ export default function MapWithQSOs ({ styles, operation, qth, qsos, settings, s
     }
   }, [qth, mappableQSOs])
 
-  return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsos} settings={settings} selectedUUID={selectedUUID} projection={projection} />
+  return <MapboxMapWithQSOs styles={styles} mappableQSOs={mappableQSOs} initialRegion={initialRegion} operation={operation} qth={qth} qsos={qsosWithOriginContext} settings={settings} selectedUUID={selectedUUID} projection={projection} />
 }
 
 function strengthForQSO (qso) {
