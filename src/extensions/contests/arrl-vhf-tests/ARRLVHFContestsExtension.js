@@ -111,8 +111,9 @@ const ReferenceHandler = {
 
   cabrilloHeaders: ({ operation, settings, headers }) => {
     const ref = findRef(operation, Info.key)
+    const test = vhfTestData({ ref })
 
-    headers.push(['CONTEST', `CQ-WPX-${ref.mode}`])
+    headers.push(['CONTEST', test.cabrilloName ?? test.key])
     headers.push(['CALLSIGN', operation.stationCall || settings.operatorCall])
     headers.push(['NAME', ''])
     if (operation.local?.operatorCall) headers.push(['OPERATORS', operation.local.operatorCall])
@@ -328,12 +329,14 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
   if (opRef) {
     const ref = findRef(qso?.refs, Info.key) || { type: Info.key }
 
-    qso.their.grid = _trimmedGrid({ grid: qso.their?.grid ?? qso.their?.guess?.grid, test })
+    const fullGrid = qso.their?.grid ?? qso.their?.guess?.grid ?? ''
+    const exchangeGrid = _trimmedGrid({ grid: fullGrid, test })
+    qso.their.grid = fullGrid // Preserve full grid so ADIF export retains 6-char precision
     const ourGrid = _trimmedGrid({ grid: operation.grid ?? '', test })
 
-    qso.refs = replaceRef(qso.refs, Info.key, { ...ref, grid: qso.their.grid })
+    qso.refs = replaceRef(qso.refs, Info.key, { ...ref, grid: exchangeGrid })
 
-    const theirParts = [qso.their.grid]
+    const theirParts = [exchangeGrid]
     const ourParts = [ourGrid]
 
     qso.their.exchange = theirParts.filter(x => x).join(' ')
