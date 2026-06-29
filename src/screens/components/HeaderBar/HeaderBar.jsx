@@ -15,7 +15,7 @@ import LOGO from './img/ham2k-square-300.png'
 
 export const DEFAULT_TITLE = 'Ham2K Portable Logger'
 
-export default function HeaderBar ({
+export default function HeaderBar({
   route, options, navigation, title, subTitle, splitView,
   leftAction, leftActionA11yLabel, onLeftActionPress,
   rightAction, rightMenuItems, rightA11yLabel,
@@ -79,7 +79,7 @@ export default function HeaderBar ({
       // safeAreaInsets={{ left: Math.max(safeAreaInsets.left, styles.oneSpace * 2), right: splitView ? 0 : Math.max(safeAreaInsets.right, styles.oneSpace * 2), top: safeAreaInsets.top, bottom: 0 }}
       style={styles.root}
     >
-      <SystemBars style="light" />
+      <SystemBars style="light" hidden={false} />
 
       <View flexDirection="row" justifyContent="flex-start" style={styles.sideContent}>
         {leftActionIcon && (
@@ -109,39 +109,39 @@ export default function HeaderBar ({
       <Appbar.Content
         style={styles.content}
         title={
-            title && subTitle ? (
-              <>
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode={'tail'}
-                  style={styles.screenTitleSmall}
-                  accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
-                  accesibilityRole="header"
-                  adjustsFontSizeToFit={false}
-                  minimumFontScale={0.9}
-                >
-                  {title}
-                </Text>
-                <Text
-                  accessible={false}
-                  numberOfLines={1}
-                  ellipsizeMode={'tail'}
-                  style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}
-                  adjustsFontSizeToFit={false}
-                  minimumFontScale={0.95}
-                >{subTitle}</Text>
-              </>
-            ) : (
+          title && subTitle ? (
+            <>
               <Text
                 numberOfLines={1}
                 ellipsizeMode={'tail'}
-                style={styles.screenTitle}
-                accessibilityLabel={tweakStringForVoiceOver(title)}
+                style={styles.screenTitleSmall}
+                accessibilityLabel={tweakStringForVoiceOver([title, subTitle].filter(x => x).join(', '))}
                 accesibilityRole="header"
-                adjustsFontSizeToFit={true}
-                minimumFontScale={0.80}
-              >{title}</Text>
-            )
+                adjustsFontSizeToFit={false}
+                minimumFontScale={0.9}
+              >
+                {title}
+              </Text>
+              <Text
+                accessible={false}
+                numberOfLines={1}
+                ellipsizeMode={'tail'}
+                style={subTitle.length > 60 ? styles.screenSubTitleCondensed : styles.screenSubTitle}
+                adjustsFontSizeToFit={false}
+                minimumFontScale={0.95}
+              >{subTitle}</Text>
+            </>
+          ) : (
+            <Text
+              numberOfLines={1}
+              ellipsizeMode={'tail'}
+              style={styles.screenTitle}
+              accessibilityLabel={tweakStringForVoiceOver(title)}
+              accesibilityRole="header"
+              adjustsFontSizeToFit={true}
+              minimumFontScale={0.80}
+            >{title}</Text>
+          )
         }
       />
 
@@ -190,7 +190,7 @@ export default function HeaderBar ({
   )
 }
 
-function _prepareStyles (baseStyles, { leftAction, safeAreaInsets, splitView }) {
+function _prepareStyles(baseStyles, { leftAction, safeAreaInsets, splitView }) {
   return ({
     ...baseStyles,
     root: {
