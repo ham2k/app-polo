@@ -11,11 +11,17 @@ import { SOTASSOConfig, useAccountQuery } from '../../../store/apis/apiSOTA'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle, H2kListItem, H2kText } from '../../../ui'
 import { useTranslation } from 'react-i18next'
 
-export function SOTAAccountSetting ({ settings, styles }) {
+export function SOTAAccountSetting({ settings, styles, openDialog }) {
   const { t } = useTranslation()
 
   const [currentDialog, setCurrentDialog] = useState()
   const accountQueryResults = useAccountQuery(undefined, { skip: !settings?.accounts?.sota?.idToken })
+
+  useEffect(() => {
+    if (openDialog) {
+      setCurrentDialog('accountsSOTA')
+    }
+  }, [openDialog])
 
   return (
     <React.Fragment>
@@ -40,7 +46,7 @@ export function SOTAAccountSetting ({ settings, styles }) {
   )
 }
 
-export function AccountsSOTADialog ({ visible, settings, styles, onDialogDone }) {
+export function AccountsSOTADialog({ visible, settings, styles, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()

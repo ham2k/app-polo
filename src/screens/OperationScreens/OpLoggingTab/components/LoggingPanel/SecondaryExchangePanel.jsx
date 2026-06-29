@@ -37,12 +37,12 @@ export const SecondaryExchangePanel = (props) => {
 
     const activityHooksWithSelfSpotting = activityHooks.filter((x) => (
       findRef(operation, x.activationType) && x.postSelfSpot &&
-      (!x.isSelfSpotEnabled || (x.isSelfSpotEnabled && x.isSelfSpotEnabled({ operation, settings })))
+      (!x.isSelfSpotEnabled || (x.isSelfSpotEnabled && x.isSelfSpotEnabled({ operation, settings, navigation })))
     ))
 
     const spottingHooksWithSelfSpotting = spottingHooks.filter((x) => (
       x.postSelfSpot &&
-      (!x.isSelfSpotEnabled || (x.isSelfSpotEnabled && x.isSelfSpotEnabled({ operation, settings })))
+      (!x.isSelfSpotEnabled || (x.isSelfSpotEnabled && x.isSelfSpotEnabled({ operation, settings, navigation })))
     ))
 
     if (activityHooksWithSelfSpotting.length + spottingHooksWithSelfSpotting.length > 0) {
@@ -70,7 +70,7 @@ export const SecondaryExchangePanel = (props) => {
       }
       if (activityControls.length > 0 && !newControls[spotterControl.key]) {
         if (activity.postOtherSpot &&
-        (!activity.isOtherSpotEnabled || (activity.isOtherSpotEnabled && activity.isOtherSpotEnabled({ operation, settings })))) {
+          (!activity.isOtherSpotEnabled || (activity.isOtherSpotEnabled && activity.isOtherSpotEnabled({ operation, settings, navigation })))) {
           newControls[spotterControl.key] = { ...spotterControl, labelAsGeneralSpotting: true }
         }
       }

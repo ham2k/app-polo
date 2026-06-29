@@ -1,7 +1,7 @@
 // Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { ScrollView } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -14,7 +14,7 @@ import ScreenContainer from '../../components/ScreenContainer'
 import { H2kListItem, H2kListSection } from '../../../ui'
 import { AccountsQRZDialog } from '../components/AccountsQRZDialog'
 
-export default function AccountsSettingsScreen ({ navigation, splitView }) {
+export default function AccountsSettingsScreen({ navigation, route, splitView }) {
   const { t } = useTranslation()
 
   const styles = useThemedStyles()
@@ -23,6 +23,14 @@ export default function AccountsSettingsScreen ({ navigation, splitView }) {
   const settings = useSelector(selectSettings)
 
   const [currentDialog, setCurrentDialog] = useState()
+
+  const account = route?.params?.account
+
+  useEffect(() => {
+    if (account) {
+      navigation.setParams({ account: undefined })
+    }
+  }, [account, navigation])
 
   const accountSettingHooks = useMemo(() => {
     const hooks = findHooks('setting').filter(hook => hook.category === 'account' && hook.SettingItem)
@@ -50,7 +58,7 @@ export default function AccountsSettingsScreen ({ navigation, splitView }) {
           )}
 
           {accountSettingHooks.map((hook) => (
-            <hook.SettingItem key={hook.key} settings={settings} styles={styles} />
+            <hook.SettingItem key={hook.key} settings={settings} styles={styles} openDialog={hook.key === account || hook.key === `${account}-account`} />
           ))}
         </H2kListSection>
 

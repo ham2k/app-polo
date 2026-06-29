@@ -200,7 +200,7 @@ export function retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, sett
       (isSelfSpotting ? operation : qso)?.refs,
       isSelfSpotting ? x.activationType : x.huntingType
     ) && x[spotMethodKey] &&
-    (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings })))
+    (!x[spotEnabledKey] || (x[spotEnabledKey] && x[spotEnabledKey]({ operation, settings, navigation })))
   ))
 
   const spottingHooks = findHooks('spots').filter((x) => x[spotMethodKey])

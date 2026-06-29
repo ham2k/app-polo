@@ -52,6 +52,25 @@ export default Extension
 
 let lastAuthenticationCheck
 
+function showSOTANotLoggedInAlert (navigation) {
+  Alert.alert(
+    GLOBAL?.t?.('extensions.sota.notLoggedInAlertTitle', 'Warning') || 'Warning',
+    GLOBAL?.t?.('extensions.sota.notLoggedInAlertText', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings') || 'Not logged into SOTAWatch for spotting. Please go to PoLo settings',
+    [
+      { text: GLOBAL?.t?.('extensions.sota.notLoggedInAlertIgnore', 'Ignore') || 'Ignore', style: 'cancel' },
+      {
+        text: GLOBAL?.t?.('extensions.sota.notLoggedInAlertLogIn', 'Log in') || 'Log in',
+        onPress: () => {
+          navigation?.navigate('Settings', {
+            screen: 'AccountsSettings',
+            params: { account: 'sota' }
+          })
+        }
+      }
+    ]
+  )
+}
+
 const ActivityHook = {
   ...Info,
 
@@ -70,26 +89,20 @@ const ActivityHook = {
 
   postOtherSpot: SOTAPostOtherSpot,
   postSelfSpot: SOTAPostSelfSpot,
-  isOtherSpotEnabled: ({ settings, operation }) => {
+  isOtherSpotEnabled: ({ settings, operation, navigation }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
     const now = new Date().getTime()
     if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
-      Alert.alert(
-        GLOBAL?.t?.('extensions.sota.notLoggedInAlertTitle', 'Warning') || 'Warning',
-        GLOBAL?.t?.('extensions.sota.notLoggedInAlertText', 'Not logged into SOTAWatch for spotting. Please go to PoLo settings') || 'Not logged into SOTAWatch for spotting. Please go to PoLo settings'
-      )
+      showSOTANotLoggedInAlert(navigation)
       lastAuthenticationCheck = now
     }
     return enabled
   },
-  isSelfSpotEnabled: ({ settings, operation }) => {
+  isSelfSpotEnabled: ({ settings, operation, navigation }) => {
     const enabled = !!settings?.accounts?.sota?.idToken
     const now = new Date().getTime()
     if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
-      Alert.alert(
-        GLOBAL?.t?.('extensions.sota.notLoggedInAlertTitle', 'Warning') || 'Warning',
-        GLOBAL?.t?.('extensions.sota.notLoggedInAlertText', 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings') || 'Not logged into SOTAWatch for self-spotting. Please go to PoLo settings'
-      )
+      showSOTANotLoggedInAlert(navigaition)
       lastAuthenticationCheck = now
     }
     return enabled
