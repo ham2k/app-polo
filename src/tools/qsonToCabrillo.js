@@ -72,9 +72,14 @@ const DEFAULT_FREQUENCIES_PER_BAND = {
   '13cm': '2.3G'
 }
 
+// VHF+ Cabrillo logs use MHz; HF logs use kHz. Threshold: 50 MHz = 50000 kHz.
 function cabrilloFreq (qso) {
-  if (qso.freq) return `${Math.round(qso.freq)}`
-  else return DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
+  if (qso.freq) {
+    return qso.freq >= 50000
+      ? `${Math.round(qso.freq / 1000)}`
+      : `${Math.round(qso.freq)}`
+  }
+  return DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
 }
 
 function cabrilloMode (qso) {
