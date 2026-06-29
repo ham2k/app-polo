@@ -91,6 +91,8 @@ Relevant `"options"`:
 - `rareCountySweepMinimumCount`: If set, the minimum number of rare counties worked required to earn the rare county sweep bonus. (NC)
 - `bonusStationSweep`: If true, bonus points are awarded for a sweep of bonus stations. (ID)
 - `bonusStationSweepMinimumCount`: If set, the minimum number of bonus stations worked required to earn the bonus station sweep bonus. (ID)
+- `perActivatedCounty`: If set, bonus points awarded for each activated county [CO]
+- `perActivatedCountyMinimumCount`: If set, minimum number of QSOs per county required to earn the Activated County bonus [CO]
 
 ### Other Options
 - `countyToState`: Provides a mapping of county abbreviations to state abbreviations. Needed for some multi-state events (CPQP)

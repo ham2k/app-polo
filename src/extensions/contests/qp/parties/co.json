@@ -5,31 +5,30 @@
   "end": "2026-9-13 03:59Z",
   "url": "https://coloradoqsoparty.org/",
   "cabrilloName": "COQP",
-  "notes": "Multipliers for power, mode and other factors are not correclty included in score yet.",
+  "notes": "",
   "internalNotes": "",
-  "lastUpdated": "2026-04-21 12:00Z",
-  "status": "Updated for 2026, but rules based on 2025",
+  "lastUpdated": "2026-06-29 12:00Z",
+  "status": "Updated for 2026. Mixed mode scoring will not be accurate.",
   "exchange": [
     "Name",
     "Location"
   ],
   "options": {
-    "dcCountsAsMaryland": false,
+    "dcCountsAsMaryland": true,
     "stateCountsForInState": true,
     "selfSpotting": true,
     "countyLine": true,
     "dxIsMultiplier": true,
-    "multsPerBandMode": true,
-    "inStateMultsPerBand": true
+    "multsPerBandMode": false,
+    "multsPerMode": true
   },
   "points": {
-    "PHONE": 1,
-    "CW": 2,
-    "DIGI": 2
+    "PHONE": 2,
+    "CW": 2
   },
-  "bonusStations": {
-    "AF0S": 500,
-    "WA0VTU": 500
+  "bonus": {
+    "perActivatedCounty": 500,
+    "perActivatedCountyMinimumCount": 10
   },
   "counties": {
     "ADA": "Adams",
