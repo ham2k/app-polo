@@ -15,7 +15,7 @@ import { hasRef } from '@ham2k/lib-qson-tools'
 import { slashZeros } from '@ham2k/lib-format-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
-import { buildOperationTitle, loadOperation, selectOperation } from '../../store/operations'
+import { buildOperationTitle, loadOperation, selectOperation, setOperationData } from '../../store/operations'
 import { loadQSOs, lookupAllQSOs, confirmFromSpots, selectQSOs } from '../../store/qsos'
 import { selectSettings, setSettings } from '../../store/settings'
 import { startTickTock, stopTickTock } from '../../store/time'
@@ -100,6 +100,10 @@ export default function OperationScreen(props) {
     }
     options.leftAction = 'close'
     options.rightMenuItems = <OperationMenuItems {...{ operation, settings, styles, dispatch, online }} />
+
+    if (title !== operation.title || subtitle !== operation.subtitle) {
+      dispatch(setOperationData({ uuid: operation.uuid, title, subtitle }))
+    }
 
     return options
   }, [dispatch, online, operation, settings, styles, t])

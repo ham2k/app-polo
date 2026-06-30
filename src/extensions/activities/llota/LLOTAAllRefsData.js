@@ -13,14 +13,14 @@ import { Info } from './LLOTAInfo'
 
 export const LLOTAAllReferences = {
   prefixByDXCCCode: Object.keys(DXCC_BY_CODE).reduce((acc, code) => {
-    acc[code] = DXCC_BY_CODE[code]?.countryCode?.toUpperCase()
+    acc[code] = "LL" + DXCC_BY_CODE[code]?.countryCode?.toUpperCase()
     return acc
   }, {})
 }
 
-export function registerLLOTAAllRefsData () {
+export function registerLLOTAAllRefsData() {
   registerDataFile({
-    key: 'llota-all-lakes',
+    key: 'llota-all-lakes-v2', // v2 because the reference format change to add LL prefix
     name: 'LLOTA: All Lakes',
     description: 'Database of all LLOTA references',
     title: Info.name,
@@ -117,15 +117,15 @@ export function registerLLOTAAllRefsData () {
   })
 }
 
-export function llotaPrefixForDXCCCode (code) {
+export function llotaPrefixForDXCCCode(code) {
   return (LLOTAAllReferences.prefixByDXCCCode && LLOTAAllReferences.prefixByDXCCCode[code]) || ''
 }
 
-export async function llotaFindByReference (ref) {
+export async function llotaFindByReference(ref) {
   return await dbSelectOne('SELECT data FROM lookups WHERE category = ? AND key = ?', ['llota', ref], { row: row => row?.data ? JSON.parse(row.data) : {} })
 }
 
-export async function llotaFindByName (dxccCode, name) {
+export async function llotaFindByName(dxccCode, name) {
   const prefix = llotaPrefixForDXCCCode(dxccCode)
 
   const results = await dbSelectAll(
@@ -137,7 +137,7 @@ export async function llotaFindByName (dxccCode, name) {
   return results
 }
 
-export async function llotaFindByLocation (dxccCode, lat, lon, delta = 1) {
+export async function llotaFindByLocation(dxccCode, lat, lon, delta = 1) {
   const prefix = llotaPrefixForDXCCCode(dxccCode)
   const results = await dbSelectAll(
     'SELECT data FROM lookups WHERE category = ? AND subCategory = ? AND lat BETWEEN ? AND ? AND lon BETWEEN ? AND ? AND flags = 1',

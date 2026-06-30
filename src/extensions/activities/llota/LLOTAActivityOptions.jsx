@@ -17,7 +17,7 @@ import { Info } from './LLOTAInfo'
 import { llotaFindByReference, llotaFindByLocation, llotaFindByName, llotaPrefixForDXCCCode } from './LLOTAAllRefsData'
 import { LLOTAListItem } from './LLOTAListItem'
 
-export function LLOTAActivityOptions ({ styles, operation, settings, refs: allRefs, setRefs: setRefsUpstream }) {
+export function LLOTAActivityOptions({ styles, operation, settings, refs: allRefs, setRefs: setRefsUpstream }) {
   const { t } = useTranslation()
 
   const NEARBY_DEGREES = 0.25
@@ -48,10 +48,10 @@ export function LLOTAActivityOptions ({ styles, operation, settings, refs: allRe
       error => {
         console.info('Geolocation error', error)
       }, {
-        enableHighAccuracy: true,
-        timeout: 1000 * 30 /* 30 seconds */,
-        maximumAge: 1000 * 60 /* 1 minute */
-      }
+      enableHighAccuracy: true,
+      timeout: 1000 * 30 /* 30 seconds */,
+      maximumAge: 1000 * 60 /* 1 minute */
+    }
     )
   }, [])
 

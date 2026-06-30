@@ -13,7 +13,7 @@ export const Info = {
   activationType: 'llotaActivation',
   descriptionPlaceholder: 'Enter LLOTA references',
   unknownReferenceName: 'Unknown Lake',
-  referenceRegex: /^[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i,
+  referenceRegex: /^LL[A-Z0-9]+-(?:[0-9]{4,5}|TEST)$/i,
   scoring: {
     activates: 'daily',
     allowsMultipleReferences: true,

@@ -191,7 +191,8 @@ export function dataExportOptions({ operation, qsos, settings, ourInfo }) {
     const partials = basePartialTemplates({ settings })
     const data = extraDataForTemplates({ settings })
 
-    for (const ref of refs) {
+    for (const originalRef of refs) {
+      const ref = handler?.decorateRefForExport ? handler.decorateRefForExport(originalRef) : originalRef
       const context = templateContextForOneExport({ option, settings, operation, ourInfo, handler, ref })
 
       let title

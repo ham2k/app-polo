@@ -32,10 +32,11 @@ const Extension = {
 
     registerLLOTAAllRefsData()
 
-    await dispatch(loadDataFile('llota-all-lakes', { noticesInsteadOfFetch: true }))
+    await dispatch(loadDataFile('llota-all-lakes-v2', { noticesInsteadOfFetch: true }))
   },
   onDeactivationDispatch: () => async (dispatch) => {
     await dispatch(removeDataFile('llota-all-lakes'))
+    await dispatch(removeDataFile('llota-all-lakes-v2'))
   }
 }
 export default Extension
@@ -59,7 +60,7 @@ const ActivityHook = {
   sampleOperations: ({ settings, callInfo, t }) => {
     return [
       // Regular Activation
-      { refs: [{ type: Info.activationType, ref: 'XX-1234', name: t('extensions.llota.exampleRefName', 'Example Lake'), shortName: t('extensions.llota.activityOptions.exampleLake', 'Example Lake'), program: Info.shortName, label: `${Info.shortName} XX-1234: Example Lake`, shortLabel: `${Info.shortName} XX-1234` }] }
+      { refs: [{ type: Info.activationType, ref: 'LLXX-1234', name: t('extensions.llota.exampleRefName', 'Example Lake'), shortName: t('extensions.llota.activityOptions.exampleLake', 'Example Lake'), program: Info.shortName, label: `${Info.shortName} XX-1234: Example Lake`, shortLabel: `${Info.shortName} XX-1234` }] }
     ]
   }
 }
@@ -169,7 +170,7 @@ const ReferenceHandler = {
   description: (operation) => {
     const refs = filterRefs(operation, Info.activationType)
     return [
-      refs.map(r => r.ref).filter(x => x).join(', '),
+      refs.map(r => _updateRefWithPrefix(r.ref)).filter(x => x).join(', '),
       refs.map(r => r.name).filter(x => x).join(', ')
     ].filter(x => x).join(' • ')
   },
@@ -180,14 +181,16 @@ const ReferenceHandler = {
     if (!ref?.ref || !ref.ref.match(Info.referenceRegex)) return { ...ref, ref: '', name: '', shortName: '', location: '' }
     let result
 
-    const data = await llotaFindByReference(ref.ref)
+    const updatedRef = _updateRefWithPrefix(ref.ref)
+
+    const data = await llotaFindByReference(updatedRef)
     if (data?.name) {
       result = {
         ...ref,
         name: data.name,
         location: data.location,
-        label: `${Info.shortName} ${ref.ref}: ${data.name}`,
-        shortLabel: `${Info.shortName} ${ref.ref}`,
+        label: `${Info.shortName} ${updatedRef}: ${data.name}`,
+        shortLabel: `${Info.shortName} ${updatedRef}`,
         program: Info.shortName
       }
 
@@ -195,7 +198,7 @@ const ReferenceHandler = {
         result.accuracy = LOCATION_ACCURACY.REASONABLE
         result.grid = data.grid
 
-        if (data.ref?.startsWith('US-') || data.ref?.startsWith('CA-') || data.ref?.startsWith('AU-')) {
+        if (data.ref?.startsWith('LLUS-') || data.ref?.startsWith('LLCA-') || data.ref?.startsWith('LLAU-')) {
           // For US, Canada or Australia, use the state/province.
           result.state = (data.location || '').split('-')[1]?.trim()
         }
@@ -206,6 +209,10 @@ const ReferenceHandler = {
       return { name: GLOBAL?.t?.('extensions.llota.unknownRefName', Info.unknownReferenceName ?? 'Unknown lake') ?? Info.unknownReferenceName, ...ref }
     }
     return result
+  },
+
+  decorateRefForExport: (ref) => {
+    return { ...ref, ref: _updateRefWithPrefix(ref.ref) }
   },
 
   extractTemplate: ({ ref, operation }) => {
@@ -232,9 +239,10 @@ const ReferenceHandler = {
   },
 
   suggestOperationTitle: ({ ref }) => {
-    if (ref.type === Info.activationType && ref.ref) {
+    const updatedRef = _updateRefWithPrefix(ref.ref)
+    if (ref.type === Info.activationType && updatedRef) {
       return {
-        at: ref.ref, subtitle: ref.name, shortSubtitle: ref.shortName, description: `${Info.shortName}: ${ref.ref}`
+        at: updatedRef, subtitle: ref.name, shortSubtitle: ref.shortName, description: `${Info.shortName}: ${updatedRef}`
       }
     } else {
       return null
@@ -242,12 +250,13 @@ const ReferenceHandler = {
   },
 
   suggestExportOptions: ({ operation, ref, settings }) => {
-    if (ref?.type === Info.activationType && ref?.ref) {
+    const updatedRef = _updateRefWithPrefix(ref.ref)
+    if (ref?.type === Info.activationType && updatedRef) {
       return [{
         format: 'adif',
         exportType: `${Info.key}-activator`,
         exportName: 'LLOTA Activation',
-        exportData: { refs: [ref] }, // exports only see this one ref
+        exportData: { refs: [{ ...ref, ref: updatedRef }] }, // exports only see this one ref
         nameTemplate: '{{>RefActivityName}}',
         titleTemplate: '{{>RefActivityTitle}}'
       }]
@@ -260,10 +269,10 @@ const ReferenceHandler = {
 
     const fields = []
     if (huntingRefs && huntingRefs[0]) {
-      fields.push({ SIG: 'LLOTA' }, { SIG_INFO: huntingRefs[0]?.ref }, { LLOTA_REF: huntingRefs.map(ref => ref?.ref).filter(x => x).join(',') })
+      fields.push({ SIG: 'LLOTA' }, { SIG_INFO: _updateRefWithPrefix(huntingRefs[0]?.ref) }, { LLOTA_REF: huntingRefs.map(ref => _updateRefWithPrefix(ref?.ref)).filter(x => x).join(',') })
     }
     if (activationRefs && activationRefs[0]) {
-      fields.push({ MY_SIG: 'LLOTA' }, { MY_SIG_INFO: activationRefs[0]?.ref }, { MY_LLOTA_REF: activationRefs.map(ref => ref?.ref).filter(x => x).join(',') })
+      fields.push({ MY_SIG: 'LLOTA' }, { MY_SIG_INFO: _updateRefWithPrefix(activationRefs[0]?.ref) }, { MY_LLOTA_REF: activationRefs.map(ref => _updateRefWithPrefix(ref?.ref)).filter(x => x).join(',') })
     }
     return fields
   },
@@ -274,14 +283,14 @@ const ReferenceHandler = {
     let activationFields = []
     if (activationRef) {
       activationFields = [
-        { MY_SIG: 'LLOTA' }, { MY_SIG_INFO: activationRef.ref }, { MY_LLOTA_REF: activationRef.ref }
+        { MY_SIG: 'LLOTA' }, { MY_SIG_INFO: _updateRefWithPrefix(activationRef.ref) }, { MY_LLOTA_REF: _updateRefWithPrefix(activationRef.ref) }
       ]
     }
 
     if (huntingRefs.length > 0) {
       return huntingRefs.map(huntingRef => [
         ...activationFields,
-        { SIG: 'LLOTA' }, { SIG_INFO: huntingRef.ref }, { LLOTA_REF: huntingRef.ref }
+        { SIG: 'LLOTA' }, { SIG_INFO: _updateRefWithPrefix(huntingRef.ref) }, { LLOTA_REF: _updateRefWithPrefix(huntingRef.ref) }
       ])
     } else {
       return [activationFields]
@@ -292,4 +301,10 @@ const ReferenceHandler = {
   accumulateScoreForDay: generateActivityDailyAccumulator({ info: Info }),
   summarizeScore: generateActivitySumarizer({ info: Info })
 
+}
+
+function _updateRefWithPrefix(ref) {
+  if (!ref) return ''
+  if (ref.startsWith('LL')) return ref
+  return 'LL' + ref
 }

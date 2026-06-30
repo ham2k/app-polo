@@ -10,6 +10,14 @@
       "Assorted bug fixes"
     ]
   },
+  "26.6.4": {
+    "name": "June '26 (patch 4)",
+    "photoCaption": "ON4VT at ONFF-0440",
+    "changes": [
+      "LLOTA changed reference format",
+      "Fixed Field Day scoring"
+    ]
+  },
   "26.6.3": {
     "name": "June '26 (patch 3)",
     "photoCaption": "ON4VT at ONFF-0440",
