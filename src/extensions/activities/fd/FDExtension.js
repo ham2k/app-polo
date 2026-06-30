@@ -35,7 +35,7 @@ export const Info = {
 }
 
 const INVALID_BANDS = ['60m', '30m', '17m', '12m']
-const POINTS = { PHONE: 1, CW: 2, DIGITAL: 2 }
+const POINTS = { PHONE: 1, CW: 2, DATA: 2 }
 
 const Extension = {
   ...Info,
