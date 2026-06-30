@@ -1,3 +1,6 @@
+[env]
+# Enable Rozenite plugins in React DevTools
+WITH_ROZENITE = true
 
 [tools]
 node = "24"

@@ -5,6 +5,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import createMigrate from 'redux-persist/es/createMigrate'
+import { rozeniteDevToolsEnhancer } from '@rozenite/redux-devtools-plugin'
 
 import { migrations, LATEST_VERSION } from './migrations'
 import systemReducer from './system'
@@ -121,7 +122,9 @@ export const store = configureStore({
     return middlewares
   },
   enhancers: (getDefaultEnhancers) => {
-    return getDefaultEnhancers().concat(reduxEnhancersForDistribution())
+    return getDefaultEnhancers()
+      .concat(reduxEnhancersForDistribution())
+      .concat(rozeniteDevToolsEnhancer())
   },
   devTools: {
     actionSanitizer: reduxDevtoolsActionSanitizer,

@@ -4,6 +4,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { useReactNavigationDevTools } from '@rozenite/react-navigation-plugin'
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { PaperProvider, Portal } from 'react-native-paper'
@@ -72,7 +73,7 @@ if (module.hot) {
 
 globalSetupForDistribution()
 
-function MainApp ({ navigationTheme }) {
+function MainApp({ navigationTheme }) {
   const [appState, setAppState] = useState('starting')
 
   const dispatch = useDispatch()
@@ -113,6 +114,8 @@ function MainApp ({ navigationTheme }) {
 
   const routeNameRef = React.useRef()
   const navigationRef = React.useRef()
+
+  useReactNavigationDevTools({ ref: navigationRef })
 
   useEffect(() => {
     if (_appHotReloaded) {
@@ -236,7 +239,7 @@ function MainApp ({ navigationTheme }) {
   }
 }
 
-function TranslatedApp (props) {
+function TranslatedApp(props) {
   const language = useSelector(selectSettingsLanguage)
   const [initialized, setInitialized] = useState(false)
 
@@ -250,7 +253,7 @@ function TranslatedApp (props) {
   return <MainApp {...props} />
 }
 
-function ErrorWrappedApp (props) {
+function ErrorWrappedApp(props) {
   return (
     <RootErrorBoundary>
       <TranslatedApp {...props} />
@@ -258,7 +261,7 @@ function ErrorWrappedApp (props) {
   )
 }
 
-function ThemedApp () {
+function ThemedApp() {
   const [paperTheme, navigationTheme] = usePrepareThemes()
   const baseStyles = useBaseStyles({ theme: paperTheme })
 
