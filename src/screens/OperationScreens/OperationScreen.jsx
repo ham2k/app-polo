@@ -101,7 +101,7 @@ export default function OperationScreen(props) {
     options.leftAction = 'close'
     options.rightMenuItems = <OperationMenuItems {...{ operation, settings, styles, dispatch, online }} />
 
-    if (title !== operation.title || subtitle !== operation.subtitle) {
+    if (operation.uuid && (title || subtitle) && (title !== operation.title || subtitle !== operation.subtitle)) {
       dispatch(setOperationData({ uuid: operation.uuid, title, subtitle }))
     }
 
