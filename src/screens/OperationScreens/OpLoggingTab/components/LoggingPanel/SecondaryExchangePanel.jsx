@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import React, { useMemo } from 'react'
+import { useNavigation } from '@react-navigation/native'
 
 import { findRef } from '@ham2k/lib-qson-tools'
 
@@ -18,6 +19,8 @@ import { spotterControl } from './SecondaryExchangePanel/SpotterControl'
 
 export const SecondaryExchangePanel = (props) => {
   const { currentSecondaryControl, operation, vfo, settings } = props
+
+  const navigation = useNavigation()
 
   const secondaryControlSettings = useMemo(() => (
     operation?.local?.secondaryControls ?? settings?.secondaryControls ?? {}

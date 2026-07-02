@@ -1,6 +1,6 @@
 {
-  "26.7.0-pre0": {
-    "name": "July '26 (pre 0)",
+  "26.7.0-pre1": {
+    "name": "July '26 (pre 1)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
       "Improved performance of text input controls",
@@ -15,7 +15,6 @@
     "photoCaption": "ON4VT at ONFF-0440",
     "changes": [
       "Fixed rare bug that created extra operations"
-
     ]
   },
   "26.6.4": {
