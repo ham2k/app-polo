@@ -14,7 +14,7 @@ import { getSyncCounts } from '../../../store/operations'
 import { selectFiveSecondsTick } from '../../../store/time'
 import QRCode from 'react-native-qrcode-svg'
 
-export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDialogDone }) {
+export function SyncAccountDialog({ visible, settings, styles, syncHook, onDialogDone }) {
   const { t } = useTranslation()
 
   const dispatch = useDispatch()
@@ -49,8 +49,8 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
     }
 
     setDialogVisible(visible)
-  // We only want to run this once, when making the dialog visible
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // We only want to run this once, when making the dialog visible
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible])
 
   useEffect(() => {
@@ -465,14 +465,16 @@ export function SyncAccountDialog ({ visible, settings, styles, syncHook, onDial
           <H2kDialogContent>
             <View style={{ alignItems: 'center', marginBottom: styles.oneSpace }}>
               {qrCodeLinkInfo?.url ? (
-                <QRCode
-                  value={qrCodeLinkInfo.url}
-                  size={200}
-                  backgroundColor={styles.colors.elevation.level3}
-                />
+                <View style={{ backgroundColor: '#D0D0D0', padding: styles.oneSpace }}>
+                  <QRCode
+                    value={qrCodeLinkInfo.url}
+                    size={200}
+                    backgroundColor={'#D0D0D0'}
+                  />
+                </View>
               ) : (
-                <View style={{ height: 200, width: 200, backgroundColor: styles.colors.elevation.level3 }}>
-                  <Text>Preparing QR code...</Text>
+                <View style={{ height: 200, width: 200, backgroundColor: '#D0D0D0', justifyContent: 'center', alignItems: 'center' }}>
+                  <Text style={{ color: '#111111' }}>Preparing QR code...</Text>
                 </View>
               )}
             </View>
