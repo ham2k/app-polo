@@ -35,6 +35,8 @@ export default defineConfig([
         indentLogicalExpressions: true,
       }],
 
+      "no-unused-vars": ["error", { "args": "none", "caughtErrors": "none" }],
+
       "react/jsx-indent-props": [2, 2],
       "react/jsx-closing-bracket-location": [2, "tag-aligned"],
       "react/prop-types": "off",
