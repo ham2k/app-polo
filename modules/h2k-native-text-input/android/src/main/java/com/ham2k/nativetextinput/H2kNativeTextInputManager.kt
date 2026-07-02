@@ -50,6 +50,16 @@ class H2kNativeTextInputManager :
     }
   }
 
+  // Fabric hands recycled views to different fields; reset per-view state first so
+  // the next occupant doesn't inherit the previous field's text / event counter.
+  override fun prepareToRecycleView(
+    reactContext: ThemedReactContext,
+    view: H2kNativeEditText
+  ): H2kNativeEditText? {
+    view.resetForRecycle()
+    return super.prepareToRecycleView(reactContext, view)
+  }
+
   // Apply staged `text` + `mostRecentEventCount` together, after all prop setters ran.
   override fun onAfterUpdateTransaction(view: H2kNativeEditText) {
     super.onAfterUpdateTransaction(view)

@@ -329,6 +329,35 @@ class H2kNativeEditText(context: Context) : AppCompatEditText(context) {
     editable.replace(prefix, old.length - suffix, newText.substring(prefix, newText.length - suffix))
   }
 
+  /**
+   * Fabric recycles views: when this one unmounts it returns to a pool and is later
+   * handed to a DIFFERENT field. Reset per-view state or the next occupant inherits
+   * our text buffer and [nativeEventCount] — and setTextFromProps would then reject
+   * its (mostRecentEventCount 0) value as stale, stranding the previous field's text.
+   * Called from the ViewManager's prepareToRecycleView.
+   */
+  fun resetForRecycle() {
+    applyingFromProps = true
+    setText(null)
+    applyingFromProps = false
+    nativeEventCount = 0
+    pendingText = null
+    hasPendingText = false
+    pendingEventCount = 0
+    lastKeyCode = -1
+    lastKeyEmitNanos = 0L
+    // Restore prop-backed state to codegen defaults. Fabric only re-invokes a setter
+    // for the next occupant when its value differs from the default, so any prop the
+    // new field leaves at default would otherwise keep this view's previous value.
+    hint = null
+    isEnabled = true
+    uppercase = false
+    keyboardProfile = "default"
+    smartKeyboard = true
+    spaceNavigates = true
+    applyKeyboardConfig()
+  }
+
   fun insertAtCursor(value: String) {
     val start = selectionStart.coerceAtLeast(0)
     val end = selectionEnd.coerceAtLeast(0)

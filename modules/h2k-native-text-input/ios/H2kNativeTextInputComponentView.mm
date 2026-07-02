@@ -144,6 +144,32 @@ static unichar const kCursorSentinel = 0x0001;
   [super updateProps:props oldProps:oldProps];
 }
 
+// Fabric recycles component views: when this one unmounts it returns to a pool and
+// is later handed to a DIFFERENT field. Reset every piece of per-view state or the
+// next occupant inherits our text buffer and event counter — and the eventCount
+// race guard would then reject its (eventCount 0) value as stale, stranding the
+// previous field's text on screen. Mirrors RN's RCTTextInputComponentView.
+- (void)prepareForRecycle
+{
+  [super prepareForRecycle];
+  // Reset _props to default so the next occupant's updateProps diffs against a clean
+  // baseline. updateProps compares against _props (not the passed oldProps), and a
+  // setter is skipped when the new value equals the default — so anything the next
+  // field leaves at default must be restored to its default state here too.
+  static const auto defaultProps = std::make_shared<const H2kNativeTextInputProps>();
+  _props = defaultProps;
+  [_textField resignFirstResponder];
+  _applyingFromProps = YES;
+  _textField.text = nil;
+  _applyingFromProps = NO;
+  _textField.placeholder = nil;
+  _textField.enabled = YES;
+  _eventCount = 0;
+  _uppercase = NO;
+  _spaceNavigates = YES;
+  [self applyKeyboardProfile:"default" uppercase:NO];
+}
+
 - (void)applyKeyboardProfile:(const std::string &)profile uppercase:(BOOL)uppercase
 {
   if (profile == "numbers") {
