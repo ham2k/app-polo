@@ -61,7 +61,7 @@ export function PaperDropDown(props, _ref) {
     }
   }
 
-  const onLayout = (event: LayoutChangeEvent) => {
+  const onLayout = (event) => {
     setInputLayout(event.nativeEvent.layout)
   }
 
