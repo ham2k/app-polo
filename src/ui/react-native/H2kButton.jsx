@@ -6,14 +6,14 @@ import React from 'react'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { Button } from 'react-native-paper'
 
-function prepareStyles (baseTheme, themeColor) {
+function prepareStyles(baseTheme, themeColor, mode) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
 
   return {
     ...baseTheme,
     colors: {
       ...baseTheme.colors,
-      primary: baseTheme.colors[themeColor],
+      primary: mode ? baseTheme.colors[themeColor] : baseTheme.colors[`${themeColor}Vibrant`],
       onPrimary: baseTheme.colors[`on${upcasedThemeColor}`],
       onSurfaceDisabled: baseTheme.colors.onSurfaceDisabled,
       outline: baseTheme.colors[themeColor]
@@ -21,13 +21,14 @@ function prepareStyles (baseTheme, themeColor) {
   }
 }
 
-export function H2kButton (props) {
+export function H2kButton(props) {
   const {
     theme,
+    mode,
     themeColor = 'primary'
   } = props
 
-  const themeStyles = useThemedStyles(prepareStyles, themeColor)
+  const themeStyles = useThemedStyles(prepareStyles, themeColor, mode)
 
   return (
     <Button

@@ -38,11 +38,11 @@
     "inversePrimary": "rgb(0, 103, 131)",
     "elevation": {
       "level0": "transparent",
-      "level1": "rgb(29, 37, 41)",
-      "level2": "rgb(31, 43, 48)",
-      "level3": "rgb(33, 44, 48)",
-      "level4": "rgb(34, 50, 57)",
-      "level5": "rgb(35, 54, 62)"
+      "level1": "rgb(27, 31, 33)",
+      "level2": "rgb(28, 33, 35)",
+      "level3": "rgb(30, 35, 37)",
+      "level4": "rgb(32, 37, 40)",
+      "level5": "rgb(34, 39, 43)"
     },
     "surfaceDisabled": "rgba(125, 128, 130, 0.3)",
     "onSurfaceDisabled": "rgba(225, 226, 228, 0.5)",

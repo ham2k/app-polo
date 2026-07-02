@@ -13,6 +13,7 @@ import { useComputeSizes } from './computeSizes'
 import lightColors from '../lightColors'
 import darkColors from '../darkColors'
 import fontConfig from '../fonts'
+import cloneDeep from 'clone-deep'
 
 export function usePrepareThemes () {
   const settings = useSelector(selectSettings)
@@ -42,13 +43,14 @@ export function usePrepareThemes () {
   }, [sizes.fontScaleAdjustment])
 
   const colors = useMemo(() => {
-    const loadedColors = colorScheme === 'dark' ? darkColors.colors : lightColors.colors
+    const loadedColors = cloneDeep(colorScheme === 'dark' ? darkColors.colors : lightColors.colors)
 
     if (colorScheme === 'dark') {
       ['primary', 'secondary', 'tertiary'].forEach((color) => {
         const upcasedColor = color.charAt(0).toUpperCase() + color.slice(1)
         loadedColors[`${color}Light`] = Color(loadedColors[color]).darken(0.6).desaturate(0.1).hex()
         loadedColors[`${color}Lighter`] = Color(loadedColors[color]).darken(0.5).desaturate(0.4).hex()
+        loadedColors[`${color}Vibrant`] = Color(loadedColors[color]).lighten(0.6).saturate(0.1).hex()
         loadedColors[`on${upcasedColor}Light`] = loadedColors[`on${upcasedColor}`]
         loadedColors[`on${upcasedColor}Lighter`] = Color(loadedColors[`on${upcasedColor}`]).lighten(5).desaturate(0.2).hex()
         loadedColors[`${color}Highlight`] = Color(loadedColors[color]).lighten(1).hex()
@@ -66,6 +68,7 @@ export function usePrepareThemes () {
         // loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(0.95).desaturate(0.7).hex()
         loadedColors[`${color}Light`] = Color(loadedColors[color]).lighten(1.3).desaturate(0.3).hex()
         loadedColors[`${color}Lighter`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.5).hex()
+        loadedColors[`${color}Vibrant`] = Color(loadedColors[color]).darken(0.1).saturate(0.1).hex()
         loadedColors[`on${upcasedColor}Light`] = loadedColors[`on${upcasedColor}`]
         loadedColors[`on${upcasedColor}Lighter`] = Color(loadedColors[`on${upcasedColor}`]).darken(0.7).desaturate(0.2).hex()
         loadedColors[`${color}Highlight`] = Color(loadedColors[color]).lighten(1.9).desaturate(0.3).hex()
