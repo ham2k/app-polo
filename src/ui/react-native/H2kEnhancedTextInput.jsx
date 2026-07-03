@@ -64,7 +64,7 @@ const cursorAware = (fn) => (t) => {
 
 const KEYBOARD_PROFILES = { numbers: 'numbers', dumb: 'dumb', code: 'code', email: 'email' }
 
-export function H2kEnhancedTextInput (props) {
+export function H2kEnhancedTextInput(props) {
   const {
     style, textStyle, themeColor, disabled, error,
     label, placeholder, value,
@@ -209,6 +209,7 @@ export function H2kEnhancedTextInput (props) {
           innerRef={setRef}
           value={stringValue}
           placeholder={placeholder || ''}
+          placeholderTextColor={styles.theme.colors.onBackgroundLighter}
           style={styles.input}
           editable={!disabled}
           uppercase={!!(uppercase || rst)}

@@ -89,8 +89,19 @@ static unichar const kCursorSentinel = 0x0001;
   const auto &oldViewProps = *std::static_pointer_cast<const H2kNativeTextInputProps>(_props);
   const auto &newViewProps = *std::static_pointer_cast<const H2kNativeTextInputProps>(props);
 
-  if (oldViewProps.placeholder != newViewProps.placeholder) {
-    _textField.placeholder = RCTNSStringFromString(newViewProps.placeholder);
+  if (oldViewProps.placeholder != newViewProps.placeholder ||
+      oldViewProps.placeholderTextColor != newViewProps.placeholderTextColor) {
+    // UITextField has no placeholder-color property; a color has to go through
+    // attributedPlaceholder. Fall back to a plain placeholder when no color is set.
+    NSString *placeholder = RCTNSStringFromString(newViewProps.placeholder);
+    UIColor *placeholderColor = RCTUIColorFromSharedColor(newViewProps.placeholderTextColor);
+    if (placeholderColor != nil && placeholder.length > 0) {
+      _textField.attributedPlaceholder =
+          [[NSAttributedString alloc] initWithString:placeholder
+                                          attributes:@{NSForegroundColorAttributeName : placeholderColor}];
+    } else {
+      _textField.placeholder = placeholder;
+    }
   }
 
   if (oldViewProps.editable != newViewProps.editable) {
@@ -163,6 +174,7 @@ static unichar const kCursorSentinel = 0x0001;
   _textField.text = nil;
   _applyingFromProps = NO;
   _textField.placeholder = nil;
+  _textField.attributedPlaceholder = nil;
   _textField.enabled = YES;
   _eventCount = 0;
   _uppercase = NO;
