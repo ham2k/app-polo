@@ -1,4 +1,4 @@
-// Copyright ©️ 2025-2026 Sebastian Delmont <sd@ham2k.com>
+// Copyright ©️ 2025, 2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
 import { superModeForMode } from '@ham2k/lib-operation-data'
@@ -15,7 +15,7 @@ export const Info = {
   name: '13 Colonies Special Event',
   shortName: '13 Colonies',
   infoURL: 'http://www.13colonies.us/',
-  defaultValue: { year: 2025 }
+  defaultValue: { year: 2026 }
 }
 
 const Extension = {
@@ -129,10 +129,11 @@ const ReferenceHandler = {
 
     const superMode = superModeForMode(mode)
     const call = qso.their.call
-    if (!THIRTEEN_COLONIES_CALLS[call]) return {}
 
     const colony = THIRTEEN_COLONIES_CALLS[call]
     const special = THIRTEEN_COLONIES_SPECIAL_STATIONS[call]
+
+    if (!colony && !special) return {}
 
     const nearDupes = qsos.filter(q => !q.deleted && (startAtMillis ? q.startAtMillis < startAtMillis : true) && q.their.call === qso.their.call && q.uuid !== uuid)
 
@@ -141,9 +142,9 @@ const ReferenceHandler = {
     const scoring = { value, call, colony, special, mode: superMode, band }
 
     if (score?.worked?.[call]) {
-      scoring.infos = [`13 Col: ${THIRTEEN_COLONIES_NAMES[colony]}`]
+      scoring.infos = [`13 Col: ${THIRTEEN_COLONIES_NAMES[colony ?? special]}`]
     } else {
-      scoring.notices = [`13 Col:${THIRTEEN_COLONIES_NAMES[colony]}`]
+      scoring.notices = [`13 Col: ${THIRTEEN_COLONIES_NAMES[colony ?? special]}`]
     }
 
     if (nearDupes.length === 0) {

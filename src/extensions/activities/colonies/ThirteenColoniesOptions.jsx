@@ -1,4 +1,4 @@
-// Copyright ©️ 2025 Sebastian Delmont <sd@ham2k.com>
+// Copyright ©️ 2025, 2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
 import React, { useMemo } from 'react'
@@ -34,7 +34,7 @@ export function ThirteenColoniesOptions({ styles, operation, refs: allRefs, setR
             uppercase={true}
             noSpaces={true}
             disabled={true}
-            value={activityRef?.year || '2025'}
+            value={activityRef?.year || '2026'}
           />
         </H2kListRow>
       </H2kListSection>
