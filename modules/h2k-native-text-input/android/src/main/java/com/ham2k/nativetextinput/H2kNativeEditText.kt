@@ -108,7 +108,13 @@ class H2kNativeEditText(context: Context) : AppCompatEditText(context) {
     // selection, so restore it.
     val selStart = selectionStart
     val selEnd = selectionEnd
+    // setTextIsSelectable() re-sets the buffer internally, which fires the TextWatcher.
+    // Guard it so we don't emit a spurious change here — that would bump nativeEventCount
+    // (and emit an empty onChangeText) before the first real value lands, causing the
+    // eventCount guard to reject that value and leave the field blank.
+    applyingFromProps = true
     setTextIsSelectable(true)
+    applyingFromProps = false
     val len = text?.length ?: 0
     if (selStart in 0..len && selEnd in 0..len) setSelection(selStart, selEnd)
   }

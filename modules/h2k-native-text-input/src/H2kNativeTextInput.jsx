@@ -1,7 +1,7 @@
 // Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
 import NativeH2kNativeTextInput, { Commands } from './specs/H2kNativeTextInputNativeComponent'
@@ -55,19 +55,25 @@ export function H2kNativeTextInput (props) {
     else if (innerRef) innerRef.current = node
   }, [innerRef])
 
-  // `state.text` is the single source of truth for what native should display (it
-  // may carry the sentinel to position the caret). It is advanced by exactly two
-  // things: native keystrokes (handleChange) and genuine app-driven `value` changes
-  // (the effect below). `eventCount` is echoed back so native can drop stale updates.
+  // What native currently reports it holds (may carry the sentinel to mark the caret),
+  // plus the native event counter at that point. `eventCount` is echoed back so native
+  // can drop stale updates.
   const [state, setState] = useState({ text: value, eventCount: 0 })
+
+  // A short trail of the values we have emitted, newest first, so reconciliation below
+  // can recognise a `value` prop that is a LAGGING echo of a past native change (versus
+  // a genuinely new value the app is setting) and stamp it with the right eventCount.
+  const emitsRef = useRef([])
 
   const handleChange = useCallback((event) => {
     const { text: textWithCursor, eventCount } = event.nativeEvent
 
     const formatted = onValueFormatting ? onValueFormatting(textWithCursor) : textWithCursor
+    const stripped = stripCursor(formatted)
     setState({ text: formatted, eventCount })
+    emitsRef.current = [{ text: stripped, eventCount }, ...emitsRef.current].slice(0, 32)
 
-    onChangeText && onChangeText(stripCursor(formatted))
+    onChangeText && onChangeText(stripped)
   }, [onValueFormatting, onChangeText])
 
   const handleFocusChange = useCallback((event) => {
@@ -76,20 +82,27 @@ export function H2kNativeTextInput (props) {
     else onBlur && onBlur(event)
   }, [onFocus, onBlur])
 
-  // Adopt a controlled `value` ONLY when the app actually changes it (programmatic
-  // set/clear, external edit). Keying on `value` is the crux: this never runs on our
-  // own per-keystroke re-render, where `value` can still be LAGGING behind native
-  // (e.g. the JS thread was busy doing callsign lookups). Rendering the raw lagging
-  // `value` used to push it back onto native stamped with the freshest eventCount, so
-  // the native staleness guard couldn't reject it and it reverted a just-typed char.
-  // We never render `value` directly now — only `state.text`.
-  // useLayoutEffect (not useEffect) so a programmatic change is adopted before paint,
-  // matching RN's own TextInput (which reconciles in a useLayoutEffect).
-  useLayoutEffect(() => {
-    setState((s) => (stripCursor(s.text) === value ? s : { text: value, eventCount: s.eventCount }))
-  }, [value])
-
-  const text = state.text
+  // Reconcile the controlled `value` against what native holds — recomputed every
+  // render so a native⇄app divergence always self-heals (e.g. the app assigning an
+  // initial value right after mount, or recovering from any native-side desync). The
+  // trick is the eventCount we stamp the pushed value with, since native drops anything
+  // older than its own counter:
+  //   - value already matches native  → nothing to push; the app is caught up, so drop
+  //                                      the echo trail (a later programmatic value that
+  //                                      happens to equal an old emit must not look stale).
+  //   - value is a lagging echo        → stamp it with that past change's count, so if
+  //                                      native has since moved on (fast typing) it is
+  //                                      rejected instead of reverting the newer char.
+  //   - value is a genuinely new value → stamp the latest count so native accepts it.
+  let text = state.text
+  let eventCount = state.eventCount
+  if (stripCursor(state.text) === value) {
+    if (emitsRef.current.length) emitsRef.current = []
+  } else {
+    text = value
+    const echo = emitsRef.current.find((e) => e.text === value)
+    eventCount = echo ? echo.eventCount : state.eventCount
+  }
 
   const flat = useMemo(() => StyleSheet.flatten(style) || {}, [style])
 
@@ -99,7 +112,7 @@ export function H2kNativeTextInput (props) {
       {...nativeProps}
       style={style}
       text={text}
-      mostRecentEventCount={state.eventCount}
+      mostRecentEventCount={eventCount}
       color={flat.color}
       fontSize={flat.fontSize}
       fontFamily={flat.fontFamily}

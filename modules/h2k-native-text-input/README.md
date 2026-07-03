@@ -42,14 +42,25 @@ by the async controlled-value round-trip (the problem the old `lastChangeRef` /
 `setTimeout` hacks worked around).
 
 **The guard only works if the count travels with the value it describes.** The
-wrapper therefore renders `state.text` (native's own reported text) — **never the
-raw `value` prop** — and adopts `value` only inside a `useLayoutEffect` keyed on
-`value`, i.e. only when the app _genuinely changes_ it. Do **not** "simplify" this
-back to a render-time `const text = … ? state.text : value`: on a per-keystroke
-re-render the `value` prop can still be lagging behind native (JS thread busy on
-callsign lookups), and rendering it pushes a stale value stamped with the _freshest_
-`eventCount`, which the native guard cannot reject — reverting the just-typed
-character (e.g. `W2ASD` snapping back to `W2AS`).
+wrapper reconciles the controlled `value` against what native reports every render
+(so a native⇄app divergence always self-heals — e.g. an initial value assigned right
+after mount, or recovery from any native-side desync). The subtlety is which
+`eventCount` it stamps a pushed `value` with, since native drops anything older than
+its own counter. The wrapper keeps a short trail of the values it has emitted and:
+
+- if `value` already matches native → nothing to push (and it clears the trail, so a
+  later programmatic value that happens to equal an old emit isn't taken for a lag);
+- if `value` is a **lagging echo** of a past native change → stamps it with _that
+  change's_ count, so if native has since moved on (fast typing, JS thread busy on
+  callsign lookups) the guard rejects it instead of reverting the newer character
+  (e.g. `W2ASD` snapping back to `W2AS`);
+- if `value` is a **genuinely new** value → stamps the latest count so native takes it.
+
+Do **not** "simplify" this to always stamping `state.eventCount`: that stamps a
+lagging echo with the freshest count, which native can't reject → the revert bug.
+And do **not** gate reconciliation on `value` changing alone (e.g. an effect keyed on
+`[value]`): that loses the self-heal, so any moment native's counter runs ahead (an
+attach-time `setTextIsSelectable`, a recycle, …) strands the field on stale text.
 
 ## View recycling ⚠️
 
