@@ -5,7 +5,7 @@ import React from 'react'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-import { distanceForRSGBVHFContests } from '@ham2k/lib-geo-tools'
+import { distanceForRegion1VHFContests } from '@ham2k/lib-geo-tools'
 import { filterNearDupes, findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kGridInput, H2kEnhancedTextInput, H2kTextInputWithSuggestions } from '../../../ui/index.js'
@@ -209,7 +209,7 @@ const ReferenceHandler = {
         scoring.distance = 50
         scoring.value = 50 * BAND_MULTIPLIERS[band]
       } else {
-        const distance = distanceForRSGBVHFContests(operation.grid, theirGrid)
+        const distance = distanceForRegion1VHFContests(operation.grid, theirGrid)
         scoring.distance = distance
         scoring.value = distance * BAND_MULTIPLIERS[band]
       }
@@ -342,7 +342,7 @@ const ReferenceHandler = {
   }
 }
 
-function mainExchangeForOperation (props) {
+function mainExchangeForOperation(props) {
   const { qso, updateQSO, styles, disabled, refStack, operation } = props
 
   const qsoRef = findRef(qso, Info.key)
@@ -441,7 +441,7 @@ function mainExchangeForOperation (props) {
   return fields
 }
 
-function prepareNewQSO ({ operation, qso }) {
+function prepareNewQSO({ operation, qso }) {
   const opRef = findRef(operation, Info.key)
   if (!opRef) return qso
 
@@ -453,7 +453,7 @@ function prepareNewQSO ({ operation, qso }) {
   return qso
 }
 
-async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatch }) {
+async function processQSOBeforeSaveWithDispatch({ qso, qsos, operation, dispatch }) {
   const opRef = findRef(operation, Info.key)
   const test = vhfTestData({ ref: opRef })
 
@@ -492,11 +492,11 @@ async function processQSOBeforeSaveWithDispatch ({ qso, qsos, operation, dispatc
   return qso
 }
 
-export function vhfTestData ({ ref }) {
+export function vhfTestData({ ref }) {
   return VHF_CONTESTS_DATA[ref?.ref] || { bands: [], name: 'Unknown VHF Contest', short: 'Unknown VHF Contest' }
 }
 
-function _testModeForMode (mode) {
+function _testModeForMode(mode) {
   if (mode === 'CW') return 'CW'
   if (mode === 'SSB' || mode === 'USB' || mode === 'LSB') return 'PH'
   if (mode === 'FM') return 'FM'
