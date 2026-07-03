@@ -65,8 +65,8 @@ export default function OpLoggingTab({ navigation, route, splitView }) {
   const [selectedUUID] = useUIState('OpLoggingTab', 'selectedUUID')
   const [currentOperationUUID, setCurrentOperationUUID] = useState()
 
-  useEffect(() => { // If this is a different operation, prepare a new QSO
-    if (operation?.uuid !== currentOperationUUID) {
+  useEffect(() => { // If this is a different operation, prepare a new QSO (which might be based in current QSO data)
+    if (currentOperationUUID && operation?.uuid !== currentOperationUUID) {
       setCurrentOperationUUID(operation?.uuid)
       dispatch(manageNextQSO({ qsos, operation, vfo, settings }))
     }

@@ -67,6 +67,8 @@ export function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   return clone
 }
 
+const DEBUG = true
+
 export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo, settings }) => (dispatch, getState) => {
   qsos = qsos || []
 
@@ -76,11 +78,14 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
   const originalQSO = selectStateForComponentAndKey(state, 'OpLoggingTab', 'originalQSO')
   const callStack = selectStateForComponentAndKey(state, 'OpLoggingTab', 'callStack')
 
-  // console.log('manageNextQSO')
-  // console.log('-- selectedUUID', selectedUUID)
-  // console.log('-- suggestedQSO', suggestedQSO)
-  // console.log('-- currentQSO', qso)
-  // console.log('-- currentQSOQueue', qsoQueue)
+  if (DEBUG) {
+    console.log('manageNextQSO')
+    console.log('-- selectedUUID', selectedUUID)
+    console.log('-- suggestedQSO', suggestedQSO)
+    console.log('-- currentQSO', qso)
+    console.log('-- currentQSOQueue', qsoQueue)
+  }
+
   let nextQSO
   if (suggestedQSO) {
     nextQSO = prepareSuggestedQSO(suggestedQSO, qsos, operation, vfo, settings)
@@ -91,7 +96,7 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
         value: [...qsoQueue || [], { qso, originalQSO, callStack }]
       }))
     }
-    // console.log(' >> suggested', nextQSO)
+    if (DEBUG) console.log(' >> suggested', nextQSO)
   } else if (selectedUUID) {
     const existingQSO = qsos.find(q => q.uuid === selectedUUID)
     if (existingQSO) {
@@ -106,13 +111,13 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
         value: [...qsoQueue || [], { qso, originalQSO, callStack }]
       }))
     }
-    // console.log(' >> selected', nextQSO)
+    if (DEBUG) console.log(' >> selected', nextQSO)
   } else {
     if (qsoQueue?.length > 0) {
       const queueItem = qsoQueue[qsoQueue.length - 1]
       nextQSO = queueItem?.qso ?? prepareNewQSO(operation, qsos, vfo, settings)
       if (queueItem?.originalQSO) {
-        // console.log(' >> queue item originalQSO', queueItem.originalQSO)
+        if (DEBUG) console.log(' >> queue item originalQSO', queueItem.originalQSO)
         dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'originalQSO', value: queueItem.originalQSO }))
         dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'callStack', value: queueItem.callStack }))
       }
@@ -121,7 +126,7 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
         key: 'qsoQueue',
         value: qsoQueue.slice(0, -1)
       }))
-      // console.log(' >> queue', nextQSO)
+      if (DEBUG) console.log(' >> queue', nextQSO)
     } else {
       nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
 
@@ -130,7 +135,7 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
         nextQSO.their.call = callStack
         dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'callStack', value: undefined }))
       }
-      // console.log(' >> new', nextQSO)
+      if (DEBUG) console.log(' >> new', nextQSO)
     }
   }
   dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'qso', value: nextQSO }))
