@@ -1,7 +1,7 @@
 // Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useCallback, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { StyleSheet } from 'react-native'
 
 import NativeH2kNativeTextInput, { Commands } from './specs/H2kNativeTextInputNativeComponent'
@@ -55,8 +55,10 @@ export function H2kNativeTextInput (props) {
     else if (innerRef) innerRef.current = node
   }, [innerRef])
 
-  // The controlled value handed to native. May carry the sentinel to position
-  // the caret. `eventCount` is echoed back so native can drop stale updates.
+  // `state.text` is the single source of truth for what native should display (it
+  // may carry the sentinel to position the caret). It is advanced by exactly two
+  // things: native keystrokes (handleChange) and genuine app-driven `value` changes
+  // (the effect below). `eventCount` is echoed back so native can drop stale updates.
   const [state, setState] = useState({ text: value, eventCount: 0 })
 
   const handleChange = useCallback((event) => {
@@ -74,9 +76,20 @@ export function H2kNativeTextInput (props) {
     else onBlur && onBlur(event)
   }, [onFocus, onBlur])
 
-  // Adopt external value changes (controlled). Sentinel is only present when the
-  // change originated from native/our formatter, so an app-driven `value` clears it.
-  const text = stripCursor(state.text) === value ? state.text : value
+  // Adopt a controlled `value` ONLY when the app actually changes it (programmatic
+  // set/clear, external edit). Keying on `value` is the crux: this never runs on our
+  // own per-keystroke re-render, where `value` can still be LAGGING behind native
+  // (e.g. the JS thread was busy doing callsign lookups). Rendering the raw lagging
+  // `value` used to push it back onto native stamped with the freshest eventCount, so
+  // the native staleness guard couldn't reject it and it reverted a just-typed char.
+  // We never render `value` directly now — only `state.text`.
+  // useLayoutEffect (not useEffect) so a programmatic change is adopted before paint,
+  // matching RN's own TextInput (which reconciles in a useLayoutEffect).
+  useLayoutEffect(() => {
+    setState((s) => (stripCursor(s.text) === value ? s : { text: value, eventCount: s.eventCount }))
+  }, [value])
+
+  const text = state.text
 
   const flat = useMemo(() => StyleSheet.flatten(style) || {}, [style])
 

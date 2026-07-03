@@ -41,6 +41,45 @@ per emitted change; JS echoes it back on the `text` prop; native ignores any
 by the async controlled-value round-trip (the problem the old `lastChangeRef` /
 `setTimeout` hacks worked around).
 
+**The guard only works if the count travels with the value it describes.** The
+wrapper therefore renders `state.text` (native's own reported text) — **never the
+raw `value` prop** — and adopts `value` only inside a `useLayoutEffect` keyed on
+`value`, i.e. only when the app _genuinely changes_ it. Do **not** "simplify" this
+back to a render-time `const text = … ? state.text : value`: on a per-keystroke
+re-render the `value` prop can still be lagging behind native (JS thread busy on
+callsign lookups), and rendering it pushes a stale value stamped with the _freshest_
+`eventCount`, which the native guard cannot reject — reverting the just-typed
+character (e.g. `W2ASD` snapping back to `W2AS`).
+
+## View recycling ⚠️
+
+Fabric keeps a **pool of native views** and hands a recycled `H2kNativeTextInput`
+to a _different_ field after the original unmounts. Per-view native state that is
+not reset on recycle **leaks into the next field** — the classic symptom is a value
+typed in one field (e.g. POTA logging controls) reappearing later in an unrelated
+one (self-spotting comments, band filter).
+
+This interacts nastily with the [race guard](#race-guard): the recycled view keeps
+its (high) `eventCount`, so the next occupant's fresh `text` update (`eventCount 0`)
+is rejected as _stale_ and its old text is never overwritten.
+
+**Contract: anything with per-view native state must be reset when the view is
+recycled**, mirroring RN's own `TextInput`:
+
+- iOS — `-prepareForRecycle` in `H2kNativeTextInputComponentView.mm`.
+- Android — `H2kNativeTextInputManager.prepareToRecycleView` → `H2kNativeEditText.resetForRecycle()`.
+
+Both reset the text buffer **and** the event counter. They also restore the
+**prop-backed state** (`uppercase`, `keyboardProfile`, `smartKeyboard`,
+`spaceKeyMode`, `editable`, `placeholder`) to its default: Fabric skips a prop
+setter for the next occupant when the incoming value equals the codegen default, so
+a prop the new field leaves at default would otherwise retain this view's old value.
+
+> **When you add a new prop to the spec**, decide whether it carries per-view state
+> that survives recycle, and if so reset it in both recycle hooks. Props that are
+> _always_ written by the chrome (e.g. `color`, `fontSize`) don't need resetting,
+> because they never equal the default and so are always reapplied on reuse.
+
 ## Layout of this module
 
 ```
