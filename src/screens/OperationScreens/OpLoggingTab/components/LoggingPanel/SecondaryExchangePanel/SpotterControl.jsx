@@ -25,6 +25,7 @@ const MINUTES_FOR_AUTO_RESPOT = 10
 
 export function SpotterControlInputs(props) {
   const { t } = useTranslation()
+  const navigation = useNavigation()
 
   const { qso, operation, vfo, styles, style, settings, setCurrentSecondaryControl, focusedRef } = props
 
@@ -44,7 +45,7 @@ export function SpotterControlInputs(props) {
 
   const isSelfSpotting = useMemo(() => !qso || !parseCallsign(qso.their?.call)?.baseCall, [qso])
 
-  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }), [isSelfSpotting, qso, operation, settings])
+  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings, navigation }), [isSelfSpotting, qso, operation, settings, navigation])
 
   const { spotterMessage, spotterDisabled, autoRespotting } = useMemo(() => {
     const freq = qso?.freq || vfo?.freq
@@ -191,7 +192,7 @@ export function SpotterControlInputs(props) {
   )
 }
 
-export function retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings }) {
+export function retrieveHooksWithSpotting({ isSelfSpotting, qso, operation, settings, navigation }) {
   const spotMethodKey = isSelfSpotting ? 'postSelfSpot' : 'postOtherSpot'
   const spotEnabledKey = isSelfSpotting ? 'isSelfSpotEnabled' : 'isOtherSpotEnabled'
 
@@ -253,8 +254,8 @@ export async function postSpots({ t, isSelfSpotting, qso, operation, vfo, commen
   }
 }
 
-export function useAutoRespotting({ t, operation, vfo, dispatch, settings }) {
-  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings }), [operation, settings])
+export function useAutoRespotting({ t, operation, vfo, dispatch, settings, navigation }) {
+  const hooksWithSpotting = useMemo(() => retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings, navigation }), [operation, settings, navigation])
 
   const thirtySecondsTick = useSelector(selectThirtySecondsTick)
 

@@ -29,7 +29,7 @@ import { useUIState } from '../../../store/ui'
 const flexOne = { flex: 1 }
 const flexZero = { flex: 0 }
 
-export default function OpLoggingTab ({ navigation, route, splitView }) {
+export default function OpLoggingTab({ navigation, route, splitView }) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const online = useSelector(selectRuntimeOnline)
@@ -59,7 +59,7 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
   )
   const { sections, qsos, activeQSOs } = useSelectorConditionally(isFocused, sectionedQSOsSelector)
 
-  useAutoRespotting({ t, operation, vfo, dispatch, settings })
+  useAutoRespotting({ t, operation, vfo, dispatch, settings, navigation })
 
   const [lastUUID] = useUIState('OpLoggingTab', 'lastUUID')
   const [selectedUUID] = useUIState('OpLoggingTab', 'selectedUUID')
@@ -99,8 +99,8 @@ export default function OpLoggingTab ({ navigation, route, splitView }) {
         })
       }, 1)
     }
-  // We don't want to re-run this again if settings change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // We don't want to re-run this again if settings change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [operation?.uuid, operation?.refs?.map(r => r.type)?.join(','), dispatch])
 
   const showOpInfo = useCallback(() => {
