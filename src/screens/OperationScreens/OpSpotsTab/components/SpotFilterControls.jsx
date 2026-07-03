@@ -16,7 +16,7 @@ import { LONG_LABEL_FOR_MODE } from './SpotsPanel'
 import SpotFilterIndicators from './SpotFilterIndicators'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 
-export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, style, themeColor, settings, online }) {
+export default function SpotFilterControls({ filteredSpots, spotsSources, vfo, options, filterState, updateFilterState, counts, operation, onDone, refreshSpots, styles, style, themeColor, settings, online }) {
   const { t } = useTranslation()
 
   const spotCountText = useMemo(() => {
@@ -92,17 +92,17 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
         <View style={{ flexDirection: 'row', alignItems: 'stretch' }}>
           <H2kDropDown
             label={t('screens.opSpotsTab.filtersMaximumAge', 'Maximum Age')}
-            value={filterState.ageInMinutes || 0}
+            value={filterState.ageInMinutes || "0"}
             style={{ width: '100%' }}
             onChange={(event) => updateFilterState({ ageInMinutes: Number.parseInt(event.nativeEvent.text, 10) })}
             fieldId={'age'}
             options={[
-              { value: 0, label: t('screens.opSpotsTab.filtersAnyAge', 'Any age') },
-              { value: 10, label: t('screens.opSpotsTab.filtersAge10Minutes', '10 minutes') },
-              { value: 20, label: t('screens.opSpotsTab.filtersAge20Minutes', '20 minutes') },
-              { value: 30, label: t('screens.opSpotsTab.filtersAge30Minutes', '30 minutes') },
-              { value: 45, label: t('screens.opSpotsTab.filtersAge45Minutes', '45 minutes') },
-              { value: 60, label: t('screens.opSpotsTab.filtersAge60Minutes', '60 minutes') }
+              { value: "0", label: t('screens.opSpotsTab.filtersAnyAge', 'Any age') },
+              { value: "10", label: t('screens.opSpotsTab.filtersAge10Minutes', '10 minutes') },
+              { value: "20", label: t('screens.opSpotsTab.filtersAge20Minutes', '20 minutes') },
+              { value: "30", label: t('screens.opSpotsTab.filtersAge30Minutes', '30 minutes') },
+              { value: "45", label: t('screens.opSpotsTab.filtersAge45Minutes', '45 minutes') },
+              { value: "60", label: t('screens.opSpotsTab.filtersAge60Minutes', '60 minutes') }
             ]}
           />
         </View>
@@ -113,7 +113,7 @@ export default function SpotFilterControls ({ filteredSpots, spotsSources, vfo, 
         </Text>
         <SegmentedButtons
           style={{ width: '100%' }}
-          value={filterState.sortBy || 'frequency' }
+          value={filterState.sortBy || 'frequency'}
           onValueChange={(value) => updateFilterState({ sortBy: value })}
           buttons={[
             { value: 'time', label: t('screens.opSpotsTab.filtersSortByTime', 'By spot time') },
