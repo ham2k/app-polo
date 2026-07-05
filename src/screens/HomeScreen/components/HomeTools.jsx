@@ -23,7 +23,7 @@ import SyncProgress from './SyncProgress'
 
 let commandInfoTimeout
 
-export default function HomeTools ({ settings, styles, style }) {
+export default function HomeTools({ settings, styles, style }) {
   const { t, i18n } = useTranslation()
   const navigation = useNavigation()
 
@@ -122,7 +122,7 @@ export default function HomeTools ({ settings, styles, style }) {
   }, [])
 
   const handleSubmit = useCallback((event) => {
-    const commandResult = checkAndProcessCommands(search, { dispatch, settings, t, i18n, online, setCommandInfo, updateQSO: () => setSearch('') })
+    const commandResult = checkAndProcessCommands(search, { dispatch, settings, t, i18n, online, setCommandInfo, updateQSO: () => setSearch(''), navigation })
     if (commandResult) {
       trackEvent('command_executed', { command: search })
       setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })

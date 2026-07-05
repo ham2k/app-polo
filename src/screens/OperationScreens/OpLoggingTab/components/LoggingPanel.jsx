@@ -41,7 +41,7 @@ import { useUIState } from '../../../../store/ui'
 
 const DEBUG = false
 
-export default function LoggingPanel ({
+export default function LoggingPanel({
   style, operation, vfo, qsos, sections, activeQSOs, settings, online, ourInfo, splitView
 }) {
   const { t, i18n } = useTranslation()
@@ -242,7 +242,7 @@ export default function LoggingPanel ({
       // First, try to process any commands, but only if we're not editing an event
       if (!qso?.event) {
         const command = qso?.their?.call
-        const commandResult = checkAndProcessCommands(command, { qso, originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, updateQSO, handleFieldChange, handleSubmit, setCommandInfo })
+        const commandResult = checkAndProcessCommands(command, { qso, originalQSO, operation, vfo, qsos, dispatch, settings, t, i18n, online, ourInfo, updateQSO, handleFieldChange, handleSubmit, setCommandInfo, navigation })
         if (commandResult) {
           trackEvent('command_executed', { command })
           setCommandInfo({ message: commandResult || undefined, match: undefined, timeout: 3000 })
@@ -570,7 +570,7 @@ export default function LoggingPanel ({
   )
 }
 
-function prepareStyles (themeStyles, { style, themeColor, leftieMode, isKeyboardVisible, keyboardExtraStyles }) {
+function prepareStyles(themeStyles, { style, themeColor, leftieMode, isKeyboardVisible, keyboardExtraStyles }) {
   const upcasedThemeColor = themeColor.charAt(0).toUpperCase() + themeColor.slice(1)
   const panelSize = themeStyles.oneSpace * 6
   const buttonSize = themeStyles.oneSpace * 4

@@ -32,7 +32,7 @@ const RTFMCommandHook = {
   describeCommand: (match, { t }) => {
     return t?.('extensions.commands-misc.rtfm', 'Read the fine manual?') || 'Read the fine manual?'
   },
-  invokeCommand: (match, { t, handleFieldChange }) => {
+  invokeCommand: (match, { t, _handleFieldChange }) => {
     Linking.openURL('https://polo.ham2k.com/docs/')
     return t?.('extensions.commands-misc.rtfmConfirm', 'Opening the fine manual') || 'Opening the fine manual'
   }
@@ -65,7 +65,7 @@ const SpotCommandHook = {
       return t?.('extensions.commands-misc.spot.selfSpotPrompt', 'Self-spot?') || 'Self-spot?'
     }
   },
-  invokeCommand: (match, { t, operation, vfo, dispatch, settings }) => {
+  invokeCommand: (match, { t, operation, vfo, dispatch, settings, navigation }) => {
     if (!vfo || !operation) return
 
     let comments = match[2]?.substring(1) || ''
@@ -83,7 +83,7 @@ const SpotCommandHook = {
       comments = comments.trim()
     }
 
-    const hooksWithSpotting = retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings })
+    const hooksWithSpotting = retrieveHooksWithSpotting({ isSelfSpotting: true, operation, settings, navigation })
     postSpots({ t, isSelfSpotting: true, operation, vfo, comments, hooksWithSpotting, dispatch })
     if (comments) {
       return t?.('extensions.commands-misc.spot.selfSpottingWithComments', 'Self-spotting at {{freq}} with ‘{{comments}}’', { freq: fmtFreq(vfo.freq), comments }) || `Self-spotting at ${fmtFreq(vfo.freq)} with ‘${comments}’`
