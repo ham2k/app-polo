@@ -584,7 +584,7 @@
         "potentialForDataLoss": "Potential for data loss!!!",
         "potentialForDataLossDescription": "You have not synced all the data in this device.\n\nIf you link this device to a new account, you will be asked if you want to replace its data with that from the new account.\n\nIf this is the case, you might not be able to recover any existing activity that has not been synced yet.\n\nWe suggest you complete syncing this device first!"
       },
-      "syncServiceDescription-md": "Basic service is free and allows you to sync recent data (up to 7 days) between two devices or apps at limited speed.\n\nFull service requires a paid subscription and includes all your operations synced between any reasonable number of devices or apps at full speed.\n\nWhile the LoFi service is in its TESTING PERIOD for the next couple of months, the service will remain free. After that prices will depend on the country and currency but should not be more than US$30/year or equivalent, and probably less.",
+      "syncServiceDescription-md": "Basic service is free but it is limited to two devices or apps at reduced speeds to avoid overloading the servers.\n\nFull service requires a paid subscription and includes all your operations synced between any reasonable number of devices or apps at full speed.\n\n",
       "thisDevice": "This Device",
       "notAuthenticated": "Not authenticated",
       "lofiServer": "LoFi Server",
@@ -598,9 +598,7 @@
       },
       "cloudCountDescription": {
         "operations": "Operations: {{total}} total",
-        "operationsSyncable": "Operations: {{total}} stored, {{syncable}} syncable",
-        "qsos": "QSOs: {{total}} stored",
-        "qsosSyncable": "QSOs: {{total}} stored, {{syncable}} syncable"
+        "qsos": "QSOs: {{total}} stored"
       }
     },
     "versionSettings": {

@@ -47,7 +47,7 @@ let errorCount = 0
  * to trigger a single round of syncing with a small batch size.
  */
 
-export function useSyncLoop ({ dispatch, settings, online, appState }) {
+export function useSyncLoop({ dispatch, settings, online, appState }) {
   const localData = useSelector(selectLocalData)
   const [lastSettings, setLastSettings] = useState()
 
@@ -139,7 +139,7 @@ export function useSyncLoop ({ dispatch, settings, online, appState }) {
   }, [appState, dispatch, online, goAheadWithSync, tick])
 }
 
-function _scheduleNextSyncLoop ({ dispatch, delay }, loop) {
+function _scheduleNextSyncLoop({ dispatch, delay }, loop) {
   if (delay === undefined) {
     delay = GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY
   }
@@ -150,13 +150,13 @@ function _scheduleNextSyncLoop ({ dispatch, delay }, loop) {
   }
 }
 
-export async function sendQSOsToSyncService ({ dispatch, getState }) {
+export async function sendQSOsToSyncService({ dispatch, getState }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
     await _doOneRoundOfSyncing({ dispatch, settings: selectSettings(getState()), oneSmallBatchOnly: true })
   })
 }
 
-export async function sendOperationsToSyncService ({ dispatch, getState }) {
+export async function sendOperationsToSyncService({ dispatch, getState }) {
   _scheduleDebouncedFunctionForSyncLoop(async () => {
     await _doOneRoundOfSyncing({ dispatch, settings: selectSettings(getState()), oneSmallBatchOnly: true })
   })
@@ -171,7 +171,7 @@ export async function sendOperationsToSyncService ({ dispatch, getState }) {
  * - Scheduling the next sync loop
  * - Handling errors
  */
-async function _doOneRoundOfSyncing ({ dispatch, settings, oneSmallBatchOnly = false }) {
+async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = false }) {
   if (!GLOBAL.syncEnabled) return
 
   _takeOverSyncLoop()
@@ -183,14 +183,7 @@ async function _doOneRoundOfSyncing ({ dispatch, settings, oneSmallBatchOnly = f
   dispatch((_dispatch, getState) => {
     const lofiData = selectLocalExtensionData(getState(), 'ham2k-lofi')
 
-    if (lofiData?.account?.cutoff_date_millis &&
-      (Date.now() - lofiData?.account?.cutoff_date_millis > 1000 * 60 * 60 * 24)) {
-      // If the sync server gave us a cutoff date more than 24h in the past,
-      // we assume the server wants us to sync
-      inboundSync = true
-    } else {
-      inboundSync = selectFeatureFlag(getState(), 'inboundSync') ?? false
-    }
+    inboundSync = selectFeatureFlag(getState(), 'inboundSync') ?? true
   })
 
   let qsoBatchSize, operationBatchSize
@@ -412,7 +405,7 @@ async function _doOneRoundOfSyncing ({ dispatch, settings, oneSmallBatchOnly = f
 let nextSyncLoopInterval = 0
 let lastDebouncedSync = 0
 
-function _takeOverSyncLoop () {
+function _takeOverSyncLoop() {
   // No new loops will be scheduled as long as `nextSyncLoopInterval` is true
   if (nextSyncLoopInterval && nextSyncLoopInterval !== true) {
     clearTimeout(nextSyncLoopInterval)
@@ -421,7 +414,7 @@ function _takeOverSyncLoop () {
   lastDebouncedSync = 0
 }
 
-function _releaseSyncLoop () {
+function _releaseSyncLoop() {
   // Allow new loops to be scheduled
   lastDebouncedSync = 0
   if (nextSyncLoopInterval === true) {
@@ -430,7 +423,7 @@ function _releaseSyncLoop () {
   }
 }
 
-function _scheduleDebouncedFunctionForSyncLoop (fn) {
+function _scheduleDebouncedFunctionForSyncLoop(fn) {
   if (VERBOSE >= 1) console.log('_scheduleDebouncedFunctionForSyncLoop')
   if (nextSyncLoopInterval !== true) {
     if (VERBOSE >= 1) console.log(' -- debouncing')
@@ -454,7 +447,7 @@ function _scheduleDebouncedFunctionForSyncLoop (fn) {
   }
 }
 
-async function _processResponseMeta ({ response = {}, localData = {}, dispatch, syncHook }) {
+async function _processResponseMeta({ response = {}, localData = {}, dispatch, syncHook }) {
   const { json = {}, ok } = response
   const { meta = {}, account = {} } = json
   const { sync = {} } = localData
@@ -479,10 +472,6 @@ async function _processResponseMeta ({ response = {}, localData = {}, dispatch, 
 
     if ((meta.qsos?.recordsLeft ?? meta.qsos?.records_left) !== sync.serverRemainingQSOs) {
       changesToSyncData.serverRemainingQSOs = meta?.qsos?.recordsLeft ?? meta?.qsos?.records_left ?? 0
-    }
-
-    if ((account?.cutoffDate || account?.cutoff_date) !== sync.cutoffDate) {
-      changesToSyncData.cutoffDate = account?.cutoffDate ?? account?.cutoff_date
     }
 
     if (meta.resetSyncedStatus || meta.reset_synced_status) {
@@ -534,7 +523,7 @@ async function _processResponseMeta ({ response = {}, localData = {}, dispatch, 
   return [true, changesToSyncData]
 }
 
-async function _analyzeAccountChanges ({ dispatch, account, lofiData, syncData, syncHook }) {
+async function _analyzeAccountChanges({ dispatch, account, lofiData, syncData, syncHook }) {
   // If the account has changed, consider pausing sync…
   if (syncData?.lastSyncAccountUUID && syncData?.lastSyncAccountUUID !== account?.uuid) {
     if (VERBOSE > 0) console.log('🚨 Account changed', account.uuid, syncData.lastSyncAccountUUID)
@@ -570,7 +559,7 @@ async function _analyzeAccountChanges ({ dispatch, account, lofiData, syncData, 
 
 let _lastAccountNotified = 0
 
-function _addNoticeForAccountChanged ({ dispatch, currentAccountUUID, lastSyncAccountUUID }) {
+function _addNoticeForAccountChanged({ dispatch, currentAccountUUID, lastSyncAccountUUID }) {
   if (_lastAccountNotified === currentAccountUUID) return
   _lastAccountNotified = currentAccountUUID
   return dispatch(addNotice({
@@ -590,14 +579,14 @@ function _addNoticeForAccountChanged ({ dispatch, currentAccountUUID, lastSyncAc
   }))
 }
 
-export async function prepareSyncToReplaceLocalData ({ dispatch }) {
+export async function prepareSyncToReplaceLocalData({ dispatch }) {
   dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
   dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
   dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))
   await dispatch(clearAllOperationData())
 }
 
-export async function prepareSyncToCombineLocalData ({ dispatch }) {
+export async function prepareSyncToCombineLocalData({ dispatch }) {
   dispatch(setLocalExtensionData({ key: 'ham2k-lofi', pending_link_email: undefined }))
   dispatch(clearMatchingNotices({ uniquePrefix: 'sync:' }))
   dispatch(setLocalData({ sync: { lastSyncAccountUUID: undefined } }))

@@ -15,7 +15,7 @@ import KeepAwake from '@sayem314/react-native-keep-awake'
 
 const DEBUG = 0
 
-export default function SyncProgress ({ wrapper }) {
+export default function SyncProgress({ wrapper }) {
   const settings = useSelector(selectSettings)
   const styles = useThemedStyles()
   const localData = useSelector(selectLocalData)
@@ -28,7 +28,7 @@ export default function SyncProgress ({ wrapper }) {
       const counts = await getSyncCounts()
       setSyncCounts(counts)
     })
-  }, [fiveSecondTick, localData?.sync?.cutoffDate])
+  }, [fiveSecondTick])
 
   const percentage = useMemo(() => {
     if (DEBUG) console.log('🏃‍♂️ SyncProgress', localData?.sync)

@@ -33,7 +33,7 @@ const LOFI_SERVER_LABELS = {
   'https://lofi.ham2k.net': 'Ham2K LoFi (Official)'
 }
 
-export default function SyncSettingsScreen ({ navigation, splitView, route }) {
+export default function SyncSettingsScreen({ navigation, splitView, route }) {
   const { t } = useTranslation()
 
   const styles = useThemedStyles()
@@ -157,7 +157,7 @@ The app will restart.
 
 If you have unsynced data, IT WILL BE LOST.`),
       [
-        { text: t('screens.syncSettings.replaceDataAlert.buttonCancel', 'No, Cancel'), onPress: () => {} },
+        { text: t('screens.syncSettings.replaceDataAlert.buttonCancel', 'No, Cancel'), onPress: () => { } },
         {
           text: t('screens.syncSettings.replaceDataAlert.buttonProcees', 'Yes, I\'ll take the risk! Replace It All!'),
           style: 'destructive',
@@ -183,7 +183,7 @@ This will combine QSOs on this device with what's already in the Sync Service fo
 
 This operation cannot be undone.`),
       [
-        { text: t('screens.syncSettings.combineDataAlert.buttonCancel', 'No, Cancel'), onPress: () => {} },
+        { text: t('screens.syncSettings.combineDataAlert.buttonCancel', 'No, Cancel'), onPress: () => { } },
         {
           text: t('screens.syncSettings.combineDataAlert.buttonText', 'Yes, I\'ll take the risk! Combine Them!'),
           style: 'destructive',
@@ -440,21 +440,14 @@ Please try again later.`, { error: linkResult.json.error })
   )
 }
 
-function _cloudCountDescription ({ operations, qsos, t }) {
+function _cloudCountDescription({ operations, qsos, t }) {
   if (!operations || !qsos || (operations?.total === 0 && qsos?.total === 0)) {
     return t('screens.syncSettings.noDataStored', 'No data stored')
   }
 
   const parts = []
-  if (operations?.total === operations?.syncable) {
-    parts.push(t('screens.syncSettings.cloudCountDescription.operations', 'Operations: {{total}} total', { total: fmtNumber(operations?.total || 0) }))
-  } else {
-    parts.push(t('screens.syncSettings.cloudCountDescription.operationsSyncable', 'Operations: {{total}} stored, {{syncable}} syncable', { total: fmtNumber(operations?.total || 0), syncable: fmtNumber(operations?.syncable || 0) }))
-  }
-  if (qsos?.total === qsos?.syncable) {
-    parts.push(t('screens.syncSettings.cloudCountDescription.qsos', 'QSOs: {{total}} stored', { total: fmtNumber(qsos?.total || 0) }))
-  } else {
-    parts.push(t('screens.syncSettings.cloudCountDescription.qsosSyncable', 'QSOs: {{total}} stored, {{syncable}} syncable', { total: fmtNumber(qsos?.total || 0), syncable: fmtNumber(qsos?.syncable || 0) }))
-  }
+  parts.push(t('screens.syncSettings.cloudCountDescription.operations', 'Operations: {{total}} total', { total: fmtNumber(operations?.total || 0) }))
+  parts.push(t('screens.syncSettings.cloudCountDescription.qsos', 'QSOs: {{total}} stored', { total: fmtNumber(qsos?.total || 0) }))
+
   return parts.join('\n')
 }
