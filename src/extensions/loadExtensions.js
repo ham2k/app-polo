@@ -44,6 +44,7 @@ import NAQPExtension from './contests/naqp/NAQPExtension'
 import QSOPartiesExtension from './contests/qp/QSOPartiesExtension'
 import StateParksExtension from './contests/stateparks/StateParksExtension'
 import SimpleContestExtension from './contests/simple-contest/SimpleContestExtension'
+import ARRLDXExtension from './contests/arrl-dx/ARRLDXExtension'
 import CQWPXExtension from './contests/cqwpx/CQWPXExtension'
 import CQWWExtension from './contests/cqww/CQWWExtension'
 import IARUHFExtension from './contests/iaru-hf/IARUHFExtension'
@@ -102,6 +103,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
   registerExtension(QSOPartiesExtension)
   registerExtension(StateParksExtension)
   registerExtension(SimpleContestExtension)
+  registerExtension(ARRLDXExtension)
   registerExtension(CQWPXExtension)
   registerExtension(CQWWExtension)
   registerExtension(IARUHFExtension)
