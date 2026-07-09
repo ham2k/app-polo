@@ -67,7 +67,7 @@ export function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   return clone
 }
 
-const DEBUG = true
+const DEBUG = false
 
 export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo, settings }) => (dispatch, getState) => {
   qsos = qsos || []

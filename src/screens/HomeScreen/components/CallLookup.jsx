@@ -1,10 +1,13 @@
 // Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { View, LayoutAnimation } from 'react-native'
+
+import { selectVFO } from '../../../store/station'
 import { CallInfo } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/CallInfo'
 import { OpInfo } from '../../OperationScreens/OpLoggingTab/components/LoggingPanel/OpInfo'
+import { useSelector } from 'react-redux'
 
 const CallLookupAnimation = {
   duration: 500,
@@ -19,6 +22,9 @@ const CallLookupAnimation = {
 
 export default function CallLookup ({ call, commandInfo, settings, onPress, styles, style }) {
   const [visible, setVisible] = useState()
+
+  const vfoSelector = useCallback((state) => selectVFO(state), [])
+  const vfo = useSelector(vfoSelector)
 
   const commandMessage = useMemo(() => {
     if (commandInfo?.message) return { text: `**${commandInfo.message}**`, icon: 'chevron-right-box', hideCallInfo: true }
@@ -54,6 +60,7 @@ export default function CallLookup ({ call, commandInfo, settings, onPress, styl
             <CallInfo
               qso={{ their: { call } }}
               operation={{}}
+              vfo={vfo}
               styles={styles}
               settings={settings}
               themeColor={'primary'}

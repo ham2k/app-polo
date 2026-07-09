@@ -181,7 +181,7 @@ export default function SpotsPanel({ operation, qsos, sections, onSelect, style 
       } else {
         scoringHandlers.forEach(({ handler, ref }) => {
           const lastSection = sections && sections[sections.length - 1]
-          const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key ?? ref.type], operation, ref, ourInfo })
+          const score = handler.scoringForQSO({ qso: spot, qsos, score: lastSection?.scores?.[ref.key ?? ref.type], operation, vfo, ref, ourInfo })
 
           if (score?.alerts && score?.alerts[0] === 'duplicate' && (spot.spot?.type !== 'scoring')) {
             spot.spot.type = 'duplicate'

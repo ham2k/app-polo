@@ -47,7 +47,7 @@ export const MESSAGES_FOR_SCORING = {
 
 const DEBUG = false
 
-export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, styles, themeColor, setQSO, settings }) {
+export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, vfo, style, styles, themeColor, setQSO, settings }) {
   const { t } = useTranslation()
 
   const navigation = useNavigation()
@@ -176,7 +176,7 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, style, s
     const scoringHandlers = scoringHandlersForOperation({ operation, settings })
 
     const lastSection = sections && sections[sections.length - 1]
-    const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.type || ref.key], operation, ref, ourInfo })).filter(x => x)
+    const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.type || ref.key], operation, vfo, ref, ourInfo })).filter(x => x)
 
     return scores
   }, [operation, qso, qsos, sections, settings, ourInfo])

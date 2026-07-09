@@ -59,7 +59,7 @@ export function scoringHandlersForOperation ({ operation }) {
   return scoringHandlers.sort((a, b) => b.priority - a.priority)
 }
 
-export function analyzeAndSectionQSOs ({ qsos, operation, ourInfo, showDeletedQSOs = true }) {
+export function analyzeAndSectionQSOs ({ qsos, operation, vfo, ourInfo, showDeletedQSOs = true }) {
   const t = GLOBAL?.t
 
   qsos = qsos ?? []
@@ -136,7 +136,7 @@ export function analyzeAndSectionQSOs ({ qsos, operation, ourInfo, showDeletedQS
       scoringHandlers.forEach(({ handler, ref }) => {
         const key = ref?.type ?? handler.key
 
-        const qsoScore = handler.scoringForQSO({ qso, qsos, score: currentSection.scores[key], operation: currentOperation, ref, ourInfo })
+        const qsoScore = handler.scoringForQSO({ qso, qsos, score: currentSection.scores[key], operation: currentOperation, vfo, ref, ourInfo })
 
         try {
           if (handler.accumulateScoreForDay) {
