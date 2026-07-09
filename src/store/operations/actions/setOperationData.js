@@ -116,7 +116,7 @@ export const mergeDataIntoOperation = ({ operation, data }) => async (dispatch, 
 }
 
 const DEBUG = false
-export async function markOperationStart ({ operation, qsos, dispatch }) {
+export async function markOperationStart({ operation, qsos, dispatch }) {
   if (!operation) return
   if (DEBUG) console.log('markOperationStart', operation, qsos)
   if (qsos?.find(qso => qso.event?.event === 'start')) {
@@ -138,7 +138,7 @@ export async function markOperationStart ({ operation, qsos, dispatch }) {
   }))
 }
 
-export async function updateOperationBreakOrStart ({ operation, qsos, dispatch }) {
+export async function updateOperationBreakOrStart({ operation, qsos, dispatch }) {
   if (!operation) return
 
   if (DEBUG) console.log('updateOperationBreakOrStart')
@@ -188,7 +188,7 @@ export async function updateOperationBreakOrStart ({ operation, qsos, dispatch }
   return { ...operation, allRefs }
 }
 
-export async function markOperationBreak ({ operation, qsos, dispatch }) {
+export async function markOperationBreak({ operation, qsos, dispatch }) {
   if (!operation) return
 
   if (DEBUG) console.log('markOperationBreak')
@@ -212,7 +212,7 @@ export async function markOperationBreak ({ operation, qsos, dispatch }) {
   }))
 }
 
-export async function markOperationStop ({ operation, qsos, dispatch }) {
+export async function markOperationStop({ operation, qsos, dispatch }) {
   if (!operation) return
 
   const previousStop = qsos?.findLast(qso => qso.event?.event === 'stop')
@@ -246,7 +246,7 @@ export async function markOperationStop ({ operation, qsos, dispatch }) {
   }
 }
 
-export function captureOperationParameters ({ operation }) {
+export function captureOperationParameters({ operation }) {
   if (!operation) return {}
   const params = {}
   if (operation?.refs) params.refs = operation.refs
@@ -254,7 +254,7 @@ export function captureOperationParameters ({ operation }) {
   return params
 }
 
-export function describeOperation ({ operation }) {
+export function describeOperation({ operation }) {
   // console.log('describeOperation', operation)
   if (!operation) return ''
 
@@ -286,7 +286,7 @@ export function describeOperation ({ operation }) {
   return titleParts.join(' • ')
 }
 
-export function buildOperationTitle ({ refs, operation }) {
+export function buildOperationTitle({ refs, operation }) {
   const referenceTitles = (refs ?? []).map(ref => {
     const hooks = findHooks(`ref:${ref?.type}`)
     return hooks.map(hook => hook?.suggestOperationTitle && hook?.suggestOperationTitle({ ref, operation })).filter(Boolean)[0]
@@ -306,6 +306,6 @@ export function buildOperationTitle ({ refs, operation }) {
   if (titleParts.length) {
     return { title: titleParts.join(' '), subtitle: subtitleParts.join(' • ') }
   } else {
-    return { title: GLOBAL?.t?.('general.terms.generalOperation', 'General Operation') ?? 'General Operation', subtitle: subtitleParts.join(' • ') }
+    return {}
   }
 }
