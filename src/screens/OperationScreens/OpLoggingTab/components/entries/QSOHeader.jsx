@@ -8,10 +8,15 @@ import { Text } from 'react-native-paper'
 import { capitalizeFirstLetter, fmtNumber, fmtDateDynamicZulu } from '@ham2k/lib-format-tools'
 
 import { H2kIcon, H2kPressable } from '../../../../../ui'
+import { describeOperation } from '../../../../../store/operations'
 
-const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, settings, onHeaderPress }) {
+const QSOHeader = React.memo(function QSOHeader ({ section, contextItem, operation, styles, settings, onHeaderPress }) {
   // NOTE: We're using onPresOut instead of onPress because of a bug in SectionList
   // See https://github.com/facebook/react-native/issues/51290
+  const dateLabel = capitalizeFirstLetter(fmtDateDynamicZulu(section.day, { compact: true }))
+  const summary = contextItem?.event?.segmentSummary ?? section
+  const qsoCountLabel = qsoCountText(summary.count)
+  const segmentLabel = segmentHeaderLabel(contextItem?.event?.operation)
 
   return (
     <H2kPressable
@@ -19,30 +24,25 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
       style={styles.headerRow}
       accessible={true}
       accessibilityRole="header"
-      accessibilityLabel={`${capitalizeFirstLetter(fmtDateDynamicZulu(section.day, { compact: true }))} - ${fmtNumber(section.count ?? 0)} QSOs`}
+      accessibilityLabel={[dateLabel, segmentLabel, qsoCountLabel].filter(Boolean).join(' - ')}
     >
       <View style={styles.rowInner}>
         <Text style={[styles.fields.header, styles.text.bold, { minWidth: styles.oneSpace * 8 }]}>
-          {capitalizeFirstLetter(fmtDateDynamicZulu(section.day, { compact: true }))}
+          {dateLabel}
         </Text>
+        {segmentLabel ? (
+          <Text numberOfLines={1} ellipsizeMode={'tail'} style={[styles.fields.header, { flex: 1, marginRight: styles.oneSpace }]}>
+            {segmentLabel}
+          </Text>
+        ) : null}
         <Text style={[styles.fields.header, { flex: 0, textAlign: 'right', minWidth: styles.oneSpace * 8 }]}>
-          {
-            section.count === 0 ? (
-              'No QSOs'
-            ) : (
-              section.count === 1 ? (
-                '1 QSO'
-              ) : (
-                `${fmtNumber(section.count ?? 0)} QSOs`
-              )
-            )
-          }
+          {qsoCountLabel}
         </Text>
 
-        <Text style={[styles.fields.header, { flex: 1 }]}>{' '}</Text>
+        <Text style={[styles.fields.header, { flex: segmentLabel ? 0 : 1 }]}>{' '}</Text>
 
-        {Object.keys(section.scores ?? {}).sort((a, b) => (section.scores[a]?.weight ?? 0) - (section.scores[b]?.weight ?? 0)).map(key => {
-          const score = section.scores[key] ?? {}
+        {Object.keys(summary.scores ?? {}).sort((a, b) => (summary.scores[a]?.weight ?? 0) - (summary.scores[b]?.weight ?? 0)).map(key => {
+          const score = summary.scores[key] ?? {}
           const refKeys = Object.keys(score.refs ?? { one: true })
 
           if (score.summary && (score.icon || score.label)) {
@@ -69,4 +69,16 @@ const QSOHeader = React.memo(function QSOHeader ({ section, operation, styles, s
     </H2kPressable>
   )
 })
+
+function qsoCountText (count) {
+  if (count === 0) return 'No QSOs'
+  if (count === 1) return '1 QSO'
+  return `${fmtNumber(count ?? 0)} QSOs`
+}
+
+function segmentHeaderLabel (operation) {
+  const description = describeOperation({ operation })
+  return description.split(' • ')[0] || undefined
+}
+
 export default QSOHeader

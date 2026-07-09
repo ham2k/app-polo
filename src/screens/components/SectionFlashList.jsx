@@ -10,6 +10,8 @@
 import { FlashList } from '@shopify/flash-list'
 import React from 'react'
 
+import { buildSectionFlashListData } from './SectionFlashListTools'
+
 export function SectionFlashList ({
   sections, extraData, stickySectionHeadersEnabled,
   SectionSeparatorComponent,
@@ -19,37 +21,12 @@ export function SectionFlashList ({
   renderSectionHeader,
   renderSectionFooter,
   renderItem,
+  isStickyItem,
   overrideItemLayout,
   ...props
 }) {
-  const data = sections
-    .map((section) => {
-      return [
-        { type: 'sectionHeader', section, extraData },
-        ...section.data.map((item, index) => ({
-          type: 'row',
-          item,
-          index,
-          extraData
-        }))
-      ]
-    })
-    .flat()
+  const { data, stickyHeaderIndices } = buildSectionFlashListData({ sections, extraData, stickySectionHeadersEnabled, isStickyItem })
 
-  const stickyHeaderIndices = []
-  const sectionLabels = []
-
-  data.forEach((item, index) => {
-    if (item.type !== 'sectionHeader') {
-      return
-    }
-    sectionLabels.push({
-      actualIndex: index
-    })
-    if (stickySectionHeadersEnabled !== false) {
-      stickyHeaderIndices.push(index)
-    }
-  })
   const separator = (index, isSection) => {
     if (!data || index + 1 >= data.length) {
       return null
@@ -79,11 +56,26 @@ export function SectionFlashList ({
             : null}
           {renderSectionHeader?.({
             section: info.item.section,
+            contextItem: info.item.contextItem,
+            headerType: info.item.type,
+            target: info.target,
             extraData: info.extraData
           }) || null}
           {maintainVisibleContentPosition?.startRenderingFromBottom
             ? null
             : separator(info.index, true)}
+        </>
+      )
+    } else if (info.item.type === 'contextHeader') {
+      return (
+        <>
+          {renderSectionHeader?.({
+            section: info.item.section,
+            contextItem: info.item.contextItem,
+            headerType: info.item.type,
+            target: info.target,
+            extraData: info.extraData
+          }) || null}
         </>
       )
     } else if (info.item.type === 'sectionFooter') {
@@ -118,7 +110,7 @@ export function SectionFlashList ({
 
   const overrideItemLayoutWithSections = (layout, item, index, maxColumns, extra) => {
     overrideItemLayout?.(layout, item, index, maxColumns, extra)
-    if (item.type === 'sectionHeader') {
+    if (item.type === 'sectionHeader' || item.type === 'contextHeader') {
       layout.span = maxColumns
     } else {
       layout.span = 1
@@ -135,6 +127,7 @@ export function SectionFlashList ({
       stickyHeaderIndices={
         stickySectionHeadersEnabled !== false ? stickyHeaderIndices : []
       }
+      stickyHeaderConfig={{ hideRelatedCell: true, ...props.stickyHeaderConfig }}
       getItemType={(item) => item.type}
       maintainVisibleContentPosition={maintainVisibleContentPosition}
       horizontal={horizontal}

@@ -59,6 +59,76 @@ export function scoringHandlersForOperation ({ operation }) {
   return scoringHandlers.sort((a, b) => b.priority - a.priority)
 }
 
+/**
+ * Builds the compact scoring payload used by QSO list headers.
+ *
+ * The summary is scoped by `qsos`: only non-deleted, non-event QSOs in that
+ * array contribute to the returned `count` and accumulated `scores`.
+ *
+ * `operationQSOs` is the broader operation log passed through to scoring
+ * handlers as `qsos`. This keeps existing duplicate/history logic intact for
+ * handlers that need to inspect contacts outside the header's local scope, such
+ * as contest scorers, while still allowing segment headers to count only their
+ * own QSOs.
+ *
+ * Returns:
+ *   {
+ *     count: number,
+ *     scores: {
+ *       [scoreKey: string]: object
+ *     }
+ *   }
+ */
+export function buildHeaderSummary ({ qsos, operationQSOs, operation, ourInfo, scoringHandlers }) {
+  const t = GLOBAL?.t
+
+  qsos = qsos ?? []
+  operationQSOs = operationQSOs ?? qsos
+  operation = operation ?? {}
+  scoringHandlers = scoringHandlers ?? scoringHandlersForOperation({ operation })
+
+  const summary = { count: 0, scores: {} }
+
+  scoringHandlers.forEach(({ handler, ref }) => {
+    const key = ref?.type ?? handler.key
+    summary.scores[key] = {}
+  })
+
+  qsos.forEach(qso => {
+    if (qso.deleted || qso.event) return
+
+    summary.count = summary.count + 1
+
+    scoringHandlers.forEach(({ handler, ref }) => {
+      const key = ref?.type ?? handler.key
+      try {
+        const qsoScore = handler.scoringForQSO({ qso, qsos: operationQSOs, score: summary.scores[key], operation, ref, ourInfo })
+
+        if (handler.accumulateScoreForDay) {
+          summary.scores[key] = handler.accumulateScoreForDay({ qsoScore, score: summary.scores[key], operation, ref })
+        } else if (handler.accumulateScoreForOperation) {
+          summary.scores[key] = handler.accumulateScoreForOperation({ qsoScore, score: summary.scores[key], operation, ref })
+        }
+      } catch (e) {
+        reportError(`Error accumulating header summary score for '${handler.key}' and qso '${qso.key}'`, e)
+      }
+    })
+  })
+
+  scoringHandlers.forEach(({ handler, ref }) => {
+    const key = ref?.type ?? handler.key
+    if (handler.summarizeScore && summary.scores[key]) {
+      try {
+        summary.scores[key] = handler.summarizeScore({ t, score: summary.scores[key] ?? {}, operation, ref, section: summary })
+      } catch (e) {
+        reportError(`Error summarizing header summary score for '${handler.key}'`, e)
+      }
+    }
+  })
+
+  return summary
+}
+
 export function analyzeAndSectionQSOs ({ qsos, operation, ourInfo, showDeletedQSOs = true }) {
   const t = GLOBAL?.t
 
@@ -76,6 +146,25 @@ export function analyzeAndSectionQSOs ({ qsos, operation, ourInfo, showDeletedQS
   let currentSection = null
   let currentBreakEvent = null
   let currentOperation = operation
+  let currentSegment
+  let currentSegmentHandlers = scoringHandlers
+
+  const resetSegment = ({ event, segmentOperation, segmentScoringHandlers }) => {
+    currentSegment = { event, operation: segmentOperation, qsos: [] }
+    currentSegmentHandlers = segmentScoringHandlers
+  }
+
+  const summarizeSegment = () => {
+    if (!currentSegment) return
+
+    currentSegment.event.segmentSummary = buildHeaderSummary({
+      qsos: currentSegment.qsos,
+      operationQSOs: qsos,
+      operation: currentSegment.operation,
+      ourInfo,
+      scoringHandlers: currentSegmentHandlers
+    })
+  }
 
   for (const qso of qsos) {
     if (showDeletedQSOs === false && qso.deleted) continue
@@ -119,17 +208,23 @@ export function analyzeAndSectionQSOs ({ qsos, operation, ourInfo, showDeletedQS
     } else if (qso.event) {
       currentSection.events = (currentSection.events || 0) + 1
       if (qso.event.event === 'break' || qso.event.event === 'start') {
+        summarizeSegment()
+
         currentBreakEvent = qso.event
         currentOperation = { ...operation, ...currentBreakEvent?.operation }
 
         if (VERBOSE) console.log('\nOperation Break', qso.event)
 
         scoringHandlers = scoringHandlersForOperation({ operation: currentOperation })
+        resetSegment({ event: currentBreakEvent, segmentOperation: currentOperation, segmentScoringHandlers: scoringHandlers })
 
         if (VERBOSE) console.log('-- New scoring handlers', scoringHandlers.map(({ handler, ref }) => (`${handler.key} ${ref.ref ?? ref.location ?? ref.type ?? '-'}`)).join(', '))
       }
     } else {
       currentSection.count = (currentSection.count || 0) + 1
+      if (currentSegment) {
+        currentSegment.qsos.push(qso)
+      }
 
       if (VERBOSE >= 1) console.log('\nScoring qso', qso.key, { refs: qso.refs })
 
@@ -155,6 +250,7 @@ export function analyzeAndSectionQSOs ({ qsos, operation, ourInfo, showDeletedQS
 
   // Summarize last section
   if (VERBOSE) console.log('Summarizing last section')
+  summarizeSegment()
   scoringHandlers.forEach(({ handler, ref }) => {
     const key = ref?.type ?? handler.key
     if (VERBOSE >= 2 && DEBUG_KEYS.includes(handler.key)) console.log(`-- ${handler.key}${handler.key !== key ? ` (${key})` : ' '} ${ref.ref ?? ref.location ?? ref.type}`, { ...currentSection?.scores?.[key] })
