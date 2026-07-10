@@ -7,7 +7,7 @@ import { selectSettings } from '../../settings'
 import { selectQSOs } from '../qsosSlice'
 import { addQSO } from './qsosDB'
 
-export const lookupAllQSOs = (operation, _options = {}) => async (dispatch, getState) => {
+export const lookupAllQSOs = ({ operation }) => async (dispatch, getState) => {
   const uuid = operation.uuid
 
   const qsos = selectQSOs(getState(), uuid)
