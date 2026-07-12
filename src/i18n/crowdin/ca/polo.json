@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Duplicat",
         "invalidBand": "Banda Invàlida",
+        "ourGrid": "Falta la nostra ubicació",
         "newBand": "Banda Nova",
         "newMode": "Mode Nou",
         "newRef": "Referència Nova",
         "newMult": "Nou Multiplicador",
         "newDay": "Dia Nou",
+        "newGrid": "Quadrícula nova",
+        "newLocation": "Nova localització",
         "maybeDupe": "Duplicat?",
         "partialDupe": "Duplicat",
         "potaActivation-newDay": "Nou Dia de POTA",
@@ -561,17 +564,16 @@
         "changeEmailText": "Canvia el correu electrònic de recuperació d'aquest compte:",
         "setEmailText": "Configureu un correu electrònic per al vostre compte. Es pot utilitzar per identificar-lo i facilitar-ne la recuperació més tard.",
         "emailAddressLabel": "Adreça de correu electrònic",
-        "linkWithOtherButton": "O bé... connecteu-vos amb un compte existent",
+        "linkWithOtherButton": "Utilitza un altre compte",
         "linkAccountText": "Connecteu-vos amb un compte existent:",
-        "keepExistingAccountButton": "O bé... manteniu el compte existent",
         "pendingEmailTextPre": "S'ha enviat un correu electrònic a",
         "pendingEmailTextPost": "Si us plau, busqueu-lo i seguiu les instruccions.",
         "confirmLink-md": "Obriu l'aplicació en un dispositiu ja vinculat amb **{{email}}** i confirmeu aquesta sol·licitud introduint el codi següent:",
         "confirmLinkPost-md": "Si no teniu accés a un altre dispositiu vinculat a aquest compte, podeu:",
         "accountNotFound": "No s'ha trobat el compte.",
-        "connectViaEmailButton": "O… connecta't per correu electrònic",
+        "connectViaEmailButton": "Connecta't per correu electrònic",
         "linkViaQRAccountText": "Escaneja aquest codi QR des d'un dispositiu amb un compte de Ham2K LoFi existent",
-        "linkViaQRButton": "O… connecta't mitjançant codi QR",
+        "linkViaQRButton": "Connecta't mitjançant codi QR",
         "confirmViaEmailButton": "Confirma a través de correu electrònic",
         "changeAccountButton": "Canvia de compte",
         "resendButton": "Torna a enviar el correu electrònic",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Risc de pèrdua de dades!!!",
         "potentialForDataLossDescription": "No has sincronitzat totes les dades d'aquest dispositiu.\n\nSi vincules aquest dispositiu a un nou compte, se't demanarà si vols substituir les seves dades per les del nou compte.\n\nEn aquest cas, potser no podràs recuperar cap activitat existent que encara no s'hagi sincronitzat.\n\nEt suggerim que completis primer la sincronització d'aquest dispositiu!"
       },
-      "syncServiceDescription-md": "El servei bàsic és gratuït i et permet sincronitzar dades recents (fins a 7 dies) entre dos dispositius o aplicacions a velocitat limitada.\n\nEl servei complet requereix una subscripció de pagament i et permet sincronitzar totes les teves operacions entre un nombre raonable de dispositius o aplicacions a plena velocitat.\n\nMentre el servei LoFi estigui en PERÍODE DE PROVES durant els propers mesos, el servei continuarà sent gratuït. Després, els preus dependran del país i de la moneda, però no haurien de superar els 30 USD/any o el seu equivalent, i probablement seran inferiors.",
+      "syncServiceDescription-md": "El servei bàsic és gratuït, però està limitat a dos dispositius o aplicacions a velocitats reduïdes per evitar sobrecarregar els servidors.\n\nEl servei complet requereix una subscripció de pagament i inclou totes les teves operacions sincronitzades entre qualsevol nombre raonable de dispositius o aplicacions a velocitat màxima.\n\n",
       "thisDevice": "Aquest dispositiu",
       "notAuthenticated": "No autenticat",
       "lofiServer": "Servidor LoFi",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Operacions: {{total}} en total",
-        "operationsSyncable": "Operacions: {{total}} emmagatzemades, {{syncable}} per sincronitzar",
-        "qsos": "QSOs: {{total}} emmagatzemats",
-        "qsosSyncable": "QSOs: {{total}} emmagatzemats, {{syncable}} per sincronitzar"
+        "qsos": "QSOs: {{total}} emmagatzemats"
       }
     },
     "versionSettings": {
@@ -720,6 +720,7 @@
       "customTemplatesDescription": "Utilitzar plantilles personalitzades per a l'exportació",
       "defaultTemplatesDescription": "Utilitzar plantilles per defecte per a l'exportació",
       "includePrivateData": "Inclou dades privades",
+      "ignoreLookupData": "Ignora les dades de cerca",
       "fileNameTemplate": "Plantilla de nom de fitxer",
       "titleTemplate": "Plantilla de títol",
       "adifNotes": "Notes ADIF QSO",
@@ -727,6 +728,7 @@
       "adifQslMessage": "Missatge ADIF QSL",
       "templateHelpTitle": "Ajuda de plantilles",
       "includePrivateDataDescription": "Noms, notes, adreces, etc.",
+      "ignoreLookupDataDescription": "Ignora les dades dels serveis de consulta com QRZ.com",
       "templateHelp-md": "Alguns elements de plantilla d'exemple…\n\n### Exportació del Registre\nAtributs pel registre que s'està exportant\n`{{log.station}}` → `{{call}}` Estació per aquesta exportació\n`{{log.ref}}` → `XX-1234` Referència per aquesta exportació\n`{{log.refName}}` → `Exemple Parc Nacional` Nom de la referència per aquesta exportació\n`{{log.refShortName}}` → `Exemple PN` Nom curt de la referència per aquesta exportació\n`{{log.handlerType}}` → `pota` Tipus de gestor per aquesta exportació\n`{{log.handlerName}}` → `Parcs Sobre l'Aire` Nom del gestor per aquesta exportació\n`{{log.handlerShortName}}` → `POTA` Nom curt del gestor per aquesta exportació\n\n### Indicatius d'Operació\n`{{op.station}}` → `{{call}}` Primera estació per l'operació\n`{{op.operator}}` → `{{call}}` Operador per l'operació\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Totes les estacions per l'operació\n`{{op.otherStations}}` → `{{otherCalls}}` Altres estacions per l'operació\n\n### Data d'Operació\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Altres Detalls d'Operació\n`{{op.title}}` → `a XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `La Meva Operació Especial`\n`{{op.userNotes}}` → `Vàrem sortir aviat al matí…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Quadre per aquesta operació\n\n### Informació QSO\n`{{qso.notes}}` → `Àudio terrible!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` L'informe de senyal que van enviar\n`{{qso.our.sent}}` → `55` L'informe de senyal que vam enviar\n`{{qso.their.grid}}` → `FF99` El quadre que van reportar\n`{{qso.refs}}` → Una llista de totes les referències per al QSO (inclou tant les referències d'Operació com les Referències únicament del QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Valors per defecte",

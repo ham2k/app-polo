@@ -341,15 +341,17 @@ Please try again later.`, { error: linkResult.json.error })
           </View>
         )}
 
-        <H2kListItem
-          title={lofiData?.subscription?.plan?.name ? t('screens.syncSettings.activePlan', 'Active Plan: {{plan}}', { plan: lofiData?.subscription?.plan?.name }) : t('screens.syncSettings.noActivePlan', 'No Active Plan')}
-          description={t(`screens.syncSettings.plans.${lofiData?.subscription?.plan?.slug}`, lofiData?.subscription?.plan?.description ?? '')}
-          leftIcon="calendar-clock"
-          onPress={() => null}
-          disabled={!syncEnabled}
-        />
+        <H2kListSection title={t('screens.syncSettings.subscription', 'Subscription')}>
+          <H2kListItem
+            title={lofiData?.subscription?.plan?.name ? t('screens.syncSettings.activePlan', 'Active Plan: {{plan}}', { plan: lofiData?.subscription?.plan?.name }) : t('screens.syncSettings.noActivePlan', 'No Active Plan')}
+            description={t(`screens.syncSettings.plans.${lofiData?.subscription?.plan?.slug}`, lofiData?.subscription?.plan?.description ?? '')}
+            leftIcon="calendar-clock"
+            onPress={() => null}
+            disabled={!syncEnabled}
+          />
 
-        <SyncSettingsForDistribution settings={settings} styles={styles} />
+          <SyncSettingsForDistribution settings={settings} styles={styles} />
+        </H2kListSection>
 
         <H2kListSection title={t('screens.syncSettings.thisDevice', 'This Device')}>
           <H2kListItem

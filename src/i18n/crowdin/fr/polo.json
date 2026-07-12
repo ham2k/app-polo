@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Dupliquer",
         "invalidBand": "Bande non valide",
+        "ourGrid": "Notre position est manquante",
         "newBand": "Nouvelle bande",
         "newMode": "Nouveau mode",
         "newRef": "Nouvelle référence",
         "newMult": "Nouveau multiplicateur",
         "newDay": "Nouveau jour",
+        "newGrid": "Nouvelle grille",
+        "newLocation": "Nouveau lieu",
         "maybeDupe": "Doublon ?",
         "partialDupe": "Doublon",
         "potaActivation-newDay": "Nouvelle journée POTA",
@@ -561,17 +564,16 @@
         "changeEmailText": "Modifier l'email de récupération pour ce compte :",
         "setEmailText": "Définissez un email pour votre compte. Cela peut servir à l'identifier et à le récupérer plus facilement ultérieurement.",
         "emailAddressLabel": "Adresse courriel",
-        "linkWithOtherButton": "Ou… connectez-vous avec un compte existant",
+        "linkWithOtherButton": "Utiliser un autre compte",
         "linkAccountText": "Connectez-vous avec un compte existant :",
-        "keepExistingAccountButton": "Ou… conservez le compte existant",
         "pendingEmailTextPre": "Un email a été envoyé à",
         "pendingEmailTextPost": "Veuillez le rechercher et suivre les instructions.",
         "confirmLink-md": "Ouvrez l'application sur un appareil déjà lié avec **{{email}}** et confirmez cette demande en entrant le code suivant :",
         "confirmLinkPost-md": "Si vous n'avez pas accès à un autre appareil lié à ce compte, vous pouvez :",
         "accountNotFound": "Compte non trouvé.",
-        "connectViaEmailButton": "Ou… connectez-vous via email",
+        "connectViaEmailButton": "Se connecter par e-mail",
         "linkViaQRAccountText": "Scannez ce code QR à partir d'un appareil disposant d'un compte Ham2K LoFi existant",
-        "linkViaQRButton": "Ou… connectez-vous via un code QR",
+        "linkViaQRButton": "Se connecter via un code QR",
         "confirmViaEmailButton": "Confirmer par email",
         "changeAccountButton": "Changer de compte",
         "resendButton": "Renvoyer l'email",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Risque de perte de données !!!",
         "potentialForDataLossDescription": "Vous n'avez pas synchronisé toutes les données de cet appareil.\n\nSi vous associez cet appareil à un nouveau compte, vous serez invité à remplacer ses données par celles du nouveau compte.\n\nDans ce cas, vous risquez de ne pas pouvoir récupérer toute activité existante qui n'a pas encore été synchronisée.\n\nNous vous suggérons de terminer d'abord la synchronisation de cet appareil!"
       },
-      "syncServiceDescription-md": "Le service de base est gratuit et vous permet de synchroniser les données récentes (jusqu'à 7 jours) entre deux appareils ou applications à une vitesse limitée.\n\nLe service complet nécessite un abonnement payant et synchronise toutes vos opérations entre un nombre raisonnable d'appareils ou d'applications à pleine vitesse.\n\nPendant la PÉRIODE DE TEST du service LoFi pour les prochains mois, le service restera gratuit. Après cela, les prix dépendront du pays et de la monnaie, mais ne devraient pas dépasser 30 USD/an ou l'équivalent, probablement moins.",
+      "syncServiceDescription-md": "Le service de base est gratuit, mais il est limité à deux appareils ou applications, avec des vitesses réduites afin d’éviter de surcharger les serveurs.\n\nLe service complet nécessite un abonnement payant et inclut la synchronisation de toutes vos opérations entre un nombre raisonnable d’appareils ou d’applications, à pleine vitesse.\n\n",
       "thisDevice": "Cet appareil",
       "notAuthenticated": "Non authentifié",
       "lofiServer": "Serveur LoFi",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Opérations : {{total}} au total",
-        "operationsSyncable": "Opérations : {{total}} enregistrée(s), {{syncable}} synchronisable(s)",
-        "qsos": "QSOs : {{total}} enregistré(s)",
-        "qsosSyncable": "QSOs : {{total}} enregistré(s), {{syncable}} synchronisable(s)"
+        "qsos": "QSOs : {{total}} enregistré(s)"
       }
     },
     "versionSettings": {
@@ -720,6 +720,7 @@
       "customTemplatesDescription": "Utiliser des modèles personnalisés pour l'export",
       "defaultTemplatesDescription": "Utiliser les modèles par défaut pour l'export",
       "includePrivateData": "Inclure les données privées",
+      "ignoreLookupData": "Ignorer les données des recherches",
       "fileNameTemplate": "Modèle de nom de fichier",
       "titleTemplate": "Modèle de titre",
       "adifNotes": "Notes QSO ADIF",
@@ -727,6 +728,7 @@
       "adifQslMessage": "Message QSL ADIF",
       "templateHelpTitle": "Aide pour les modèles",
       "includePrivateDataDescription": "Noms, notes, adresses, etc.",
+      "ignoreLookupDataDescription": "Ignorer les données provenant de services de recherche comme QRZ.com",
       "templateHelp-md": "Quelques exemples d'éléments de modèle …\n\n### Export du Journal\nAttributs pour le journal exporté\n`{{log.station}}` → `{{call}}` Station pour cet export\n`{{log.ref}}` → `XX-1234` Référence pour cet export\n`{{log.refName}}` → `Exemple Parc National` Nom de la référence pour cet export\n`{{log.refShortName}}` → `Exemple PN` Nom raccourci de la référence pour cet export\n`{{log.handlerType}}` → `pota` Type de rubrique pour cet export\n`{{log.handlerName}}` → `Parks On The Air` Nom de la rubrique pour cet export\n`{{log.handlerShortName}}` → `POTA` Nom raccourci de la rubrique pour cet export\n\n### Indicatifs de l'Opération\n`{{op.station}}` → `{{call}}` Première station de l'opération\n`{{op.operator}}` → `{{call}}` Opérateur de l'opération\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Toutes les stations de l'opération\n`{{op.otherStations}}` → `{{otherCalls}}` Autres stations de l'opération\n\n### Date de l'Opération\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Autres Détails de l'Opération\n`{{op.title}}` → `à XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mon opération spéciale`\n`{{op.userNotes}}` → `Je suis venu tôt le matin…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Locator pour cette opération\n\n### Informations sur le QSO\n`{{qso.notes}}` → `Audio horrible !`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Le report qu'ils ont envoyé\n`{{qso.our.sent}}` → `55` Le report que nous avons envoyé\n`{{qso.their.grid}}` → `FF99` Le locator qu'ils ont transmis\n`{{qso.refs}}` → Une liste de toutes les références pour le QSO (comprend à la fois les références de l'opération et celles des QSO)\n`{{first8 qso.uuid}}` → `123e4567`",
       "default": {
         "name": "Défauts",

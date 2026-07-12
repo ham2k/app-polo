@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Duplikat",
         "invalidBand": "Ugyldig bånd",
+        "ourGrid": "Mangler vår posisjon",
         "newBand": "Nytt bånd",
         "newMode": "Ny modus",
         "newRef": "Ny referanse",
         "newMult": "Ny mult",
         "newDay": "Ny dag",
+        "newGrid": "Nytt grid",
+        "newLocation": "Ny posisjon",
         "maybeDupe": "Dupe?",
         "partialDupe": "Dupe",
         "potaActivation-newDay": "Ny POTA-dag",
@@ -561,17 +564,16 @@
         "changeEmailText": "Endre gjenopprettings-e-posten for denne kontoen:",
         "setEmailText": "Angi en e-post for kontoen din. Den kan brukes til å identifisere den og gjøre det enklere å gjenopprette senere.",
         "emailAddressLabel": "E-postadresse",
-        "linkWithOtherButton": "Eller… koble til en eksisterende konto",
+        "linkWithOtherButton": "Bruk en annen konto",
         "linkAccountText": "Koble til en eksisterende konto:",
-        "keepExistingAccountButton": "Eller… behold eksisterende konto",
         "pendingEmailTextPre": "En e-post har blitt sendt til",
         "pendingEmailTextPost": "Vennligst se etter den og følg instruksjonene.",
         "confirmLink-md": "Åpne appen på en enhet allerede koblet til **{{email}}** og bekreft denne forespørselen ved å oppgi følgende kode:",
         "confirmLinkPost-md": "Hvis du ikke har tilgang til en annen enhet koblet til denne kontoen, kan du:",
         "accountNotFound": "Konto ikke funnet.",
-        "connectViaEmailButton": "Eller… koble via e-post",
+        "connectViaEmailButton": "Koble til via e-post",
         "linkViaQRAccountText": "Skann denne QR-koden fra en enhet med en eksisterende Ham2K LoFi-konto",
-        "linkViaQRButton": "Eller… koble via QR-kode",
+        "linkViaQRButton": "Koble til via QR-kode",
         "confirmViaEmailButton": "Bekreft via e-post",
         "changeAccountButton": "Bytt konto",
         "resendButton": "Send e-post igjen",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Mulighet for datatap!!!",
         "potentialForDataLossDescription": "Du har ikke synkronisert alle dataene på denne enheten.\n\nHvis du kobler denne enheten til en ny konto, vil du bli spurt om du vil erstatte dataene med dem fra den nye kontoen.\n\nHvis dette er tilfelle, kan det hende du ikke kan gjenopprette eksisterende aktivitet som ikke er synkronisert ennå.\n\nVi foreslår at du fullfører synkroniseringen av denne enheten først!"
       },
-      "syncServiceDescription-md": "Grunnleggende tjeneste er gratis og lar deg synkronisere nylige data (opptil 7 dager) mellom to enheter eller apper med begrenset hastighet.\n\nFull tjeneste krever et betalt abonnement og inkluderer alle operasjonene dine synkronisert mellom et rimelig antall enheter eller apper med full hastighet.\n\nMens LoFi-tjenesten er i sin TESTPERIODE de neste månedene, vil tjenesten forbli gratis. Etter det vil prisene avhenge av landet og valutaen, men bør ikke være mer enn 30 USD/år eller tilsvarende, og sannsynligvis mindre.",
+      "syncServiceDescription-md": "Basistjenesten er gratis, men den er begrenset til to enheter eller apper med redusert hastighet for å unngå å overbelaste serverne.\n\nFull tjeneste krever et betalt abonnement og inkluderer synkronisering av alle operasjonene dine mellom et rimelig antall enheter eller apper med full hastighet.\n\n",
       "thisDevice": "Denne enheten",
       "notAuthenticated": "Ikke autentisert",
       "lofiServer": "LoFi-server",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Operasjoner: {{total}} totalt",
-        "operationsSyncable": "Operasjoner: {{total}} lagret, {{syncable}} synkroniserbar",
-        "qsos": "QSOer: {{total}} lagret",
-        "qsosSyncable": "QSOer: {{total}} lagret, {{syncable}} synkroniserbar"
+        "qsos": "QSOer: {{total}} lagret"
       }
     },
     "versionSettings": {
@@ -719,7 +719,8 @@
       "defaultTemplates": "Standardmaler",
       "customTemplatesDescription": "Bruk tilpassede maler for eksporten",
       "defaultTemplatesDescription": "Bruk standardmaler for eksporten",
-      "includePrivateData": "Inkluder personlig informasjon",
+      "includePrivateData": "Inkluder private data",
+      "ignoreLookupData": "Ignorer oppslagsdata",
       "fileNameTemplate": "Filnavnsmal",
       "titleTemplate": "Tittelmal",
       "adifNotes": "ADIF QSO-notater",
@@ -727,6 +728,7 @@
       "adifQslMessage": "ADIF QSL-melding",
       "templateHelpTitle": "Malhjelp",
       "includePrivateDataDescription": "Navn, notater, adresser, osv.",
+      "ignoreLookupDataDescription": "Ignorer data fra oppslagstjenester som QRZ.com",
       "templateHelp-md": "Noen eksempelmalelementer...\n\n### Loggeksport\nAttributter for loggen som eksporteres\n`{{log.station}}` → `{{call}}` Stasjon for denne eksporten\n`{{log.ref}}` → `XX-1234` Referanse for denne eksporten\n`{{log.refName}}` → `Example National Park` Referansenavn for denne eksporten\n`{{log.refShortName}}` → `Example NP` Kort referansenavn for denne eksporten\n`{{log.handlerType}}` → `pota` Håndterertype for denne eksporten\n`{{log.handlerName}}` → `Parks On The Air` Håndterernavn for denne eksporten\n`{{log.handlerShortName}}` → `POTA` Kort håndterernavn for denne eksporten\n\n### Operasjonskallesignaler\n`{{op.station}}` → `{{call}}` Første stasjon for operasjonen\n`{{op.operator}}` → `{{call}}` Operatør for operasjonen\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stasjoner for operasjonen\n`{{op.otherStations}}` → `{{otherCalls}}` Andre stasjoner for operasjonen\n\n### Operasjonsdato\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andre operasjonsdetaljer\n`{{op.title}}` → `på XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Min spesielle operasjon`\n`{{op.userNotes}}` → `Gikk tidlig om morgenen…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Rutenett for denne operasjonen\n\n### QSO-informasjon\n`{{qso.notes}}` → `Forferdelig lyd!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Signalrapporten de sendte\n`{{qso.our.sent}}` → `55` Signalrapporten vi sendte\n`{{qso.their.grid}}` → `FF99` Rutenettet de rapporterte\n`{{qso.refs}}` → En liste over alle referansene for QSOen (inkluderer både operasjonsreferanser og QSO-spesifikke referanser)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Standardinnstillinger",

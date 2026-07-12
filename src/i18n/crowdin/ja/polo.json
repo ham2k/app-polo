@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "重複",
         "invalidBand": "無効なバンド",
+        "ourGrid": "自局の位置情報がありません",
         "newBand": "新しいバンド",
         "newMode": "新しいモード",
         "newRef": "新しいリファレンス",
         "newMult": "新しいマルチ",
         "newDay": "新しい日",
+        "newGrid": "新しいグリッド",
+        "newLocation": "新しい運用地",
         "maybeDupe": "重複？",
         "partialDupe": "重複",
         "potaActivation-newDay": "新しいPOTAの日",
@@ -561,17 +564,16 @@
         "changeEmailText": "このアカウントのリカバリメールを変更する：",
         "setEmailText": "アカウント用のメールを設定してください。識別および後での回復を容易にするために使用できます。",
         "emailAddressLabel": "メールアドレス",
-        "linkWithOtherButton": "または…既存のアカウントに接続",
+        "linkWithOtherButton": "別のアカウントを使用",
         "linkAccountText": "既存のアカウントに接続：",
-        "keepExistingAccountButton": "または…既存のアカウントを保持する",
         "pendingEmailTextPre": "メールが送信されました",
         "pendingEmailTextPost": "指示に従ってください。",
         "confirmLink-md": "**{{email}}**ですでにリンクされているデバイスでアプリを開き、次のコードを入力してこのリクエストを確認してください：",
         "confirmLinkPost-md": "このアカウントにリンクされた他のデバイスにアクセスできない場合は、次の操作を行います：",
         "accountNotFound": "アカウントが見つかりません。",
-        "connectViaEmailButton": "または…メールで接続する",
+        "connectViaEmailButton": "メールで接続",
         "linkViaQRAccountText": "存在するHam2K LoFiアカウントのあるデバイスからこのQRコードをスキャンしてください",
-        "linkViaQRButton": "または…QRコードで接続する",
+        "linkViaQRButton": "QRコードで接続",
         "confirmViaEmailButton": "メールで確認",
         "changeAccountButton": "アカウントを変更",
         "resendButton": "再度メールを送信",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "データ損失の可能性があります!!!",
         "potentialForDataLossDescription": "このデバイスのデータは全て同期されていません。\n\nこのデバイスを新しいアカウントにリンクすると、そのデータを新しいアカウントのデータに置き換えるか尋ねられます。\n\nこれが事実であれば、まだ同期されていない既存のアクティビティを復元できない可能性があります。\n\nまず、このデバイスの同期を完了されることをお勧めします！"
       },
-      "syncServiceDescription-md": "基本のサービスは無料で、2台のデバイスまたはアプリ間で最近のデータ（最大7日間）を制限された速度で同期できます。\n\n完全なサービスには有料サブスクリプションが必要で、任意のリーズナブルな数のデバイスまたはアプリ間で全速度でオペレーションを同期できます。\n\nLoFiサービスは今後数か月間のテスト期間中、サービスは無料のままです。その後、年間30米ドルかそれ以下の料金が発生する見込みです。ただし料金は国と通貨によって異なります。",
+      "syncServiceDescription-md": "基本サービスは無料ですが、サーバーへの過負荷を避けるため、低速で2台までのデバイスまたはアプリに制限されています。\n\nフルサービスには有料サブスクリプションが必要で、常識的な範囲内の台数のデバイスまたはアプリ間で、すべてのオペレーションをフルスピードで同期できます。\n\n",
       "thisDevice": "このデバイス",
       "notAuthenticated": "認証されていません",
       "lofiServer": "LoFiサーバー",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "オペレーション: 合計{{total}}件",
-        "operationsSyncable": "オペレーション: {{total}}件が保存済み、{{syncable}}件が同期可能",
-        "qsos": "QSO: {{total}}件が保存済み",
-        "qsosSyncable": "QSO: {{total}}件が保存済み、{{syncable}}件が同期可能"
+        "qsos": "QSO: {{total}}件が保存済み"
       }
     },
     "versionSettings": {
@@ -720,6 +720,7 @@
       "customTemplatesDescription": "エクスポートにカスタムテンプレートを使用",
       "defaultTemplatesDescription": "エクスポートにデフォルトテンプレートを使用",
       "includePrivateData": "プライベートデータを含める",
+      "ignoreLookupData": "検索データを無視",
       "fileNameTemplate": "ファイル名テンプレート",
       "titleTemplate": "タイトルテンプレート",
       "adifNotes": "ADIF QSOノート",
@@ -727,6 +728,7 @@
       "adifQslMessage": "ADIF QSLメッセージ",
       "templateHelpTitle": "テンプレートのヘルプ",
       "includePrivateDataDescription": "名前、メモ、アドレスなど。",
+      "ignoreLookupDataDescription": "QRZ.com などの検索サービスからのデータを無視",
       "templateHelp-md": "いくつかのサンプルテンプレート要素...\n\n### ログエクスポート\nエクスポートされるログの属性\n`{{log.station}}` → `{{call}}` このエクスポートの局\n`{{log.ref}}` → `XX-1234` このエクスポートの参照\n`{{log.refName}}` → `Example National Park` このエクスポートの参照名\n`{{log.refShortName}}` → `Example NP` このエクスポートの短い参照名\n`{{log.handlerType}}` → `pota` このエクスポートのハンドラータイプ\n`{{log.handlerName}}` → `Parks On The Air` このエクスポートのハンドラー名\n`{{log.handlerShortName}}` → `POTA` このエクスポートの短いハンドラー名\n\n### オペレーションコールサイン\n`{{op.station}}` → `{{call}}` オペレーションの最初の局\n`{{op.operator}}` → `{{call}}` オペレーションのオペレーター\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` オペレーションのすべての局\n`{{op.otherStations}}` → `{{otherCalls}}` オペレーションの他の局\n\n### オペレーション日付\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### その他のオペレーション詳細\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `My Special Operation`\n`{{op.userNotes}}` → `Went early in the morning…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` このオペレーションのグリッド\n\n### QSO情報\n`{{qso.notes}}` → `Terrible audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 彼らが送信した信号レポート\n`{{qso.our.sent}}` → `55` 私たちが送信した信号レポート\n`{{qso.their.grid}}` → `FF99` 彼らが報告したグリッド\n`{{qso.refs}}` → QSOのすべての参照のリスト（オペレーション参照とQSO専用参照の両方を含む）\n`{{first8 qso.uuid}}` → `123e4567`",
       "default": {
         "name": "既定値",

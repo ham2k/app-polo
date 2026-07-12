@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Çift",
         "invalidBand": "Geçersiz Bant",
+        "ourGrid": "Konumumuz eksik",
         "newBand": "Yeni Bant",
         "newMode": "Yeni Mod",
         "newRef": "Yeni Referans",
         "newMult": "Yeni Mult",
         "newDay": "Yeni Gün",
+        "newGrid": "Yeni Grid",
+        "newLocation": "Yeni Konum",
         "maybeDupe": "Çift?",
         "partialDupe": "Çift",
         "potaActivation-newDay": "Yeni POTA Günü",
@@ -561,17 +564,16 @@
         "changeEmailText": "Bu hesap için kurtarma e-postasını değiştirin:",
         "setEmailText": "Hesabınız için bir e-posta ayarlayın. Bu, hesabınızı tanımlamak ve daha sonra kolayca kurtarabilmek için kullanılabilir.",
         "emailAddressLabel": "E-mail Adresi",
-        "linkWithOtherButton": "Veya bir mevcut hesapla bağlan",
+        "linkWithOtherButton": "Başka bir hesap kullan",
         "linkAccountText": "Mevcut bir hesapla bağlan:",
-        "keepExistingAccountButton": "Veya mevcut hesabı sakla",
         "pendingEmailTextPre": "E-posta gönderildi",
         "pendingEmailTextPost": "Lütfen bulup talimatları takip edin.",
         "confirmLink-md": "**{{email}}** ile zaten bağlı bir cihazda uygulamayı açın ve aşağıdaki kodu girerek bu isteği onaylayın:",
         "confirmLinkPost-md": "Bu hesaba bağlı başka bir cihaza erişiminiz yoksa şunları yapabilirsiniz:",
         "accountNotFound": "Hesap bulunamadı.",
-        "connectViaEmailButton": "Veya… e-posta ile bağlan",
+        "connectViaEmailButton": "E-posta ile bağlan",
         "linkViaQRAccountText": "Bu QR kodunu mevcut bir Ham2K LoFi Hesabına sahip cihazdan tarayın",
-        "linkViaQRButton": "Veya… QR kodu ile bağlan",
+        "linkViaQRButton": "QR kodu ile bağlan",
         "confirmViaEmailButton": "E-posta ile onayla",
         "changeAccountButton": "Hesabı Değiştir",
         "resendButton": "E-postayı tekrar gönder",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Veri kaybı olasılığı!!!",
         "potentialForDataLossDescription": "Bu cihazdaki tüm verileri senkronize etmediniz.\n\nBu cihazı yeni bir hesaba bağlarsanız, cihazın verilerini yeni hesaptan gelenlerle değiştirmek isteyip istemediğiniz sorulacak.\n\nBu durumda, henüz senkronize edilmemiş mevcut etkinlikleri geri yükleyemeyebilirsiniz.\n\nÖncelikle bu cihazın senkronizasyonunu tamamlamanızı öneririz!"
       },
-      "syncServiceDescription-md": "Temel hizmet ücretsizdir ve sınırlı hızda iki cihaz veya uygulama arasında son verilerinizi (7 güne kadar) senkronize etmenize olanak tanır.\n\nTam hizmet, makul bir sayıda cihaz veya uygulama arasında tüm operasyonlarınızı tam hızda eşitlemenizi sağlar ve ücretli bir abonelik gerektirir.\n\nLoFi hizmeti önümüzdeki birkaç ay boyunca TEST DÖNEMİNDE olduğundan, hizmet ücretsiz kalacaktır. Ardından, fiyatlar ülkeye ve para birimine bağlı olarak yıllık maksimum US$30 veya eşdeğer olacaktır, muhtemelen daha düşük.",
+      "syncServiceDescription-md": "Temel hizmet ücretsizdir, ancak sunucuların aşırı yüklenmesini önlemek için düşük hızlarda iki cihaz veya uygulama ile sınırlıdır.\n\nTam hizmet ücretli abonelik gerektirir ve tüm operasyonlarınızın makul sayıdaki herhangi bir cihaz veya uygulama arasında tam hızda senkronize edilmesini içerir.\n\n",
       "thisDevice": "Bu Cihaz",
       "notAuthenticated": "Kimlik doğrulaması yapılmamış",
       "lofiServer": "LoFi Sunucusu",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Operasyonlar: {{total}} toplam",
-        "operationsSyncable": "Operasyonlar: {{total}} depolandı, {{syncable}} eşitlenebilir",
-        "qsos": "QSO'lar: {{total}} depolandı",
-        "qsosSyncable": "QSO'lar: {{total}} depolandı, {{syncable}} eşitlenebilir"
+        "qsos": "QSO'lar: {{total}} depolandı"
       }
     },
     "versionSettings": {
@@ -719,7 +719,8 @@
       "defaultTemplates": "Varsayılan şablonlar",
       "customTemplatesDescription": "Dışa aktarım için özel şablonlar kullan",
       "defaultTemplatesDescription": "Dışa aktarım için varsayılan şablonlar kullan",
-      "includePrivateData": "Özel Verileri Dahil Et",
+      "includePrivateData": "Özel verileri dahil et",
+      "ignoreLookupData": "Sorgulama verilerini yok say",
       "fileNameTemplate": "Dosya adı şablonu",
       "titleTemplate": "Başlık şablonu",
       "adifNotes": "ADIF QSO Notları",
@@ -727,6 +728,7 @@
       "adifQslMessage": "ADIF QSL Mesajı",
       "templateHelpTitle": "Şablon Yardımı",
       "includePrivateDataDescription": "İsimler, notlar, adresler, vb.",
+      "ignoreLookupDataDescription": "QRZ.com gibi sorgulama hizmetlerinden gelen verileri yok say",
       "templateHelp-md": "Bazı örnek şablon öğeleri…\n\n### Günlük Dışa Aktar\nDışa aktarılan günlüğün öznitelikleri\n`{{log.station}}` → `{{call}}` Bu dışa aktarma için istasyon\n`{{log.ref}}` → `XX-1234` Bu dışa aktarma için referans\n`{{log.refName}}` → `Örnek Ulusal Park` Bu dışa aktarma için referans adı\n`{{log.refShortName}}` → `Örnek UP` Bu dışa aktarma için kısa referans adı\n`{{log.handlerType}}` → `pota` Bu dışa aktarma için işleyici türü\n`{{log.handlerName}}` → `Parks On The Air` Bu dışa aktarma için işleyici adı\n`{{log.handlerShortName}}` → `POTA` Bu dışa aktarma için kısa işleyici adı\n\n### Operasyon Çağrı Kodları\n`{{op.station}}` → `{{call}}` Operasyon için ilk istasyon\n`{{op.operator}}` → `{{call}}` Operasyon için operatör\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Operasyon için tüm istasyonlar\n`{{op.otherStations}}` → `{{otherCalls}}` Operasyon için diğer istasyonlar\n\n### Operasyon Tarihi\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Diğer Operasyon Ayrıntıları\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Benim Özel Operasyonum`\n`{{op.userNotes}}` → `Sabah erken gittim…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Bu operasyon için grid\n\n### QSO Bilgileri\n`{{qso.notes}}` → `Korkunç ses!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Gönderdikleri sinyal raporu\n`{{qso.our.sent}}` → `55` Gönderdiğimiz sinyal raporu\n`{{qso.their.grid}}` → `FF99` Bildirdikleri grid\n`{{qso.refs}}` → QSO için tüm referansların bir listesi (hem Operasyon referanslarını hem de yalnızca QSO referanslarını içerir)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Varsayılanlar",

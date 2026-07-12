@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Duplicita",
         "invalidBand": "Neplatné pásmo",
+        "ourGrid": "Chybí naše poloha",
         "newBand": "Nové pásmo",
         "newMode": "Nový mód",
         "newRef": "Nová reference",
         "newMult": "Nový multiplikátor",
         "newDay": "Nový den",
+        "newGrid": "Nový lokátor",
+        "newLocation": "Nová poloha",
         "maybeDupe": "Duplicita?",
         "partialDupe": "Duplicita",
         "potaActivation-newDay": "Nový POTA Den",
@@ -561,17 +564,16 @@
         "changeEmailText": "Změnit obnovovací e-mail pro tento účet:",
         "setEmailText": "Nastavte e-mail pro svůj účet. Může být použit pro jeho identifikaci a usnadní jeho obnovení později.",
         "emailAddressLabel": "E-mailová adresa",
-        "linkWithOtherButton": "Nebo… připojit se s existujícím účtem",
+        "linkWithOtherButton": "Použít jiný účet",
         "linkAccountText": "Připojit se s existujícím účtem:",
-        "keepExistingAccountButton": "Nebo… ponechat stávající účet",
         "pendingEmailTextPre": "E-mail byl odeslán na",
         "pendingEmailTextPost": "Prosím, zkontrolujte jej a postupujte podle pokynů.",
         "confirmLink-md": "Otevřete aplikaci na zařízení, které již je propojeno s **{{email}}**, a potvrďte tuto žádost zadáním následujícího kódu:",
         "confirmLinkPost-md": "Pokud nemáte přístup k jinému zařízení propojenému s tímto účtem, můžete:",
         "accountNotFound": "Účet nenalezen.",
-        "connectViaEmailButton": "Nebo... připojte se přes e-mail",
+        "connectViaEmailButton": "Připojit přes e-mail",
         "linkViaQRAccountText": "Naskenujte tento QR kód z zařízení s existujícím účtem Ham2K LoFi",
-        "linkViaQRButton": "Nebo... připojte se přes QR kód",
+        "linkViaQRButton": "Připojit přes QR kód",
         "confirmViaEmailButton": "Potvrdit prostřednictvím e-mailu",
         "changeAccountButton": "Změnit účet",
         "resendButton": "Znovu odeslat e-mail",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Možná ztráta dat!!!",
         "potentialForDataLossDescription": "Ne všechny údaje na tomto zařízení byly synchronizovány.\n\nPokud připojíš toto zařízení k novému účtu, budeš dotázán, zda chceš nahradit jeho data těmi z nového účtu.\n\nV tom případě nebude pravděpodobně možné obnovit žádné existující aktivity, které ještě nebyly synchronizovány.\n\nDoporučujeme nejdříve dokončit synchronizaci tohoto zařízení!"
       },
-      "syncServiceDescription-md": "Základní služba je zdarma a umožňuje synchronizaci posledních dat (až 7 dní) mezi dvěma zařízeními nebo aplikacemi s omezenou rychlostí.\n\nPlná služba vyžaduje placené předplatné a zahrnuje všechny vaše operace synchronizované mezi rozumným počtem zařízení nebo aplikací s plnou rychlostí.\n\nBěhem zkušební doby služby LoFi po příštích několik měsíců zůstane služba zdarma. Po tom ceny budou záviset na zemi a měně, ale neměly by překročit ekvivalent 30 dolarů za rok a pravděpodobně méně.",
+      "syncServiceDescription-md": "Základní služba je zdarma, ale je omezena na dvě zařízení nebo aplikace při snížené rychlosti, aby nedocházelo k přetížení serverů.\n\nPlná služba vyžaduje placené předplatné a zahrnuje synchronizaci všech vašich aktivit mezi libovolným rozumným počtem zařízení nebo aplikací plnou rychlostí.\n\n",
       "thisDevice": "Toto zařízení",
       "notAuthenticated": "Nepřihlášeno",
       "lofiServer": "Server LoFi",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Aktivity: {{total}} celkem",
-        "operationsSyncable": "Aktivita: {{total}} uloženo, {{syncable}} synchronizovatelné",
-        "qsos": "QSO: {{total}} uloženo",
-        "qsosSyncable": "QSO: {{total}} uloženo, {{syncable}} synchronizovatelné"
+        "qsos": "QSO: {{total}} uloženo"
       }
     },
     "versionSettings": {
@@ -720,6 +720,7 @@
       "customTemplatesDescription": "Použijte vlastní šablony pro export",
       "defaultTemplatesDescription": "Použijte výchozí šablony pro export",
       "includePrivateData": "Zahrnout soukromá data",
+      "ignoreLookupData": "Ignorovat data z vyhledávání",
       "fileNameTemplate": "Název souboru šablony",
       "titleTemplate": "Název šablony",
       "adifNotes": "ADIF QSO poznámky",
@@ -727,6 +728,7 @@
       "adifQslMessage": "ADIF QSL zpráva",
       "templateHelpTitle": "Nápověda k šablonám",
       "includePrivateDataDescription": "Jména, poznámky, adresy atd.",
+      "ignoreLookupDataDescription": "Ignorovat data ze služeb pro vyhledávání, jako je QRZ.com",
       "templateHelp-md": "Některé vzorové položky šablon…\n\n### Export logu\nAtributy pro exportovaný log\n`{{log.station}}` → `{{call}}` Stanice pro tento export\n`{{log.ref}}` → `XX-1234` Referenční číslo pro tento export\n`{{log.refName}}` → `Příklad Národní park` Název reference pro tento export\n`{{log.refShortName}}` → `Příklad NP` Krátký název reference pro tento export\n`{{log.handlerType}}` → `pota` Typ zpracovatele pro tento export\n`{{log.handlerName}}` → `Parks On The Air` Název zpracovatele pro tento export\n`{{log.handlerShortName}}` → `POTA` Krátký názvev zpracovatele pro tento export\n\n### Volací znaky operace\n`{{op.station}}` → `{{call}}` První stanice pro operaci\n`{{op.operator}}` → `{{call}}` Operátor pro operaci\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Všechny stanice pro operaci\n`{{op.otherStations}}` → `{{otherCalls}}` Ostatní stanice pro operaci\n\n### Datum Operace\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Další Podrobnosti Operace\n`{{op.title}}` → `u XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Moje speciální operace`\n`{{op.userNotes}}` → `Šli jsme brzy ráno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Lokátor pro tuto operaci\n\n### Informace o QSO\n`{{qso.notes}}` → `Hrozný zvuk!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Report prijatý\n`{{qso.our.sent}}` → `55` Report odeslaný\n`{{qso.their.grid}}` → `FF99` Lokátro protistanice\n`{{qso.refs}}` → Seznam všech referencí pro QSO (zahrnuje jak reference operace, tak pouze reference QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Výchozí",

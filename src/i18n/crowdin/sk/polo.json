@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Duplikát",
         "invalidBand": "Neplatné pásmo",
+        "ourGrid": "Chýba naša poloha",
         "newBand": "Nová pásmo",
         "newMode": "Nový mód",
         "newRef": "Nová referencia",
         "newMult": "Nový násobič",
         "newDay": "Nový deň",
+        "newGrid": "Nový lokátor",
+        "newLocation": "Nová poloha",
         "maybeDupe": "Duplikát?",
         "partialDupe": "Duplikát",
         "potaActivation-newDay": "Nový POTA deň",
@@ -561,17 +564,16 @@
         "changeEmailText": "Zmeniť obnovovací email pre tento účet:",
         "setEmailText": "Nastavte si email pre váš účet. Môže sa použiť na identifikáciu a zjednoduší sa tak neskoršie obnovenie.",
         "emailAddressLabel": "Emailová adresa",
-        "linkWithOtherButton": "Alebo… pripojte sa k existujúcemu účtu",
+        "linkWithOtherButton": "Použiť iný účet",
         "linkAccountText": "Pripojiť k existujúcemu účtu:",
-        "keepExistingAccountButton": "Alebo… ponechať existujúci účet",
         "pendingEmailTextPre": "Email bol odoslaný na",
         "pendingEmailTextPost": "Prosím, vyhľadajte ho a postupujte podľa pokynov.",
         "confirmLink-md": "Otvorte aplikáciu na zariadení, ktoré je už prepojené s **{{email}}** a potvrďte túto žiadosť zadaním nasledujúceho kódu:",
         "confirmLinkPost-md": "Ak nemáte prístup k inému zariadeniu prepojenému s týmto účtom, môžete:",
         "accountNotFound": "Účet nebol nájdený.",
-        "connectViaEmailButton": "Alebo... pripojte sa cez email",
+        "connectViaEmailButton": "Pripojiť cez e-mail",
         "linkViaQRAccountText": "Naskenujte tento QR kód zo zariadenia s existujúcim účtom Ham2K LoFi",
-        "linkViaQRButton": "Alebo... pripojte sa cez QR kód",
+        "linkViaQRButton": "Pripojiť cez QR kód",
         "confirmViaEmailButton": "Potvrdiť prostredníctvom emailovej adresy",
         "changeAccountButton": "Zmeniť účet",
         "resendButton": "Poslať email znovu",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Možnosť straty údajov!!!",
         "potentialForDataLossDescription": "Na tomto zariadení ste nesynchronizovali všetky údaje.\n\nAk toto zariadenie spojíte s novým účtom, bude sa vás pýtať, či chcete jeho údaje nahradiť údajmi z nového účtu.\n\nV takom prípade, možno nebudete môcť obnoviť žiadne existujúce aktivity, ktoré ešte neboli synchronizované.\n\nOdporúčame vám najprv dokončiť synchronizáciu tohto zariadenia!"
       },
-      "syncServiceDescription-md": "Základná služba je zdarma a umožňuje synchronizáciu najnovších údajov (až 7 dní) medzi dvoma zariadeniami alebo aplikáciami s obmedzenou rýchlosťou.\n\nPlná služba vyžaduje platené predplatné a zahŕňa všetky vaše operácie synchronizované medzi akýmkoľvek rozumným počtom zariadení alebo aplikácií s plnou rýchlosťou.\n\nPočas TESTOVACIEHO OBDOBIA služby LoFi v nasledujúcich niekoľkých mesiacoch zostane služba zadarmo. Potom ceny závisia od krajiny a meny, ale nemali by byť vyššie ako 30 USD/rok alebo ekvivalent, a pravdepodobne nižšie.",
+      "syncServiceDescription-md": "Základná služba je bezplatná, ale je obmedzená na dve zariadenia alebo aplikácie so zníženou rýchlosťou, aby nedochádzalo k preťaženiu serverov.\n\nPlná služba vyžaduje platené predplatné a zahŕňa synchronizáciu všetkých vašich operácií medzi primeraným počtom zariadení alebo aplikácií pri plnej rýchlosti.\n\n",
       "thisDevice": "Toto zariadenie",
       "notAuthenticated": "Neprihlásený",
       "lofiServer": "LoFi server",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Prevádzky: {{total}} celkom",
-        "operationsSyncable": "Prevádzky: {{total}} uložené, {{syncable}} synchronizovateľné",
-        "qsos": "QSOs: {{total}} uložené",
-        "qsosSyncable": "Spojenia: {{total}} uložené, {{syncable}} synchronizovateľné"
+        "qsos": "QSOs: {{total}} uložené"
       }
     },
     "versionSettings": {
@@ -720,6 +720,7 @@
       "customTemplatesDescription": "Použiť vlastné šablóny pre export",
       "defaultTemplatesDescription": "Použiť predvolené šablóny pre export",
       "includePrivateData": "Zahrnúť súkromné údaje",
+      "ignoreLookupData": "Ignorovať údaje z vyhľadávania",
       "fileNameTemplate": "Šablóna názvu súboru",
       "titleTemplate": "Šablóna Titulu",
       "adifNotes": "ADIF QSO poznámky",
@@ -727,6 +728,7 @@
       "adifQslMessage": "ADIF QSL správa",
       "templateHelpTitle": "Nápoveda k šablóne",
       "includePrivateDataDescription": "Mená, poznámky, adresy, atď.",
+      "ignoreLookupDataDescription": "Ignorovať údaje zo služieb vyhľadávania, ako je QRZ.com",
       "templateHelp-md": "Niektoré príklady prvkov šablóny…\n\n### Export denníku\nAtribúty exportovaného denníku\n`{{log.station}}` → `{{call}}` Stanica pre tento export\n`{{log.ref}}` → `XX-1234` Referencia pre tento export\n`{{log.refName}}` → `Príklad národného parku` Referenčné meno pre tento export\n`{{log.refShortName}}` → `Príklad NP` Krátky referenčný názov pre tento export\n`{{log.handlerType}}` → `pota` Typ obsluhy pre tento export\n`{{log.handlerName}}` → `Parks On The Air` Názov obsluhy pre tento export\n`{{log.handlerShortName}}` → `POTA` Krátky názov obsluhy pre tento export\n\n### Volacie znaky prevádzky\n`{{op.station}}` → `{{call}}` Prvá stanica pre prevádzku\n`{{op.operator}}` → `{{call}}` Operátor pre prevádzku\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Všetky stanice pre prevádzku\n`{{op.otherStations}}` → `{{otherCalls}}` Ostatné stanice pre prevádzku\n\n### Dátum prevádzky\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Ďalšie podrobnosti prevádzky\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Moja špeciálna prevádzka`\n`{{op.userNotes}}` → `Vyrazil som skoro ráno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Lokátor pre túto prevádzku\n\n### Informácie o QSO\n`{{qso.notes}}` → `Hrozný zvuk!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Report signálu, ktorý poslali oni\n`{{qso.our.sent}}` → `55` Správa o signále, ktorý sme poslali my\n`{{qso.their.grid}}` → `FF99` Lokátor, ktorý nahlásili oni\n`{{qso.refs}}` → Zoznam všetkých referencií pre QSO (zahŕňa referencie prevádzky aj referencie iba pre QSO)\n`{{first8 qso.uuid}}` → `123e4567`",
       "default": {
         "name": "Predvolené",

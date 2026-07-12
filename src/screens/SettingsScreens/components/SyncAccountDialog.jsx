@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Text } from 'react-native-paper'
+import { Divider, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 
@@ -380,7 +380,6 @@ export function SyncAccountDialog({ visible, settings, styles, syncHook, onDialo
             url,
             currentAccount: lofiData?.account?.uuid
           })
-          console.log('QR code link', url)
         }
       })
     }
@@ -428,12 +427,18 @@ export function SyncAccountDialog({ visible, settings, styles, syncHook, onDialo
                 Email {errors.pending_email.map(e => e?.error || e).join(', ')}
               </Text>
             )}
+
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
               <H2kButton style={{ flex: 0 }} onPress={handleRevertEmail} disabled={email === lofiData?.account?.email}>{t('general.buttons.revert', 'Revert')}</H2kButton>
               <H2kButton style={{ flex: 0 }} onPress={handleEmailSubmit} disabled={email === lofiData?.account?.email}>{t('general.buttons.apply', 'Apply')}</H2kButton>
             </View>
-            <H2kButton onPress={handleSwitchToLinkViaQR} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.linkWithOtherButton', 'Or… connect with an existing account')}</H2kButton>
-            <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
+          </H2kDialogContent>
+
+          <H2kDialogContent style={{ borderTopWidth: 1, borderTopColor: styles.colors.divider }}>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
+              <H2kButton onPress={handleSwitchToLinkViaQR} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.linkWithOtherButton', 'Use another account')}</H2kButton>
+              <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
+            </View>
           </H2kDialogContent>
         </>
       )}
@@ -465,11 +470,11 @@ export function SyncAccountDialog({ visible, settings, styles, syncHook, onDialo
           <H2kDialogContent>
             <View style={{ alignItems: 'center', marginBottom: styles.oneSpace }}>
               {qrCodeLinkInfo?.url ? (
-                <View style={{ backgroundColor: '#D0D0D0', padding: styles.oneSpace }}>
+                <View style={{ backgroundColor: '#FFFFFF', padding: styles.oneSpace }}>
                   <QRCode
                     value={qrCodeLinkInfo.url}
                     size={200}
-                    backgroundColor={'#D0D0D0'}
+                    backgroundColor={'#FFFFFF'}
                   />
                 </View>
               ) : (
@@ -481,9 +486,13 @@ export function SyncAccountDialog({ visible, settings, styles, syncHook, onDialo
             <Text variant="bodyMedium" style={{ textAlign: 'center', marginTop: styles.oneSpace }}>
               {t('screens.syncSettings.syncAccountDialog.linkViaQRAccountText', 'Scan this QR code from a device with an existing Ham2K LoFi Account')}
             </Text>
-            <H2kButton onPress={handleSwitchToLink} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.connectViaEmailButton', 'Or… connect via email')}</H2kButton>
-            <H2kButton onPress={handleSwitchToEmail} style={{ alignSelf: 'flex-end' }}>{t('screens.syncSettings.syncAccountDialog.keepExistingAccountButton', 'Or… keep existing account')}</H2kButton>
-            <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
+          </H2kDialogContent>
+
+          <H2kDialogContent style={{ borderTopWidth: 1, borderTopColor: styles.colors.divider }}>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
+              <H2kButton onPress={handleSwitchToLink} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.connectViaEmailButton', 'Connect via email')}</H2kButton>
+              <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+            </View>
           </H2kDialogContent>
         </>
       )}
@@ -511,9 +520,13 @@ export function SyncAccountDialog({ visible, settings, styles, syncHook, onDialo
             <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', gap: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
               <H2kButton style={{ flex: 0 }} onPress={handleLinkSubmit} disabled={!email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)}>{t('general.buttons.connect', 'Connect')}</H2kButton>
             </View>
-            <H2kButton onPress={handleSwitchToLinkViaQR} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.linkViaQRButton', 'Or… connect via QR code')}</H2kButton>
-            <H2kButton onPress={handleSwitchToEmail} style={{ alignSelf: 'flex-end' }}>{t('screens.syncSettings.syncAccountDialog.keepExistingAccountButton', 'Or… keep existing account')}</H2kButton>
-            <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.done', 'Done')}</H2kButton>
+            </H2kDialogContent>
+
+            <H2kDialogContent style={{ borderTopWidth: 1, borderTopColor: styles.colors.divider }}>
+              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace * 2, marginTop: styles.oneSpace * 2 }}>
+                <H2kButton onPress={handleSwitchToLinkViaQR} style={{ alignSelf: 'flex-end', marginTop: styles.oneSpace * 2 }}>{t('screens.syncSettings.syncAccountDialog.linkViaQRButton', 'Connect via QR code')}</H2kButton>
+                <H2kButton style={{ alignSelf: 'flex-end' }} onPress={handleDone}>{t('general.buttons.cancel', 'Cancel')}</H2kButton>
+              </View>
           </H2kDialogContent>
         </>
       )}

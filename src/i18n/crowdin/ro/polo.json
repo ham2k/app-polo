@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Duplicat",
         "invalidBand": "Bandă Invalidă",
+        "ourGrid": "Lipsește locația noastră",
         "newBand": "Bandă Nouă",
         "newMode": "Mod Nou",
         "newRef": "Referință Nouă",
         "newMult": "Nou Mult",
         "newDay": "Zi Nouă",
+        "newGrid": "Locator nou",
+        "newLocation": "Locație nouă",
         "maybeDupe": "Duplicat?",
         "partialDupe": "Duplicat",
         "potaActivation-newDay": "Zi Nouă POTA",
@@ -561,17 +564,16 @@
         "changeEmailText": "Schimbați email-ul de recuperare pentru acest cont:",
         "setEmailText": "Setați un email pentru contul dumneavoastră. Poate fi folosit pentru a-l identifica și pentru a facilita recuperarea ulterioară.",
         "emailAddressLabel": "Adresă de Email",
-        "linkWithOtherButton": "Sau... conectați-vă cu un cont existent",
+        "linkWithOtherButton": "Folosește alt cont",
         "linkAccountText": "Conectați-vă cu un cont existent:",
-        "keepExistingAccountButton": "Sau... păstrați contul existent",
         "pendingEmailTextPre": "Un email a fost trimis către",
         "pendingEmailTextPost": "Vă rugăm să îl căutați și să urmați instrucțiunile.",
         "confirmLink-md": "Deschideți aplicația pe un dispozitiv deja conectat cu **{{email}}** și confirmați această solicitare introducând codul următor:",
         "confirmLinkPost-md": "Dacă nu aveți acces la alt dispozitiv conectat cu acest cont, puteți:",
         "accountNotFound": "Contul nu a fost găsit.",
-        "connectViaEmailButton": "Sau... conectează-te prin email",
+        "connectViaEmailButton": "Conectare prin e-mail",
         "linkViaQRAccountText": "Scanează acest cod QR de pe un dispozitiv cu un Cont Ham2K LoFi existent",
-        "linkViaQRButton": "Sau... conectează-te prin cod QR",
+        "linkViaQRButton": "Conectare prin cod QR",
         "confirmViaEmailButton": "Confirmați prin email",
         "changeAccountButton": "Schimbați Contul",
         "resendButton": "Trimiteți emailul din nou",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Risc de pierdere a datelor!!!",
         "potentialForDataLossDescription": "Nu ați sincronizat toate datele de pe acest dispozitiv.\n\nDacă asociați acest dispozitiv cu un nou cont, vi se va cere dacă doriți să înlocuiți datele sale cu cele din noul cont.\n\nÎn acest caz, s-ar putea să nu puteți recupera nicio activitate existentă care nu a fost încă sincronizată.\n\nVă sugerăm să finalizați mai întâi sincronizarea acestui dispozitiv!"
       },
-      "syncServiceDescription-md": "Serviciul de bază este gratuit și vă permite să sincronizați datele recente (până la 7 zile) între două dispozitive sau aplicații la viteză limitată.\n\nServiciul complet necesită un abonament plătit și include toate operațiunile voastre sincronizate între un număr rezonabil de dispozitive sau aplicații la viteză maximă.\n\nÎn timp ce serviciul LoFi este în PERIOADA DE TESTARE pentru următoarele câteva luni, serviciul va rămâne gratuit. După aceea, prețurile vor depinde de țară și monedă, dar nu ar trebui să depășească 30 dolari americani/an sau echivalent, probabil mai puțin.",
+      "syncServiceDescription-md": "Serviciul de bază este gratuit, dar este limitat la două dispozitive sau aplicații, la viteze reduse, pentru a evita supraîncărcarea serverelor.\n\nServiciul complet necesită un abonament plătit și include sincronizarea tuturor operațiunilor tale între un număr rezonabil de dispozitive sau aplicații, la viteză maximă.\n\n",
       "thisDevice": "Acest Dispozitiv",
       "notAuthenticated": "Neautentificat",
       "lofiServer": "Server LoFi",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Operațiuni: {{total}} totale",
-        "operationsSyncable": "Operațiuni: {{total}} stocate, {{syncable}} sincronizabile",
-        "qsos": "QSOs: {{total}} stocate",
-        "qsosSyncable": "QSOs: {{total}} stocate, {{syncable}} sincronizabile"
+        "qsos": "QSOs: {{total}} stocate"
       }
     },
     "versionSettings": {
@@ -720,6 +720,7 @@
       "customTemplatesDescription": "Folosește șabloane personalizate pentru export",
       "defaultTemplatesDescription": "Folosește șabloane implicite pentru export",
       "includePrivateData": "Include date private",
+      "ignoreLookupData": "Ignoră datele de căutare",
       "fileNameTemplate": "Șablon nume fișier",
       "titleTemplate": "Șablon titlu",
       "adifNotes": "Notițe ADIF QSO",
@@ -727,6 +728,7 @@
       "adifQslMessage": "Mesaj QSL în ADIF",
       "templateHelpTitle": "Ajutor Șabloane",
       "includePrivateDataDescription": "Nume, note, adrese, etc.",
+      "ignoreLookupDataDescription": "Ignoră datele de la servicii de căutare precum QRZ.com",
       "templateHelp-md": "\u0006[Elemente de șablon exemplu...](#)\n\n### Exportare jurnal\nAtribute pentru jurnalul care se exportă\n`{{log.station}}` → `{{call}}` Stația pentru acest export\n`{{log.ref}}` → `XX-1234` Referință pentru acest export\n`{{log.refName}}` → `Parcul Național Exemplu` Numele referinței pentru acest export\n`{{log.refShortName}}` → `PN Exemplu` Nume scurt de referință pentru acest export\n`{{log.handlerType}}` → `pota` Tip handler pentru acest export\n`{{log.handlerName}}` → `Parcuri On The Air` Nume handler pentru acest export\n`{{log.handlerShortName}}` → `POTA` Nume scurt handler pentru acest export\n\n### Indicative operațiune\n`{{op.station}}` → `{{call}}` Prima stație pentru operațiune\n`{{op.operator}}` → `{{call}}` Operatorul pentru operațiune\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Toate stațiile pentru operațiune\n`{{op.otherStations}}` → `{{otherCalls}}` Alte stații pentru operațiune\n\n### Data operațiunei\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Alte Detalii Operaționale\n`{{op.title}}` → `la XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Operațiunea Mea Specială`\n`{{op.userNotes}}` → `Am plecat dimineața devreme...`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grila pentru această operațiune\n\n### Informații QSO\n`{{qso.notes}}` → `Audio îngrozitor!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Raportul de semnal primit de la ei\n`{{qso.our.sent}}` → `55` Raportul de semnal trimis de noi\n`{{qso.their.grid}}` → `FF99` Grila raportată de ei\n`{{qso.refs}}` → O listă cu toate referințele pentru QSO (includere referințe operaționale și doar QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Setări implicite",

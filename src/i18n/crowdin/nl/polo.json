@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Dupe",
         "invalidBand": "Ongeldige Band",
+        "ourGrid": "Onze locatie ontbreekt",
         "newBand": "Nieuwe Band",
         "newMode": "Nieuwe Modus",
         "newRef": "Nieuwe Referentie",
         "newMult": "Nieuwe Multiplier",
         "newDay": "Nieuwe Dag",
+        "newGrid": "Nieuw grid",
+        "newLocation": "Nieuwe locatie",
         "maybeDupe": "Dupe?",
         "partialDupe": "Dupe",
         "potaActivation-newDay": "Nieuwe POTA Dag",
@@ -561,17 +564,16 @@
         "changeEmailText": "Wijzig het herstel-e-mailadres voor dit account:",
         "setEmailText": "Stel een e-mail in voor uw account. Hiermee kunt u het identificeren en later gemakkelijker herstellen.",
         "emailAddressLabel": "E-mailadres",
-        "linkWithOtherButton": "Of… verbinden met een bestaand account",
+        "linkWithOtherButton": "Een ander account gebruiken",
         "linkAccountText": "Verbinden met een bestaand account:",
-        "keepExistingAccountButton": "Of… bestaand account behouden",
         "pendingEmailTextPre": "Er is een e-mail verzonden naar",
         "pendingEmailTextPost": "Zoek ernaar en volg de instructies.",
         "confirmLink-md": "Open de app op een apparaat dat al gekoppeld is met **{{email}}** en bevestig dit verzoek door de volgende code in te voeren:",
         "confirmLinkPost-md": "Als je geen toegang hebt tot een ander apparaat dat aan dit account is gekoppeld, kun je:",
         "accountNotFound": "Account niet gevonden.",
-        "connectViaEmailButton": "Of… verbind via e-mail",
+        "connectViaEmailButton": "Verbinden via e-mail",
         "linkViaQRAccountText": "Scan deze QR-code vanaf een apparaat met een bestaand Ham2K LoFi-account",
-        "linkViaQRButton": "Of… verbind via QR-code",
+        "linkViaQRButton": "Verbinden via QR-code",
         "confirmViaEmailButton": "Bevestig via e-mail",
         "changeAccountButton": "Account wijzigen",
         "resendButton": "E-mail opnieuw verzenden",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Opgepast voor gegevensverlies!!!",
         "potentialForDataLossDescription": "Je hebt niet alle gegevens op dit apparaat gesynchroniseerd.\n\nAls je dit apparaat aan een nieuw account koppelt, wordt je gevraagd of je de gegevens wilt vervangen met die van het nieuwe account.\n\nIn dat geval kun je mogelijk bestaande activaties die nog niet zijn gesynchroniseerd, niet terughalen.\n\nWe raden aan eerst de synchronisatie van dit apparaat te voltooien!"
       },
-      "syncServiceDescription-md": "De basisdienst is gratis en stelt je in staat om recente gegevens (tot 7 dagen) tussen twee apparaten of apps te synchroniseren met beperkte snelheid.\n\nVolledige dienst vereist een betaald abonnement en omvat dat al je activaties gesynchroniseerd worden tussen alle apparaten of apps en dat op volle snelheid.\n\nWanneer de LoFi-dienst in zijn TESTPERIODE blijft in de volgende maanden, dan blijft de dienst gratis. Daarna zijn de prijzen afhankelijk van het land en de valuta, maar zouden ze niet meer zijn dan US$30/jaar of equivalent, waarschijnlijk minder.",
+      "syncServiceDescription-md": "De basisservice is gratis, maar beperkt tot twee apparaten of apps met lagere snelheden om overbelasting van de servers te voorkomen.\n\nVoor de volledige service is een betaald abonnement vereist; hiermee worden al je activaties op volle snelheid gesynchroniseerd tussen elk redelijk aantal apparaten of apps.\n\n",
       "thisDevice": "Dit apparaat",
       "notAuthenticated": "Niet geauthentiseerd",
       "lofiServer": "LoFi Server",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Activaties: {{total}} totaal",
-        "operationsSyncable": "Activaties: {{total}} opgeslagen, {{syncable}} synchroniseerbaar",
-        "qsos": "QSO's: {{total}} opgeslagen",
-        "qsosSyncable": "QSO's: {{total}} opgeslagen, {{syncable}} synchroniseerbaar"
+        "qsos": "QSO's: {{total}} opgeslagen"
       }
     },
     "versionSettings": {
@@ -719,7 +719,8 @@
       "defaultTemplates": "Standaard sjablonen",
       "customTemplatesDescription": "Gebruik aangepaste sjablonen voor de export",
       "defaultTemplatesDescription": "Gebruik standaard sjablonen voor de export",
-      "includePrivateData": "Privégegevens Inbegrepen",
+      "includePrivateData": "Privégegevens opnemen",
+      "ignoreLookupData": "Opzoekgegevens negeren",
       "fileNameTemplate": "Bestandsnaam sjabloon",
       "titleTemplate": "Titel sjabloon",
       "adifNotes": "ADIF QSO Notities",
@@ -727,6 +728,7 @@
       "adifQslMessage": "ADIF QSL Bericht",
       "templateHelpTitle": "Sjabloon Hulp",
       "includePrivateDataDescription": "Namen, notities, adressen, etc.",
+      "ignoreLookupDataDescription": "Gegevens van opzoekdiensten zoals QRZ.com negeren",
       "templateHelp-md": "Enkele voorbeeldsjabloonelementen…\n\n### Log-export\nAttributen voor het logboek dat wordt geëxporteerd\n`{{log.station}}` → `{{call}}` Station voor deze export\n`{{log.ref}}` → `XX-1234` Referentie voor deze export\n`{{log.refName}}` → `Voorbeeld Nationaal Park` Referentienaam voor deze export\n`{{log.refShortName}}` → `Voorbeeld NP` Korte referentienaam voor deze export\n`{{log.handlerType}}` → `pota`type voor deze export\n`{{log.handlerName}}` → `Parks On The Air` Naam voor deze export\n`{{log.handlerShortName}}` → `POTA` Korte naam voor deze export\n\n### Operatieoproepnamen\n`{{op.station}}` → `{{call}}` Eerste station voor de activatie\n`{{op.operator}}` → `{{call}}` Operator voor de activatie\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stations voor de activatie\n`{{op.otherStations}}` → `{{otherCalls}}` Andere stations voor de activatie\n\n### Operatiedatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andere operatiedetails\n`{{op.title}}` → `bij XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mijn Speciale activatie`\n`{{op.userNotes}}` → `Gingen vroeg in de ochtend…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid voor deze activatie\n\n### QSO-informatie\n`{{qso.notes}}` → `Vreselijke audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Het signaalrapport dat ze hebben gestuurd\n`{{qso.our.sent}}` → `55` Het signaalrapport dat ik heb gestuurd\n`{{qso.their.grid}}` → `FF99` De Grid die zij hebben gerapporteerd\n`{{qso.refs}}` → Een lijst van alle referenties voor de QSO's (inclusief zowel activatie referenties als QSO-only referenties)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "\nStandaarden",

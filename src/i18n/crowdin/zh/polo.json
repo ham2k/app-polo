@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "重复",
         "invalidBand": "无效频段",
+        "ourGrid": "缺少我方位置",
         "newBand": "新频段",
         "newMode": "新模式",
         "newRef": "新参考",
         "newMult": "新倍数",
         "newDay": "新的一天",
+        "newGrid": "新网格",
+        "newLocation": "新位置",
         "maybeDupe": "重复？",
         "partialDupe": "重复",
         "potaActivation-newDay": "新的 POTA 日",
@@ -561,17 +564,16 @@
         "changeEmailText": "更改此帐户的恢复电子邮件：",
         "setEmailText": "为您的帐户设置一个电子邮件。它可以帮助识别和以后更容易恢复。",
         "emailAddressLabel": "电子邮件地址",
-        "linkWithOtherButton": "或者...连接现有帐户",
+        "linkWithOtherButton": "使用其他账户",
         "linkAccountText": "连接现有帐户：",
-        "keepExistingAccountButton": "或者...保留现有帐户",
         "pendingEmailTextPre": "已发送电子邮件至",
         "pendingEmailTextPost": "请查找并按照指示操作。",
         "confirmLink-md": "在已经与**{{email}}**连接的设备上打开应用程序，并输入以下代码以确认此请求：",
         "confirmLinkPost-md": "如果您无法访问链接到此帐户的其他设备，您可以：",
         "accountNotFound": "未找到帐户。",
-        "connectViaEmailButton": "或者…通过电子邮件连接",
+        "connectViaEmailButton": "通过电子邮件连接",
         "linkViaQRAccountText": "从具有现有 Ham2K LoFi 帐户的设备扫描此二维码",
-        "linkViaQRButton": "或者…通过二维码连接",
+        "linkViaQRButton": "通过二维码连接",
         "confirmViaEmailButton": "通过电子邮件确认",
         "changeAccountButton": "更换账户",
         "resendButton": "再次发送电子邮件",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "可能导致数据丢失！！！",
         "potentialForDataLossDescription": "您尚未同步此设备中的所有数据。\n\n如果您将此设备链接到新账户，系统会询问是否要用新账户的数据替换其数据。\n\n如果是这种情况，您可能无法恢复尚未同步的任何现有活动。\n\n建议您先完成设备同步！"
       },
-      "syncServiceDescription-md": "基础服务是免费的，允许您在两个设备或应用之间以有限的速度同步最近数据（最多7天）。\n\n完整的服务需要付费订阅，包括在任意合理数量的设备或应用上同步的所有操作。\n\n在接下来的几个月里，LoFi服务的测试期内该服务将保持免费。之后价格将取决于国家和货币，但不应超过每年30美元或等值金额，并且可能更低。",
+      "syncServiceDescription-md": "基础服务免费，但为避免服务器过载，仅限两台设备或应用使用，并且速度会降低。\n\n完整服务需要付费订阅，包括在任意合理数量的设备或应用之间全速同步您的所有操作。\n\n",
       "thisDevice": "此设备",
       "notAuthenticated": "未认证",
       "lofiServer": "LoFi服务器",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "操作：总共{{total}}",
-        "operationsSyncable": "操作：{{total}}已存储，{{syncable}}可同步",
-        "qsos": "QSOs：{{total}}已存储",
-        "qsosSyncable": "QSOs：{{total}}已存储，{{syncable}}可同步"
+        "qsos": "QSOs：{{total}}已存储"
       }
     },
     "versionSettings": {
@@ -719,7 +719,8 @@
       "defaultTemplates": "默认模版",
       "customTemplatesDescription": "导出使用自定义模版",
       "defaultTemplatesDescription": "导出使用默认模版",
-      "includePrivateData": "包含私人数据",
+      "includePrivateData": "包含私密数据",
+      "ignoreLookupData": "忽略查询数据",
       "fileNameTemplate": "文件名模版",
       "titleTemplate": "标题模版",
       "adifNotes": "ADIF QSO 备注",
@@ -727,6 +728,7 @@
       "adifQslMessage": "ADIF QSL 消息",
       "templateHelpTitle": "模版帮助",
       "includePrivateDataDescription": "姓名、备注、地址等。",
+      "ignoreLookupDataDescription": "忽略来自 QRZ.com 等查询服务的数据",
       "templateHelp-md": "一些示例模板元素…\n\n### 日志导出\n导出日志的属性\n`{{log.station}}` → `{{call}}` 此导出的站点\n`{{log.ref}}` → `XX-1234` 此导出的参考\n`{{log.refName}}` → `示例国家公园` 此导出的参考名称\n`{{log.refShortName}}` → `示例 NP` 此导出的参考简称\n`{{log.handlerType}}` → `pota` 此导出的处理程序类型\n`{{log.handlerName}}` → `空中公园` 此导出的处理程序名称\n`{{log.handlerShortName}}` → `POTA` 此导出的处理程序简称\n\n### 操作呼号\n`{{op.station}}` → `{{call}}` 操作的首个站点\n`{{op.operator}}` → `{{call}}` 操作的操作者\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` 操作的所有站点\n`{{op.otherStations}}` → `{{otherCalls}}` 操作的其他站点\n\n### 操作日期\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### 其他操作详情\n`{{op.title}}` → `在 XX-1234，XXFF-0001`\n`{{op.userTitle}}` → `我的特别活动`\n`{{op.userNotes}}` → `早上早来…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` 此操作的网格\n\n### QSO 信息\n`{{qso.notes}}` → `糟糕的音频！`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 他们发送的信号报告\n`{{qso.our.sent}}` → `55` 我们发送的信号报告\n`{{qso.their.grid}}` → `FF99` 他们报告的网格\n`{{qso.refs}}` → 所有 QSO 的参考列表（包括操作参考和仅 QSO 参考）\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "默认",

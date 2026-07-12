@@ -120,11 +120,14 @@
       "messages": {
         "duplicate": "Duplicado",
         "invalidBand": "Banda Inválida",
+        "ourGrid": "Falta a nossa localização",
         "newBand": "Nova Banda",
         "newMode": "Novo Modo",
         "newRef": "Nova Referência",
         "newMult": "Novo Mult",
         "newDay": "Novo Dia",
+        "newGrid": "Novo Grid",
+        "newLocation": "Nova Localização",
         "maybeDupe": "Duplicado?",
         "partialDupe": "Duplicado",
         "potaActivation-newDay": "Novo Dia POTA",
@@ -561,17 +564,16 @@
         "changeEmailText": "Alterar o email de recuperação para esta conta:",
         "setEmailText": "Defina um email para a conta. Pode ser usado para identificar e facilitar a recuperação posteriormente.",
         "emailAddressLabel": "Endereço de Email",
-        "linkWithOtherButton": "Ou... ligar com uma conta existente",
+        "linkWithOtherButton": "Usar outra conta",
         "linkAccountText": "Ligar com uma conta existente:",
-        "keepExistingAccountButton": "Ou... manter a conta existente",
         "pendingEmailTextPre": "Um email foi enviado para",
         "pendingEmailTextPost": "Por favor, procure-o e siga as instruções.",
         "confirmLink-md": "Abre a app num dispositivo já vinculado com **{{email}}** e confirma este pedido digitando o seguinte código:",
         "confirmLinkPost-md": "Se não tiver acesso a outro dispositivo vinculado a esta conta, pode:",
         "accountNotFound": "Conta não encontrada.",
-        "connectViaEmailButton": "Ou... conecte-se via email",
+        "connectViaEmailButton": "Conectar via email",
         "linkViaQRAccountText": "Use este código QR num dispositivo com uma conta Ham2K LoFi existente",
-        "linkViaQRButton": "Ou... conectar via código QR",
+        "linkViaQRButton": "Conectar via código QR",
         "confirmViaEmailButton": "Confirmar via email",
         "changeAccountButton": "Alterar Conta",
         "resendButton": "Enviar email novamente",
@@ -581,7 +583,7 @@
         "potentialForDataLoss": "Potencial para perda de dados!!!",
         "potentialForDataLossDescription": "Não sincronizou todos os dados neste dispositivo.\n\nSe vincular este dispositivo a uma nova conta, será perguntado se deseja substituir seus dados pelos da nova conta.\n\nNesse caso, talvez não consiga recuperar nenhuma atividade existente que ainda não foi sincronizada.\n\nSugerimos que complete a sincronização deste dispositivo primeiro!"
       },
-      "syncServiceDescription-md": "O serviço básico é gratuito e permite que sincronize dados recentes (até 7 dias) entre dois dispositivos ou apps a velocidade limitada.\n\nO serviço completo requer uma subscrição paga e inclui todas as suas operações sincronizadas entre qualquer número razoável de dispositivos ou apps em velocidade total.\n\nEnquanto o serviço LoFi estiver em seu PERÍODO DE TESTES pelos próximos meses, o serviço permanecerá gratuito. Depois disso, os preços dependerão do país e da moeda, mas não devem ser superiores a US$ 30/ano ou equivalente, e provavelmente serão menores.",
+      "syncServiceDescription-md": "O serviço básico é gratuito, mas é limitado a dois dispositivos ou apps com velocidades reduzidas para evitar sobrecarregar os servidores.\n\nO serviço completo requer uma assinatura paga e inclui todas as suas operações sincronizadas entre qualquer número razoável de dispositivos ou apps em velocidade total.\n\n",
       "thisDevice": "Este Dispositivo",
       "notAuthenticated": "Não autenticado",
       "lofiServer": "Servidor LoFi",
@@ -595,9 +597,7 @@
       },
       "cloudCountDescription": {
         "operations": "Operações: {{total}} total",
-        "operationsSyncable": "Operações: {{total}} armazenadas, {{syncable}} sincronizáveis",
-        "qsos": "QSOs: {{total}} armazenados",
-        "qsosSyncable": "QSOs: {{total}} armazenados, {{syncable}} sincronizáveis"
+        "qsos": "QSOs: {{total}} armazenados"
       }
     },
     "versionSettings": {
@@ -720,6 +720,7 @@
       "customTemplatesDescription": "Usar modelos personalizados para a exportação",
       "defaultTemplatesDescription": "Usar modelos padrão para a exportação",
       "includePrivateData": "Incluir dados privados",
+      "ignoreLookupData": "Ignorar dados de consulta",
       "fileNameTemplate": "Modelo de nome de ficheiro",
       "titleTemplate": "Modelo de título",
       "adifNotes": "Notas de ADIF QSO",
@@ -727,6 +728,7 @@
       "adifQslMessage": "Mensagem de QSL ADIF",
       "templateHelpTitle": "Ajuda de Modelos",
       "includePrivateDataDescription": "Nomes, notas, endereços, etc.",
+      "ignoreLookupDataDescription": "Ignorar dados de serviços de consulta como QRZ.com",
       "templateHelp-md": "Alguns elementos de modelo de exemplo…\n\n### Exportação de Registo\nAtributos para o registo a ser exportado\n`{{log.station}}` → `{{call}}` Estação para esta exportação\n`{{log.ref}}` → `XX-1234` Referência para esta exportação\n`{{log.refName}}` → `Parque Nacional Exemplo` Nome de referência para esta exportação\n`{{log.refShortName}}` → `Exemplo NP` Nome curto de referência para esta exportação\n`{{log.handlerType}}` → `pota` Tipo de manipulador para esta exportação\n`{{log.handlerName}}` → `Parques no Ar` Nome do manipulador para esta exportação\n`{{log.handlerShortName}}` → `POTA` Nome curto do manipulador para esta exportação\n\n### Callsigns de Operação\n`{{op.station}}` → `{{call}}` Primeira estação para a operação\n`{{op.operator}}` → `{{call}}` Operador para a operação\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Todas as estações para a operação\n`{{op.otherStations}}` → `{{otherCalls}}` Outras estações para a operação\n\n### Data de Operação\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Outros Detalhes da Operação\n`{{op.title}}` → `em XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Minha Operação Especial`\n`{{op.userNotes}}` → `Fui cedo pela manhã…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grade para esta operação\n\n### Informações de QSO\n`{{qso.notes}}` → `Áudio terrível!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Relatório de sinal que eles enviaram\n`{{qso.our.sent}}` → `55` Relatório de sinal que enviamos\n`{{qso.their.grid}}` → `FF99` Grade que eles relataram\n`{{qso.refs}}` → Uma lista de todas as referências para o QSO (inclui tanto as referências de Operação quanto as referências exclusivas de QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Padrões",
