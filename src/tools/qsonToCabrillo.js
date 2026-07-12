@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { fmtCabrilloDate, fmtCabrilloTime } from '@ham2k/lib-format-tools'
-
 import { findRef } from '@ham2k/lib-qson-tools'
+
+import packageJson from '../../package.json'
 
 export function qsonToCabrillo ({ operation, qsos, settings, handler, combineSegmentRefs }) {
   const ref = findRef(operation, handler.key)
@@ -11,6 +12,7 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler, combineSeg
   let str = ''
 
   str += 'START-OF-LOG: 3.0\n'
+  str += `CREATED-BY: Ham2K Portable Logger ${packageJson?.version ?? ''}\n`
   if (handler.cabrilloHeaders) {
     str += handler
       .cabrilloHeaders({ operation, settings, headers: [] })
@@ -86,7 +88,7 @@ const DEFAULT_FREQUENCIES_PER_BAND = {
 function cabrilloFreq (qso) {
   if (qso.freq) {
     return qso.freq < 50000
-      ? `${Math.round(qso.freq / 1000)}`
+      ? `${Math.round(qso.freq)}`
       : DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
   }
   return DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
