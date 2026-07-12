@@ -102,7 +102,7 @@ const ActivityHook = {
     const enabled = !!settings?.accounts?.sota?.idToken
     const now = new Date().getTime()
     if (!enabled && (!lastAuthenticationCheck || (now - lastAuthenticationCheck > 1000 * 60 * 30))) {
-      showSOTANotLoggedInAlert(navigaition)
+      showSOTANotLoggedInAlert(navigation)
       lastAuthenticationCheck = now
     }
     return enabled

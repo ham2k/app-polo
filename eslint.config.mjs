@@ -1,5 +1,6 @@
 import { defineConfig } from 'eslint/config'
 import js from '@eslint/js'
+import globals from 'globals'
 import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
 import pluginReactNative from "eslint-plugin-react-native";
@@ -19,6 +20,8 @@ export default defineConfig([
     languageOptions: {
       globals: {
         ...pluginReactNative.environments["react-native"].globals,
+        URLSearchParams: "readonly",
+        AbortController: "readonly",
       },
       parserOptions: {
         ecmaFeatures: {
@@ -27,15 +30,15 @@ export default defineConfig([
       }
     },
     rules: {
-      ...pluginReactHooks.configs.recommended.rules,
-      "prettier/prettier": 0,
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
 
       "react/jsx-indent": [2, 2, {
         checkAttributes: false,
         indentLogicalExpressions: true,
       }],
 
-      "no-unused-vars": ["error", { "args": "none", "caughtErrors": "none" }],
+      "no-unused-vars": ["error", { "args": "none", "caughtErrors": "none", "ignoreRestSiblings": true }],
 
       "react/jsx-indent-props": [2, 2],
       "react/jsx-closing-bracket-location": [2, "tag-aligned"],
@@ -44,5 +47,13 @@ export default defineConfig([
       "no-debugger": "warn",
       "multiline-ternary": "off",
     },
-  }
+  },
+  {
+    files: ["**/*.spec.js", "**/*.spec.jsx", "**/__tests__/**/*.js", "**/__tests__/**/*.jsx"],
+    languageOptions: {
+      globals: {
+        ...globals.jest,
+      },
+    },
+  },
 ]);

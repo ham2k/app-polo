@@ -1,6 +1,7 @@
 // Copyright ©️ 2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
+import React from 'react'
 import { fmtNumber } from '@ham2k/lib-format-tools'
 import { superModeForMode } from '@ham2k/lib-operation-data'
 import { filterRefs, findRef, filterNearDupes, replaceRef, replaceRefs } from '@ham2k/lib-qson-tools'
