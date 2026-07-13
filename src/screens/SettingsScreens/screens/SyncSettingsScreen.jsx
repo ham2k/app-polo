@@ -350,7 +350,7 @@ Please try again later.`, { error: linkResult.json.error })
             disabled={!syncEnabled}
           />
 
-          <SyncSettingsForDistribution settings={settings} styles={styles} />
+          <SyncSettingsForDistribution settings={settings} styles={styles} eventVariation={route?.params?.eventVariation} />
         </H2kListSection>
 
         <H2kListSection title={t('screens.syncSettings.thisDevice', 'This Device')}>

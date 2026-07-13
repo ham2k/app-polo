@@ -1,7 +1,7 @@
 // Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { Linking, Platform, ScrollView, View } from 'react-native'
@@ -33,6 +33,14 @@ export default function Notices ({ paddingForSafeArea = false }) {
   useEffect(() => {
     setCurrentNotice(notices[0])
   }, [notices])
+
+  const lastShownNoticeKey = useRef()
+  useEffect(() => {
+    if (currentNotice?.key && currentNotice.key !== lastShownNoticeKey.current) {
+      lastShownNoticeKey.current = currentNotice.key
+      trackNoticeShown(currentNotice)
+    }
+  }, [currentNotice])
 
   const [visible, setVisible] = useState(false)
 
@@ -69,7 +77,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
   const [dialog, setDialog] = useState()
 
   const handleAction = useCallback((notice, action) => {
-    trackEvent('notice_accepted', { notice_action: action.action, notice_key: notice.actionArgs?.key })
+    trackNoticeAction(notice, action)
 
     dispatch(dismissNotice(notice))
     if (notices[1]) {
@@ -79,7 +87,7 @@ export default function Notices ({ paddingForSafeArea = false }) {
   }, [dispatch, navigation, notices, i18next])
 
   const handleDismiss = useCallback((notice) => {
-    trackEvent('notice_dismissed', { notice_action: notice.action, notice_key: notice.actionArgs?.key })
+    trackEvent('notice_dismissed', { notice_key: notice.key, notice_variation: notice.eventVariation })
 
     dispatch(dismissNotice(notice))
     if (notices[1]) {
@@ -87,8 +95,10 @@ export default function Notices ({ paddingForSafeArea = false }) {
     }
   }, [dispatch, notices])
 
-  const handleDialogAction = useCallback((notice, action) => {
-    performAction({ i18next, notice, action, dispatch, navigation, setDialog })
+  const handleDialogAction = useCallback((dialog, action) => {
+    trackNoticeAction(dialog, action)
+
+    performAction({ i18next, notice: dialog, action, dispatch, navigation, setDialog })
     setDialog(undefined)
   }, [dispatch, navigation, i18next])
 
@@ -128,12 +138,24 @@ export function NoticeList ({ notices, style }) {
 
   const [dialog, setDialog] = useState()
 
+  const shownNoticeKeys = useRef(new Set())
+  useEffect(() => {
+    notices.forEach(notice => {
+      if (notice.key && !shownNoticeKeys.current.has(notice.key)) {
+        shownNoticeKeys.current.add(notice.key)
+        trackNoticeShown(notice)
+      }
+    })
+  }, [notices])
+
   const handleAction = useCallback((notice, action) => {
+    trackNoticeAction(notice, action)
     performAction({ i18next, notice, action, dispatch, navigation, setDialog })
   }, [dispatch, navigation, i18next])
 
-  const handleDialogAction = useCallback((notice, action) => {
-    performAction({ i18next, notice, action, dispatch, navigation, setDialog })
+  const handleDialogAction = useCallback((dialog, action) => {
+    trackNoticeAction(dialog, action)
+    performAction({ i18next, notice: dialog, action, dispatch, navigation, setDialog })
     setDialog(undefined)
   }, [dispatch, navigation, i18next])
 
@@ -181,21 +203,19 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
       </H2kMarkdown>
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: styles.oneSpace }}>
-        <ScrollView horizontal style={{ flex: 1, marginLeft: -styles.oneSpace, paddingLeft: styles.oneSpace }}>
-          {notice?.actions?.map((action, index) => (
-            <H2kButton
-              key={index}
-              mode={'contained'}
-              theme={ styles.buttonTheme }
-              style={{ paddingHorizontal: styles.oneSpace, marginLeft: -styles.oneSpace, marginRight: styles.oneSpace * 2 }}
-              compact={true}
-              disabled={action === 'disabled'}
-              onPress={() => handleAction(notice, action)}
-            >
-              {t([`general.notices.action.${action.label}`, 'general.notices.action.ok'], action.label)}
-            </H2kButton>
-          ))}
-        </ScrollView>
+        {notice?.actions?.map((action, index) => (
+          <H2kButton
+            key={index}
+            mode={'contained'}
+            theme={ styles.buttonTheme }
+            style={{ paddingHorizontal: styles.oneSpace }}
+            compact={true}
+            disabled={action === 'disabled'}
+            onPress={() => handleAction(notice, action)}
+          >
+            {action.label ? t(`general.notices.action.${action.label}`, action.label) : t(`general.notices.action.ok`, 'Ok!')}
+          </H2kButton>
+        ))}
         {handleDismiss ? (
           <H2kIconButton
             icon="close"
@@ -259,6 +279,22 @@ function OneDialog ({ dialog, styles, handleDialogAction, setDialog }) {
   )
 }
 
+function trackNoticeShown (notice) {
+  if (notice.eventVariation) {
+    trackEvent('notice_shown', { notice_key: notice.key, notice_variation: notice.eventVariation })
+  }
+}
+
+function trackNoticeAction (notice, action) {
+  if (typeof action !== 'object' || !action.event) return
+  trackEvent(action.event, {
+    notice_key: notice.key ?? notice.noticeKey,
+    notice_variation: notice.eventVariation,
+    notice_action: action.action,
+    notice_action_label: action.label
+  })
+}
+
 async function performAction ({ i18next, languages, notice, action, dispatch, navigation, setDialog }) {
   if (typeof action !== 'object') return
 
@@ -284,26 +320,36 @@ async function performAction ({ i18next, languages, notice, action, dispatch, na
       setDialog({
         title: action.args?.[`dialogTitle-${i18next.language}-ios`] ?? action.args?.['dialogTitle-ios'] ?? action.args?.dialogTitle,
         text: action.args?.['dialogText-ios'] ?? action.args?.dialogText,
-        actions: action.args?.['dialogActions-ios'] ?? action.args?.dialogActions
+        actions: action.args?.['dialogActions-ios'] ?? action.args?.dialogActions,
+        noticeKey: notice.key,
+        eventVariation: notice.eventVariation
       })
     } else if (Platform.OS === 'android') {
       setDialog({
         title: action.args?.['dialogTitle-android'] ?? action.args?.dialogTitle,
         text: action.args?.['dialogText-android'] ?? action.args?.dialogText,
-        actions: action.args?.['dialogActions-android'] ?? action.args?.dialogActions
+        actions: action.args?.['dialogActions-android'] ?? action.args?.dialogActions,
+        noticeKey: notice.key,
+        eventVariation: notice.eventVariation
       })
     } else {
       setDialog({
         title: action.args?.dialogTitle,
         text: action.args?.dialogText,
-        actions: action.args?.dialogActions
+        actions: action.args?.dialogActions,
+        noticeKey: notice.key,
+        eventVariation: notice.eventVariation
       })
     }
   } else if (action.action === 'navigate' || action.action === 'navigation') {
     if (typeof action.args === 'string') {
-      navigation.navigate(action.args)
+      navigation.navigate(action.args, notice.eventVariation ? { eventVariation: notice.eventVariation } : undefined)
     } else {
-      navigation.navigate(...action.args)
+      const [screenName, screenParams] = action.args
+      const mergedParams = notice.eventVariation
+        ? { ...screenParams, params: { ...screenParams?.params, eventVariation: notice.eventVariation } }
+        : screenParams
+      navigation.navigate(screenName, mergedParams)
     }
   } else if (action.action === 'link') {
     Linking.openURL(action.args?.url ?? action.args?.link ?? action.args?.href)

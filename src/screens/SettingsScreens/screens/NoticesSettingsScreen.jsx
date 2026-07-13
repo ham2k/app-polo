@@ -7,7 +7,7 @@ import { Text } from 'react-native-paper'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
-import { fmtDateDayMonth } from '@ham2k/lib-format-tools'
+import { fmtDateNice } from '@ham2k/lib-format-tools'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -48,7 +48,7 @@ export default function NoticesSettingsScreen ({ navigation, splitView }) {
 
     return sortedKeys.map(key => {
       key = Number(key) // numeric keys get converted to strings in objects
-      const label = key ? fmtDateDayMonth(key) : t('screens.noticesSettings.undated', 'Undated')
+      const label = key ? fmtDateNice(key) : t('screens.noticesSettings.undated', 'Undated')
       const groupNotices = groupedNotices[key]
       return [label, groupNotices]
     })

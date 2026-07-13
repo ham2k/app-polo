@@ -60,6 +60,9 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
         if (notice.versions && notice.versions.length > 0 && !notice.versions.find(v => packageJson.version.startsWith(v))) return false
         if (notice.exceptVersions && notice.exceptVersions.length > 0 && notice.exceptVersions.find(v => packageJson.version.startsWith(v))) return false
         if (notice.calls && notice.calls.length > 0 && !notice.calls.find(c => c.toUpperCase() === operatorCallInfo?.baseCall)) return false
+        if (notice.testCalls && notice.testCalls.length > 0 && notice.testCalls.find(c => c.toUpperCase() === operatorCallInfo?.baseCall)) return true
+        if (notice.segmentFrom && _calculateCallSegment(operatorCallInfo?.baseCall) < notice.segmentFrom) return false
+        if (notice.segmentTo && _calculateCallSegment(operatorCallInfo?.baseCall) > notice.segmentTo) return false
         if (notice.notes && !_findInHam2KNotes(operatorCallInfo?.baseCall, notice.notes)) return false
         if (notice.entities && notice.entities.length > 0 && !notice.entities.find(d => d.toUpperCase() === operatorCallInfo?.entityPrefix)) return false
         if (notice.countries && notice.countries.length > 0 && !notice.countries.find(c => c.toLowerCase() === operatorCallInfo?.countryCode)) return false
@@ -130,4 +133,15 @@ const _findInHam2KNotes = (call, rule) => {
   else if (Array.isArray(rule)) return rule.some(r => notes.find(n => n.note.toLowerCase().includes(r.toLowerCase())))
 
   return false
+}
+
+// A pseudo-random number, consistently based on callsign, evenly distributed from 1 to 100
+const _calculateCallSegment = (call) => {
+  if (!call) return 0
+  let hash = 0
+  for (let i = 0; i < call.length; i++) {
+    hash = (hash << 5) - hash + call.charCodeAt(i)
+    hash |= 0 // Convert to 32bit integer
+  }
+  return (Math.abs(hash) % 100) + 1
 }
