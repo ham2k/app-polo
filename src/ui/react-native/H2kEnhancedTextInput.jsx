@@ -80,6 +80,7 @@ export function H2kEnhancedTextInput(props) {
   const styles = useThemedStyles(prepareStyles, { style, textStyle, error, themeColor, disabled })
 
   const stringValue = typeof value === 'string' ? value : String(value ?? '')
+  const stringPlaceholder = typeof placeholder === 'string' ? placeholder : String(placeholder ?? '')
 
   // Local handle to the native host node, also forwarded to the caller's innerRef.
   const nodeRef = useRef(null)
@@ -208,7 +209,7 @@ export function H2kEnhancedTextInput(props) {
         <H2kNativeTextInput
           innerRef={setRef}
           value={stringValue}
-          placeholder={placeholder || ''}
+          placeholder={stringPlaceholder}
           placeholderTextColor={styles.theme.colors.onBackgroundLighter}
           style={styles.input}
           editable={!disabled}
