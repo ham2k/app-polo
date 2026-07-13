@@ -58,6 +58,7 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
         if (notice.dateFrom && !(now > Date.parse(notice.dateFrom))) return false
         if (notice.dateTo && !(now < Date.parse(notice.dateTo))) return false
         if (notice.versions && notice.versions.length > 0 && !notice.versions.find(v => packageJson.version.startsWith(v))) return false
+        if (notice.exceptVersions && notice.exceptVersions.length > 0 && notice.exceptVersions.find(v => packageJson.version.startsWith(v))) return false
         if (notice.calls && notice.calls.length > 0 && !notice.calls.find(c => c.toUpperCase() === operatorCallInfo?.baseCall)) return false
         if (notice.notes && !_findInHam2KNotes(operatorCallInfo?.baseCall, notice.notes)) return false
         if (notice.entities && notice.entities.length > 0 && !notice.entities.find(d => d.toUpperCase() === operatorCallInfo?.entityPrefix)) return false
