@@ -54,6 +54,7 @@ import RSGBVHFContestsExtension from './contests/rsgb-vhf-tests/RSGBVHFContestsE
 
 import AnnotationCommands from './commands/AnnotationCommands'
 import DebuggingCommands from './commands/DebuggingCommands'
+import ExcuseCommands from './commands/ExcuseCommands'
 import MiscCommands from './commands/MiscCommands'
 import OperationCommands from './commands/OperationCommands'
 import OperatorCommands from './commands/OperatorCommands'
@@ -113,6 +114,7 @@ export const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(AnnotationCommands)
   registerExtension(DebuggingCommands)
+  registerExtension(ExcuseCommands)
   registerExtension(MiscCommands)
   registerExtension(OperationCommands)
   registerExtension(OperatorCommands)
