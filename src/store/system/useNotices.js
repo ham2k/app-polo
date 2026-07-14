@@ -12,6 +12,7 @@ import { selectDismissedNotices, selectFeatureFlags, selectNotices } from './sys
 import { selectOperatorCallInfo } from '../settings'
 import { processNoticeTemplateDataForDistribution } from '../../distro'
 import { findAllCallNotes } from '../../extensions/data/call-notes/CallNotesExtension'
+import DeviceInfo from 'react-native-device-info'
 
 export function useNotices ({ dispatch, includeDismissed = false, includeTransient = false }) {
   const operatorCallInfo = useSelector(selectOperatorCallInfo)
@@ -47,18 +48,22 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
     const uniqueNotices = {}
     const filteredNotices = [...systemNotices, ...serverNotices].filter(notice => {
       try {
+        const build = DeviceInfo.getVersion()
+
         if (dismissedNotices[notice.key]) {
           if (!includeDismissed) return false
           else notice.dismissedOn = dismissedNotices[notice.key]
         }
 
         if (!includeTransient && notice.transient) return false
-        console.log('notice', notice)
+
         if (notice.platforms && !notice.platforms.includes(Platform.OS)) return false
         if (notice.dateFrom && !(now > Date.parse(notice.dateFrom))) return false
         if (notice.dateTo && !(now < Date.parse(notice.dateTo))) return false
         if (notice.versions && notice.versions.length > 0 && !notice.versions.find(v => packageJson.version.startsWith(v))) return false
+        if (notice.builds && notice.builds.length > 0 && !notice.builds.find(v => build === v)) return false
         if (notice.exceptVersions && notice.exceptVersions.length > 0 && notice.exceptVersions.find(v => packageJson.version.startsWith(v))) return false
+        if (notice.exceptBuilds && notice.exceptBuilds.length > 0 && notice.exceptBuilds.find(v => build === v)) return false
         if (notice.calls && notice.calls.length > 0 && !notice.calls.find(c => c.toUpperCase() === operatorCallInfo?.baseCall)) return false
         if (notice.testCalls && notice.testCalls.length > 0 && notice.testCalls.find(c => c.toUpperCase() === operatorCallInfo?.baseCall)) return true
         if (notice.segmentFrom && _calculateCallSegment(operatorCallInfo?.baseCall) < notice.segmentFrom) return false
