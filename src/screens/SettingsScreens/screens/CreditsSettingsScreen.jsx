@@ -184,7 +184,7 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
           />
           <H2kListItem
             title={t('general.languages.ja', 'Japanese')}
-            description={'W9WOT Tomoko (lead)'}
+            description={'W9TOT Tomoko (lead)'}
             leftIcon="earth"
           />
           <H2kListItem
