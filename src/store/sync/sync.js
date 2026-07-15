@@ -25,11 +25,14 @@ const DEFAULT_SYNC_LOOP_DELAY = 1000 * 20 // 5 seconds, time between sending bat
 const DEFAULT_SYNC_CHECK_PERIOD = 1000 * 10 // 1000 * 60 * 1 // 1 minutes, time between checking if a new sync loop is needed
 
 const SMALL_BATCH_SIZE = 10 // QSOs or Operations to send on a quick `syncLatest...`
-const DEFAULT_LARGE_BATCH_SIZE = 10 // 200 // QSOs or Operations to send on a regular sync loop
+const DEFAULT_LARGE_BATCH_SIZE = 100 // QSOs or Operations to send on a regular sync loop
 
 const VERBOSE = 0
 
 let errorCount = 0
+
+const MAX_STALLED_ROUNDS = 5 // Consecutive empty-but-not-done rounds before backing off
+let stalledRounds = 0
 
 /*
  * A "sync loop" is one or more "paginated" sync operations in quick succession
@@ -76,6 +79,7 @@ export function useSyncLoop({ dispatch, settings, online, appState }) {
     if (currentAccountUUID && (currentAccountUUID === localData?.sync?.lastSyncAccountUUID || !localData?.sync?.lastSyncAccountUUID)) {
       if (VERBOSE > 1) console.log(' -- go ahead with sync')
       setGoAheadWithSync(true)
+      _scheduleNextSyncLoop({ dispatch, delay: 1000 })
     } else if (currentAccountUUID && localData?.sync?.lastSyncAccountUUID !== currentAccountUUID) {
       // Account changed!!! Disable sync until the user updates their settings
       if (VERBOSE > 1) console.log(' -- account changed, sync disabled')
@@ -89,6 +93,7 @@ export function useSyncLoop({ dispatch, settings, online, appState }) {
       if (VERBOSE > 1) console.log(' -- no account, sync enabled')
       // No account, try to sync anyway
       setGoAheadWithSync(true)
+      _scheduleNextSyncLoop({ dispatch, delay: 1000 })
     }
   }, [localData?.sync?.lastSyncAccountUUID, currentAccountUUID, localData, dispatch])
 
@@ -350,11 +355,30 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
             const anyPendingQSO = await queryQSOs("WHERE synced IS false AND operation != 'historical' ORDER BY startAtMillis DESC LIMIT 1")
             const anyPendingOperation = await queryOperations('WHERE synced IS false LIMIT 1')
 
-            const receivedAllUpdates = ((response.json.operations?.length || 0) < syncPayload.meta?.sync?.operations.limit) && ((response.json?.qsos?.length || 0) < syncPayload.meta?.sync?.qsos?.limit)
+            // Trust the server's own record counts to decide if there's more to backfill, rather than
+            // inferring it from how many records this particular response happened to include: a
+            // cooldown-gated or otherwise empty response must never be mistaken for "nothing left".
+            const operationsMeta = response.json?.meta?.operations
+            const qsosMeta = response.json?.meta?.qsos
+            const operationsLeft = operationsMeta ? (operationsMeta.recordsLeft ?? operationsMeta.records_left ?? 0) : (localData?.sync?.serverRemainingOperations ?? 0)
+            const qsosLeft = qsosMeta ? (qsosMeta.recordsLeft ?? qsosMeta.records_left ?? 0) : (localData?.sync?.serverRemainingQSOs ?? 0)
+            const receivedAllUpdates = operationsLeft === 0 && qsosLeft === 0
+            const receivedAnyData = (response.json.operations?.length || 0) > 0 || (response.json?.qsos?.length || 0) > 0
 
             if (anyPendingQSO.length === 0 && anyPendingOperation.length === 0 && receivedAllUpdates) {
               if (VERBOSE > 1) console.log(' -- no more changes to sync!!! loop complete')
               scheduleAnotherLoop = false
+              stalledRounds = 0
+            } else if (!receivedAllUpdates && !receivedAnyData) {
+              // The server says there's more to sync, but this round came back empty (cooldown,
+              // hiccup, etc). Don't hammer it in a tight loop chasing data that isn't arriving.
+              stalledRounds += 1
+              if (stalledRounds >= MAX_STALLED_ROUNDS) {
+                if (VERBOSE > 1) console.log(' -- stalled, backing off to normal check period')
+                scheduleAnotherLoop = false
+              }
+            } else {
+              stalledRounds = 0
             }
 
             if (syncDirection === 'backfill') {
