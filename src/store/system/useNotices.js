@@ -18,7 +18,7 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
   const operatorCallInfo = useSelector(selectOperatorCallInfo)
   const systemNotices = useSelector(selectNotices)
   const featureFlags = useSelector(selectFeatureFlags)
-  const serverNotices = useMemo(() => featureFlags?.notices ?? [], [featureFlags])
+  const serverNotices = useMemo(() => [...featureFlags?.notices ?? [], ...featureFlags?.['polo-notices'] ?? []], [featureFlags])
   const dismissedNotices = useSelector(selectDismissedNotices)
 
   const templateData = useMemo(() => {
