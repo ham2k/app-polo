@@ -156,5 +156,48 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
   }
   dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'qso', value: nextQSO }))
   dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'selectedUUID', value: nextQSO?.uuid }))
+  dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'operationUUID', value: operation?.uuid }))
   dispatch(resetCallLookupCache())
+}
+
+// When the logging tab is focused for a different operation than the one the current QSO belongs to,
+// we don't want to keep editing that QSO against the new operation (which would mix data up).
+// Instead we preserve any entered data as a newly suggested QSO, detached from the previous operation.
+export const manageQSOForOperationChange = ({ operation }) => (dispatch, getState) => {
+  if (!operation?.uuid) return
+
+  const state = getState()
+  const operationUUID = selectStateForComponentAndKey(state, 'OpLoggingTab', 'operationUUID')
+
+  // Same operation: keep the current QSO as-is (survives navigation, rotation, etc.)
+  if (operationUUID === operation.uuid) return
+
+  const qso = selectStateForComponentAndKey(state, 'OpLoggingTab', 'qso')
+  const hasChanges = selectStateForComponentAndKey(state, 'OpLoggingTab', 'hasChanges')
+
+  // The queue and call stack belong to the previous operation, so clear them.
+  dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'operationUUID', value: operation.uuid }))
+  dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'qsoQueue', value: [] }))
+  dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'callStack', value: undefined }))
+
+  if (qso && hasChanges) {
+    // Preserve the entered data, but detach it from the previous operation and present it as a suggestion.
+    const migrated = cloneDeep(qso)
+    migrated.uuid = UUID.v4()
+    migrated._isNew = true
+    migrated._isSuggested = true
+    delete migrated.operation
+    delete migrated._willBeDeleted
+    delete migrated.deleted
+
+    dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'qso', value: migrated }))
+    dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'originalQSO', value: undefined }))
+    dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'selectedUUID', value: migrated.uuid }))
+    dispatch(resetCallLookupCache())
+  } else {
+    // Nothing worth preserving: start fresh for the new operation.
+    dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'qso', value: undefined }))
+    dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'originalQSO', value: undefined }))
+    dispatch(setStateForComponentAndKey({ component: 'OpLoggingTab', key: 'selectedUUID', value: undefined }))
+  }
 }

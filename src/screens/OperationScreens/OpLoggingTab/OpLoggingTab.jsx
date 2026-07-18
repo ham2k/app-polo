@@ -23,7 +23,7 @@ import { useSelectorConditionally } from '../../components/useConditionally'
 import QSOList from './components/QSOList'
 import LoggingPanel from './components/LoggingPanel'
 import { useAutoRespotting } from './components/LoggingPanel/SecondaryExchangePanel/SpotterControl'
-import { manageNextQSO } from './components/LoggingPanel/loggingFunctions'
+import { manageNextQSO, manageQSOForOperationChange } from './components/LoggingPanel/loggingFunctions'
 import { useUIState } from '../../../store/ui'
 
 const flexOne = { flex: 1 }
@@ -63,14 +63,12 @@ export default function OpLoggingTab({ navigation, route, splitView }) {
 
   const [lastUUID] = useUIState('OpLoggingTab', 'lastUUID')
   const [selectedUUID] = useUIState('OpLoggingTab', 'selectedUUID')
-  const [currentOperationUUID, setCurrentOperationUUID] = useState()
 
-  useEffect(() => { // If this is a different operation, prepare a new QSO (which might be based in current QSO data)
-    if (currentOperationUUID && operation?.uuid !== currentOperationUUID) {
-      setCurrentOperationUUID(operation?.uuid)
-      dispatch(manageNextQSO({ qsos, operation, vfo, settings }))
+  useEffect(() => { // Preserve the current QSO within the same operation, but detach it if a different operation is selected
+    if (isFocused && operation?.uuid) {
+      dispatch(manageQSOForOperationChange({ operation }))
     }
-  }, [operation, currentOperationUUID, dispatch, qsos, vfo, settings])
+  }, [isFocused, operation?.uuid, dispatch])
 
   useEffect(() => { // Set navigation title
     if (styles?.smOrLarger) {
