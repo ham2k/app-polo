@@ -18,7 +18,8 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
   const operatorCallInfo = useSelector(selectOperatorCallInfo)
   const systemNotices = useSelector(selectNotices)
   const featureFlags = useSelector(selectFeatureFlags)
-  const serverNotices = useMemo(() => [...featureFlags?.notices ?? [], ...featureFlags?.['polo-notices'] ?? []], [featureFlags])
+  // polo-notices are listed first so they take precedence over generic notices when several share a key
+  const serverNotices = useMemo(() => [...featureFlags?.['polo-notices'] ?? [], ...featureFlags?.notices ?? []], [featureFlags])
   const dismissedNotices = useSelector(selectDismissedNotices)
 
   const templateData = useMemo(() => {
@@ -46,7 +47,11 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
   const notices = useMemo(() => {
     const now = Date.now()
     const uniqueNotices = {}
-    const filteredNotices = [...systemNotices, ...serverNotices].filter(notice => {
+    const seenKeys = {}
+    // Order candidates by priority first (array order breaks ties, since the sort is stable) so the
+    // dedup below keeps the highest-priority matching notice when several share a key or unique value.
+    const candidateNotices = [...systemNotices, ...serverNotices].sort(_compareNoticesByPriority)
+    const filteredNotices = candidateNotices.filter(notice => {
       try {
         const build = DeviceInfo.getVersion()
 
@@ -74,10 +79,13 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
         if (notice.continents && notice.continents.length > 0 && !notice.continents.find(c => c.toUpperCase() === operatorCallInfo?.continent)) return false
         if (notice.ituRegions && notice.ituRegions.length > 0 && !notice.ituRegions.find(r => r === operatorCallInfo?.ituRegion)) return false
 
-        if (notice.unique) {
-          if (uniqueNotices[notice.unique]) return false
-          uniqueNotices[notice.unique] = true
-        }
+        // These dedup checks come last, so a notice only reserves its unique/key once it has
+        // matched every other filter. Because candidates are pre-sorted by priority, the highest
+        // priority matching notice for a given key/unique is the one kept; the rest are suppressed.
+        if (notice.unique && uniqueNotices[notice.unique]) return false
+        if (notice.key && seenKeys[notice.key]) return false
+        if (notice.unique) uniqueNotices[notice.unique] = true
+        if (notice.key) seenKeys[notice.key] = true
 
         return true
       } catch (e) {
@@ -88,16 +96,20 @@ export function useNotices ({ dispatch, includeDismissed = false, includeTransie
 
     const adjustedNotices = filteredNotices.map(notice => _adjustNotice(notice, templateData))
 
-    const sortedNotices = adjustedNotices.sort((a, b) => {
-      if (a.priority && b.priority) return a.priority - b.priority
-      if (a.priority) return -1
-      if (b.priority) return 1
-      return 0
-    })
-    return sortedNotices
+    return adjustedNotices.sort(_compareNoticesByPriority)
   }, [systemNotices, serverNotices, dismissedNotices, includeTransient, includeDismissed, operatorCallInfo?.baseCall, operatorCallInfo?.entityPrefix, operatorCallInfo?.countryCode, operatorCallInfo?.continent, operatorCallInfo?.ituRegion, templateData])
 
   return notices
+}
+
+// Sorts notices by priority (lower number = higher priority; a notice with a priority
+// outranks one without). Returns 0 for equal/absent priorities so a stable sort keeps
+// the original array order as the tiebreaker.
+function _compareNoticesByPriority (a, b) {
+  if (a.priority && b.priority) return a.priority - b.priority
+  if (a.priority) return -1
+  if (b.priority) return 1
+  return 0
 }
 
 function _adjustNotice (object, templateData) {
