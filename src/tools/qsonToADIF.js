@@ -55,8 +55,8 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
   str += adifField('ADIF_VER', '3.1.5', { newLine: true })
   str += adifField('PROGRAMID', 'Ham2K Portable Logger', { newLine: true })
   str += adifField('PROGRAMVERSION', packageJson.version, { newLine: true })
-  if (operation.userTitle && privateData) str += adifField('X_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
-  if (operation.notes && privateData) str += adifField('X_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
+  if (operation.userTitle && privateData) str += adifField('APP_HAM2K_OP_TITLE', escapeForHeader(operation.userTitle), { newLine: true })
+  if (operation.notes && privateData) str += adifField('APP_HAM2K_OP_NOTES', escapeForHeader(operation.notes), { newLine: true })
 
   if (handler.adifFieldsForHeader) {
     str += escapeForHeader(handler.adifFieldsForHeader({ qsos, operation, common, mainHandler: true, privateData, templates }) ?? []).join('\n')
@@ -72,14 +72,14 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
         if (qso.event.event === 'break' || qso.event.event === 'start') str += '\n'
 
         const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
-        str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
+        str += adifField(`APP_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
 
         if (qso.event.data) {
-          str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event.data), { newLine: true })
+          str += adifField(`APP_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event.data), { newLine: true })
         } else {
           const dataField = Object.keys(qso.event).find(key => key.endsWith('Data'))
           if (dataField) {
-            str += adifField(`X_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event[dataField]), { newLine: true })
+            str += adifField(`APP_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}_DATA`, JSON.stringify(qso.event[dataField]), { newLine: true })
           }
         }
 
