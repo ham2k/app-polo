@@ -6,6 +6,7 @@ import cloneDeep from 'clone-deep'
 import UUID from 'react-native-uuid'
 
 import { findHooks } from '../../../../../extensions/registry'
+import { setVFO } from '../../../../../store/station/stationSlice'
 import { selectStateForComponentAndKey, setStateForComponentAndKey } from '../../../../../store/ui'
 import { resetCallLookupCache } from './useCallLookup'
 
@@ -67,6 +68,13 @@ export function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
   return clone
 }
 
+// A brand-new QSO with no callsign entered is just the blank starting point
+// seeded from the VFO; only preserve an interrupted entry the operator actually
+// began, otherwise restoring it later would revert freq/mode to stale values.
+function qsoWorthQueuing (qso) {
+  return qso?._isNew && !qso?._isSuggested && !!qso?.their?.call
+}
+
 export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo, settings }) => (dispatch, getState) => {
   qsos = qsos || []
 
@@ -84,7 +92,15 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
   let nextQSO
   if (suggestedQSO) {
     nextQSO = prepareSuggestedQSO(suggestedQSO, qsos, operation, vfo, settings)
-    if (qso?._isNew && !qso?._isSuggested) {
+    // A suggested QSO, from a deep link or from tapping a spot, carries an
+    // authoritative freq/mode. Record it as the VFO so subsequent new QSOs
+    // (which are seeded from the VFO) start from it.
+    const vfoUpdate = {}
+    if (nextQSO.freq) vfoUpdate.freq = nextQSO.freq
+    if (nextQSO.band) vfoUpdate.band = nextQSO.band
+    if (nextQSO.mode) vfoUpdate.mode = nextQSO.mode
+    if (Object.keys(vfoUpdate).length) dispatch(setVFO(vfoUpdate))
+    if (qsoWorthQueuing(qso)) {
       dispatch(setStateForComponentAndKey({
         component: 'OpLoggingTab',
         key: 'qsoQueue',
@@ -99,7 +115,7 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
     } else {
       nextQSO = prepareNewQSO(operation, qsos, vfo, settings)
     }
-    if (qso?._isNew && !qso?._isSuggested) {
+    if (qsoWorthQueuing(qso)) {
       dispatch(setStateForComponentAndKey({
         component: 'OpLoggingTab',
         key: 'qsoQueue',
