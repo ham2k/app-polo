@@ -122,7 +122,10 @@ In-app translation testing:
 
 ## Deep Linking
 
-To test deep linking, you can use the following commands:
+To test deep linking, you can use the following commands. The command is the URL
+*path*, so use three slashes (`com.ham2k:///qso?...`); the host is reserved. Any
+reserved character in a value (e.g. the `/` in a SOTA ref or a portable callsign)
+must be percent-encoded.
 ```
 export POLO_URL="com.ham2k:///qso?their.call=W1WC&mode=CW&freq=7200"
 
