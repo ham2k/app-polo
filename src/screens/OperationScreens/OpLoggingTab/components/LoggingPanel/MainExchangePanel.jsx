@@ -154,16 +154,20 @@ export const MainExchangePanel = ({
     state: false,
     grid: false
   }
+  // An activity can request a field as `true` (shown unless the user overrides) or `'always'`
+  // (forced on, and not overridable by the user's show/hide setting).
+  const alwaysFields = {}
   findHooks('activity').filter(activity => activity.standardExchangeFields).forEach(activity => {
     const requestedFields = valueOrFunction(activity.standardExchangeFields, { qso, operation, vfo, settings })
     for (const field of Object.keys(requestedFields)) {
-      extraFields[field] = extraFields[field] || requestedFields[field]
+      if (requestedFields[field] === 'always') alwaysFields[field] = true
+      extraFields[field] = extraFields[field] || !!requestedFields[field]
     }
   })
-  if (settings.showStateField === true || settings.showStateField === false) {
+  if (!alwaysFields.state && (settings.showStateField === true || settings.showStateField === false)) {
     extraFields.state = settings.showStateField
   }
-  if (settings.showGridField === true || settings.showGridField === false) {
+  if (!alwaysFields.grid && (settings.showGridField === true || settings.showGridField === false)) {
     extraFields.grid = settings.showGridField
   }
 

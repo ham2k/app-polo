@@ -1,13 +1,10 @@
 // Copyright ©️ 2024 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React from 'react'
-
 import { bandForFrequency } from '@ham2k/lib-operation-data'
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { loadDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { H2kGridInput } from '../../../ui'
 
 import { Info } from './SatellitesInfo'
 import { SatellitesLoggingControl } from './SatellitesLoggingControl'
@@ -28,12 +25,9 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
-  mainExchangeForQSO,
-  standardExchangeFields: ({ qso, operation }) => {
-    return {
-      grid: (findRef(operation, Info.refType) || findRef(qso, Info.refType)) ? 'always' : false
-    }
-  },
+  standardExchangeFields: ({ qso, operation }) => ({
+    grid: (findRef(operation, Info.refType) || findRef(qso, Info.refType)) ? 'always' : false
+  }),
   loggingControls: ({ operation, settings }) => {
     // On a satellite operation, include the control automatically (mandatory); otherwise it's optional.
     if (findRef(operation, Info.refType)) {
@@ -66,32 +60,6 @@ const LoggingControl = {
   InputComponent: SatellitesLoggingControl,
   inputWidthMultiplier: 40,
   optionType: 'optional'
-}
-
-function mainExchangeForQSO (props) {
-  const { qso, updateQSO, styles, refStack, disabled, themeColor } = props
-  const fields = []
-
-  if (findRef(qso, Info.refType)) {
-    fields.push(
-      <H2kGridInput
-        {...props}
-        themeColor={themeColor}
-        key={`${Info.key}/grid`}
-        innerRef={refStack.shift()}
-        style={[styles.input, { minWidth: styles.oneSpace * 7, flex: 1 }]}
-        textStyle={styles.text.callsign}
-        label={'Grid'}
-        placeholder={qso?.their?.guess?.grid || ''}
-        value={qso?.their?.grid || ''}
-        disabled={disabled}
-        onChangeText={(text) => updateQSO({
-          their: { grid: text, exchange: text }
-        })}
-      />
-    )
-  }
-  return fields
 }
 
 const ReferenceHandler = {
