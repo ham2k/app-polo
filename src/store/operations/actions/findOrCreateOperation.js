@@ -6,7 +6,7 @@ import { selectAllOperations } from '../operationsSlice'
 import { addNewOperation } from './operationsDB'
 import { mergeDataIntoOperation } from './setOperationData'
 
-export const RECENT_WINDOW_MS = 24 * 60 * 60 * 1000 // 24 hours
+export const RECENT_WINDOW_MS = 48 * 60 * 60 * 1000 // 48 hours
 
 /**
  * Find a recent operation activating exactly `ourRefs` (as `[{ type, ref }]`

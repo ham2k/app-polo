@@ -45,8 +45,8 @@ describe('findOrCreateOperation', () => {
     expect(dispatch).not.toHaveBeenCalled()
   })
 
-  it('ignores stale operations (older than 24h) and creates a new one', async () => {
-    const stale = { uuid: 'op-old', createdAtMillis: Date.now() - 25 * 60 * 60 * 1000, refs: [{ type: 'sotaActivation', ref: 'W6/CT-006' }] }
+  it('ignores stale operations (older than 48h) and creates a new one', async () => {
+    const stale = { uuid: 'op-old', createdAtMillis: Date.now() - 50 * 60 * 60 * 1000, refs: [{ type: 'sotaActivation', ref: 'W6/CT-006' }] }
     const op = await run({ ourRefs, operations: { 'op-old': stale } })
     expect(op.uuid).toBe('new-op-uuid')
     expect(op.refs).toEqual([{ type: 'sotaActivation', ref: 'W6/CT-006' }])
