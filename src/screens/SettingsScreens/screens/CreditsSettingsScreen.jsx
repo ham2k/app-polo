@@ -81,6 +81,12 @@ export default function CreditsSettingsScreen ({ navigation, splitView }) {
             onPress={() => navigation.navigate('CallInfo', { call: 'KC1VOP' })}
           />
           <H2kListItem
+            title={'Jeff • KC6X'}
+            description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'Deep-linking' })}
+            leftIcon="account"
+            onPress={() => navigation.navigate('CallInfo', { call: 'KC6X' })}
+          />
+          <H2kListItem
             title={'John • KQ4URU'}
             description={t('screens.creditsSettings.contributorCode', 'Code Contributor: {{contributions}}', { contributions: 'QSO Party data and rules' })}
             leftIcon="account"

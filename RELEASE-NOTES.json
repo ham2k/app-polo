@@ -1,4 +1,11 @@
 {
+  "26.7.1": {
+    "name": "July '25 (patch 1)",
+    "photoCaption": "KI2D at US-2138 and LLUS-0006",
+    "changes": [
+      "Improved deeplinking, for better integration with companion apps like SOTAmat (thanks to KC6X)"
+    ]
+  },
   "26.7.0": {
     "name": "July '26",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
