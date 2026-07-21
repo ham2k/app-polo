@@ -72,7 +72,7 @@ export default function OperationActivityOptionsScreen ({ navigation, route }) {
   }, [navigation, activity, operation, dispatch, refs, t])
 
   const handleRemoveActivity = useCallback(() => {
-    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity?.activationType ?? activity?.key ?? handler?.key, []) }))
+    dispatch(setOperationData({ uuid: operation.uuid, refs: replaceRefs(operation, activity?.activationType ?? activity?.refType ?? activity?.key ?? handler?.key, []) }))
     trackEvent('activity_removed', { activity: activity?.key })
 
     navigation.goBack()
