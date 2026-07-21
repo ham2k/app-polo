@@ -7,6 +7,7 @@ import { Animated, View } from 'react-native'
 import { useSafeAreaFrame, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import { KeyboardController } from 'react-native-keyboard-controller'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useTranslation } from 'react-i18next'
 import { Icon, Menu, Text } from 'react-native-paper'
@@ -290,6 +291,7 @@ export default function OperationScreen(props) {
               id={'OperationScreen_TabNavigator'}
               initialLayout={{ width: dimensions.width, height: dimensions.height }}
               initialRouteName={operation?.stationCall && operation?.qsoCount > 0 ? 'OpLog' : 'OpSettings'}
+              screenListeners={{ tabPress: () => KeyboardController.dismiss() }} // Hide the keyboard when switching tabs (not in split mode)
               screenOptions={{
                 tabBarItemStyle: [{ width: dimensions.width / 4 }, styles.screenTabBarItem, { minHeight: styles.oneSpace * 4, padding: 0 }], // This allows tab titles to be rendered while the screen is transitioning in
                 tabBarLabelStyle: styles.screenTabBarLabel,
