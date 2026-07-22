@@ -24,7 +24,10 @@
       "noOperations": "No Operations!",
       "settings-a11y": "Settings",
       "quickCallLookupPlaceholder": "Quick Call Lookup…",
-      "spots-a11y": "Spots"
+      "spots-a11y": "Spots",
+      "archiveFolder": "Archive",
+      "archiveFolder-a11y": "Archive",
+      "archiveBack-a11y": "Back to operations"
     },
     "operation": {
       "title": "Operation"
@@ -113,7 +116,10 @@
         "title": "Delete operation?",
         "description": "Are you sure you want to delete this operation?"
       },
-      "errorSavingExport": "Couldn't save file"
+      "errorSavingExport": "Couldn't save file",
+      "operationManagement": "Operation Management",
+      "archived": "Archived",
+      "archivedDescription": "Show this operation in Archive"
     },
     "callInfo": {
       "title": "Callsign Info",

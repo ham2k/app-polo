@@ -1,17 +1,17 @@
 // Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { View } from 'react-native'
-import { AnimatedFAB, Text } from 'react-native-paper'
+import { AnimatedFAB, Icon, Text } from 'react-native-paper'
 import { useDispatch } from 'react-redux'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import ScreenContainer from '../components/ScreenContainer'
-import { addNewOperation, selectOperationIds } from '../../store/operations'
+import { addNewOperation, selectOperationIdsByArchived } from '../../store/operations'
 import { selectSettings } from '../../store/settings'
 import OperationItem from './components/OperationItem'
 import HomeTools from './components/HomeTools'
@@ -19,6 +19,7 @@ import { trackEvent } from '../../distro'
 import { FlashList } from '@shopify/flash-list'
 import { useIsFocused } from '@react-navigation/native'
 import { useSelectorConditionally } from '../components/useConditionally'
+import { H2kPressable } from '../../ui'
 
 export default function HomeScreen ({ navigation }) {
   const { t } = useTranslation()
@@ -28,7 +29,9 @@ export default function HomeScreen ({ navigation }) {
   const styles = useThemedStyles(prepareStyles, { safeArea })
 
   const isFocused = useIsFocused()
-  const operationIds = useSelectorConditionally(isFocused, selectOperationIds)
+  const [showArchive, setShowArchive] = useState(false)
+  const operationIds = useSelectorConditionally(isFocused, (state) => selectOperationIdsByArchived(state, showArchive))
+  const archivedOperationIds = useSelectorConditionally(isFocused, (state) => selectOperationIdsByArchived(state, true))
   const settings = useSelectorConditionally(isFocused, selectSettings)
 
   useEffect(() => {
@@ -53,7 +56,26 @@ export default function HomeScreen ({ navigation }) {
     navigation.navigate('Operation', { uuid: operation.uuid, operation })
   }, [navigation])
 
+  const navigateToArchive = useCallback(() => {
+    setShowArchive(true)
+  }, [])
+
+  const navigateOutOfArchive = useCallback(() => {
+    setShowArchive(false)
+  }, [])
+
   const renderRow = useCallback(({ item }) => {
+    if (item === '__archive__') {
+      return (
+        <ArchiveItem
+          count={archivedOperationIds?.length ?? 0}
+          styles={styles}
+          style={{ paddingLeft: safeArea.left, paddingRight: safeArea.right }}
+          onPress={navigateToArchive}
+        />
+      )
+    }
+
     return (
       <OperationItem
         key={item}
@@ -64,7 +86,12 @@ export default function HomeScreen ({ navigation }) {
         onPress={navigateToOperation}
       />
     )
-  }, [navigateToOperation, styles, settings, safeArea])
+  }, [archivedOperationIds?.length, navigateToArchive, navigateToOperation, styles, settings, safeArea])
+
+  const listData = useMemo(() => {
+    if (showArchive) return operationIds
+    return [...(operationIds || []), '__archive__']
+  }, [operationIds, showArchive])
 
   const [isExtended, setIsExtended] = React.useState(true)
 
@@ -82,25 +109,80 @@ export default function HomeScreen ({ navigation }) {
         <FlashList
           accesibilityLabel={t('screens.home.operationList-a11y', 'screens.home.operationList', 'Operation List')}
           style={styles.list}
-          data={operationIds}
+          data={listData}
           renderItem={renderRow}
+          ListHeaderComponent={showArchive ? <ArchiveHeader styles={styles} onBack={navigateOutOfArchive} /> : null}
           ListEmptyComponent={emptyListComponent}
           keyboardShouldPersistTaps={'handled'}
           onScroll={handleScroll}
         />
-        <AnimatedFAB
-          icon="plus"
-          label={t('screens.home.newOperation', 'New Operation')}
-          accessibilityLabel={t('screens.home.newOperation-a11y', 'screens.home.newOperation', 'New Operation')}
-          mode="elevated"
-          extended={isExtended}
-          style={styles.fab}
-          onPress={handleNewOperation}
-        />
+        {!showArchive && (
+          <AnimatedFAB
+            icon="plus"
+            label={t('screens.home.newOperation', 'New Operation')}
+            accessibilityLabel={t('screens.home.newOperation-a11y', 'screens.home.newOperation', 'New Operation')}
+            mode="elevated"
+            extended={isExtended}
+            style={styles.fab}
+            onPress={handleNewOperation}
+          />
+        )}
       </View>
 
       <HomeTools settings={settings} styles={styles} />
     </ScreenContainer>
+  )
+}
+
+function ArchiveItem ({ count, styles, style, onPress }) {
+  const { t } = useTranslation()
+  const archiveLabel = t('screens.home.archiveFolder', 'Archive').toUpperCase()
+  const rowStyle = {
+    ...styles.row,
+    paddingHorizontal: 0,
+    paddingLeft: Math.max(styles?.row?.paddingHorizontal, style?.paddingLeft ?? 0),
+    paddingRight: Math.max(styles.row.paddingHorizontal, style?.paddingRight ?? 0)
+  }
+
+  return (
+    <H2kPressable
+      onPress={onPress}
+      accessibilityLabel={t('screens.home.archiveFolder-a11y', 'Archive')}
+      style={styles.rowRoot}
+    >
+      <View style={rowStyle}>
+        <View style={styles.rowTop}>
+          <View style={[styles.rowTopLeft, styles.archiveLabelRow]}>
+            <Text style={[styles.rowText, { fontWeight: 'bold' }]}>{archiveLabel}</Text>
+            <Icon source="archive-outline" size={styles.normalFontSize * 1.3} />
+          </View>
+          <View style={styles.rowTopRight}>
+            <View style={styles.countContainer}>
+              <Text style={styles.countText}>{count}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </H2kPressable>
+  )
+}
+
+function ArchiveHeader ({ styles, onBack }) {
+  const { t } = useTranslation()
+  const archiveLabel = t('screens.home.archiveFolder', 'Archive').toUpperCase()
+
+  return (
+    <H2kPressable onPress={onBack} accessibilityLabel={t('screens.home.archiveBack-a11y', 'Back to operations')} style={styles.rowRoot}>
+      <View style={[styles.row, { paddingHorizontal: styles.row.paddingHorizontal }]}>
+        <View style={[styles.rowTop, { alignItems: 'center' }]}>
+          <View style={[styles.rowTopLeft, styles.archiveLabelRow]}>
+            <Text style={styles.rowText}>{'←'}</Text>
+            <Icon source="archive-outline" size={styles.normalFontSize * 1.3} />
+            <Text style={[styles.rowText, { fontWeight: 'bold' }]}>{archiveLabel}</Text>
+          </View>
+        </View>
+      </View>
+    </H2kPressable>
   )
 }
 
@@ -145,6 +227,11 @@ function prepareStyles (baseStyles, { safeArea }) {
     rowTop: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      gap: baseStyles.oneSpace
+    },
+    archiveLabelRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
       gap: baseStyles.oneSpace
     },
     rowBottom: {

@@ -15,7 +15,7 @@ import { parseCallsign } from '@ham2k/lib-callsigns'
 import { annotateFromCountryFile } from '@ham2k/lib-country-files'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
-import { dataExportOptions, generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo } from '../../../store/operations'
+import { dataExportOptions, generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo, setOperationLocalData } from '../../../store/operations'
 import { loadQSOs, selectQSOs } from '../../../store/qsos'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
@@ -235,10 +235,32 @@ export default function OperationDataScreen (props) {
     })
   }, [navigation, operation.uuid, pendingTodos])
 
+  const handleArchivedToggle = useCallback(() => {
+    dispatch(setOperationLocalData({ uuid: operation.uuid, archived: !operation?.local?.archived }))
+  }, [dispatch, operation?.local?.archived, operation.uuid])
+
   return (
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
+          <H2kListSection title={t('screens.operationData.operationManagement', 'Operation Management')}>
+            <View style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'flex-start' }}>
+              <View style={{ marginTop: styles.oneSpace * 1, marginRight: styles.oneSpace * -1.5 }}>
+                <Checkbox
+                  status={operation?.local?.archived ? 'checked' : 'unchecked'}
+                  onPress={handleArchivedToggle}
+                />
+              </View>
+              <H2kListItem
+                title={t('screens.operationData.archived', 'Archived')}
+                description={t('screens.operationData.archivedDescription', 'Show this operation in Archive')}
+                leftIcon="archive-outline"
+                onPress={handleArchivedToggle}
+                style={{ flex: 1 }}
+              />
+            </View>
+          </H2kListSection>
+
           <H2kListSection title={t('screens.operationData.exportQSOs', 'Export QSOs')}>
 
             {pendingTodos.length > 0 && (

@@ -133,6 +133,26 @@ export const selectOperationIds = createSelector(
   }
 )
 
+export const selectOperationIdsByArchived = createSelector(
+  (state) => state?.operations?.info,
+  (state) => state?.settings?.showDeletedOps,
+  (state, archived) => archived,
+  (info, showDeletedOps, archived) => {
+    return Object.values(info || {})
+      .filter(op => op?.uuid && (showDeletedOps || !op?.deleted) && Boolean(op?.local?.archived) === Boolean(archived))
+      .sort(_operationSorter)
+      .map(op => op.uuid)
+  },
+  {
+    memoizeOptions: {
+      resultEqualityCheck: (prevIds, nextIds) => {
+        if (prevIds.length !== nextIds.length) return false
+        return prevIds.every((id, index) => id === nextIds[index])
+      }
+    }
+  }
+)
+
 export const selectOperationCallInfo = createSelector(
   (state, uuid) => selectOperationCall(state, uuid),
   (state) => selectOperatorCall(state),
