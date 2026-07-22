@@ -79,6 +79,18 @@ export function H2kEnhancedTextInput(props) {
 
   const styles = useThemedStyles(prepareStyles, { style, textStyle, error, themeColor, disabled })
 
+  // The theme sizes already bake in PoLo's own font-size setting (via
+  // fontScaleAdjustment), but NOT the OS font scale — the rest of the app gets that
+  // from RN's <Text>/<TextInput allowFontScaling>. The native input bypasses that:
+  // on Android setFontSize uses SP, which already applies the OS scale, but on iOS the
+  // point size is absolute (no Dynamic Type), so it would render unscaled. Fold the OS
+  // fontScale in on iOS only — doing it on Android too would double-scale.
+  const inputStyle = useMemo(() => {
+    if (Platform.OS !== 'ios') return styles.input
+    const base = styles.input?.fontSize ?? styles.normalFontSize
+    return [styles.input, { fontSize: base * (styles.fontScale ?? 1) }]
+  }, [styles])
+
   const stringValue = typeof value === 'string' ? value : String(value ?? '')
   const stringPlaceholder = typeof placeholder === 'string' ? placeholder : String(placeholder ?? '')
 
@@ -211,7 +223,7 @@ export function H2kEnhancedTextInput(props) {
           value={stringValue}
           placeholder={stringPlaceholder}
           placeholderTextColor={styles.theme.colors.onBackgroundLighter}
-          style={styles.input}
+          style={inputStyle}
           editable={!disabled}
           uppercase={!!(uppercase || rst)}
           keyboardProfile={keyboardProfile}
