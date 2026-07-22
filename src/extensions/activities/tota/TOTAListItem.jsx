@@ -1,7 +1,7 @@
 // Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 import { fmtDistance } from '@ham2k/lib-geo-tools'
 
@@ -10,11 +10,13 @@ import { H2kListItem } from '../../../ui'
 import { Info } from './TOTAInfo'
 import { totaFindOneByReference } from './TOTADataFile'
 
-export function TOTAListItem ({ activityRef, refData, operationRef, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
+export function TOTAListItem ({ activityRef, refData, allRefs, style, styles, settings, onPress, onAddReference, onRemoveReference }) {
   const [reference, setReference] = useState()
   useEffect(() => {
     totaFindOneByReference(activityRef).then(setReference)
   }, [activityRef])
+
+  const isInRefs = useMemo(() => allRefs?.find(ref => ref.ref === activityRef), [allRefs, activityRef])
 
   return (
     <H2kListItem style={{ paddingRight: styles.oneSpace * 1 }}
@@ -23,8 +25,8 @@ export function TOTAListItem ({ activityRef, refData, operationRef, style, style
       description={reference?.ref ? [reference?.name, reference?.region].filter(x => x).join(', ') : 'Unknown Tower Reference'}
       onPress={onPress}
       leftIcon={Info.icon}
-      rightIcon={activityRef === operationRef ? 'minus-circle-outline' : 'plus-circle'}
-      onPressRight={activityRef === operationRef ? () => onRemoveReference(activityRef) : () => onAddReference(activityRef)}
+      rightIcon={isInRefs ? 'minus-circle-outline' : 'plus-circle'}
+      onPressRight={isInRefs ? () => onRemoveReference(activityRef) : () => onAddReference(activityRef)}
     />
   )
 }

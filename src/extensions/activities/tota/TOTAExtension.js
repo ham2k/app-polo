@@ -125,7 +125,9 @@ const HunterLoggingControl = {
   icon: Info.icon,
   label: ({ operation, qso }) => {
     const parts = [Info.shortName]
-    if (findRef(qso, Info.huntingType)) parts.unshift('✓')
+    const refCount = filterRefs(qso, Info.huntingType).length
+    if (refCount === 1) parts.unshift('✓')
+    else if (refCount > 1) parts.unshift(`×${refCount}`)
     return parts.join(' ')
   },
   InputComponent: TOTALoggingControl,
@@ -138,7 +140,9 @@ const ActivatorLoggingControl = {
   icon: Info.icon,
   label: ({ operation, qso }) => {
     const parts = [Info.shortNameDoubleContact]
-    if (findRef(qso, Info.huntingType)) parts.unshift('✓')
+    const refCount = filterRefs(qso, Info.huntingType).length
+    if (refCount === 1) parts.unshift('✓')
+    else if (refCount > 1) parts.unshift(`×${refCount}`)
     return parts.join(' ')
   },
   InputComponent: TOTALoggingControl,
@@ -220,13 +224,31 @@ const ReferenceHandler = {
   },
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
-    const huntingRef = findRef(qso, Info.huntingType)
-    const activationRef = findRef(operation, Info.activationType)
+    const huntingRefs = filterRefs(qso, Info.huntingType)
+    const activationRefs = filterRefs(operation, Info.activationType)
     const fields = []
-    if (activationRef) fields.push({ MY_SIG: 'TOTA' }, { MY_SIG_INFO: activationRef.ref })
-    if (huntingRef) fields.push({ SIG: 'TOTA' }, { SIG_INFO: huntingRef.ref })
+    if (activationRefs[0]) fields.push({ MY_SIG: 'TOTA' }, { MY_SIG_INFO: activationRefs[0].ref })
+    if (huntingRefs[0]) fields.push({ SIG: 'TOTA' }, { SIG_INFO: huntingRefs[0].ref })
 
     return fields
+  },
+
+  adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
+    const huntingRefs = filterRefs(qso, Info.huntingType)
+    const activationRef = findRef(operation, Info.activationType)
+    let activationFields = []
+    if (activationRef) {
+      activationFields = [{ MY_SIG: 'TOTA' }, { MY_SIG_INFO: activationRef.ref }]
+    }
+
+    if (huntingRefs.length > 0) {
+      return huntingRefs.map(huntingRef => [
+        ...activationFields,
+        { SIG: 'TOTA' }, { SIG_INFO: huntingRef.ref }
+      ])
+    } else {
+      return [activationFields]
+    }
   },
 
   scoringForQSO: generateActivityScorer({ info: Info }),

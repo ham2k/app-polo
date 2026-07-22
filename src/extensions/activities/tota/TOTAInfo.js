@@ -16,7 +16,7 @@ export const Info = {
   referenceRegex: /^[A-Z0-9]+R-[0-9]{4}$/i,
   scoring: {
     activates: 'daily',
-    allowsMultipleReferences: false,
+    allowsMultipleReferences: true,
     qsosToActivate: 13,
     uniquePer: ['ref']
   }

@@ -3,7 +3,7 @@
 
 import { Alert } from 'react-native'
 
-import { findRef } from '@ham2k/lib-qson-tools'
+import { filterRefs } from '@ham2k/lib-qson-tools'
 
 import { reportError } from '../../../distro'
 import GLOBAL from '../../../GLOBAL'
@@ -21,9 +21,12 @@ export const TOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (disp
     activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? '0'}`
   }
 
-  const ref = findRef(operation, Info.activationType)
+  const refs = filterRefs(operation, Info.activationType).filter(ref => ref.ref)
 
-  if (ref && ref.ref) {
+  if (refs.length === 0) return false
+
+  let allOk = true
+  for (const ref of refs) {
     const spot = {
       callsign: activatorCallsign,
       frequency: vfo.freq,
@@ -41,13 +44,13 @@ export const TOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (disp
       if (apiResults?.error && !apiResults?.error?.data?.message?.match(/Duplicate self-spot/)) {
         Alert.alert(t('extensions.activities.tota.postSpotAPI.error', 'Error posting TOTA spot'),
           t('extensions.tota.postSpotAPI.serverResponse', 'Server responded with status {{status}} {{message}}', { status: apiResults.error?.status, message: apiResults.error?.data?.message }))
-        return false
+        allOk = false
       }
     } catch (error) {
       Alert.alert(t('extensions.tota.postSpotAPI.error', 'Error posting TOTA spot'), error.message)
       reportError('Error posting TOTA spot', error)
-      return false
+      allOk = false
     }
-    return true
   }
+  return allOk
 }

@@ -7,7 +7,7 @@ import Geolocation from '@react-native-community/geolocation'
 import { useTranslation } from 'react-i18next'
 
 import { distanceOnEarth } from '@ham2k/lib-geo-tools'
-import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+import { filterRefs, replaceRefs } from '@ham2k/lib-qson-tools'
 
 import { selectOperationCallInfo } from '../../../store/operations'
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
@@ -23,11 +23,11 @@ export function TOTAActivityOptions ({ styles, operation, settings, refs: allRef
 
   const ourInfo = useSelector(state => selectOperationCallInfo(state, operation?.uuid))
 
-  const activityRef = useMemo(() => findRef(allRefs, Info.activationType) ?? {}, [allRefs]) ?? ''
+  const activityRefs = useMemo(() => filterRefs(allRefs, Info.activationType).filter(ref => ref.ref), [allRefs])
 
   const title = useMemo(() => {
-    return t('extensions.tota.activityOptions.title', 'Activating {{count}} towers', { count: activityRef?.ref ? 1 : 0 })
-  }, [activityRef?.ref, t])
+    return t('extensions.tota.activityOptions.title', 'Activating {{count}} towers', { count: activityRefs?.length || 0 })
+  }, [activityRefs?.length, t])
 
   const [search, setSearch] = useState('')
 
@@ -51,17 +51,21 @@ export function TOTAActivityOptions ({ styles, operation, settings, refs: allRef
     )
   }, [])
 
-  const [refData, setRefData] = useState({})
+  const [refDatas, setRefDatas] = useState([])
   useEffect(() => {
     setTimeout(async () => {
-      const lookupData = await totaFindOneByReference(activityRef.ref)
-      const newData = { ...activityRef, ...lookupData }
-      if (location?.lat && location?.lon) {
-        newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
+      const datas = []
+      for (const ref of activityRefs) {
+        const lookupData = await totaFindOneByReference(ref.ref)
+        const newData = { ...ref, ...lookupData }
+        if (location?.lat && location?.lon) {
+          newData.distance = distanceOnEarth(newData, location, { units: settings.distanceUnits })
+        }
+        datas.push(newData)
       }
-      setRefData(newData)
+      setRefDatas(datas)
     }, 0)
-  }, [activityRef, location, settings.distanceUnits])
+  }, [activityRefs, location, settings.distanceUnits])
 
   const [nearbyResults, setNearbyResults] = useState([])
   useEffect(() => {
@@ -116,28 +120,28 @@ export function TOTAActivityOptions ({ styles, operation, settings, refs: allRef
   }, [search, ourInfo, nearbyResults, location, settings.distanceUnits, t])
 
   const handleAddReference = useCallback((newRef) => {
-    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: newRef }))
-  }, [allRefs, setRefs])
+    setRefs(replaceRefs(allRefs, Info.activationType, [...activityRefs.filter(r => r.ref !== newRef), { type: Info.activationType, ref: newRef }]))
+  }, [activityRefs, allRefs, setRefs])
 
   const handleRemoveReference = useCallback((newRef) => {
-    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: undefined }))
-  }, [allRefs, setRefs])
+    setRefs(replaceRefs(allRefs, Info.activationType, activityRefs.filter(r => r.ref !== newRef)))
+  }, [activityRefs, allRefs, setRefs])
 
   return (
     <>
       <H2kListSection title={title}>
-        {refData?.ref && (
+        {refDatas.map((refData) => (
           <TOTAListItem
             key={refData.ref}
             activityRef={refData.ref}
             refData={refData}
-            operationRef={refData.ref}
+            allRefs={activityRefs}
             styles={styles}
             settings={settings}
             onAddReference={handleAddReference}
             onRemoveReference={handleRemoveReference}
           />
-        )}
+        ))}
       </H2kListSection>
 
       <H2kListRow>
@@ -153,7 +157,7 @@ export function TOTAActivityOptions ({ styles, operation, settings, refs: allRef
           <TOTAListItem
             key={result.ref}
             activityRef={result.ref}
-            operationRef={activityRef.ref}
+            allRefs={activityRefs}
             refData={result}
             styles={styles}
             settings={settings}

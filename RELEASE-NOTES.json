@@ -11,6 +11,7 @@
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
       "Improved deeplinking, for better integration with companion apps like SOTAcat (thanks to KC6X)",
+      "Towers on the Air: activate and hunt multiple references at once",
       "Fix stuck keyboard in operation tabs",
       "Fixed font scaling and other issues in the new text input controls",
       "Assorted bug fixes"
