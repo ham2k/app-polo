@@ -1,4 +1,11 @@
 {
+  "26.7.2": {
+    "name": "July '25 (patch 2)",
+    "photoCaption": "KI2D at US-2138 and LLUS-0006",
+    "changes": [
+      "Fixed phantom empty operations bug"
+    ]
+  },
   "26.7.1": {
     "name": "July '25 (patch 1)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",

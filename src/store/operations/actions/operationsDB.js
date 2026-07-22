@@ -108,12 +108,17 @@ export const saveOperation = (operation, { synced = false } = {}) => async (disp
   const originalFingerprint = fingerprintOperationData(originalOperation)
   const newFingerprint = fingerprintOperationData(operation)
   if (newFingerprint !== originalFingerprint) {
-    const now = Date.now()
+    if (!synced) {
+      // Local edit: stamp this device as the author of the change.
+      const now = Date.now()
 
-    operation.createdAtMillis = operation.createdAtMillis || now
-    operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
-    operation.updatedAtMillis = now
-    operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+      operation.createdAtMillis = operation.createdAtMillis || now
+      operation.createdOnDeviceId = operation.createdOnDeviceId || GLOBAL.deviceId.slice(0, 8)
+      operation.updatedAtMillis = now
+      operation.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
+    }
+    // Records ingested from sync keep the origin device's authorship and timestamps as-is,
+    // so they are not mistakenly re-attributed to this device.
   } else {
     synced = originalOperation.synced // Don't change sync status if the operation hasn't changed
   }
@@ -159,8 +164,10 @@ export const saveOperationLocalData = (operation) => async (dispatch, getState) 
 }
 
 export const mergeSyncOperations = ({ operations }) => async (dispatch, getState) => {
-  const uuids = operations.map((op) => `"${op.uuid}"`).join(',')
-  const existingOps = await dbSelectAll('SELECT * FROM operations WHERE uuid IN (?)', [uuids], { row: operationFromRow })
+  const uuids = operations.map((op) => op.uuid)
+  const existingOps = uuids.length > 0
+    ? await dbSelectAll(`SELECT * FROM operations WHERE uuid IN (${uuids.map(() => '?').join(',')})`, uuids, { row: operationFromRow })
+    : []
 
   const now = Date.now()
   let earliestSyncedAtMillis = now
@@ -296,7 +303,9 @@ export const loadOperation = (uuid) => async (dispatch) => {
 
 export const deleteOperation = (uuid) => async (dispatch, getState) => {
   await dbExecute('UPDATE operations SET deleted = ?, synced = ? WHERE uuid = ?', [true, false, uuid])
-  await dbExecute('UPDATE qsos SET deleted = ? WHERE operation = ?', [true, uuid])
+  // Mark the QSOs unsynced too, so their deletion propagates to the server. Otherwise the
+  // server keeps the QSOs live and re-sends them, which recreates the operation after deletion.
+  await dbExecute('UPDATE qsos SET deleted = ?, synced = ? WHERE operation = ?', [true, false, uuid])
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
 

@@ -168,9 +168,11 @@ export const addQSOs = ({ uuid, qsos, operation, synced = false }) => async (dis
 }
 
 export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
-  const uuids = qsos.map((q) => `"${q.uuid}"`).join(',')
+  const uuids = qsos.map((q) => q.uuid)
   if (DEBUG) logTimer('sync', 'Start of mergeSyncQSOs')
-  const existingQSOs = await dbSelectAll('SELECT * FROM qsos WHERE uuid IN (?)', [uuids], { row: prepareQSORow })
+  const existingQSOs = uuids.length > 0
+    ? await dbSelectAll(`SELECT * FROM qsos WHERE uuid IN (${uuids.map(() => '?').join(',')})`, uuids, { row: prepareQSORow })
+    : []
   if (DEBUG) logTimer('sync', 'Retrieved QSOs', { sinceLast: true })
 
   const now = Date.now()
