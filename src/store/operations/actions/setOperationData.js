@@ -32,6 +32,13 @@ export const setOperationData = (data) => async (dispatch, getState) => {
     const { uuid } = data
     const state = getState()
     const operation = selectOperation(state, uuid) ?? {}
+
+    // Only ever update an existing operation, never create one. All operations are loaded into the
+    // store at startup, so a uuid that isn't there was deleted (sync `unsetOperation`s deleted ops)
+    // or never existed. Merging into an empty object and saving would mint a brand-new, empty
+    // "General Operation" — the phantom operations seen when sync is enabled.
+    if (!uuid || !operation?.uuid) return
+
     const qsos = selectQSOs(state, uuid) ?? []
 
     const mergedOperation = await dispatch(mergeDataIntoOperation({ operation, data }))
