@@ -302,10 +302,21 @@ export const loadOperation = (uuid) => async (dispatch) => {
 }
 
 export const deleteOperation = (uuid) => async (dispatch, getState) => {
-  await dbExecute('UPDATE operations SET deleted = ?, synced = ? WHERE uuid = ?', [true, false, uuid])
-  // Mark the QSOs unsynced too, so their deletion propagates to the server. Otherwise the
-  // server keeps the QSOs live and re-sends them, which recreates the operation after deletion.
-  await dbExecute('UPDATE qsos SET deleted = ?, synced = ? WHERE operation = ?', [true, false, uuid])
+  const now = Date.now()
+  const deviceId = GLOBAL.deviceId.slice(0, 8)
+  // Bump updatedAtMillis (kept inside the JSON `data` blob) so the deletion registers as the newest
+  // change. Otherwise the deletion carries the same timestamp as the server's copy, the server never
+  // accepts it as newer, and the operation keeps reappearing on every sync.
+  await dbExecute(
+    "UPDATE operations SET deleted = ?, synced = ?, data = json_set(data, '$.updatedAtMillis', ?, '$.updatedOnDeviceId', ?) WHERE uuid = ?",
+    [true, false, now, deviceId, uuid]
+  )
+  // Same for the QSOs: mark them unsynced and bump their timestamp so their deletion propagates too,
+  // otherwise the server re-sends them live and they recreate the operation.
+  await dbExecute(
+    "UPDATE qsos SET deleted = ?, synced = ?, data = json_set(data, '$.updatedAtMillis', ?, '$.updatedOnDeviceId', ?) WHERE operation = ?",
+    [true, false, now, deviceId, uuid]
+  )
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
 
@@ -314,12 +325,29 @@ export const deleteOperation = (uuid) => async (dispatch, getState) => {
   })
 }
 
-export const restoreOperation = (uuid) => async (dispatch) => {
-  await dbExecute('UPDATE operations SET deleted = ? WHERE uuid = ?', [false, uuid])
-  await dbExecute("UPDATE qsos SET deleted = ifnull(json_extract('data', '$.deleted'), false) WHERE operation = ?", [uuid])
+export const restoreOperation = (uuid) => async (dispatch, getState) => {
+  const now = Date.now()
+  const deviceId = GLOBAL.deviceId.slice(0, 8)
+  // Bump updatedAtMillis and mark unsynced so the restore registers as the newest change and
+  // propagates; otherwise sync's last-write-wins keeps the (newer) deletion and re-deletes the op.
+  await dbExecute(
+    "UPDATE operations SET deleted = ?, synced = ?, data = json_set(data, '$.updatedAtMillis', ?, '$.updatedOnDeviceId', ?) WHERE uuid = ?",
+    [false, false, now, deviceId, uuid]
+  )
+  // Restore each QSO to its own stored deleted state — json_extract must read the `data` column, not
+  // the literal string 'data' (which always yields null and silently un-deletes every QSO) — and
+  // bump/unsync so the restore propagates.
+  await dbExecute(
+    "UPDATE qsos SET deleted = ifnull(json_extract(data, '$.deleted'), false), synced = ?, data = json_set(data, '$.updatedAtMillis', ?, '$.updatedOnDeviceId', ?) WHERE operation = ?",
+    [false, now, deviceId, uuid]
+  )
   await dispatch(actions.unsetOperation(uuid))
   await dispatch(qsosActions.unsetQSOs(uuid))
   await dispatch(loadOperation(uuid))
+
+  setImmediate(() => {
+    sendOperationsToSyncService({ dispatch, getState })
+  })
 }
 
 const UUID_REGEX = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i
