@@ -208,15 +208,7 @@ export function OneNotice ({ notice, style, styles, handleAction, handleDismiss,
             key={index}
             mode={'contained'}
             theme={ styles.buttonTheme }
-            // DIAGNOSTIC: the red border confirms whether a reporting device is actually running
-            // this build. If the border is missing, the build never arrived and any other result
-            // from this notice is meaningless. Remove once we have an answer.
-            style={{ paddingHorizontal: styles.oneSpace, borderWidth: 2, borderColor: 'red' }}
-            // Set the label color and font explicitly instead of relying on theme resolution:
-            // `textColor` bypasses every theme-based color path, and `buttonLabel` avoids the
-            // `Roboto Medium` family from labelLarge, which is not a real Android family name.
-            textColor={styles.buttonTheme.colors.onPrimary}
-            buttonColor={styles.buttonTheme.colors.primary}
+            style={{ paddingHorizontal: styles.oneSpace }}
             labelStyle={styles.buttonLabel}
             compact={true}
             disabled={action === 'disabled'}
@@ -412,13 +404,13 @@ function prepareStyles (baseStyles, paddingForSafeArea, safeArea) {
       }
     },
     buttonLabel: {
-      // Use the same font family the rest of this card already renders correctly with, rather than
-      // the `Roboto Medium` that Paper's labelLarge asks for. Give the line box room to grow with
-      // the OS font scale (which applies to fontSize but not to an explicit lineHeight), and state
-      // the color here too so it does not depend on theme resolution.
+      // Paper's `labelLarge` line box (20/16 = 1.25) is too tight for this label, and at small OS
+      // font sizes the text collapses to nothing — the button renders as an empty pill. Give the
+      // line box a generous ratio instead. Do NOT multiply by the OS font scale here: it is already
+      // applied to both fontSize and lineHeight at render, so doing it again shrinks the box.
       fontFamily: baseStyles.normalFontFamily,
       fontSize: baseStyles.normalFontSize,
-      lineHeight: baseStyles.normalFontSize * baseStyles.fontScale * 1.4,
+      lineHeight: baseStyles.normalFontSize * 1.5,
       color: 'rgb(252,244,167)'
     }
   }
