@@ -34,7 +34,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
     let call = operation.stationCall
 
     if (operation.local?.isMultiStation) {
-      call = `${call}/M${operation.local.multiIdentifier ?? '0'}`
+      call = `${call}/OP${operation.local.multiIdentifier ?? '0'}`
     }
 
     // console.log('-- spot to QP Hub')

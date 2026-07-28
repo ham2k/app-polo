@@ -18,7 +18,7 @@ export const TOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (disp
 
   let activatorCallsign = operation.stationCall || state.settings.operatorCall
   if (operation.local?.isMultiStation) {
-    activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? '0'}`
+    activatorCallsign = `${activatorCallsign}/OP${operation.local.multiIdentifier ?? '0'}`
   }
 
   const refs = filterRefs(operation, Info.activationType).filter(ref => ref.ref)

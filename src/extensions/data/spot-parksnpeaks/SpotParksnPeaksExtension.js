@@ -74,7 +74,7 @@ const SpotsHook = {
 
     let activatorCallsign = operation.stationCall || state.settings.operatorCall
     if (operation.local?.isMultiStation) {
-      activatorCallsign = `${activatorCallsign}/M${operation.local.multiIdentifier ?? '0'}`
+      activatorCallsign = `${activatorCallsign}/OP${operation.local.multiIdentifier ?? '0'}`
     }
 
     for (const ref of operation.refs) {
