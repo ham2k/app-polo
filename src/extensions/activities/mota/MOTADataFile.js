@@ -15,14 +15,14 @@ export function registerMOTADataFile () {
     key: 'mota-all-mills',
     name: 'MOTA: All Mills',
     description: 'Database of all MOTA references',
-    infoURL: 'https://www.cqgma.org/motadsp.php',
+    infoURL: 'https://gma.rocks/mota/',
     icon: 'file-image-outline',
     maxAgeInDays: 100,
     fetch: async (args) => {
       const { key, definition, options } = args
       options.onStatus && await options.onStatus({ key, definition, status: 'progress', progress: 'Downloading raw data' })
 
-      const url = 'https://www.cqgma.org/download/mills.csv'
+      const url = 'https://www.gma.rocks/download/mills.csv'
 
       return fetchAndProcessURL({
         ...args,

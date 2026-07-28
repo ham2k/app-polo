@@ -8,7 +8,7 @@ export const Info = {
   shortName: 'MOTA',
   doubleContact: 'Mill-to-Mill',
   shortNameDoubleContact: 'MOTA',
-  infoURL: 'https://www.cqgma.org/',
+  infoURL: 'https://gma.rocks/mota/',
   huntingType: 'mota',
   activationType: 'motaActivation',
   descriptionPlaceholder: 'Enter MOTA reference',

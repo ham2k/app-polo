@@ -9,10 +9,10 @@ const logSpot = async (request) => {
 
 export const handlers = [
   'https://api.pota.app/spot',
-  'https://www.cqgma.org/spotsmart2.php',
+  'https://www.gma.rocks/spotsmart2.php',
   'https://api-db2.sota.org.uk/api/spots',
   'https://api.wwbota.org/spots/*',
-  'https://www.cqgma.org/wwff/spotwwff.php',
+  'https://www.gma.rocks/wwff/spotwwff.php',
   'https://spots.wwff.co/*'
 ].map((spotUrl) =>
   ['post', 'put'].map((method) =>

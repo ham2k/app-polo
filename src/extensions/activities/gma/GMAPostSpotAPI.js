@@ -2,7 +2,7 @@ import packageJson from '../../../../package.json'
 
 export const GMAPostSpotAPI = async ({ call, comments, freq, mode, ref, spotterCall, url }) => {
   try {
-    const response = await fetch(url ?? 'https://www.cqgma.org/spotsmart2.php', {
+    const response = await fetch(url ?? 'https://www.gma.rocks/spotsmart2.php', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',

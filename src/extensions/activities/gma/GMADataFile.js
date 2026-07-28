@@ -15,7 +15,7 @@ export function registerGMADataFile () {
     key: 'gma-all-summits',
     name: 'GMA: All Summits',
     description: 'Database of all GMA references',
-    infoURL: 'https://www.cqgma.org/smtdsp.php',
+    infoURL: 'https://www.gma.rocks/',
     icon: 'file-image-outline',
     maxAgeInDays: 100,
     fetch: async (args) => {

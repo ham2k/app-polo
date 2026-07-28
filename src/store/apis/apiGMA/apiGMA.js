@@ -10,7 +10,7 @@ import packageJson from '../../../../package.json'
 /**
 
   GMA API
-  https://www.cqgma.org/infoapi.php
+  https://www.gma.rocks/infoapi.php
 
 **/
 
@@ -19,7 +19,7 @@ const API_TIMEOUT = 3000 // 3 seconds
 export const apiGMA = createApi({
   reducerPath: 'apiGMA',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'https://www.cqgma.org/api/',
+    baseUrl: 'https://www.gma.rocks/api/',
     timeout: API_TIMEOUT,
     prepareHeaders: (headers, { getState }) => {
       headers.set('Accept', 'application/json')

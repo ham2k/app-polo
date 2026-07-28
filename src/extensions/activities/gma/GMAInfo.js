@@ -8,7 +8,7 @@ export const Info = {
   shortName: 'GMA',
   doubleContact: 'Summit-to-Summit',
   shortNameDoubleContact: 'S2S',
-  infoURL: 'https://www.cqgma.org/',
+  infoURL: 'https://www.gma.rocks/',
   huntingType: 'gma',
   activationType: 'gmaActivation',
   descriptionPlaceholder: 'Enter GMA reference',
