@@ -25,9 +25,11 @@ export default Extension
 
 const ActivityHook = {
   ...Info,
-  standardExchangeFields: ({ qso, operation }) => ({
-    grid: (findRef(operation, Info.refType) || findRef(qso, Info.refType)) ? 'always' : false
-  }),
+  standardExchangeFields: ({ qso, operation }) => {
+    return {
+      grid: (findRef(operation, Info.refType) || findRef(qso, Info.refType)) ? 'always' : false
+    }
+  },
   loggingControls: ({ operation, settings }) => {
     // On a satellite operation, include the control automatically (mandatory); otherwise it's optional.
     if (findRef(operation, Info.refType)) {
