@@ -44,7 +44,8 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
         results.push({
           uri,
           type: mimeTypeForFormat(thisExport?.format),
-          fileName: thisExport.fileName
+          fileName: thisExport.fileName,
+          format: thisExport.format
         })
       }
     } else {
@@ -54,7 +55,8 @@ export const generateExportsForOptions = (uuid, exports, options = {}) => async 
           path,
           uri: `file://${path}`,
           type: mimeTypeForFormat(thisExport?.format),
-          fileName: thisExport.fileName
+          fileName: thisExport.fileName,
+          format: thisExport.format
         })
       }
       if (DEBUG) console.log('-- results', [...results])

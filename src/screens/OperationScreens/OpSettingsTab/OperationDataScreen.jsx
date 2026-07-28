@@ -8,6 +8,7 @@ import { Checkbox, Menu, Text } from 'react-native-paper'
 import { errorCodes, isErrorWithCode, keepLocalCopy, pick, saveDocuments } from '@react-native-documents/picker'
 import RNFetchBlob from 'react-native-blob-util'
 import Share from 'react-native-share'
+import UUID from 'react-native-uuid'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTranslation } from 'react-i18next'
 
@@ -17,13 +18,17 @@ import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 
 import { dataExportOptions, generateExportsForOptions, importADIFIntoOperation, loadOperation, selectOperation, selectOperationCallInfo } from '../../../store/operations'
 import { loadQSOs, selectQSOs } from '../../../store/qsos'
+import { selectLocalExtensionData } from '../../../store/local'
 import { selectSettings, setSettings } from '../../../store/settings'
+import { selectSystemFlag, setSystemFlag } from '../../../store/system'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { reportError, trackEvent } from '../../../distro'
+import { FileStashDialogForDistribution, reportError, trackEvent } from '../../../distro'
 import { H2kButton, H2kListItem, H2kListSection } from '../../../ui'
+import { findHooks } from '../../../extensions/registry'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { ExportWavelogDialog } from './components/ExportWavelogDialog'
+import { LogStashNotice } from './components/LogStashNotice'
 import { buildTitleForOperation } from '../OperationScreen'
 
 const isLikelyCanceledSavePickError = (err) =>
@@ -50,11 +55,20 @@ export default function OperationDataScreen (props) {
 
   const settings = useSelector(selectSettings)
 
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
+  const isFreeLofiAccount = !lofiData?.subscription?.id
+
+  const hasSeenFileStashInfoSelector = useCallback((state) => selectSystemFlag(state, 'viewedFileStashInfoOn'), [])
+  const hasSeenFileStashInfo = useSelector(hasSeenFileStashInfoSelector)
+
   useEffect(() => { // When starting, make sure all operation data is loaded
     dispatch(loadQSOs(route.params.operation))
     dispatch(loadOperation(route.params.operation))
   }, [route.params.operation, dispatch])
   const [showExportWavelog, setShowExportWavelog] = useState(false)
+  const [showStashInfoDialog, setShowStashInfoDialog] = useState(false)
+  const [isStashing, setIsStashing] = useState(false)
 
   useEffect(() => {
     let options = { title: t('screens.operationData.title', 'Operation Data') }
@@ -186,6 +200,114 @@ export default function OperationDataScreen (props) {
       })
   }, [dispatch, operation, t])
 
+  const handleStashExport = useCallback(async (options) => {
+    const confirmAsync = (title, message, confirmLabel) => new Promise((resolve) => {
+      Alert.alert(title, message, [
+        { text: t('general.buttons.cancel', 'Cancel'), style: 'cancel', onPress: () => resolve(false) },
+        { text: confirmLabel, onPress: () => resolve(true) }
+      ])
+    })
+
+    let finalOptions = options
+
+    if (isFreeLofiAccount && options.length > 1) {
+      const firstFileName = options[0].fileName
+      const proceed = await confirmAsync(
+        t('screens.operationData.freeTierOneFileTitle', 'Free accounts can only send one file at a time'),
+        t('screens.operationData.freeTierOneFileMessage', 'Do you want to send just "{{fileName}}"?', { fileName: firstFileName }),
+        t('screens.operationData.freeTierOneFileConfirm', 'Send {{fileName}}', { fileName: firstFileName })
+      )
+      if (!proceed) return
+      finalOptions = [options[0]]
+    }
+
+    const syncHook = findHooks('sync')[0]
+
+    if (isFreeLofiAccount) {
+      const recent = await dispatch(syncHook.getStashFiles({ limit: 5, offset: 0 }))
+      const sixHoursAgo = Date.now() - 6 * 60 * 60 * 1000
+      const recentUndownloaded = recent?.ok && (recent.json?.stash_files || []).find(
+        (f) => new Date(f.created_at).getTime() > sixHoursAgo && f.status !== 'downloaded'
+      )
+      if (recentUndownloaded) {
+        const proceed = await confirmAsync(
+          t('screens.operationData.freeTierRecentUploadTitle', 'Recent upload will be replaced'),
+          t('screens.operationData.freeTierRecentUploadMessage', 'You uploaded "{{fileName}}" less than 6 hours ago and it has not been downloaded yet. Sending this file will replace it. Do you want to wait instead?', { fileName: recentUndownloaded.filename }),
+          t('screens.operationData.freeTierRecentUploadConfirm', 'Send Anyway')
+        )
+        if (!proceed) return
+      }
+    }
+
+    finalOptions.forEach((option) => {
+      trackEvent('operation_exported', {
+        destination: 'log_stash',
+        export_type: [option.exportType ?? option.handler.key, option.format].join('.'),
+        qso_count: operation.qsoCount,
+        duration_minutes: Math.round((operation.startAtMillisMax - operation.startAtMillisMin) / (1000 * 60)),
+        refs: (option.operationData?.refs || []).map(r => r.type).join(',')
+      })
+    })
+
+    setIsStashing(true)
+    try {
+      const groupUuid = UUID.v4()
+      const groupTitle = buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle })
+
+      const exports = await dispatch(generateExportsForOptions(operation.uuid, finalOptions, { dataURI: false }))
+      if (!exports?.length) return
+
+      const errors = []
+      for (const e of exports) {
+        try {
+          const result = await dispatch(syncHook.uploadStashFile({ uri: e.uri, type: e.type, fileName: e.fileName, format: e.format, groupUuid, groupTitle }))
+          if (!result?.ok) {
+            const detail = result?.json?.stash_file_errors
+              ? Object.entries(result.json.stash_file_errors).map(([field, errs]) => `${field}: ${errs.map(er => er.error).join(', ')}`).join('\n')
+              : (result?.json?.error || `Error ${result?.status}`)
+            errors.push(`${e.fileName}: ${detail}`)
+          }
+        } catch (err) {
+          console.info('Log Stash upload error', err)
+          errors.push(`${e.fileName}: ${err?.message || 'Unknown error'}`)
+        }
+      }
+
+      if (errors.length > 0) {
+        reportError('Error sending export to Log Stash', new Error(errors.join('; ')))
+        Alert.alert(t('screens.operationData.errorSendingToLogStash', "Couldn't send to Ham2K's File Stash"), errors.join('\n'))
+      } else {
+        const filesLabel = exports.length === 1
+          ? t('screens.operationData.retrieveSingularFile', 'this file')
+          : t('screens.operationData.retrievePluralFiles', 'these files')
+
+        Alert.alert(
+          t('screens.operationData.sentToLogStash', "Sent to Ham2K's File Stash"),
+          t('screens.operationData.sentToLogStashMessage', 'You can retrieve {{filesLabel}} by visiting stash.ham2k.net on any browser.\n\nOr for your convenience, we can send you an email with a direct link.', { filesLabel }),
+          [
+            { text: t('general.buttons.done', 'Done'), style: 'cancel' },
+            {
+              text: t('screens.operationData.emailMeALink', 'Email Me a Link'),
+              onPress: async () => {
+                const emailResult = await dispatch(syncHook.emailStashDownloadLink())
+                if (emailResult?.ok) {
+                  Alert.alert(t('screens.operationData.linkEmailed', "We've emailed you a download link."))
+                } else {
+                  Alert.alert(t('screens.operationData.errorEmailingLink', "Couldn't send the email"), emailResult?.json?.error || '')
+                }
+              }
+            }
+          ]
+        )
+      }
+    } catch (error) {
+      console.error('Error generating exports', error)
+      reportError('Error generating exports', error)
+    } finally {
+      setIsStashing(false)
+    }
+  }, [dispatch, operation, t, isFreeLofiAccount])
+
   const handleImportADIF = useCallback(() => {
     pick({ mode: 'import' }).then(async (files) => {
       const [localCopy] = await keepLocalCopy({
@@ -224,6 +346,16 @@ export default function OperationDataScreen (props) {
 
   const exportActionsEnabled = Boolean(readyToExport && selectedExportOptions.length > 0)
 
+  const handleStashButtonPress = useCallback(() => {
+    if (!exportActionsEnabled || isStashing) return
+    if (isFreeLofiAccount && !hasSeenFileStashInfo) {
+      dispatch(setSystemFlag('viewedFileStashInfoOn', Date.now()))
+      setShowStashInfoDialog(true)
+    } else {
+      handleStashExport(selectedExportOptions)
+    }
+  }, [dispatch, exportActionsEnabled, isStashing, isFreeLofiAccount, hasSeenFileStashInfo, handleStashExport, selectedExportOptions])
+
   const handleNavigateToLoggingTab = useCallback(() => {
     // Passing `selectedUUID` in `params` so that it makes it to the `OpLog` tab if it is present
     // but also passing it directly so that it makes it to the main screen in split view.
@@ -239,7 +371,7 @@ export default function OperationDataScreen (props) {
     <ScreenContainer>
       <SafeAreaView edges={['left', 'right', 'bottom']} style={{ flex: 1 }}>
         <ScrollView style={{ flex: 1 }}>
-          <H2kListSection title={t('screens.operationData.exportQSOs', 'Export QSOs')}>
+          <H2kListSection title={exportLabel}>
 
             {pendingTodos.length > 0 && (
               <H2kListItem
@@ -251,26 +383,40 @@ export default function OperationDataScreen (props) {
               />
             )}
 
+            <LogStashNotice />
+            <FileStashDialogForDistribution
+              visible={showStashInfoDialog}
+              onDismiss={({ subscribed }) => {
+                setShowStashInfoDialog(false)
+                if (!subscribed) handleStashExport(selectedExportOptions)
+              }}
+            />
             <View
               style={{
-                ...styles.list.item,
                 flexDirection: 'row',
+                justifyContent: 'flex-end',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                gap: styles.oneSpace * 2,
                 paddingHorizontal: styles.oneSpace * 2,
                 paddingVertical: styles.halfSpace * 1,
                 opacity: readyToExport ? 1 : 0.5
               }}
             >
-              <Text
-                style={[styles.list.title, { flex: 1, flexShrink: 1, marginRight: styles.oneSpace }]}
-                numberOfLines={2}
-                accessibilityRole="header"
+              <H2kButton
+                mode="elevated"
+                icon="cloud-upload-outline"
+                compact
+                loading={isStashing}
+                disabled={!exportActionsEnabled || isStashing}
+                onPress={handleStashButtonPress}
+                accessibilityRole="button"
+                accessibilityLabel={t('screens.operationData.exportActionsLogStash', "Send to Ham2K's File Stash")}
               >
-                {exportLabel}
-              </Text>
+                {t('screens.operationData.exportActionsStash', 'Stash')}
+              </H2kButton>
+
               {Platform.OS === 'android' ? (
-                <View style={{ flexDirection: 'row', flexShrink: 0, gap: styles.oneSpace * 2, alignItems: 'center' }}>
+                <>
                   <H2kButton
                     mode="elevated"
                     icon="share"
@@ -278,9 +424,9 @@ export default function OperationDataScreen (props) {
                     disabled={!exportActionsEnabled}
                     onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'share' })}
                     accessibilityRole="button"
-                    accessibilityLabel={t('screens.operationData.exportRowShare', 'Share')}
+                    accessibilityLabel={t('screens.operationData.exportActionsShare', 'Share')}
                   >
-                    {t('screens.operationData.exportRowShare', 'Share')}
+                    {t('screens.operationData.exportActionsShare', 'Share')}
                   </H2kButton>
                   <H2kButton
                     mode="elevated"
@@ -289,25 +435,23 @@ export default function OperationDataScreen (props) {
                     disabled={!exportActionsEnabled}
                     onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'save' })}
                     accessibilityRole="button"
-                    accessibilityLabel={t('screens.operationData.exportRowSave', 'Save')}
+                    accessibilityLabel={t('screens.operationData.exportActionsSave', 'Save')}
                   >
-                    {t('screens.operationData.exportRowSave', 'Save')}
+                    {t('screens.operationData.exportActionsSave', 'Save')}
                   </H2kButton>
-                </View>
+                </>
               ) : (
-                <View style={{ flexDirection: 'row', flexShrink: 0, gap: styles.oneSpace * 2, alignItems: 'center' }}>
-                  <H2kButton
-                    mode="elevated"
-                    icon="share"
-                    compact
-                    disabled={!exportActionsEnabled}
-                    onPress={() => readyToExport && handleExports({ options: selectedExportOptions, disposition: 'share' })}
-                    accessibilityRole="button"
-                    accessibilityLabel={t('screens.operationData.exportRowShare', 'Share')}
-                  >
-                    {t('screens.operationData.exportRowExport', 'Export')}
-                  </H2kButton>
-                </View>
+                <H2kButton
+                  mode="elevated"
+                  icon="share"
+                  compact
+                  disabled={!exportActionsEnabled}
+                  onPress={() => readyToExport && handleExports({ options: selectedExportOptions, disposition: 'share' })}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('screens.operationData.exportActionsShare', 'Share')}
+                >
+                  {t('screens.operationData.exportActionsExport', 'Export')}
+                </H2kButton>
               )}
             </View>
             {exportOptions.map((option) => (

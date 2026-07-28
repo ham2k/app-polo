@@ -168,6 +168,30 @@ const SyncHook = {
     const response = await requestWithAuth({ dispatch, getState, url: `v1/accounts/${account?.uuid}/resend_email`, method: 'POST' })
 
     return response
+  },
+
+  uploadStashFile: ({ uri, type, fileName, format, source, groupUuid, groupTitle }) => async (dispatch, getState) => {
+    const formData = new FormData()
+    formData.append('stash_file[file]', { uri, type: type || 'text/plain', name: fileName })
+    formData.append('stash_file[filename]', fileName)
+    if (format) formData.append('stash_file[format]', format)
+    formData.append('stash_file[source]', source || 'com.ham2k.polo/exports')
+    if (groupUuid) formData.append('stash_file[group_uuid]', groupUuid)
+    if (groupTitle) formData.append('stash_file[group_title]', groupTitle)
+
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/stash_files', method: 'POST', body: formData })
+    return response
+  },
+
+  getStashFiles: ({ limit, offset } = {}) => async (dispatch, getState) => {
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/stash_files', method: 'GET', params: { limit, offset } })
+    return response
+  },
+
+  emailStashDownloadLink: ({ email } = {}) => async (dispatch, getState) => {
+    const body = email ? JSON.stringify({ email }) : undefined
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/stash_files/email_link', method: 'POST', body })
+    return response
   }
 }
 
@@ -242,12 +266,15 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
       }
 
       if (DEBUG) console.log('-- request', { url, method, body, token })
+      // `fetch` sets its own multipart boundary in the Content-Type header when the
+      // body is a `FormData` - setting it ourselves would drop that boundary and break the upload.
+      const isFormData = typeof FormData !== 'undefined' && body instanceof FormData
       const response = await fetchWithTimeout(`${server}/${url}`, {
         timeout: 30000,
         method,
         headers: {
           'User-Agent': `Ham2K Portable Logger/${packageJson.version}`,
-          'Content-Type': 'application/json',
+          ...(isFormData ? {} : { 'Content-Type': 'application/json' }),
           Authorization: `Bearer ${token}`
         },
         body

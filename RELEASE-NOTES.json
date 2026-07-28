@@ -3,7 +3,10 @@
     "name": "July '25 (patch 2)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
-      "Fixed phantom empty operations bug"
+      "Fixed phantom empty operations bug",
+      "Use GMA's new server address",
+      "Spot multi-station operations (beta)",
+      "Ham2K File Stash: upload exported files and download them later from any browser"
     ]
   },
   "26.7.1": {
