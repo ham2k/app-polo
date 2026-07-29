@@ -30,7 +30,11 @@ export function buildSuggestedQSO (params, url) {
     freq,
     mode: params.mode?.toUpperCase(),
     startAtMillis: params.startAtMillis ? Number(params.startAtMillis) : undefined,
-    _suggestedKey: url
+    _suggestedKey: url,
+    // A deep link's freq/mode is authoritative — the companion app is telling us the
+    // radio's real state — so it should persist to the VFO. A spot tap, by contrast,
+    // is just the operator considering a QSO, and must not overwrite the VFO.
+    _updatesVFO: true
   }
 
   if (params['their.call']) qso.their.call = params['their.call'].toUpperCase()

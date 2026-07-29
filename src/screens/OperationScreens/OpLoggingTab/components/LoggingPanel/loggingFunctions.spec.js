@@ -5,7 +5,9 @@
 // cover how it interacts with the logging flow: the freq/mode must become the
 // VFO ("last known good") so the next QSO keeps them after logging, an
 // unstarted blank QSO must not be queued and restored (which would revert the
-// freq/mode), and an interrupted manual entry must be preserved.
+// freq/mode), and an interrupted manual entry must be preserved. A spot-tap
+// suggested QSO (no `_updatesVFO`) is the opposite: it must NOT update the VFO,
+// so the next QSO reverts to whatever the operator had before the spot tap.
 
 import { manageNextQSO } from './loggingFunctions'
 import { buildSuggestedQSO } from '../../../../../tools/deepLinkTools'
@@ -187,5 +189,48 @@ describe('deep-linked suggested QSO (qso link)', () => {
     expect(next.mode).toBe('CW')
     expect(next.band).toBe('40m')
     expect(next.their?.call).toBeUndefined()
+  })
+})
+
+// A spot tap builds its own suggested QSO (OpSpotsTab.jsx), with no `_updatesVFO` flag: the
+// operator is only considering the spot's contact, not reporting the radio's real state, so
+// unlike a deep link it must NOT overwrite the VFO.
+describe('spot-tap suggested QSO (does not update VFO)', () => {
+  const spotQSO = () => ({
+    their: { call: 'W1AW' },
+    band: '40m',
+    freq: 7185,
+    mode: 'CW',
+    refs: [],
+    _suggestedKey: 'spot-1'
+  })
+
+  it('applies the freq/mode and their.call to the in-progress QSO', () => {
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+
+    const qso = h.currentQSO()
+    expect(qso.freq).toBe(7185)
+    expect(qso.mode).toBe('CW')
+    expect(qso.their.call).toBe('W1AW')
+  })
+
+  it('does not update the VFO', () => {
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+
+    expect(h.vfo().freq).toBe(14250)
+    expect(h.vfo().mode).toBe('SSB')
+  })
+
+  it('reverts the next QSO to the prior VFO freq/mode after logging, not the spot', () => {
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
+    seedBlankQSO(h) // blank QSO at 14250 showing before the spot tap
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+
+    const next = logCurrentAndAdvance(h)
+    expect(next.freq).toBe(14250)
+    expect(next.mode).toBe('SSB')
+    expect(next.band).toBe('20m')
   })
 })

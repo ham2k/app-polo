@@ -97,14 +97,17 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
   let nextQSO
   if (suggestedQSO) {
     nextQSO = prepareSuggestedQSO(suggestedQSO, qsos, operation, vfo, settings)
-    // A suggested QSO, from a deep link or from tapping a spot, carries an
-    // authoritative freq/mode. Record it as the VFO so subsequent new QSOs
-    // (which are seeded from the VFO) start from it.
-    const vfoUpdate = {}
-    if (nextQSO.freq) vfoUpdate.freq = nextQSO.freq
-    if (nextQSO.band) vfoUpdate.band = nextQSO.band
-    if (nextQSO.mode) vfoUpdate.mode = nextQSO.mode
-    if (Object.keys(vfoUpdate).length) dispatch(setVFO(vfoUpdate))
+    if (suggestedQSO._updatesVFO) {
+      // Only a deep link's freq/mode is authoritative (the companion app is reporting
+      // the radio's real state) — record it as the VFO so subsequent new QSOs (which
+      // are seeded from the VFO) start from it. A spot tap must NOT do this: the
+      // operator is just considering a QSO, and the VFO should stay where it was.
+      const vfoUpdate = {}
+      if (nextQSO.freq) vfoUpdate.freq = nextQSO.freq
+      if (nextQSO.band) vfoUpdate.band = nextQSO.band
+      if (nextQSO.mode) vfoUpdate.mode = nextQSO.mode
+      if (Object.keys(vfoUpdate).length) dispatch(setVFO(vfoUpdate))
+    }
     if (qsoWorthQueuing(qso)) {
       dispatch(setStateForComponentAndKey({
         component: 'OpLoggingTab',
