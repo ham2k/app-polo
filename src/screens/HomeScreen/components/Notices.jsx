@@ -3,16 +3,16 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Linking, Platform, ScrollView, View } from 'react-native'
 import { Surface } from 'react-native-paper'
 import { useTranslation } from 'react-i18next'
 
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
 
-import { dismissNotice, useNotices } from '../../../store/system'
+import { dismissNotice, selectSystemFlag, setSystemFlag, useNotices } from '../../../store/system'
 import { fetchDataFile } from '../../../store/dataFiles/actions/dataFileFS'
-import { trackEvent, handleNoticeActionForDistribution } from '../../../distro'
+import { trackEvent, handleNoticeActionForDistribution, reportError } from '../../../distro'
 import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native'
@@ -181,6 +181,25 @@ export function NoticeList ({ notices, style }) {
 
 export function OneNotice ({ notice, style, styles, handleAction, handleDismiss, onLayout }) {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+
+  const hasActions = (notice?.actions?.length ?? 0) > 0
+  const hasReportedButtonMetricsSelector = useCallback((state) => selectSystemFlag(state, 'reportedNoticeButtonMetricsOn'), [])
+  const hasReportedButtonMetrics = useSelector(hasReportedButtonMetricsSelector)
+
+  useEffect(() => {
+    // Silent, one-time-per-install diagnostic for the blank-notice-button-label bug: some devices
+    // (first reported on a Samsung phone) render notice action buttons as empty pills. Rather than
+    // showing this on screen (which would affect every user), report it as a Sentry warning so we
+    // can correlate label/metric values with device data across real installs without any visible
+    // change. Gated behind a system flag so it only fires once per install, not on every notice.
+    if (!hasActions || hasReportedButtonMetrics) return
+    const labels = notice.actions.map(a => (a.label ? t(`general.notices.action.${a.label}`, a.label) : t('general.notices.action.ok', 'Ok!')))
+    dispatch(setSystemFlag('reportedNoticeButtonMetricsOn', Date.now()))
+    reportError(`Notice button label metrics: labels=[${labels.join('|')}] fontScale=${styles.fontScale} normalFontSize=${styles.normalFontSize} buttonLabelLineHeight=${styles.buttonLabel.lineHeight}`)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasActions, hasReportedButtonMetrics])
+
   return (
     <Surface
       elevation={3}
@@ -408,7 +427,8 @@ function prepareStyles (baseStyles, paddingForSafeArea, safeArea) {
       // font sizes the text collapses to nothing — the button renders as an empty pill. Give the
       // line box a generous ratio instead. Do NOT multiply by the OS font scale here: it is already
       // applied to both fontSize and lineHeight at render, so doing it again shrinks the box.
-      fontFamily: baseStyles.normalFontFamily,
+      // No explicit fontFamily: on Android an explicit family combined with a weight it has no
+      // matching typeface for can resolve to nothing at all, which is a risk we do not need here.
       fontSize: baseStyles.normalFontSize,
       lineHeight: baseStyles.normalFontSize * 1.5,
       color: 'rgb(252,244,167)'
