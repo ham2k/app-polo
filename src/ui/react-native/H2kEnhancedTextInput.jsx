@@ -1,7 +1,7 @@
 // Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { findNodeHandle, Platform, Pressable, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
@@ -106,6 +106,18 @@ export function H2kEnhancedTextInput(props) {
   // controlled `value` prop can lag a keystroke behind the native buffer (the
   // change round-trip is async), which would otherwise feed stale text to onBlur.
   const lastValueRef = useRef()
+
+  // That lag lasts only until the next render. Any commit where the prop still disagrees with
+  // what we reported means the consumer did not take the value — it transformed it, ignored
+  // it, or reset the field — so the prop is authoritative again and the ref is spent. Holding
+  // on to it lets an earlier edit resurface on a later blur: type "3" in an RST field, log the
+  // QSO, and tabbing through the fresh 599 field would hand onBlur the old "3" and re-expand
+  // it to 339. No dependency list, because the prop can go stale without changing (the
+  // consumer keeping 599 while native holds a typed "4"). Layout effect so the ref is spent at
+  // commit, before any blur can read it.
+  useLayoutEffect(() => {
+    if (stringValue !== lastValueRef.current) lastValueRef.current = undefined
+  })
 
   const [isFocused, setIsFocused] = useState(false)
   const { isKeyboardVisible } = useKeyboardVisible()
