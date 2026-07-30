@@ -179,6 +179,15 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
     // delete operation.startAtMillisMax
     // delete operation.qsoCount
 
+    // Advance the sync cursor for every record received, whether or not we end up applying it.
+    // The cursor tracks how far we've read the server's change log, not what we wrote. Skipping
+    // it when the conflict guard below rejects a record leaves the cursor stuck, and the server
+    // re-sends that same record on every round from then on.
+    if (operation.syncedAtMillis) {
+      earliestSyncedAtMillis = Math.min(earliestSyncedAtMillis, operation.syncedAtMillis)
+      latestSyncedAtMillis = Math.max(latestSyncedAtMillis, operation.syncedAtMillis)
+    }
+
     const existing = existingOps.find((op) => op.uuid === operation.uuid)
     if (existing) {
       if (existing.updatedAtMillis >= operation.updatedAtMillis) {
@@ -187,8 +196,6 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
         operation.local = existing.local
       }
     }
-    earliestSyncedAtMillis = Math.min(earliestSyncedAtMillis, operation.syncedAtMillis)
-    latestSyncedAtMillis = Math.max(latestSyncedAtMillis, operation.syncedAtMillis)
 
     await dispatch(saveOperation(operation, { synced: true }))
   }

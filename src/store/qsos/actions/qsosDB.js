@@ -181,6 +181,13 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
 
   const qsosForOperation = {}
   for (const qso of qsos) {
+    // Advance the sync cursor for every record received, whether or not we end up applying it.
+    // See `mergeSyncOperations` for why skipping it on conflict stalls the cursor.
+    if (qso.syncedAtMillis) {
+      earliestSyncedAtMillis = Math.min(earliestSyncedAtMillis, qso.syncedAtMillis)
+      latestSyncedAtMillis = Math.max(latestSyncedAtMillis, qso.syncedAtMillis)
+    }
+
     const existing = existingQSOs.find((q) => q.uuid === qso.uuid)
     if (existing) {
       if (existing.updatedAtMillis >= qso.updatedAtMillis) {
@@ -191,8 +198,6 @@ export const mergeSyncQSOs = ({ qsos }) => async (dispatch, getState) => {
 
     qsosForOperation[qso.operation] = qsosForOperation[qso.operation] || []
     qsosForOperation[qso.operation].push(qso)
-    earliestSyncedAtMillis = Math.min(earliestSyncedAtMillis, qso.syncedAtMillis)
-    latestSyncedAtMillis = Math.max(latestSyncedAtMillis, qso.syncedAtMillis)
   }
   if (DEBUG) logTimer('sync', 'Compared QSOs', { sinceLast: true })
   for (const uuid in qsosForOperation) {
