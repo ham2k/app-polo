@@ -27,11 +27,15 @@ describe('mergeSyncOperations', () => {
   // read the server's change log — not what we chose to write — so it has to move past records
   // the conflict guard rejects. When it doesn't, the server re-sends the same record on every
   // round, forever. See the `existing.updatedAtMillis >= operation.updatedAtMillis` guard.
+  let dispatch
   const run = (operations, existing = []) => {
     dbSelectAll.mockImplementationOnce(async () => existing)
-    const dispatch = jest.fn()
+    dispatch = jest.fn()
     return mergeSyncOperations({ operations })(dispatch, () => ({}))
   }
+
+  const storeUpdates = () =>
+    dispatch.mock.calls.map(([action]) => action).filter((action) => action?.type === 'updateOperations')
 
   it('advances the cursor past a record the local copy already supersedes', async () => {
     const inbound = { uuid: 'op-1', updatedAtMillis: 1000, syncedAtMillis: 5000 }
@@ -59,6 +63,39 @@ describe('mergeSyncOperations', () => {
 
     expect(latestSyncedAtMillis).toBe(5000)
     expect(inbound.local).toEqual({ foo: 'bar' }) // local-only data is carried over, not clobbered
+  })
+
+  // The database keeps the newer local copy, but the store is what the screen reads. Handing a
+  // rejected record to `updateOperations` merges it over the newer state in memory, so a local
+  // edit — changing an operation's activities, say — silently reverts on the next sync round.
+  it('keeps a rejected record out of the store', async () => {
+    const inbound = { uuid: 'op-1', updatedAtMillis: 1000, syncedAtMillis: 5000, refs: [] }
+    const local = { uuid: 'op-1', updatedAtMillis: 2000, refs: [{ type: 'pota', ref: 'US-0001' }] }
+
+    await run([inbound], [local])
+
+    expect(storeUpdates()).toEqual([])
+  })
+
+  it('puts an applied record into the store', async () => {
+    const inbound = { uuid: 'op-1', updatedAtMillis: 3000, syncedAtMillis: 5000 }
+    const local = { uuid: 'op-1', updatedAtMillis: 2000 }
+
+    await run([inbound], [local])
+
+    expect(storeUpdates()).toEqual([{ type: 'updateOperations', ops: [inbound] }])
+  })
+
+  it('puts only the applied records of a mixed batch into the store', async () => {
+    const rejected = { uuid: 'op-1', updatedAtMillis: 1000, syncedAtMillis: 5000 }
+    const accepted = { uuid: 'op-2', updatedAtMillis: 3000, syncedAtMillis: 9000 }
+
+    await run([rejected, accepted], [
+      { uuid: 'op-1', updatedAtMillis: 2000 },
+      { uuid: 'op-2', updatedAtMillis: 2000 }
+    ])
+
+    expect(storeUpdates()).toEqual([{ type: 'updateOperations', ops: [accepted] }])
   })
 
   it('reports the range spanned by a batch', async () => {

@@ -172,6 +172,7 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
   const now = Date.now()
   let earliestSyncedAtMillis = now
   let latestSyncedAtMillis = 0
+  const applied = []
 
   for (const operation of operations) {
     delete operation.local
@@ -197,10 +198,15 @@ export const mergeSyncOperations = ({ operations }) => async (dispatch, getState
       }
     }
 
+    applied.push(operation)
     await dispatch(saveOperation(operation, { synced: true }))
   }
 
-  dispatch(actions.updateOperations(operations))
+  // Only the operations we actually applied. Pushing a record the guard above rejected into the
+  // store would undo in memory the very local edits the guard just protected on disk — the edit
+  // survives in the database but the screen reverts to the server's older copy.
+  if (applied.length > 0) dispatch(actions.updateOperations(applied))
+
   return { earliestSyncedAtMillis, latestSyncedAtMillis }
 }
 
