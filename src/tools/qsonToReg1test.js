@@ -46,7 +46,7 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
 
   let str = ''
 
-  str += '[REG1TEST;1]\n'
+  str += '[REG1TEST;1]\r\n'
   const defaultHeaders = {
     PCall: operation.stationCall ?? settings.operatorCall,
     RCall: operation.operatorCall ?? operation.stationCall ?? settings.operatorCall,
@@ -59,16 +59,16 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
   }
 
   Object.entries({ ...defaultHeaders, ...headers }).forEach(([key, value]) => {
-    if (value) str += `${key}=${value}\n`
+    if (value) str += `${key}=${value}\r\n`
   })
 
   if (operation.notes) {
-    str += `[Remarks]\n${operation.notes}\n`
+    str += `[Remarks]\r\n${operation.notes}\r\n`
   }
 
   const actualCount = qsos.filter(qso => !qso.deleted && !qso.event).length
 
-  str += `[QSORecords;${actualCount}]\n`
+  str += `[QSORecords;${actualCount}]\r\n`
 
   for (const qso of qsos) {
     if (qso.deleted) continue
@@ -112,14 +112,17 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
       qsoParts.push(combinedFields.theirCall)
       qsoParts.push(REG1TEST_MODE[combinedFields.mode] || 0)
       qsoParts.push(combinedFields.rstSent)
-      qsoParts.push(combinedFields.sequenceSent)
+      qsoParts.push(combinedFields.sequenceSent.padStart(3, "0"))
       qsoParts.push(combinedFields.rstReceived)
-      qsoParts.push(combinedFields.sequenceReceived)
+      qsoParts.push(combinedFields.sequenceReceived.padStart(3, "0"))
       qsoParts.push(combinedFields.exchangeReceived)
       qsoParts.push(combinedFields.wwlReceived)
       // We don't include any of the claimed points or multiplier fields
 
-      str += qsoParts.join(';') + '\n'
+      str += qsoParts.join(';') + ';0;;;\r\n'
+      // REG1TEST specifies 14 columns, Lines must end with ASCII characters 13 and 10 (CR LF)
+      // See IARU-R1 VHF_Handbook
+      // And calculating QSO points is mandatory but for the moment let's use 0 as the contest robots will recalculate 
     })
   }
 
