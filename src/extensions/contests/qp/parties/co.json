@@ -7,10 +7,9 @@
   "cabrilloName": "COQP",
   "notes": "",
   "internalNotes": "",
-  "lastUpdated": "2026-06-29 12:00Z",
+  "lastUpdated": "2026-08-07 12:00Z",
   "status": "Updated for 2026. Mixed mode scoring will not be accurate.",
   "exchange": [
-    "Name",
     "Location"
   ],
   "options": {
@@ -28,7 +27,7 @@
   },
   "bonus": {
     "perActivatedCounty": 500,
-    "perActivatedCountyMinimumCount": 10
+    "perActivatedCountyMinimumCount": 15
   },
   "counties": {
     "ADA": "Adams",
