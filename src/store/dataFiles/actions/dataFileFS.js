@@ -206,7 +206,7 @@ export async function fetchAndProcessURL ({ url, key, process, definition, info,
   url = await resolveDownloadUrl(url)
 
   const headers = {
-    'User-Agent': `Ham2K Portable Logger / ${packageJson.version} `
+    'User-Agent': `Ham2K Portable Logger / ${packageJson.version}`
   }
   if (DEBUG_FETCH) console.log('Fetching', { url, info })
   if (info?.data?.etag) {
@@ -232,7 +232,7 @@ export async function fetchAndProcessBatchedLines ({ url, key, processLineBatch,
   }
 
   const headers = {
-    'User-Agent': `Ham2K Portable Logger / ${packageJson.version} `
+    'User-Agent': `Ham2K Portable Logger / ${packageJson.version}`
   }
   if (DEBUG_FETCH) console.log('Fetching for batching', { url, info })
   if (info?.data?.etag) {
