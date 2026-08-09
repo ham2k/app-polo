@@ -95,7 +95,7 @@ const ActivityHook = {
 
 }
 
-const ReferenceHandler = {
+export const ReferenceHandler = {
   ...Info,
 
   descriptionPlaceholder: '',
@@ -505,7 +505,9 @@ const ReferenceHandler = {
 
     if (qp.bonus.perActivatedCounty) {
       qsoScore.ourLocations.forEach(location => {
-        score.activatedCounties[location.location] = (score.activatedCounties[location.location] || 0) + 1
+        if (qp.counties[location.location]) {
+          score.activatedCounties[location.location] = (score.activatedCounties[location.location] || 0) + 1
+        }
       })
     }
 
@@ -558,8 +560,8 @@ const ReferenceHandler = {
     }
 
     if (qp.bonus.perActivatedCounty) {
-      qsoScore.activatedCounties.forEach(county => {
-        if ((score.activatedCounties[county] || 0) >= (qp.bonus.perActivatedCountyMinimumCount || 1)) {
+      Object.keys(score.activatedCounties).forEach(county => {
+        if (score.activatedCounties[county] >= (qp.bonus.perActivatedCountyMinimumCount || 1)) {
           oneTimeBonuses = oneTimeBonuses + qp.bonus.perActivatedCounty
         }
       })
