@@ -67,9 +67,9 @@ export default function LoggingPanel({
 
   useEffect(() => {
     if (!qso) {
-      dispatch(manageNextQSO({ qsos: operation?.qsos, operation, vfo, settings }))
+      dispatch(manageNextQSO({ qsos: operation?.qsos, operation, settings }))
     }
-  }, [qso, dispatch, operation, vfo, settings])
+  }, [qso, dispatch, operation, settings])
 
   useEffect(() => {
     if (qso?.uuid && qso?.uuid !== originalQSO?.uuid) {

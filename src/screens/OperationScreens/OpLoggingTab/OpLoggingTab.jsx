@@ -106,8 +106,8 @@ export default function OpLoggingTab({ navigation, route, splitView }) {
   }, [navigation, operation])
 
   const handleSelectQSO = useCallback((uuid) => {
-    dispatch(manageNextQSO({ selectedUUID: uuid, qsos, operation, vfo, settings }))
-  }, [dispatch, qsos, operation, vfo, settings])
+    dispatch(manageNextQSO({ selectedUUID: uuid, qsos, operation, settings }))
+  }, [dispatch, qsos, operation, settings])
 
   return (
     <View style={flexOne}>

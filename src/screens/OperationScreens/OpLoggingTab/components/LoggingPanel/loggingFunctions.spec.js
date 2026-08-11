@@ -26,10 +26,13 @@ jest.mock('@ham2k/lib-operation-data', () => ({
 jest.mock('../../../../../extensions/registry', () => ({
   findHooks: (category, { key } = {}) => {
     if (category !== 'activity') return []
-    // Activities carry no `prepareNewQSO`, so the QSO-prep hooks are inert here.
     const hooks = [
       { key: 'sota', activationType: 'sotaActivation', huntingType: 'sota' },
-      { key: 'pota', activationType: 'potaActivation', huntingType: 'pota' }
+      { key: 'pota', activationType: 'potaActivation', huntingType: 'pota' },
+      // Mirrors how contest extensions (e.g. CQWPXExtension) attach an exchange
+      // number: mutate the `qso` this hook is handed. That mutation only reaches
+      // the logged QSO if the caller passes it the object it's about to return.
+      { key: 'marker', prepareNewQSO: ({ qso }) => { qso._touchedByActivity = true } }
     ]
     return key ? hooks.filter(h => h.key === key) : hooks
   }
@@ -47,9 +50,10 @@ jest.mock('./useCallLookup', () => ({ resetCallLookupCache: () => () => {} }))
 // Stub the station slice so importing loggingFunctions doesn't pull in
 // @reduxjs/toolkit (ESM, untransformed by the RN jest preset). The harness below
 // applies the resulting setVFO action, mirroring the real reducer (merge freq/mode,
-// recompute band from freq).
+// recompute band from freq). selectVFO reads the same flat `state.vfo` the harness keeps.
 jest.mock('../../../../../store/station/stationSlice', () => ({
-  setVFO: (payload) => ({ type: 'station/setVFO', payload })
+  setVFO: (payload) => ({ type: 'station/setVFO', payload }),
+  selectVFO: (state) => state?.vfo || {}
 }))
 
 // --- harness: a minimal store that applies the only two action kinds these paths
@@ -98,7 +102,7 @@ function suggestedFromURL (url) {
 function logCurrentAndAdvance (h) {
   const logged = h.currentQSO()
   h.dispatch({ type: 'ui/setStateForComponentAndKey', payload: { component: 'OpLoggingTab', key: 'qso', value: undefined } })
-  h.dispatch(manageNextQSO({ qsos: [logged], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+  h.dispatch(manageNextQSO({ qsos: [logged], operation: OPERATION, settings: {} }))
   return h.currentQSO()
 }
 
@@ -106,13 +110,13 @@ function logCurrentAndAdvance (h) {
 // is already showing, seeded from the current VFO. This blank is what a
 // suggested QSO interrupts, and what must not be queued and restored.
 function seedBlankQSO (h) {
-  h.dispatch(manageNextQSO({ qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+  h.dispatch(manageNextQSO({ qsos: [], operation: OPERATION, settings: {} }))
 }
 
 describe('deep-linked frequency and mode (vfo link)', () => {
   it('applies the freq/mode to the in-progress QSO', () => {
     const h = makeHarness({ band: '40m', freq: 7000, mode: 'SSB' })
-    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, settings: {} }))
 
     const qso = h.currentQSO()
     expect(qso.freq).toBe(14285) // 14285000 Hz / 1000
@@ -122,7 +126,7 @@ describe('deep-linked frequency and mode (vfo link)', () => {
 
   it('updates the VFO to the suggested freq/mode', () => {
     const h = makeHarness({ band: '40m', freq: 7000, mode: 'SSB' })
-    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, settings: {} }))
 
     expect(h.vfo().freq).toBe(14285)
     expect(h.vfo().mode).toBe('SSB')
@@ -131,7 +135,7 @@ describe('deep-linked frequency and mode (vfo link)', () => {
   it('keeps the next QSO on the most recent freq/mode after logging', () => {
     const h = makeHarness({ band: '40m', freq: 7000, mode: 'SSB' })
     seedBlankQSO(h) // operator is sitting on a blank QSO at 7000 when the link arrives
-    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, settings: {} }))
 
     const next = logCurrentAndAdvance(h)
     expect(next.freq).toBe(14285)
@@ -145,7 +149,7 @@ describe('deep-linked frequency and mode (vfo link)', () => {
     const h = makeHarness({ band: '40m', freq: 7000, mode: 'SSB' })
     h.dispatch(setVFO({ freq: 14285, mode: 'SSB' })) // what editing the freq field dispatches
 
-    h.dispatch(manageNextQSO({ qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ qsos: [], operation: OPERATION, settings: {} }))
     const qso = h.currentQSO()
     expect(qso.freq).toBe(14285)
     expect(qso.mode).toBe('SSB')
@@ -160,7 +164,7 @@ describe('deep-linked frequency and mode (vfo link)', () => {
     const started = { ...h.currentQSO(), their: { call: 'N0CALL' } } // operator typed a call
     h.dispatch({ type: 'ui/setStateForComponentAndKey', payload: { component: 'OpLoggingTab', key: 'qso', value: started } })
 
-    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_VFO), qsos: [], operation: OPERATION, settings: {} }))
 
     const next = logCurrentAndAdvance(h)
     expect(next.their?.call).toBe('N0CALL')
@@ -171,7 +175,7 @@ describe('deep-linked frequency and mode (vfo link)', () => {
 describe('deep-linked suggested QSO (qso link)', () => {
   it('applies the freq/mode and their.call to the in-progress QSO', () => {
     const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
-    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_QSO), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_QSO), qsos: [], operation: OPERATION, settings: {} }))
 
     const qso = h.currentQSO()
     expect(qso.freq).toBe(7185) // 7185000 Hz / 1000
@@ -182,7 +186,7 @@ describe('deep-linked suggested QSO (qso link)', () => {
   it('keeps the next QSO on the suggested freq/mode after logging, without the call', () => {
     const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
     seedBlankQSO(h) // blank QSO at 14250 showing before the link
-    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_QSO), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: suggestedFromURL(URL_QSO), qsos: [], operation: OPERATION, settings: {} }))
 
     const next = logCurrentAndAdvance(h)
     expect(next.freq).toBe(7185)
@@ -207,7 +211,7 @@ describe('spot-tap suggested QSO (does not update VFO)', () => {
 
   it('applies the freq/mode and their.call to the in-progress QSO', () => {
     const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
-    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, settings: {} }))
 
     const qso = h.currentQSO()
     expect(qso.freq).toBe(7185)
@@ -217,7 +221,7 @@ describe('spot-tap suggested QSO (does not update VFO)', () => {
 
   it('does not update the VFO', () => {
     const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
-    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, settings: {} }))
 
     expect(h.vfo().freq).toBe(14250)
     expect(h.vfo().mode).toBe('SSB')
@@ -226,11 +230,77 @@ describe('spot-tap suggested QSO (does not update VFO)', () => {
   it('reverts the next QSO to the prior VFO freq/mode after logging, not the spot', () => {
     const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
     seedBlankQSO(h) // blank QSO at 14250 showing before the spot tap
-    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, vfo: h.vfo(), settings: {} }))
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, settings: {} }))
 
     const next = logCurrentAndAdvance(h)
     expect(next.freq).toBe(14250)
     expect(next.mode).toBe('SSB')
     expect(next.band).toBe('20m')
+  })
+
+  it('carries the VFO power into the suggested QSO, without writing it back to the VFO', () => {
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB', power: 100 })
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, settings: {} }))
+
+    expect(h.currentQSO().power).toBe(100)
+    expect(h.vfo().power).toBe(100) // unchanged, not overwritten with something else
+  })
+
+  it('falls back to the power already on screen when the VFO has none', () => {
+    // Defends against a repeat of the bug where a spot tap wiped TxPowerControl:
+    // even with no VFO power recorded yet, the currently-displayed power must
+    // carry forward into the suggestion, not blank out.
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' }) // no power on the VFO
+    h.dispatch({ type: 'ui/setStateForComponentAndKey', payload: { component: 'OpLoggingTab', key: 'qso', value: { power: 75 } } })
+
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, settings: {} }))
+
+    expect(h.currentQSO().power).toBe(75)
+  })
+
+  it('preserves an explicit power of 0 on the suggestion instead of overwriting it', () => {
+    // power: 0 (e.g. a QRPp contact) is a real, meaningful value and must not
+    // be treated the same as "no power set".
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB', power: 100 })
+
+    h.dispatch(manageNextQSO({ suggestedQSO: { ...spotQSO(), power: 0 }, qsos: [], operation: OPERATION, settings: {} }))
+
+    expect(h.currentQSO().power).toBe(0)
+  })
+
+  it('hands activity hooks the QSO that actually gets logged, not a discarded copy', () => {
+    // Contest extensions attach exchange numbers by mutating the `qso` object their
+    // prepareNewQSO hook receives; if that's a different object than what's returned,
+    // the number silently never reaches the logged contact.
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB' })
+
+    h.dispatch(manageNextQSO({ suggestedQSO: spotQSO(), qsos: [], operation: OPERATION, settings: {} }))
+
+    expect(h.currentQSO()._touchedByActivity).toBe(true)
+  })
+})
+
+// Selecting an existing, already-logged QSO for editing must show that QSO's own
+// power (even if blank) rather than the VFO's, and must never write to the VFO —
+// the operator revisiting an old contact isn't reporting the radio's current state.
+describe('editing an existing logged QSO', () => {
+  it('shows the QSO\'s own power, not the VFO\'s', () => {
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB', power: 100 })
+    const logged = { uuid: 'qso-1', band: '40m', freq: 7185, mode: 'CW', power: 5 }
+
+    h.dispatch(manageNextQSO({ selectedUUID: 'qso-1', qsos: [logged], operation: OPERATION, settings: {} }))
+
+    expect(h.currentQSO().power).toBe(5)
+    expect(h.vfo().power).toBe(100) // untouched
+  })
+
+  it('does not backfill power from the VFO when the logged QSO has none', () => {
+    const h = makeHarness({ band: '20m', freq: 14250, mode: 'SSB', power: 100 })
+    const logged = { uuid: 'qso-1', band: '40m', freq: 7185, mode: 'CW' } // no power ever recorded
+
+    h.dispatch(manageNextQSO({ selectedUUID: 'qso-1', qsos: [logged], operation: OPERATION, settings: {} }))
+
+    expect(h.currentQSO().power).toBeUndefined()
+    expect(h.vfo().power).toBe(100) // untouched
   })
 })

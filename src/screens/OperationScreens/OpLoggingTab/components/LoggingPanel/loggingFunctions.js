@@ -6,7 +6,7 @@ import cloneDeep from 'clone-deep'
 import UUID from 'react-native-uuid'
 
 import { findHooks } from '../../../../../extensions/registry'
-import { setVFO } from '../../../../../store/station/stationSlice'
+import { selectVFO, setVFO } from '../../../../../store/station/stationSlice'
 import { selectStateForComponentAndKey, setStateForComponentAndKey } from '../../../../../store/ui'
 import { resetCallLookupCache } from './useCallLookup'
 
@@ -41,7 +41,7 @@ export function prepareExistingQSO (qso) {
   return clone
 }
 
-export function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
+export function prepareSuggestedQSO (qso, qsos, operation, vfo, settings, currentQSO) {
   const clone = cloneDeep(qso || {})
   clone._isNew = true
   clone._isSuggested = true
@@ -54,14 +54,15 @@ export function prepareSuggestedQSO (qso, qsos, operation, vfo, settings) {
     }
   }
 
-  if (vfo?.power) {
-    clone.power = vfo.power
-  }
+  // A spot or deep link never carries its own power info. Fall back to the VFO,
+  // and then to whatever power is currently on screen, so TxPowerControl never
+  // gets silently blanked just because a suggestion came in.
+  clone.power = clone.power ?? vfo?.power ?? currentQSO?.power
 
   const activityHooks = findHooks('activity')
   activityHooks.forEach(activity => {
     if (activity.prepareNewQSO) {
-      activity.prepareNewQSO({ qso, qsos, operation, vfo, settings })
+      activity.prepareNewQSO({ qso: clone, qsos, operation, vfo, settings })
     }
   })
 
@@ -77,10 +78,11 @@ function qsoWorthQueuing (qso) {
   return qso?._isNew && !qso?._isSuggested && !!qso?.their?.call
 }
 
-export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo, settings }) => (dispatch, getState) => {
+export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, settings }) => (dispatch, getState) => {
   qsos = qsos || []
 
   const state = getState()
+  const vfo = selectVFO(state)
   const qso = selectStateForComponentAndKey(state, 'OpLoggingTab', 'qso')
   const qsoQueue = selectStateForComponentAndKey(state, 'OpLoggingTab', 'qsoQueue')
   const originalQSO = selectStateForComponentAndKey(state, 'OpLoggingTab', 'originalQSO')
@@ -96,7 +98,7 @@ export const manageNextQSO = ({ selectedUUID, suggestedQSO, qsos, operation, vfo
 
   let nextQSO
   if (suggestedQSO) {
-    nextQSO = prepareSuggestedQSO(suggestedQSO, qsos, operation, vfo, settings)
+    nextQSO = prepareSuggestedQSO(suggestedQSO, qsos, operation, vfo, settings, qso)
     if (suggestedQSO._updatesVFO) {
       // Only a deep link's freq/mode is authoritative (the companion app is reporting
       // the radio's real state) — record it as the VFO so subsequent new QSOs (which
