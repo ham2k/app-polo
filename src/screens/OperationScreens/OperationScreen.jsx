@@ -12,7 +12,7 @@ import KeepAwake from '@sayem314/react-native-keep-awake'
 import { useTranslation } from 'react-i18next'
 import { Icon, Menu, Text } from 'react-native-paper'
 
-import { hasRef } from '@ham2k/lib-qson-tools'
+import { findRef } from '@ham2k/lib-qson-tools'
 import { slashZeros } from '@ham2k/lib-format-tools'
 import { parseCallsign } from '@ham2k/lib-callsigns'
 
@@ -445,7 +445,7 @@ function OperationMenuItems({ operation, settings, styles, dispatch, online, set
         contentStyle={{ minWidth: styles.oneSpace * 20 }}
       />
 
-      {hasRef(operation, 'potaActivation') &&
+      {findRef(operation, 'potaActivation')?.ref &&
         <Menu.Item
           leadingIcon="list-status"
           onPress={() => hideAndRun(() => {

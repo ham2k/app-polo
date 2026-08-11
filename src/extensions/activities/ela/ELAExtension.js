@@ -120,7 +120,8 @@ const ReferenceHandler = {
   },
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
-    const activationRef = findRef(operation, Info.activationType)
+    const rawActivationRef = findRef(operation, Info.activationType)
+    const activationRef = rawActivationRef?.ref ? rawActivationRef : undefined
     const fields = []
     if (activationRef) fields.push({ MY_SIG: Info.shortName }, { MY_SIG_INFO: activationRef.ref })
 

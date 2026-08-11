@@ -42,7 +42,7 @@ export default Extension
 const ActivityHook = {
   ...Info,
   loggingControls: ({ operation, settings }) => {
-    if (findRef(operation, Info.activationType)) {
+    if (findRef(operation, Info.activationType)?.ref) {
       return [ActivatorLoggingControl]
     } else {
       return [HunterLoggingControl]
@@ -229,7 +229,8 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
-    const activationRef = findRef(operation, Info.activationType)
+    const rawActivationRef = findRef(operation, Info.activationType)
+    const activationRef = rawActivationRef?.ref ? rawActivationRef : undefined
     const fields = []
     if (activationRef) fields.push({ MY_SIG: 'WWFF' }, { MY_SIG_INFO: activationRef.ref }, { MY_WWFF_REF: activationRef.ref })
     if (huntingRef) fields.push({ SIG: 'WWFF' }, { SIG_INFO: huntingRef.ref }, { WWFF_REF: huntingRef.ref })

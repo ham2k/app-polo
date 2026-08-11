@@ -6,7 +6,7 @@ import { filterRefs } from '@ham2k/lib-qson-tools'
 import { GMACommonPostSelfSpot } from './GMACommonPostSelfSpot'
 
 export const GMAPostSelfSpot = ({ operation, vfo, comments }) => async (dispatch, getState) => {
-  const refs = filterRefs(operation, 'gmaActivation')
+  const refs = filterRefs(operation, 'gmaActivation').filter(ref => ref?.ref)
   if (refs.length) {
     return dispatch(GMACommonPostSelfSpot({ operation, vfo, comments, refs }))
   }

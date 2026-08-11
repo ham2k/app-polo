@@ -27,12 +27,12 @@ const ActivityHook = {
   ...Info,
   standardExchangeFields: ({ qso, operation }) => {
     return {
-      grid: (findRef(operation, Info.refType) || findRef(qso, Info.refType)) ? 'always' : false
+      grid: (findRef(operation, Info.refType)?.ref || findRef(qso, Info.refType)?.ref) ? 'always' : false
     }
   },
   loggingControls: ({ operation, settings }) => {
     // On a satellite operation, include the control automatically (mandatory); otherwise it's optional.
-    if (findRef(operation, Info.refType)) {
+    if (findRef(operation, Info.refType)?.ref) {
       return [{ ...LoggingControl, optionType: 'mandatory' }]
     } else {
       return [LoggingControl]

@@ -18,7 +18,7 @@ export const POTAPostSelfSpot = ({ t, operation, vfo, comments }) => (_dispatch,
     ...(operation?.stationCallPlusArray || [])
   ].filter(Boolean)
 
-  const refs = filterRefs(operation, 'potaActivation')
+  const refs = filterRefs(operation, 'potaActivation').filter(ref => ref?.ref)
 
   return Promise.all(
     calls.map((call) => POTAPostSpotAPI({

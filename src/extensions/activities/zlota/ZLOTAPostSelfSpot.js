@@ -21,7 +21,7 @@ export const ZLOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (dis
     activatorCallsign = `${activatorCallsign}/OP${operation.local.multiIdentifier ?? '0'}`
   }
 
-  const refs = filterRefs(operation, Info.activationType)
+  const refs = filterRefs(operation, Info.activationType).filter(ref => ref?.ref)
   if (refs.length > 0) {
     const spot = {
       spotter: activatorCallsign,

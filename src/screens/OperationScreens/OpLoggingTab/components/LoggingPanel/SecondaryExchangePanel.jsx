@@ -39,7 +39,7 @@ export const SecondaryExchangePanel = (props) => {
     const spottingHooks = findHooks('spots')
 
     const activityHooksWithSelfSpotting = activityHooks.filter((x) => (
-      findRef(operation, x.activationType) && x.postSelfSpot &&
+      findRef(operation, x.activationType)?.ref && x.postSelfSpot &&
       (!x.isSelfSpotEnabled || (x.isSelfSpotEnabled && x.isSelfSpotEnabled({ operation, settings, navigation })))
     ))
 

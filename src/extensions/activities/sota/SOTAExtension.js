@@ -80,7 +80,7 @@ const ActivityHook = {
   }),
 
   loggingControls: ({ operation, settings }) => {
-    if (findRef(operation, Info.activationType)) {
+    if (findRef(operation, Info.activationType)?.ref) {
       return [ActivatorLoggingControl]
     } else {
       return [HunterLoggingControl]
@@ -291,7 +291,7 @@ const ReferenceHandler = {
       }]
     } else { // "export" hook
       const hasSOTA = qsos?.find(q => findRef(q, Info.huntingType) && !q.deleted)
-      const isSOTAActivation = findRef(operation, Info.activationType)
+      const isSOTAActivation = findRef(operation, Info.activationType)?.ref
       if (!hasSOTA || isSOTAActivation) return null
       return [{
         format: 'adif',
@@ -306,7 +306,8 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation, common, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
-    const activationRef = findRef(operation, Info.activationType)
+    const rawActivationRef = findRef(operation, Info.activationType)
+    const activationRef = rawActivationRef?.ref ? rawActivationRef : undefined
 
     if (!activationRef && !huntingRef) return false
 

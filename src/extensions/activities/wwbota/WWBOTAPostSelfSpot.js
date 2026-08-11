@@ -23,7 +23,7 @@ export const WWBOTAPostSelfSpot = ({ t, operation, vfo, comments }) => async (di
     activatorCallsign = `${activatorCallsign}/OP${operation.local.multiIdentifier ?? '0'}`
   }
 
-  const refs = filterRefs(operation, Info.activationType)
+  const refs = filterRefs(operation, Info.activationType).filter(ref => ref?.ref)
   if (refs.length) {
     const schemeRefs = {}
     refs.forEach((ref) => {

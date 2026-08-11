@@ -41,7 +41,7 @@ export default Extension
 const ActivityHook = {
   ...Info,
   loggingControls: ({ operation, settings }) => {
-    if (findRef(operation, Info.activationType)) {
+    if (findRef(operation, Info.activationType)?.ref) {
       return [ActivatorLoggingControl]
     } else {
       return [HunterLoggingControl]
@@ -225,7 +225,7 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
-    const activationRefs = filterRefs(operation, Info.activationType)
+    const activationRefs = filterRefs(operation, Info.activationType).filter(ref => ref?.ref)
     const fields = []
     if (activationRefs[0]) fields.push({ MY_SIG: 'TOTA' }, { MY_SIG_INFO: activationRefs[0].ref })
     if (huntingRefs[0]) fields.push({ SIG: 'TOTA' }, { SIG_INFO: huntingRefs[0].ref })
@@ -235,7 +235,8 @@ const ReferenceHandler = {
 
   adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
-    const activationRef = findRef(operation, Info.activationType)
+    const rawActivationRef = findRef(operation, Info.activationType)
+    const activationRef = rawActivationRef?.ref ? rawActivationRef : undefined
     let activationFields = []
     if (activationRef) {
       activationFields = [{ MY_SIG: 'TOTA' }, { MY_SIG_INFO: activationRef.ref }]

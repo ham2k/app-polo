@@ -18,7 +18,7 @@ export const LLOTAPostSelfSpot = ({ t, operation, vfo, comments }) => (_dispatch
     ...(operation?.stationCallPlusArray || [])
   ].filter(Boolean)
 
-  const refs = filterRefs(operation, 'llotaActivation')
+  const refs = filterRefs(operation, 'llotaActivation').filter(ref => ref?.ref)
 
   console.log('post self spot', t)
   return Promise.all(

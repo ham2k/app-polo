@@ -45,7 +45,7 @@ const ActivityHook = {
   ...Info,
 
   loggingControls: ({ operation, settings }) => {
-    if (findRef(operation, Info.activationType)) {
+    if (findRef(operation, Info.activationType)?.ref) {
       return [ActivatorLoggingControl]
     } else {
       return [HunterLoggingControl]
@@ -265,7 +265,7 @@ const ReferenceHandler = {
 
   adifFieldsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
-    const activationRefs = filterRefs(operation, Info.activationType)
+    const activationRefs = filterRefs(operation, Info.activationType).filter(ref => ref?.ref)
 
     const fields = []
     if (huntingRefs && huntingRefs[0]) {
@@ -279,7 +279,8 @@ const ReferenceHandler = {
 
   adifFieldCombinationsForOneQSO: ({ qso, operation }) => {
     const huntingRefs = filterRefs(qso, Info.huntingType)
-    const activationRef = findRef(operation, Info.activationType)
+    const rawActivationRef = findRef(operation, Info.activationType)
+    const activationRef = rawActivationRef?.ref ? rawActivationRef : undefined
     let activationFields = []
     if (activationRef) {
       activationFields = [
