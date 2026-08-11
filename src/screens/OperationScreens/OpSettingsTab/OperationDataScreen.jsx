@@ -457,7 +457,7 @@ export default function OperationDataScreen (props) {
             {exportOptions.map((option) => (
               <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'flex-start' }}>
                 <View style={{ marginTop: styles.oneSpace * 1, marginRight: styles.oneSpace * -1.5 }}>
-                  <Checkbox
+                  <Checkbox.Android
                     status={(settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false ? 'checked' : 'unchecked'}
                     onPress={() => dispatch(setSettings({ exportTypes: { ...settings.exportTypes, [option.exportType]: !((settings.exportTypes?.[option.exportType] ?? option.selectedByDefault) !== false) } }))}
                   />
