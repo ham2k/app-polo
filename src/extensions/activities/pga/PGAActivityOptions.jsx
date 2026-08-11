@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import { distanceOnEarth } from '@ham2k/lib-geo-tools'
 
-import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
+import { findRef, removeRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { H2kListRow, H2kListSection, H2kSearchBar } from '../../../ui'
 
@@ -121,7 +121,7 @@ export function PGAActivityOptions ({ styles, operation, settings, refs: allRefs
   }, [allRefs, setRefs])
 
   const handleRemoveReference = useCallback((newRef) => {
-    setRefs(replaceRef(allRefs, Info.activationType, { type: Info.activationType, ref: undefined }))
+    setRefs(removeRef(allRefs, Info.activationType))
   }, [allRefs, setRefs])
 
   return (
