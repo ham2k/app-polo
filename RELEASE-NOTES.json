@@ -1,4 +1,12 @@
 {
+  "26.7.5": {
+    "name": "July '26 (patch 5)",
+    "photoCaption": "KI2D at US-2138 and LLUS-0006",
+    "changes": [
+      "Fixed power setting getting wiped when tapping a spot or deep link",
+      "Fixed bugs when empty activities are added to operations"
+    ]
+  },
   "26.7.2": {
     "name": "July '25 (patch 2)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
