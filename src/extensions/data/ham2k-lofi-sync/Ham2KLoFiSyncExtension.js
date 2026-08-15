@@ -3,6 +3,7 @@
 
 import Config from 'react-native-config'
 import { Platform } from 'react-native'
+import * as Sentry from '@sentry/react-native'
 
 import { selectSettings } from '../../../store/settings'
 import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/local'
@@ -34,6 +35,7 @@ const Extension = {
 export default Extension
 
 export const DEFAULT_LOFI_SERVER = 'https://lofi.ham2k.net'
+export const DEFAULT_BACKUP_SERVICE_URL = 'https://backup.ham2k.online'
 
 const DEBUG = false
 
@@ -44,6 +46,18 @@ const SyncHook = {
 
     const body = JSON.stringify(params)
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/sync', method: 'POST', body })
+
+    // LoFi is unreachable or erroring server-side (status 0 = no response at
+    // all, >=500 = it received the request but failed): hand this sync
+    // payload to the backup service so it isn't lost if this device is gone
+    // before LoFi is back. Captured even without a cached auth token -- the
+    // token just lets a later replay skip re-authenticating, it's not
+    // required to preserve the data for manual recovery. Best-effort only --
+    // never changes what the caller sees.
+    if (!response.ok && (response.status === 0 || response.status >= 500)) {
+      await _captureToBackupService({ params })
+    }
+
     return response
   },
 
@@ -192,6 +206,35 @@ const SyncHook = {
     const body = email ? JSON.stringify({ email }) : undefined
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/stash_files/email_link', method: 'POST', body })
     return response
+  }
+}
+
+async function _captureToBackupService ({ params }) {
+  const token = Config.HAM2K_BACKUP_TOKEN
+  if (!token) return // not configured on this build, skip silently
+
+  try {
+    const url = Config.HAM2K_BACKUP_URL || DEFAULT_BACKUP_SERVICE_URL
+    await fetchWithTimeout(`${url}/v1/capture`, {
+      timeout: 5000,
+      method: 'POST',
+      headers: {
+        'User-Agent': _buildUserAgent(),
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        client_jwt: GLOBAL.syncLoFiToken,
+        sync_body: params,
+        client_timestamp: new Date().toISOString()
+      })
+    })
+    if (DEBUG) console.log('-- captured to backup service')
+  } catch (e) {
+    if (DEBUG) console.log('-- backup service capture failed', e)
+    // LoFi *and* the backup service are both unreachable -- worth knowing about,
+    // since the local device is now the only copy of this data.
+    Sentry.captureMessage('LoFi backup service capture failed', 'warning')
   }
 }
 
