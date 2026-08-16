@@ -1,9 +1,14 @@
 // Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-export const LATEST_VERSION = 3
+export const LATEST_VERSION = 4
 
 export const migrations = {
+  4: (state) => {
+    // We now have our own Ham2K Lookup Service, so disable HamDB for everybody
+    if (state?.settings) state.settings['extensions/hamdb'] = false
+    return state
+  },
   3: (state) => {
     // Users who had enabled SiOTA will now have ParksnPeaks enabled
     if (state?.settings?.['extensions/siota']) {

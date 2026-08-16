@@ -31,7 +31,7 @@ import ZLOTAExtension from './activities/zlota/ZLOTAExtension'
 import CallHistoryExtension from './data/call-history/CallHistoryExtension'
 import CallNotesExtension from './data/call-notes/CallNotesExtension'
 import Ham2KLoFiSyncExtension from './data/ham2k-lofi-sync/Ham2KLoFiSyncExtension'
-import HamDBExtension from './data/hamdb/HamDBExtension'
+import Ham2KLookupExtension from './data/ham2k-lookup/Ham2KLookupExtension'
 import HamQTHExtension from './data/hamqth/HamQTHExtension'
 import QRZExtension from './data/qrz/QRZExtension'
 import QRZCALLExtension from './data/qrzcall/QRZCALLExtension'
@@ -130,8 +130,8 @@ export const loadExtensions = () => async (dispatch, getState) => {
 
   registerExtension(QRZExtension)
   registerExtension(QRZCALLExtension)
-  registerExtension(HamDBExtension)
   registerExtension(HamQTHExtension)
+  registerExtension(Ham2KLookupExtension)
 
   registerExtension(WABExtension)
 

@@ -391,9 +391,9 @@
         "unknownSummit": "Unknown summit"
       }
     },
-    "hamdb": {
-      "name": "HamDB.org Callsign Loookups",
-      "description": "Free service, but limited to USA, Canada and Germany calls"
+    "ham2k-lookup": {
+      "name": "Ham2K Lookup Service",
+      "description": "Free service, but only covering US, Canada and Germany calls"
     },
     "hamqth": {
       "name": "HamQTH.com Callsign Lookups",

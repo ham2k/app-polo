@@ -3,6 +3,7 @@
     "name": "July '26 (patch 5)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
+      "Added Ham2K Lookup Service (free US, Canada and Germany callsign lookups), replacing HamDB",
       "Fixed power setting getting wiped when tapping a spot or deep link",
       "Fixed bugs when empty activities are added to operations"
     ]
