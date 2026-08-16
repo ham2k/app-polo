@@ -8,6 +8,7 @@ mise.local.toml
 # local files
 SCRATCHPAD.md
 scratch*
+.orca
 
 # react-native-config codegen
 ios/tmp.xcconfig
