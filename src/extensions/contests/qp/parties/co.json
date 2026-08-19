@@ -19,7 +19,8 @@
     "countyLine": true,
     "dxIsMultiplier": true,
     "multsPerBandMode": false,
-    "multsPerMode": true
+    "multsPerMode": true,
+    "bonusPostMultiplier": true
   },
   "points": {
     "PHONE": 2,

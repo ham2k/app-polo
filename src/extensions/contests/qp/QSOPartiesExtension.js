@@ -516,8 +516,10 @@ export const ReferenceHandler = {
     if (qsoScore?.counties) {
       qsoScore.counties.forEach(location => {
         score.counties[location] = (score.counties[location] || 0) + 1
-        if (qp.options.countiesAreMultForInState === false) {
-          const state = location.substring(0, 2)
+
+        if (qp.options.countiesCountForInState || qp.options.stateCountsForInState) {
+          // This assumes that QPs with county abbreviations longer than 4 letters have the state as the first two
+          const state = qp.state || location.length > 4 ? location.substring(0, 2) : qp.key
           score.states[state] = (score.states[state] || 0) + 1
         }
       })

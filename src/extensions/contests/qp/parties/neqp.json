@@ -20,6 +20,7 @@
     "alaskaAndHawaiiAreDX": false,
     "multsPerBandMode": false,
     "countiesAreMultForInState": false,
+    "countiesCountForInState": true,
     "dxIsMultiplier": false,
     "dxEntityIsMultiplier": true,
     "dataAndCWCountAsSameMode": true,
