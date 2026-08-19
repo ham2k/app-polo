@@ -154,4 +154,50 @@ describe('qsonToADIF segment context', () => {
     expect(adif).not.toContain('US-3333')
     expect(adif).not.toContain('EM12')
   })
+
+  it('updates attributes of an existing ref across segments, even when combineSegmentRefs is false', () => {
+    // QSO Parties keep the same ref throughout the operation, but change the county we operate
+    // from at each segment. Those changes belong in the log even for a ref-scoped export.
+    const adif = qsonToADIF({
+      operation: {
+        stationCall: 'K1OP',
+        refs: [{ type: 'qp', ref: 'co', location: 'ADA' }] // The operation carries the *latest* segment's refs
+      },
+      settings: baseSettings,
+      qsos: [
+        {
+          uuid: 'start',
+          startAtMillis: 1000,
+          event: {
+            event: 'start',
+            note: 'segment start',
+            operation: { refs: [{ type: 'qp', ref: 'co', location: 'DEL' }] }
+          }
+        },
+        baseQSO({ uuid: 'q1', call: 'K1KK', startAtMillis: 2000 }),
+        {
+          uuid: 'break',
+          startAtMillis: 3000,
+          event: {
+            event: 'break',
+            note: 'segment break',
+            operation: { refs: [{ type: 'qp', ref: 'co', location: 'ADA' }] }
+          }
+        },
+        baseQSO({ uuid: 'q2', call: 'K2KK', startAtMillis: 4000 })
+      ],
+      handler: {
+        key: 'qp',
+        adifFieldsForOneQSO: ({ qso, operation }) => [
+          { CALL: qso.their.call },
+          { STX_STRING: operation.refs?.[0]?.location }
+        ]
+      },
+      format: 'adif',
+      combineSegmentRefs: false
+    })
+
+    expect(adif).toMatch(/<CALL:\d+>K1KK.*?<STX_STRING:\d+>DEL/s)
+    expect(adif).toMatch(/<CALL:\d+>K2KK.*?<STX_STRING:\d+>ADA/s)
+  })
 })

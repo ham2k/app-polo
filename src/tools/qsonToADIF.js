@@ -8,6 +8,7 @@ import packageJson from '../../package.json'
 import { findBestHook } from '../extensions/registry'
 import { basePartialTemplates, compileTemplateForOperation, extraDataForTemplates, templateContextForOneExport } from '../store/operations'
 import { selectExportSettings } from '../store/settings'
+import { refsForSegment } from './segmentRefs'
 
 const DEBUG = false
 
@@ -87,15 +88,9 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
       }
 
       if (qso.event.event === 'break' || qso.event.event === 'start') {
-        if (combineSegmentRefs) {
-          // Update all operation attributes, including regs
-          operation = { ...operation, ...qso.event.operation }
-          common = { ...common, ...qso.event.operation }
-        } else {
-          // Combine other attributes, but keep refs as initialized
-          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
-          common = { ...common, ...qso.event.operation, refs: common.refs }
-        }
+        const refs = refsForSegment({ refs: common.refs, segmentRefs: qso.event.operation?.refs, combineSegmentRefs })
+        operation = { ...operation, ...qso.event.operation, refs }
+        common = { ...common, ...qso.event.operation, refs }
         templates.context = templateContextForOneExport({ settings, operation, handler })
       }
       return

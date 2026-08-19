@@ -5,6 +5,8 @@ import { fmtTimestamp } from '@ham2k/lib-format-tools'
 
 import { findRef } from '@ham2k/lib-qson-tools'
 
+import { refsForSegment } from './segmentRefs'
+
 const REG1TEST_MODE = {
   // Note, we don't support CW/SSB or SSB/CW split modes
   CW: 2,
@@ -34,7 +36,7 @@ export const REG1TEST_BAND = {
 }
 
 export function qsonToReg1test ({ operation, qsos, settings, handler, combineSegmentRefs }) {
-  const ref = findRef(operation, handler.key)
+  let ref = findRef(operation, handler.key)
 
   let common = {
     refs: operation.refs,
@@ -74,15 +76,10 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
     if (qso.deleted) continue
     if (qso.event) {
       if (qso.event.event === 'break' || qso.event.event === 'start') {
-        if (combineSegmentRefs) {
-          // Update all operation attributes, including regs
-          operation = { ...operation, ...qso.event.operation }
-          common = { ...common, ...qso.event.operation }
-        } else {
-          // Combine other attributes, but keep refs as initialized
-          operation = { ...operation, ...qso.event.operation, refs: operation.refs }
-          common = { ...common, ...qso.event.operation, refs: common.refs }
-        }
+        const refs = refsForSegment({ refs: operation.refs, segmentRefs: qso.event.operation?.refs, combineSegmentRefs })
+        operation = { ...operation, ...qso.event.operation, refs }
+        common = { ...common, ...qso.event.operation, refs }
+        ref = findRef(operation, handler.key)
       }
       continue
     }
