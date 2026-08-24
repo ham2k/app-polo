@@ -28,7 +28,7 @@ import { findHooks } from '../../../extensions/registry'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { ExportWavelogDialog } from './components/ExportWavelogDialog'
-import { LogStashNotice } from './components/LogStashNotice'
+import { StashSentDialog } from './components/StashSentDialog'
 import { buildTitleForOperation } from '../OperationScreen'
 
 const isLikelyCanceledSavePickError = (err) =>
@@ -69,6 +69,7 @@ export default function OperationDataScreen (props) {
   const [showExportWavelog, setShowExportWavelog] = useState(false)
   const [showStashInfoDialog, setShowStashInfoDialog] = useState(false)
   const [isStashing, setIsStashing] = useState(false)
+  const [stashedFilesLabel, setStashedFilesLabel] = useState(null)
 
   useEffect(() => {
     let options = { title: t('screens.operationData.title', 'Operation Data') }
@@ -281,24 +282,7 @@ export default function OperationDataScreen (props) {
           ? t('screens.operationData.retrieveSingularFile', 'this file')
           : t('screens.operationData.retrievePluralFiles', 'these files')
 
-        Alert.alert(
-          t('screens.operationData.sentToLogStash', "Sent to Ham2K's File Stash"),
-          t('screens.operationData.sentToLogStashMessage', 'You can retrieve {{filesLabel}} by visiting stash.ham2k.net on any browser.\n\nOr for your convenience, we can send you an email with a direct link.', { filesLabel }),
-          [
-            { text: t('general.buttons.done', 'Done'), style: 'cancel' },
-            {
-              text: t('screens.operationData.emailMeALink', 'Email Me a Link'),
-              onPress: async () => {
-                const emailResult = await dispatch(syncHook.emailStashDownloadLink())
-                if (emailResult?.ok) {
-                  Alert.alert(t('screens.operationData.linkEmailed', "We've emailed you a download link."))
-                } else {
-                  Alert.alert(t('screens.operationData.errorEmailingLink', "Couldn't send the email"), emailResult?.json?.error || '')
-                }
-              }
-            }
-          ]
-        )
+        setStashedFilesLabel(filesLabel)
       }
     } catch (error) {
       console.error('Error generating exports', error)
@@ -383,7 +367,12 @@ export default function OperationDataScreen (props) {
               />
             )}
 
-            <LogStashNotice />
+            <StashSentDialog
+              visible={!!stashedFilesLabel}
+              filesLabel={stashedFilesLabel}
+              isFreeAccount={isFreeLofiAccount}
+              onDismiss={() => setStashedFilesLabel(null)}
+            />
             <FileStashDialogForDistribution
               visible={showStashInfoDialog}
               onDismiss={({ subscribed }) => {

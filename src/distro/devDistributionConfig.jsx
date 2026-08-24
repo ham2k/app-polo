@@ -124,3 +124,7 @@ export function SyncSettingsForDistribution ({ settings, styles }) {
     <></>
   )
 }
+
+export async function subscriptionPaywall ({ settings, lofiData, dispatch, syncHook }) {
+  // Do nothing
+}

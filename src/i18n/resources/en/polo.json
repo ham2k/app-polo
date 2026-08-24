@@ -116,7 +116,6 @@
         "description": "Are you sure you want to delete this operation?"
       },
       "errorSavingExport": "Couldn't save file",
-      "logStashNotice": "Use our Ham2K File Stash and download later from any browser! Tap for more info",
       "logStashDialogTitle": "Ham2K's File Stash",
       "logStashDialogIntro": "PoLo will upload your files to the Ham2K servers and you can download from any browser.",
       "logStashDialogTiers": "Free accounts can only send one file at a time. Subscribers can send as many as they want.",
@@ -129,7 +128,8 @@
       "freeTierRecentUploadConfirm": "Send Anyway",
       "errorSendingToLogStash": "Couldn't send to Ham2K's File Stash",
       "sentToLogStash": "Sent to Ham2K's File Stash",
-      "sentToLogStashMessage": "You can retrieve {{filesLabel}} by visiting stash.ham2k.net on any browser.\n\nOr for your convenience, we can send you an email with a direct link.",
+      "sentToLogStashRetrieve-md": "You can retrieve {{filesLabel}} by visiting **[stash.ham2k.net](https://stash.ham2k.net)** on any browser.",
+      "sentToLogStashEmailOffer": "Or for your convenience, we can send you an email with a direct link.",
       "retrieveSingularFile": "this file",
       "retrievePluralFiles": "these files",
       "emailMeALink": "Email Me a Link",
