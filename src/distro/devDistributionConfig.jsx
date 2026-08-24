@@ -128,3 +128,15 @@ export function SyncSettingsForDistribution ({ settings, styles }) {
 export async function subscriptionPaywall ({ settings, lofiData, dispatch, syncHook }) {
   // Do nothing
 }
+
+export function FileStashDialogForDistribution ({ visible, onDismiss }) {
+  // This distribution has no subscriptions to introduce, but the caller waits on
+  // onDismiss before uploading, so dismiss instead of rendering nothing at all
+  useEffect(() => {
+    if (visible) onDismiss({ subscribed: false })
+  }, [visible, onDismiss])
+
+  return (
+    <></>
+  )
+}
