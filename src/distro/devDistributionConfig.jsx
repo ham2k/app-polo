@@ -140,3 +140,16 @@ export function FileStashDialogForDistribution ({ visible, onDismiss }) {
     <></>
   )
 }
+
+export function ExportComponentsForDistribution ({ operation, exportCompleted, onDismiss }) {
+  // This distribution has nothing to show after an export, but the caller waits on
+  // onDismiss before it will report another one, so release it instead of just
+  // rendering nothing
+  useEffect(() => {
+    if (exportCompleted) onDismiss()
+  }, [exportCompleted, onDismiss])
+
+  return (
+    <></>
+  )
+}

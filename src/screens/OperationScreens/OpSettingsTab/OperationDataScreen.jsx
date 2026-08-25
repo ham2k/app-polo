@@ -22,12 +22,13 @@ import { selectLocalExtensionData } from '../../../store/local'
 import { selectSettings, setSettings } from '../../../store/settings'
 import { selectSystemFlag, setSystemFlag } from '../../../store/system'
 import { useThemedStyles } from '../../../styles/tools/useThemedStyles'
-import { FileStashDialogForDistribution, reportError, trackEvent } from '../../../distro'
-import { H2kButton, H2kListItem, H2kListSection } from '../../../ui'
+import { ExportComponentsForDistribution, FileStashDialogForDistribution, reportError, trackEvent } from '../../../distro'
+import { H2kButton, H2kIconButton, H2kListItem, H2kListSection } from '../../../ui'
 import { findHooks } from '../../../extensions/registry'
 
 import ScreenContainer from '../../components/ScreenContainer'
 import { ExportWavelogDialog } from './components/ExportWavelogDialog'
+import { ExportOptionsInfoDialog } from './components/ExportOptionsInfoDialog'
 import { StashSentDialog } from './components/StashSentDialog'
 import { buildTitleForOperation } from '../OperationScreen'
 
@@ -68,8 +69,10 @@ export default function OperationDataScreen (props) {
   }, [route.params.operation, dispatch])
   const [showExportWavelog, setShowExportWavelog] = useState(false)
   const [showStashInfoDialog, setShowStashInfoDialog] = useState(false)
+  const [showExportOptionsInfo, setShowExportOptionsInfo] = useState(false)
   const [isStashing, setIsStashing] = useState(false)
   const [stashedFilesLabel, setStashedFilesLabel] = useState(null)
+  const [exportCompleted, setExportCompleted] = useState(false)
 
   useEffect(() => {
     let options = { title: t('screens.operationData.title', 'Operation Data') }
@@ -132,6 +135,7 @@ export default function OperationDataScreen (props) {
         if (!exports?.length) return
 
         if (disposition === 'save') {
+          let savedAll = true
           for (const e of exports) {
             try {
               const responses = await saveDocuments({
@@ -146,19 +150,23 @@ export default function OperationDataScreen (props) {
                   res.error
                 )
                 reportError('Error saving export', new Error(res.error))
+                savedAll = false
                 break
               }
             } catch (err) {
               if (isLikelyCanceledSavePickError(err)) {
+                savedAll = false
                 break
               }
               console.info('Saving export Error', err)
               reportError('Error saving export', err instanceof Error ? err : new Error(String(err)))
               const message = typeof err?.message === 'string' ? err.message : ''
               Alert.alert(t('screens.operationData.errorSavingExport', "Couldn't save file"), message)
+              savedAll = false
               break
             }
           }
+          if (savedAll) setExportCompleted(true)
           return
         }
 
@@ -186,6 +194,9 @@ export default function OperationDataScreen (props) {
         Share.open({ ...shareOptions, failOnCancel: false })
           .then((x) => {
             console.info('Shared', x)
+            // With `failOnCancel: false` a dismissed share sheet also resolves, so only
+            // count it as an export when the user actually picked a destination
+            if (!x?.dismissedAction) setExportCompleted(true)
           })
           .catch((shareErr) => {
             if (shareErr?.message?.includes('user canceled')) {
@@ -371,7 +382,10 @@ export default function OperationDataScreen (props) {
               visible={!!stashedFilesLabel}
               filesLabel={stashedFilesLabel}
               isFreeAccount={isFreeLofiAccount}
-              onDismiss={() => setStashedFilesLabel(null)}
+              onDismiss={({ subscribed } = {}) => {
+                setStashedFilesLabel(null)
+                if (!subscribed) setExportCompleted(true)
+              }}
             />
             <FileStashDialogForDistribution
               visible={showStashInfoDialog}
@@ -380,68 +394,85 @@ export default function OperationDataScreen (props) {
                 if (!subscribed) handleStashExport(selectedExportOptions)
               }}
             />
+            <ExportOptionsInfoDialog
+              visible={showExportOptionsInfo}
+              onDismiss={() => setShowExportOptionsInfo(false)}
+            />
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-end',
                 alignItems: 'center',
-                gap: styles.oneSpace * 2,
                 paddingHorizontal: styles.oneSpace * 2,
-                paddingVertical: styles.halfSpace * 1,
-                opacity: readyToExport ? 1 : 0.5
+                paddingVertical: styles.halfSpace * 1
               }}
             >
-              <H2kButton
-                mode="elevated"
-                icon="cloud-upload-outline"
-                compact
-                loading={isStashing}
-                disabled={!exportActionsEnabled || isStashing}
-                onPress={handleStashButtonPress}
+              <H2kIconButton
+                icon="information-outline"
+                onPress={() => setShowExportOptionsInfo(true)}
                 accessibilityRole="button"
-                accessibilityLabel={t('screens.operationData.exportActionsLogStash', "Send to Ham2K's File Stash")}
+                accessibilityLabel={t('screens.operationData.exportOptionsInfoLabel', 'About the export options')}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: styles.oneSpace * 2,
+                  opacity: readyToExport ? 1 : 0.5
+                }}
               >
-                {t('screens.operationData.exportActionsStash', 'Stash')}
-              </H2kButton>
+                <H2kButton
+                  mode="elevated"
+                  icon="cloud-upload-outline"
+                  compact
+                  loading={isStashing}
+                  disabled={!exportActionsEnabled || isStashing}
+                  onPress={handleStashButtonPress}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('screens.operationData.exportActionsLogStash', "Send to Ham2K's File Stash")}
+                >
+                  {t('screens.operationData.exportActionsStash', 'Stash')}
+                </H2kButton>
 
-              {Platform.OS === 'android' ? (
-                <>
+                {Platform.OS === 'android' ? (
+                  <>
+                    <H2kButton
+                      mode="elevated"
+                      icon="share"
+                      compact
+                      disabled={!exportActionsEnabled}
+                      onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'share' })}
+                      accessibilityRole="button"
+                      accessibilityLabel={t('screens.operationData.exportActionsShare', 'Share')}
+                    >
+                      {t('screens.operationData.exportActionsShare', 'Share')}
+                    </H2kButton>
+                    <H2kButton
+                      mode="elevated"
+                      icon="content-save"
+                      compact
+                      disabled={!exportActionsEnabled}
+                      onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'save' })}
+                      accessibilityRole="button"
+                      accessibilityLabel={t('screens.operationData.exportActionsSave', 'Save')}
+                    >
+                      {t('screens.operationData.exportActionsSave', 'Save')}
+                    </H2kButton>
+                  </>
+                ) : (
                   <H2kButton
                     mode="elevated"
                     icon="share"
                     compact
                     disabled={!exportActionsEnabled}
-                    onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'share' })}
+                    onPress={() => readyToExport && handleExports({ options: selectedExportOptions, disposition: 'share' })}
                     accessibilityRole="button"
                     accessibilityLabel={t('screens.operationData.exportActionsShare', 'Share')}
                   >
-                    {t('screens.operationData.exportActionsShare', 'Share')}
+                    {t('screens.operationData.exportActionsExport', 'Export')}
                   </H2kButton>
-                  <H2kButton
-                    mode="elevated"
-                    icon="content-save"
-                    compact
-                    disabled={!exportActionsEnabled}
-                    onPress={() => exportActionsEnabled && handleExports({ options: selectedExportOptions, disposition: 'save' })}
-                    accessibilityRole="button"
-                    accessibilityLabel={t('screens.operationData.exportActionsSave', 'Save')}
-                  >
-                    {t('screens.operationData.exportActionsSave', 'Save')}
-                  </H2kButton>
-                </>
-              ) : (
-                <H2kButton
-                  mode="elevated"
-                  icon="share"
-                  compact
-                  disabled={!exportActionsEnabled}
-                  onPress={() => readyToExport && handleExports({ options: selectedExportOptions, disposition: 'share' })}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('screens.operationData.exportActionsShare', 'Share')}
-                >
-                  {t('screens.operationData.exportActionsExport', 'Export')}
-                </H2kButton>
-              )}
+                )}
+              </View>
             </View>
             {exportOptions.map((option) => (
               <View key={`${option.exportType}-${option.fileName}`} style={{ flexDirection: 'row', width: '100%', marginLeft: styles.oneSpace * 1, alignItems: 'flex-start' }}>
@@ -512,6 +543,11 @@ export default function OperationDataScreen (props) {
             />
           )}
         </ScrollView>
+        <ExportComponentsForDistribution
+          operation={operation}
+          exportCompleted={exportCompleted}
+          onDismiss={() => setExportCompleted(false)}
+        />
       </SafeAreaView>
     </ScreenContainer>
   )

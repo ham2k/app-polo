@@ -62,7 +62,7 @@ export function StashSentDialog ({ visible, filesLabel, isFreeAccount, onDismiss
   }, [dispatch, syncHook, t])
 
   const handleSubscribe = useCallback(() => {
-    onDismiss()
+    onDismiss({ subscribed: true })
     subscriptionPaywall({ settings, lofiData, dispatch, syncHook })
   }, [dispatch, lofiData, onDismiss, settings, syncHook])
 
