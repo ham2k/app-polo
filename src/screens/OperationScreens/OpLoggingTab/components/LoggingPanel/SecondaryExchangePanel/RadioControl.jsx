@@ -9,6 +9,7 @@ import { ADIF_MODES_AND_SUBMODES, BANDS, POPULAR_BANDS, POPULAR_MODES } from '@h
 import { fmtFreq } from '@ham2k/lib-format-tools'
 
 import { H2kDropDown, H2kFrequencyInput } from '../../../../../../ui'
+import { radioValuesFor } from '../loggingFunctions'
 
 const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, style, styles, themeColor, handleFieldChange, onSubmitEditing, focusedRef }) => {
   const { t } = useTranslation()
@@ -110,41 +111,40 @@ export const radioControl = {
   icon: 'radio',
   order: 1,
   label: ({ t, qso, operation, vfo, settings }) => {
+    const { band, freq, mode } = radioValuesFor({ qso, vfo })
     const parts = []
-    if (qso?.event) {
-      if (vfo?.freq) {
-        parts.push(`${fmtFreq(vfo?.freq)} MHz`)
-      } else if (vfo?.band) {
-        parts.push(`${vfo?.band}`)
-      } else {
-        parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
-      }
-      parts.push(`${vfo?.mode ?? 'SSB'}`)
+
+    if (freq) {
+      parts.push(`${fmtFreq(freq)} MHz`)
+    } else if (band) {
+      parts.push(`${band}`)
     } else {
-      if (qso?.freq ?? vfo?.freq) {
-        parts.push(`${fmtFreq(qso?.freq ?? vfo?.freq)} MHz`)
-      } else if (qso?.band ?? vfo?.band) {
-        parts.push(`${qso?.band ?? vfo?.band}`)
-      } else {
-        parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
-      }
-      parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
+      parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
     }
+    parts.push(`${mode ?? 'SSB'}`)
 
     return parts.join(' • ')
   },
   accessibilityLabel: ({ qso, t, operation, vfo, settings }) => {
+    const { band, freq, mode } = radioValuesFor({ qso, vfo })
     const parts = []
-    if (qso?.freq ?? vfo?.freq) {
-      parts.push(`${fmtFreq(qso?.freq ?? vfo?.freq)} MHz`)
-    } else if (qso?.band ?? operation?.local?.band) {
-      parts.push(`${qso?.band ?? operation?.local?.band}`)
+
+    if (freq) {
+      parts.push(`${fmtFreq(freq)} MHz`)
+    } else if (band) {
+      parts.push(`${band}`)
     } else {
       parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
     }
+    parts.push(`${mode ?? 'SSB'}`)
 
-    parts.push(`${qso?.mode ?? vfo?.mode ?? 'SSB'}`)
     return t('screens.opLoggingTab.radioControls-a11y', 'Radio Controls, {{parts}}', { parts: parts.join(', ') }) || `Radio Controls, ${parts.join(', ')}`
+  },
+  // Highlight the control when we have no band or mode, since those cannot be recovered later
+  themeColor: ({ qso, vfo }) => {
+    if (!qso) return undefined // Between QSOs there is nothing to complain about
+    const { band, freq, mode } = radioValuesFor({ qso, vfo })
+    if (!(band || freq) || !mode) return 'error'
   },
   InputComponent: RadioControlInputs,
   inputWidthMultiplier: 43,

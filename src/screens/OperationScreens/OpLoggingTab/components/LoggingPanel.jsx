@@ -36,7 +36,7 @@ import { EventInfo } from './LoggingPanel/EventInfo'
 import { MainExchangePanel } from './LoggingPanel/MainExchangePanel'
 import { annotateQSO } from './LoggingPanel/useCallLookup'
 import EventEditingPanel from './LoggingPanel/EventEditingPanel/EventEditingPanel'
-import { manageNextQSO } from './LoggingPanel/loggingFunctions'
+import { manageNextQSO, radioValuesFor } from './LoggingPanel/loggingFunctions'
 import { useUIState } from '../../../../store/ui'
 
 const DEBUG = false
@@ -103,13 +103,15 @@ export default function LoggingPanel({
 
   const [isValidOperation, operationError] = useMemo(() => { // Ensure we have all the required operation data
     const errors = []
-    if (!qso?.band && !vfo?.band) errors.push('band')
+    const { band, freq, mode } = radioValuesFor({ qso, vfo })
+    if (!(band || freq)) errors.push('band')
+    if (!mode) errors.push('mode')
     if (!operation?.stationCall) errors.push('callsign')
 
     if (errors.length > 0) {
       return [false,
         t('screens.opLoggingTab.missingInfoError.message', 'ERROR: Please enter **{{errors}}** for a valid operation', {
-          errors: joinAnd(errors.map(error => t(`screens.opLoggingTab.missingInfoError.${error}`, error)))
+          errors: joinAnd(errors.map(error => t(`screens.opLoggingTab.missingInfoError.errors.${error}`, error)))
         })
       ]
     } else {
@@ -283,17 +285,23 @@ export default function LoggingPanel({
           dispatch(setOperationLocalData({ uuid: operation.uuid, _nextManualTime: nextManualTime }))
         }
 
+        const wasNew = qso._isNew
+
         delete qso._isNew
         delete qso._willBeDeleted
         delete qso.deleted
 
-        qso.freq = qso.freq ?? vfo.freq
+        // Only a new QSO inherits the current radio state. Filling in an older QSO
+        // from the VFO would invent a band or mode it was never actually on.
+        if (wasNew) {
+          qso.freq = qso.freq ?? vfo.freq
+          qso.mode = qso.mode ?? vfo.mode
+        }
         if (qso.freq) {
           qso.band = bandForFrequency(qso.freq)
-        } else {
+        } else if (wasNew) {
           qso.band = qso.band ?? vfo.band
         }
-        qso.mode = qso.mode ?? vfo.mode
 
         if (!qso.startAtMillis) qso.startAtMillis = (new Date()).getTime()
         qso.startAt = new Date(qso.startAtMillis).toISOString()

@@ -19,10 +19,18 @@ const QSOItem = React.memo(function QSOItem ({
   const freqParts = useMemo(() => {
     if (qso?.freq) {
       return partsForFreq(qso.freq)
+    } else if (qso?.band) {
+      return [null, qso.band, null]
     } else {
-      return [null, qso?.band, null]
+      return [null, '???', null]
     }
   }, [qso])
+
+  // A QSO with no way to tell what band it was on, or with no mode, is missing
+  // information we cannot recover later, so we flag it in the list.
+  const radioInfoMissing = useMemo(() => (
+    !qso?.deleted && (!(qso?.freq || qso?.band) || !qso?.mode)
+  ), [qso?.deleted, qso?.freq, qso?.band, qso?.mode])
 
   const extraInfo = useMemo(() => {
     let info = []
@@ -76,6 +84,18 @@ const QSOItem = React.memo(function QSOItem ({
     }
   }, [qso.deleted, isOtherOperator, styles.deletedFields, styles.otherOperatorFields, styles.fields])
 
+  // Each of the frequency styles sets its own color, so they all have to be overriden
+  const freqStyles = useMemo(() => {
+    if (!radioInfoMissing) return fieldsStyle
+    const color = styles.colors.error
+    return {
+      freq: { ...fieldsStyle.freq, color },
+      freqMHz: { ...fieldsStyle.freqMHz, color },
+      freqKHz: { ...fieldsStyle.freqKHz, color },
+      freqHz: { ...fieldsStyle.freqHz, color }
+    }
+  }, [radioInfoMissing, fieldsStyle, styles.colors.error])
+
   const refIcons = useMemo(() => {
     return (qso.refs || []).filter(ref => ref.type).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
       <H2kIcon key={i} name={handler?.iconForQSO} color={fieldsStyle.icon.color} size={styles.normalFontSize * 0.9} />
@@ -92,10 +112,10 @@ const QSOItem = React.memo(function QSOItem ({
     >
       <View style={styles.rowInner}>
         <Text style={fieldsStyle.time}>{timeFormatFunction(qso.startAtMillis)}</Text>
-        <Text style={fieldsStyle.freq}>
-          {freqParts[0] && <Text style={fieldsStyle.freqMHz}>{freqParts[0]}.</Text>}
-          {freqParts[1] && <Text style={fieldsStyle.freqKHz}>{freqParts[1]}</Text>}
-          {freqParts[2] && styles.hasFrequencyDecimals && <Text style={fieldsStyle.freqHz}>
+        <Text style={freqStyles.freq}>
+          {freqParts[0] && <Text style={freqStyles.freqMHz}>{freqParts[0]}.</Text>}
+          {freqParts[1] && <Text style={freqStyles.freqKHz}>{freqParts[1]}</Text>}
+          {freqParts[2] && styles.hasFrequencyDecimals && <Text style={freqStyles.freqHz}>
             {styles.sized({ xs: false, lg: true }) ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
           </Text>}
         </Text>

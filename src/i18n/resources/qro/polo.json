@@ -787,6 +787,7 @@
         "message": "ERROR: PLEASE ENTER **{{errors}}** FOR A VALID OPERATION",
         "errors": {
           "band": "BAND",
+          "mode": "MODE",
           "callsign": "CALLSIGN"
         }
       },

@@ -14,7 +14,11 @@ import { H2kIcon, H2kIconButton } from '../../../../../../ui'
 const PositionedControlChip = (props) => {
   const { t } = useTranslation()
 
-  const { control, operation, vfo, qso, settings, onChange } = props
+  const { control, operation, vfo, qso, settings, onChange, themeColor } = props
+
+  const chipThemeColor = useMemo(() => (
+    valueOrFunction(control.themeColor, { t, operation, vfo, qso, settings }) ?? themeColor
+  ), [control.themeColor, t, operation, vfo, qso, settings, themeColor])
 
   const [layout, setLayout] = useState([])
   const handleLayout = useCallback((event) => {
@@ -34,6 +38,7 @@ const PositionedControlChip = (props) => {
       <View onLayout={handleLayout}>
         <LoggerChip
           {...props}
+          themeColor={chipThemeColor}
           onChange={handleChange}
           accessibilityLabel={control.accessibilityLabel ? valueOrFunction(control.accessibilityLabel, { t, operation, vfo, qso, settings }) : ''}
         >
