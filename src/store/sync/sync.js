@@ -201,6 +201,7 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
   }
 
   let scheduleAnotherLoop = true
+  let syncFailed = false
 
   try {
     const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
@@ -398,6 +399,7 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
           if (VERBOSE > 1) console.log(' -- synced ok')
         } else {
           if (VERBOSE > 1) console.log(' -- sync failed', response)
+          syncFailed = true
         }
       }
     } else {
@@ -406,25 +408,53 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
 
     _releaseSyncLoop()
 
-    if (scheduleAnotherLoop || lastDebouncedSync > 0) {
-      if (VERBOSE >= 1) console.log(' -- scheduling another loop')
-      _scheduleNextSyncLoop({ dispatch })
-    }
+    if (syncFailed) {
+      // A failed response never reaches the `catch` below: `requestWithAuth` turns a dead
+      // network or a timed-out request into a returned `{ ok: false }` rather than a thrown
+      // error. So `errorCount` stayed at 0 through the Aug 2026 backup-service incident and
+      // this loop retried at its normal cadence for 86 minutes without pausing once. Count a
+      // failed response like the error it is, and the backoff below applies to it too.
+      errorCount += 1
+      const delay = _delayAfterSyncErrors(errorCount)
+      if (VERBOSE > 1) console.log(' -- sync failed, retrying in ', delay)
+      _scheduleNextSyncLoop({ dispatch, delay })
+    } else {
+      errorCount = 0
 
-    errorCount = 0
+      if (scheduleAnotherLoop || lastDebouncedSync > 0) {
+        if (VERBOSE >= 1) console.log(' -- scheduling another loop')
+        _scheduleNextSyncLoop({ dispatch })
+      }
+    }
   } catch (error) {
     console.log('Error syncing', error)
 
     _releaseSyncLoop()
 
     errorCount += 1
-    if (errorCount < 8) {
-      const delay = (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + ((2 ** errorCount) * 1000)
-      if (VERBOSE > 1) console.log(' -- retrying in ', delay)
-      _scheduleNextSyncLoop({ dispatch, delay })
-    }
+    const delay = _delayAfterSyncErrors(errorCount)
+    if (VERBOSE > 1) console.log(' -- retrying in ', delay)
+    _scheduleNextSyncLoop({ dispatch, delay })
   }
 }
+
+// Consecutive failures back the loop off exponentially, to a ceiling of MAX_BACKOFF_DOUBLINGS
+// doublings - about four and a half minutes between attempts - and stay there.
+//
+// Always schedule something. Declining to, past some number of errors, reads like a longer
+// pause and is in fact a far shorter one: `_releaseSyncLoop` clears `nextSyncLoopInterval`, so
+// the five-second tick is free to start a fresh loop as soon as its check period is up - and
+// that period is measured from `GLOBAL.lastSyncLoop`, which is only written after a *successful*
+// sync. Through an outage it is permanently stale, the gate is permanently open, and the backoff
+// collapses into a retry every five seconds. That is the cadence of the Aug 2026 incident.
+const MAX_BACKOFF_DOUBLINGS = 8
+
+function _delayAfterSyncErrors (count) {
+  return (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + ((2 ** Math.min(count, MAX_BACKOFF_DOUBLINGS)) * 1000)
+}
+
+// Exported for tests; not part of this module's interface.
+export { _delayAfterSyncErrors }
 
 let nextSyncLoopInterval = 0
 let lastDebouncedSync = 0

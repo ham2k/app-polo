@@ -47,15 +47,15 @@ const SyncHook = {
     const body = JSON.stringify(params)
     const response = await requestWithAuth({ dispatch, getState, url: 'v1/sync', method: 'POST', body })
 
-    // LoFi is unreachable or erroring server-side (status 0 = no response at
-    // all, >=500 = it received the request but failed): hand this sync
-    // payload to the backup service so it isn't lost if this device is gone
-    // before LoFi is back. Captured even without a cached auth token -- the
-    // token just lets a later replay skip re-authenticating, it's not
-    // required to preserve the data for manual recovery. Best-effort only --
-    // never changes what the caller sees.
-    if (!response.ok && (response.status === 0 || response.status >= 500)) {
-      await _captureToBackupService({ params })
+    // LoFi is unreachable or erroring server-side: hand this sync payload to
+    // the backup service so it isn't lost if this device is gone before LoFi
+    // is back. Captured even without a cached auth token -- the token just
+    // lets a later replay skip re-authenticating, it's not required to
+    // preserve the data for manual recovery. Best-effort only -- never
+    // changes what the caller sees.
+    const failure = _captureableFailure(response)
+    if (failure && _hasSomethingToPreserve(params)) {
+      await _captureToBackupService({ params, failure })
     }
 
     return response
@@ -209,7 +209,47 @@ const SyncHook = {
   }
 }
 
-async function _captureToBackupService ({ params }) {
+// Exported for tests; not part of the extension's interface.
+//
+// What actually went wrong, as the client saw it. `requestWithAuth` labels the
+// failures it synthesises; anything else that reaches here with a 5xx is LoFi
+// answering badly rather than not answering at all. A deliberately disabled
+// service is not a failure and must never be captured -- it would file one on
+// every sync round for as long as the flag is off.
+export function _captureableFailure (response) {
+  if (response?.ok) return undefined
+  if (response?.failure) {
+    return response.failure.reason === 'disabled' ? undefined : response.failure
+  }
+  if (response?.status >= 500) return { reason: 'server_error', status: response.status }
+  return undefined
+}
+
+// A capture exists to preserve data this device might hold the only copy of. A
+// sync round with no logged work in it preserves nothing worth the cost of a
+// round trip, a stored row and an alert: the Aug 2026 incident put 879 captures
+// on the backup service in 28 hours, every one of them an empty poll with no
+// unsynced work behind it.
+//
+// A settings-only round is deliberately not "something to preserve", even though
+// it does carry data. `GLOBAL.settingsSynced` only clears on a successful sync,
+// so through an outage every single round would carry the settings and every one
+// would capture - the exact flood this guard exists to stop, for state the user
+// can re-enter and that syncs itself the moment LoFi is back.
+//
+// The `meta` counts are defence in depth rather than a distinct case: the counts
+// and the batch queries apply the same filters, so a non-zero count means the
+// batch above is non-empty too.
+export function _hasSomethingToPreserve (params) {
+  const meta = params?.meta || {}
+
+  return params?.qsos?.length > 0 ||
+    params?.operations?.length > 0 ||
+    meta.unsyncedQSOCount > 0 ||
+    meta.unsyncedOperationCount > 0
+}
+
+async function _captureToBackupService ({ params, failure }) {
   const token = Config.HAM2K_BACKUP_TOKEN
   if (!token) return // not configured on this build, skip silently
 
@@ -226,7 +266,8 @@ async function _captureToBackupService ({ params }) {
       body: JSON.stringify({
         client_jwt: GLOBAL.syncLoFiToken,
         sync_body: params,
-        client_timestamp: new Date().toISOString()
+        client_timestamp: new Date().toISOString(),
+        failure
       })
     })
     if (DEBUG) console.log('-- captured to backup service')
@@ -239,7 +280,7 @@ async function _captureToBackupService ({ params }) {
 }
 
 async function requestWithAuth ({ dispatch, getState, url, method, body, params }) {
-  if (GLOBAL?.flags?.services?.lofi === false) return { ok: false, status: 500, json: {} }
+  if (GLOBAL?.flags?.services?.lofi === false) return { ok: false, status: 500, json: {}, failure: { reason: 'disabled', status: 500 } }
 
   try {
     if (DEBUG) console.log('Ham2K LoFi request', { url, method })
@@ -346,10 +387,12 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
     }
   } catch (e) {
     if (DEBUG) console.log('Error in requestWithAuth', e)
+    // A `failure` label here is the only place a timed-out request stays
+    // distinguishable from a gateway's own 504 further down the line.
     if (e.message === 'Network request failed') {
-      return { ok: false, status: 0, json: { error: 'Network request failed' } }
+      return { ok: false, status: 0, json: { error: 'Network request failed' }, failure: { reason: 'network', status: 0 } }
     } else if (e.name === 'FetchTimeoutError') {
-      return { ok: false, status: 504, json: { error: 'Request timed out' } }
+      return { ok: false, status: 504, json: { error: 'Request timed out' }, failure: { reason: 'timeout', status: 504 } }
     } else {
       throw e
     }
