@@ -41,12 +41,13 @@ export function prepareExistingQSO (qso) {
   return clone
 }
 
-// Events and already logged QSOs show their own radio data, while a new QSO
-// inherits whatever the radio is set to right now.
+// Events and already logged QSOs show their own radio data, while a new QSO —
+// or the gap between one QSO and the next — inherits whatever the radio is set
+// to right now.
 export function radioValuesFor ({ qso, vfo }) {
   if (qso?.event) {
     return { band: vfo?.band, freq: vfo?.freq, mode: vfo?.mode }
-  } else if (qso?._isNew) {
+  } else if (!qso || qso?._isNew) {
     return { band: qso?.band ?? vfo?.band, freq: qso?.freq ?? vfo?.freq, mode: qso?.mode ?? vfo?.mode }
   } else {
     return { band: qso?.band, freq: qso?.freq, mode: qso?.mode }

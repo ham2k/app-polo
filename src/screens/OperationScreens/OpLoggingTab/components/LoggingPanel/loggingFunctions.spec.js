@@ -9,7 +9,7 @@
 // suggested QSO (no `_updatesVFO`) is the opposite: it must NOT update the VFO,
 // so the next QSO reverts to whatever the operator had before the spot tap.
 
-import { manageNextQSO } from './loggingFunctions'
+import { manageNextQSO, radioValuesFor } from './loggingFunctions'
 import { buildSuggestedQSO } from '../../../../../tools/deepLinkTools'
 import { setVFO } from '../../../../../store/station/stationSlice'
 import { bandForFrequency } from '@ham2k/lib-operation-data'
@@ -302,5 +302,35 @@ describe('editing an existing logged QSO', () => {
 
     expect(h.currentQSO().power).toBeUndefined()
     expect(h.vfo().power).toBe(100) // untouched
+  })
+})
+
+// Band and mode cannot be recovered once a QSO is logged, so the app flags a QSO
+// that is missing either one. What counts as "missing" depends on whose radio
+// data applies: a QSO still being entered borrows the VFO's, but one already in
+// the log must stand on its own, or the flag would be silenced by the radio's
+// current state rather than by the operator fixing the record.
+describe('radioValuesFor', () => {
+  const vfo = { band: '20m', freq: 14074000, mode: 'FT8' }
+
+  it('lets a new QSO borrow whatever the radio is set to', () => {
+    expect(radioValuesFor({ qso: { _isNew: true }, vfo })).toEqual(vfo)
+  })
+
+  it('prefers what the operator typed over the radio', () => {
+    const qso = { _isNew: true, band: '40m', freq: 7032000, mode: 'CW' }
+    expect(radioValuesFor({ qso, vfo })).toEqual({ band: '40m', freq: 7032000, mode: 'CW' })
+  })
+
+  it('borrows the radio between QSOs, so the panel does not complain about a QSO that does not exist yet', () => {
+    expect(radioValuesFor({ qso: undefined, vfo })).toEqual(vfo)
+  })
+
+  it('reports a logged QSO as missing what it is actually missing, whatever the radio says now', () => {
+    expect(radioValuesFor({ qso: { band: '40m' }, vfo })).toEqual({ band: '40m', freq: undefined, mode: undefined })
+  })
+
+  it('gives an event the radio state, since events carry no radio data of their own', () => {
+    expect(radioValuesFor({ qso: { event: { event: 'note' }, band: 'event' }, vfo })).toEqual(vfo)
   })
 })

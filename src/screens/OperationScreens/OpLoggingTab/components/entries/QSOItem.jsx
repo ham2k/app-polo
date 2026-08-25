@@ -4,33 +4,41 @@
 import React, { useCallback, useMemo } from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native-paper'
+import { useTranslation } from 'react-i18next'
 
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { partsForFreq } from '@ham2k/lib-format-tools'
 
 import { findBestHook } from '../../../../../extensions/registry'
 import { H2kIcon, H2kPressable } from '../../../../../ui'
+import { radioValuesFor } from '../LoggingPanel/loggingFunctions'
 
 const QSOItem = React.memo(function QSOItem ({
   qso, ourInfo, onPress, styles, selected, isOtherOperator, settings, timeFormatFunction, refHandlers
 }) {
+  const { t } = useTranslation()
+
   const theirInfo = { ...qso?.their?.guess, ...qso?.their }
 
-  const freqParts = useMemo(() => {
-    if (qso?.freq) {
-      return partsForFreq(qso.freq)
-    } else if (qso?.band) {
-      return [null, qso.band, null]
-    } else {
-      return [null, '???', null]
+  // Neither the band a QSO was on nor the mode it used can be recovered later,
+  // so a QSO missing either one gets flagged in the list.
+  const { freqParts, bandMissing, modeMissing } = useMemo(() => {
+    const { band, freq, mode } = radioValuesFor({ qso })
+
+    let parts
+    if (freq) parts = partsForFreq(freq)
+    else if (band) parts = [null, band, null]
+    else if (qso?.deleted) parts = [null, null, null]
+    else parts = [null, '???', null]
+
+    return {
+      freqParts: parts,
+      bandMissing: !qso?.deleted && !(band || freq),
+      modeMissing: !qso?.deleted && !mode
     }
   }, [qso])
 
-  // A QSO with no way to tell what band it was on, or with no mode, is missing
-  // information we cannot recover later, so we flag it in the list.
-  const radioInfoMissing = useMemo(() => (
-    !qso?.deleted && (!(qso?.freq || qso?.band) || !qso?.mode)
-  ), [qso?.deleted, qso?.freq, qso?.band, qso?.mode])
+  const radioInfoMissing = bandMissing || modeMissing
 
   const extraInfo = useMemo(() => {
     let info = []
@@ -55,12 +63,15 @@ const QSOItem = React.memo(function QSOItem ({
     if (qso.startAtMillis) parts.push(timeFormatFunction(qso.startAtMillis))
     if (freqParts[0]) {
       parts.push(`${freqParts[0]}.${freqParts[1]} MHz`)
+    } else if (bandMissing) {
+      parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
     } else if (freqParts[1]) {
       parts.push(freqParts[1])
     }
+    if (modeMissing) parts.push(t('screens.opLoggingTab.modeMissing', 'Mode???'))
     if (extraInfo) parts.push(extraInfo)
     return parts.join(', ')
-  }, [qso, freqParts, extraInfo, timeFormatFunction])
+  }, [qso, freqParts, bandMissing, modeMissing, extraInfo, timeFormatFunction, t])
 
   const confirmedBySpot = useMemo(() => Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === false), [qso.qsl])
   const bustedBySpot = useMemo(() => Object.values(qso?.qsl ?? {}).some(spot => spot?.isGuess === true), [qso.qsl])
@@ -96,6 +107,14 @@ const QSOItem = React.memo(function QSOItem ({
     }
   }, [radioInfoMissing, fieldsStyle, styles.colors.error])
 
+  // Mode has no column of its own, so it only takes up room when it is missing
+  const missingModeStyle = useMemo(() => ({
+    ...fieldsStyle.freqKHz,
+    color: styles.colors.error,
+    flex: 0,
+    marginLeft: styles.oneSpace * styles.sized({ xs: 1, lg: 2 })
+  }), [fieldsStyle.freqKHz, styles.colors.error, styles.oneSpace, styles.sized])
+
   const refIcons = useMemo(() => {
     return (qso.refs || []).filter(ref => ref.type).map(ref => ({ ref, handler: findBestHook(`ref:${ref.type}`) })).filter(x => x.handler?.iconForQSO).map(({ ref, handler }, i) => (
       <H2kIcon key={i} name={handler?.iconForQSO} color={fieldsStyle.icon.color} size={styles.normalFontSize * 0.9} />
@@ -119,6 +138,7 @@ const QSOItem = React.memo(function QSOItem ({
             {styles.sized({ xs: false, lg: true }) ? `.${freqParts[2]}` : `.${freqParts[2].substring(0, 1)}`}
           </Text>}
         </Text>
+        {modeMissing && <Text style={missingModeStyle}>???</Text>}
         <Text style={fieldsStyle.call}>
           {qso.their?.call ?? '?'}
         </Text>

@@ -103,9 +103,11 @@ export default function LoggingPanel({
 
   const [isValidOperation, operationError] = useMemo(() => { // Ensure we have all the required operation data
     const errors = []
-    const { band, freq, mode } = radioValuesFor({ qso, vfo })
-    if (!(band || freq)) errors.push('band')
-    if (!mode) errors.push('mode')
+    if (!qso?.event) { // Events are not radio contacts, they have no band or mode of their own
+      const { band, freq, mode } = radioValuesFor({ qso, vfo })
+      if (!(band || freq)) errors.push('band')
+      if (!mode) errors.push('mode')
+    }
     if (!operation?.stationCall) errors.push('callsign')
 
     if (errors.length > 0) {
@@ -426,8 +428,10 @@ export default function LoggingPanel({
   }, [operationError, infoMessage, commandInfo?.message])
 
   const disableSubmit = useMemo(() => {
+    // Deleting or undeleting needs no radio data, and the QSO's fields are disabled anyway
+    if (qso?._willBeDeleted !== undefined) return false
     return !((isValidQSO && isValidOperation) || commandInfo?.match)
-  }, [isValidQSO, isValidOperation, commandInfo?.match])
+  }, [qso?._willBeDeleted, isValidQSO, isValidOperation, commandInfo?.match])
 
   return (
     <View style={styles.root}>

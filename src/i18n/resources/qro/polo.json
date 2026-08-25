@@ -824,6 +824,7 @@
       "bandLabel": "BAND",
       "frequencyLabel": "FREQUENCY",
       "bandMissing": "BAND???",
+      "modeMissing": "MODE???",
       "radioControls-a11y": "RADIO CONTROLS {{parts}}",
       "notesLabel": "NOTES",
       "notesLabel-a11y": "NOTES",
