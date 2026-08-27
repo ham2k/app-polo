@@ -106,6 +106,13 @@ const RadioControlInputs = ({ qso, operation, vfo, settings, disabled, icon, sty
   )
 }
 
+// `modeForFrequency` returns `false` when the frequency is outside any known band,
+// which is not a mode we can show or offer as a choice, so the pill says "out of band".
+function modeLabelFor ({ mode, t }) {
+  if (mode === false) return t('screens.opLoggingTab.modeOutOfBand', 'OOB')
+  return `${mode ?? 'SSB'}`
+}
+
 export const radioControl = {
   key: 'radio',
   icon: 'radio',
@@ -121,7 +128,7 @@ export const radioControl = {
     } else {
       parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
     }
-    parts.push(`${mode ?? 'SSB'}`)
+    parts.push(modeLabelFor({ mode, t }))
 
     return parts.join(' • ')
   },
@@ -136,7 +143,7 @@ export const radioControl = {
     } else {
       parts.push(t('screens.opLoggingTab.bandMissing', 'Band???'))
     }
-    parts.push(`${mode ?? 'SSB'}`)
+    parts.push(modeLabelFor({ mode, t }))
 
     return t('screens.opLoggingTab.radioControls-a11y', 'Radio Controls, {{parts}}', { parts: parts.join(', ') }) || `Radio Controls, ${parts.join(', ')}`
   },

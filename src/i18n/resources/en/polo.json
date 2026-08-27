@@ -862,6 +862,7 @@
       "frequencyLabel": "Frequency",
       "bandMissing": "Band???",
       "modeMissing": "Mode???",
+      "modeOutOfBand": "OOB",
       "radioControls-a11y": "Radio Controls {{parts}}",
       "notesLabel": "Notes",
       "notesLabel-a11y": "Notes",
