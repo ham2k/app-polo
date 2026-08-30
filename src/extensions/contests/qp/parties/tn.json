@@ -12,10 +12,13 @@
   "bonusStations": {
     "K4TCG": 100
   },
-  "bonusPoints": {
-    "roverPerCountyActivated": 500
+  "bonus": {
+    "perActivatedCounty": 500,
+    "perActivatedCountyMinimumCount": 10,
+    "perActivatedCountyRoverOnly": true
   },
   "options": {
+    "bonusPostMultiplier": true,
     "dcCountsAsMaryland": true,
     "selfSpotting": true,
     "countyLine": true,

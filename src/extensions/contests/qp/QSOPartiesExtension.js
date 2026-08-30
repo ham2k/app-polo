@@ -369,6 +369,13 @@ export const ReferenceHandler = {
           scoring.counties.push(loc)
           if (qp.options.countiesAreMultForInState === false) {
             mult = loc.substring(0, 2)
+          } else if (qp.options.stateCountsForInState && weAreInState) {
+            // In-state stations count our own state as a multiplier, on top of the county it came from (CO)
+            const state = _stateForCounty({ qp, county: loc })
+            if (US_STATES[state] || CANADIAN_PROVINCES[state]) {
+              const stateMult = multPrefix + state
+              if (!scoring.mults.includes(stateMult)) scoring.mults.push(stateMult)
+            }
           }
         } else if (US_STATES[loc] || loc === 'DC') {
           mult = multPrefix + loc
@@ -464,6 +471,9 @@ export const ReferenceHandler = {
   accumulateScoreForOperation: ({ qsoScore, score, operation, ref }) => {
     const qp = qpData({ ref })
 
+    // Some parties only award the per-county bonus to mobile & rover stations (TN)
+    const perActivatedCountyBonus = (qp.bonus?.perActivatedCountyRoverOnly && !ref?.mobile) ? 0 : (qp.bonus?.perActivatedCounty || 0)
+
     if (!score?.key) score = undefined // Reset if score doesn't have the right shape
 
     score = score ?? {
@@ -503,7 +513,7 @@ export const ReferenceHandler = {
       })
     }
 
-    if (qp.bonus.perActivatedCounty) {
+    if (perActivatedCountyBonus) {
       qsoScore.ourLocations.forEach(location => {
         if (qp.counties[location.location]) {
           score.activatedCounties[location.location] = (score.activatedCounties[location.location] || 0) + 1
@@ -518,8 +528,7 @@ export const ReferenceHandler = {
         score.counties[location] = (score.counties[location] || 0) + 1
 
         if (qp.options.countiesCountForInState || qp.options.stateCountsForInState) {
-          // This assumes that QPs with county abbreviations longer than 4 letters have the state as the first two
-          const state = qp.state || location.length > 4 ? location.substring(0, 2) : qp.key
+          const state = _stateForCounty({ qp, county: location })
           score.states[state] = (score.states[state] || 0) + 1
         }
       })
@@ -561,10 +570,10 @@ export const ReferenceHandler = {
       }
     }
 
-    if (qp.bonus.perActivatedCounty) {
+    if (perActivatedCountyBonus) {
       Object.keys(score.activatedCounties).forEach(county => {
         if (score.activatedCounties[county] >= (qp.bonus.perActivatedCountyMinimumCount || 1)) {
-          oneTimeBonuses = oneTimeBonuses + qp.bonus.perActivatedCounty
+          oneTimeBonuses = oneTimeBonuses + perActivatedCountyBonus
         }
       })
     }
@@ -1034,6 +1043,12 @@ export function qpNormalizeLocation({ qp, qso, location, weAreInState, theyAreIn
     }
   }
   return ''
+}
+
+// Multi-state events map each county to its state; otherwise this assumes that QPs with
+// county abbreviations longer than 4 letters have the state as the first two
+function _stateForCounty({ qp, county }) {
+  return qp.countyToState?.[county] || qp.state || (county.length > 4 ? county.substring(0, 2) : qp.key)
 }
 
 export function qpData({ ref }) {

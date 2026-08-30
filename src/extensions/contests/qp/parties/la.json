@@ -13,8 +13,9 @@
   "bonusStations": {
     "N5LCC": 100
   },
-  "bonusPoints": {
-    "roverPerCountyActivated": 50
+  "bonus": {
+    "perActivatedCounty": 50,
+    "perActivatedCountyRoverOnly": true
   },
   "options": {
     "dxLocationIsPrefix": true,

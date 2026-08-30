@@ -4,7 +4,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
-import { fmtDateNice, fmtDateTimeNice, fmtTimeBetween, prepareDateValue } from '@ham2k/lib-format-tools'
+import { fmtDateNice, fmtDateTimeNice, fmtNumber, fmtTimeBetween, prepareDateValue } from '@ham2k/lib-format-tools'
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
 import { selectOperatorCallInfo, selectSettings } from '../../../store/settings'
@@ -88,6 +88,11 @@ export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
     setRefs(replaceRef(allRefs, Info.key, { ...activityRef, email: value }))
   }, [activityRef, allRefs, setRefs])
 
+  const handleMobileChange = useCallback((value) => {
+    if (value === undefined) value = !activityRef?.mobile
+    setRefs(replaceRef(allRefs, Info.key, { ...activityRef, mobile: value }))
+  }, [activityRef, allRefs, setRefs])
+
   const handleSpotToQPHubChange = useCallback((value) => {
     if (value === undefined) value = !activityRef?.spotToQPHub
     setRefs(replaceRef(allRefs, Info.key, { ...activityRef, spotToQPHub: value }))
@@ -149,6 +154,18 @@ export function ActivityOptions({ styles, operation, refs: allRefs, setRefs }) {
             </H2kListRow>
           </H2kListSection>
           <H2kListSection title={'Entry Information'}>
+            {qp?.bonus?.perActivatedCountyRoverOnly && (
+              <H2kListRow>
+                <H2kListItem
+                  title="Mobile or Rover"
+                  description={activityRef?.mobile ? `Yes, ${fmtNumber(qp.bonus.perActivatedCounty)} bonus points per county activated` : 'No, fixed station'}
+                  leftIcon="car"
+                  rightSwitchValue={!!activityRef?.mobile}
+                  rightSwitchOnValueChange={handleMobileChange}
+                  onPress={handleMobileChange}
+                />
+              </H2kListRow>
+            )}
             <H2kListRow>
               <H2kEnhancedTextInput
                 label="E-Mail"

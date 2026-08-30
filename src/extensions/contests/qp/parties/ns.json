@@ -22,8 +22,11 @@
     "OurNumber"
   ],
   "bonusPoints": {
-    "qsoWithRover": 10,
-    "roverPerCountyActivated": 100
+    "qsoWithRover": 10
+  },
+  "bonus": {
+    "perActivatedCounty": 100,
+    "perActivatedCountyRoverOnly": true
   },
   "options": {
     "stateCountsForInState": false,

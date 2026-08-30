@@ -9,8 +9,9 @@
   "internalNotes": "Created by W8NI",
   "lastUpdated": "2026-04-21 12:00Z",
   "status": "Updated for 2026, but not verified",
-  "bonusPoints": {
-    "roverPerCountyActivated": 100
+  "bonus": {
+    "perActivatedCounty": 100,
+    "perActivatedCountyRoverOnly": true
   },
   "options": {
     "dcCountsAsMaryland": true,

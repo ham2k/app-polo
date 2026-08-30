@@ -29,8 +29,9 @@
     "W4KSN": 50,
     "W8ANT": 50
   },
-  "bonusPoints": {
-    "roverPerCountyActivated": 100
+  "bonus": {
+    "perActivatedCounty": 100,
+    "perActivatedCountyRoverOnly": true
   },
   "options": {
     "stateCountsForInState": false,

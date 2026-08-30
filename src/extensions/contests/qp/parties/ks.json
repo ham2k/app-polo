@@ -12,7 +12,13 @@
   "internalNotes": "",
   "lastUpdated": "2026-04-21 12:00Z",
   "status": "Updated for 2026, but not verified",
+  "points": {
+    "PHONE": 2,
+    "CW": 3,
+    "DATA": 3
+  },
   "options": {
+    "bonusPostMultiplier": true,
     "dcCountsAsMaryland": false,
     "stateCountsForInState": true,
     "selfSpotting": true,

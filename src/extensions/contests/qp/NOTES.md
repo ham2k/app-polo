@@ -84,15 +84,16 @@ Relevant `"options"`:
 
 ### Bonuses
 
-- `bonusPostMultiplier`: If true (default), bonus points are added after the multiplier is applied. (BC, SC, NC)
+- `bonusPostMultiplier`: If true, bonus points are added after the multiplier is applied. Defaults to false. (BC, SC, NC, TN)
 - `bonusPerBandMode`: If true, bonus points are awarded per band and mode. (Some)
 - `bonusPerMode`: If true, bonus points are awarded per mode. (WA Salmon Run)
 - `rareCountySweep`: If true, bonus points are awarded for a sweep of rare counties. (NC)
 - `rareCountySweepMinimumCount`: If set, the minimum number of rare counties worked required to earn the rare county sweep bonus. (NC)
 - `bonusStationSweep`: If true, bonus points are awarded for a sweep of bonus stations. (ID)
 - `bonusStationSweepMinimumCount`: If set, the minimum number of bonus stations worked required to earn the bonus station sweep bonus. (ID)
-- `perActivatedCounty`: If set, bonus points awarded for each activated county [CO]
-- `perActivatedCountyMinimumCount`: If set, minimum number of QSOs per county required to earn the Activated County bonus [CO]
+- `perActivatedCounty`: If set, bonus points awarded for each activated county (CO, TN, LA, VA, OH, NS)
+- `perActivatedCountyMinimumCount`: If set, minimum number of QSOs per county required to earn the Activated County bonus (CO, TN)
+- `perActivatedCountyRoverOnly`: If true, only mobile and rover stations earn the Activated County bonus. The operator enables "Mobile or Rover" in the activity options. (CO, TN, LA, VA, OH, NS)
 
 ### Other Options
 - `countyToState`: Provides a mapping of county abbreviations to state abbreviations. Needed for some multi-state events (CPQP)

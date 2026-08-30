@@ -28,7 +28,8 @@
   },
   "bonus": {
     "perActivatedCounty": 500,
-    "perActivatedCountyMinimumCount": 15
+    "perActivatedCountyMinimumCount": 15,
+    "perActivatedCountyRoverOnly": true
   },
   "counties": {
     "ADA": "Adams",
