@@ -72,7 +72,7 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
       if (privateData) {
         if (qso.event.event === 'break' || qso.event.event === 'start') str += '\n'
 
-        const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description.replaceAll(/ • /g, ' * ')}`
+        const eventRecord = `${fmtISODateTime(qso.startAtMillis)}: ${qso.event.note ?? qso.event.message ?? qso.event.description?.replaceAll(/ • /g, ' * ') ?? qso.event.event ?? ''}`
         str += adifField(`APP_HAM2K_${qso.event.event?.toUpperCase() || 'EVENT'}`, eventRecord, { newLine: true })
 
         if (qso.event.data) {

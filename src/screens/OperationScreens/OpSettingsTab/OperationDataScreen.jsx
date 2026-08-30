@@ -220,19 +220,6 @@ export default function OperationDataScreen (props) {
       ])
     })
 
-    let finalOptions = options
-
-    if (isFreeLofiAccount && options.length > 1) {
-      const firstFileName = options[0].fileName
-      const proceed = await confirmAsync(
-        t('screens.operationData.freeTierOneFileTitle', 'Free accounts can only send one file at a time'),
-        t('screens.operationData.freeTierOneFileMessage', 'Do you want to send just "{{fileName}}"?', { fileName: firstFileName }),
-        t('screens.operationData.freeTierOneFileConfirm', 'Send {{fileName}}', { fileName: firstFileName })
-      )
-      if (!proceed) return
-      finalOptions = [options[0]]
-    }
-
     const syncHook = findHooks('sync')[0]
 
     if (isFreeLofiAccount) {
@@ -242,16 +229,17 @@ export default function OperationDataScreen (props) {
         (f) => new Date(f.created_at).getTime() > sixHoursAgo && f.status !== 'downloaded'
       )
       if (recentUndownloaded) {
+        const recentName = recentUndownloaded.group_title || recentUndownloaded.filename
         const proceed = await confirmAsync(
           t('screens.operationData.freeTierRecentUploadTitle', 'Recent upload will be replaced'),
-          t('screens.operationData.freeTierRecentUploadMessage', 'You uploaded "{{fileName}}" less than 6 hours ago and it has not been downloaded yet. Sending this file will replace it. Do you want to wait instead?', { fileName: recentUndownloaded.filename }),
+          t('screens.operationData.freeTierRecentUploadMessage', 'You sent "{{name}}" less than 6 hours ago and it has not been downloaded yet. Sending now will replace it. Do you want to wait instead?', { name: recentName }),
           t('screens.operationData.freeTierRecentUploadConfirm', 'Send Anyway')
         )
         if (!proceed) return
       }
     }
 
-    finalOptions.forEach((option) => {
+    options.forEach((option) => {
       trackEvent('operation_exported', {
         destination: 'log_stash',
         export_type: [option.exportType ?? option.handler.key, option.format].join('.'),
@@ -266,7 +254,7 @@ export default function OperationDataScreen (props) {
       const groupUuid = UUID.v4()
       const groupTitle = buildTitleForOperation({ operatorCall: operation.local?.operatorCall, stationCall: operation.stationCallPlus || operation.stationCall, title: operation.title, userTitle: operation.userTitle })
 
-      const exports = await dispatch(generateExportsForOptions(operation.uuid, finalOptions, { dataURI: false }))
+      const exports = await dispatch(generateExportsForOptions(operation.uuid, options, { dataURI: false }))
       if (!exports?.length) return
 
       const errors = []
@@ -298,6 +286,7 @@ export default function OperationDataScreen (props) {
     } catch (error) {
       console.error('Error generating exports', error)
       reportError('Error generating exports', error)
+      Alert.alert(t('screens.operationData.errorSendingToLogStash', "Couldn't send to Ham2K's File Stash"), error?.message || 'Unknown error')
     } finally {
       setIsStashing(false)
     }

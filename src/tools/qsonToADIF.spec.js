@@ -200,4 +200,30 @@ describe('qsonToADIF segment context', () => {
     expect(adif).toMatch(/<CALL:\d+>K1KK.*?<STX_STRING:\d+>DEL/s)
     expect(adif).toMatch(/<CALL:\d+>K2KK.*?<STX_STRING:\d+>ADA/s)
   })
+
+  it('exports segment events that carry no note, message or description', () => {
+    // Segment start/break events created by changing operation details have none of
+    // these fields, and a crash here made every export of such an operation fail silently.
+    const adif = qsonToADIF({
+      operation: baseOperation(),
+      settings: baseSettings,
+      qsos: [
+        {
+          uuid: 'start',
+          startAtMillis: 1000,
+          event: {
+            event: 'start',
+            operation: { refs: [{ type: 'pota', ref: 'US-2222' }] }
+          }
+        },
+        baseQSO({ uuid: 'q1', call: 'K1AAA', startAtMillis: 2000 })
+      ],
+      handler: handlerWithContextFields(),
+      format: 'adif',
+      combineSegmentRefs: false
+    })
+
+    expect(adif).toMatch(/<APP_HAM2K_START:\d+>/)
+    expect(adif).toMatch(/<CALL:\d+>K1AAA/)
+  })
 })

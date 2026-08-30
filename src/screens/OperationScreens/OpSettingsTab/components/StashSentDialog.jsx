@@ -105,7 +105,7 @@ export function StashSentDialog ({ visible, filesLabel, isFreeAccount, onDismiss
         {isFreeAccount && (
           <>
             <H2kText style={{ marginTop: styles.oneSpace * 2 }}>
-              {t('screens.operationData.logStashDialogTiers', 'Free accounts can only send one file at a time. Subscribers can send as many as they want.')}
+              {t('screens.operationData.logStashDialogTiers', 'Free accounts can only keep one stash at a time. Subscribers can keep as many as they want.')}
             </H2kText>
             <View style={{ alignItems: 'flex-start', marginTop: styles.oneSpace }}>
               <H2kButton mode="outlined" compact onPress={handleSubscribe}>
