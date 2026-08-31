@@ -279,11 +279,13 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
           syncPayload.meta.sync = {
             operations: {
               syncedUntilMillis: (localData?.sync?.earliestOperationSyncedAtMillis || now),
+              ...(localData?.sync?.backfillOperationCursor ? { cursor: localData.sync.backfillOperationCursor } : {}),
               limit: operationBatchSize,
               anyClient: true
             },
             qsos: {
               syncedUntilMillis: (localData?.sync?.earliestQSOSyncedAtMillis || now),
+              ...(localData?.sync?.backfillQSOCursor ? { cursor: localData.sync.backfillQSOCursor } : {}),
               limit: qsoBatchSize,
               anyClient: true
             }
@@ -293,11 +295,13 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
           syncPayload.meta.sync = {
             operations: {
               syncedSinceMillis: (localData?.sync?.lastestOperationSyncedAtMillis || 0),
+              ...(localData?.sync?.forwardOperationCursor ? { cursor: localData.sync.forwardOperationCursor } : {}),
               limit: operationBatchSize,
               anyClient: false
             },
             qsos: {
               syncedSinceMillis: (localData?.sync?.lastestQSOSyncedAtMillis || 0),
+              ...(localData?.sync?.forwardQSOCursor ? { cursor: localData.sync.forwardQSOCursor } : {}),
               limit: qsoBatchSize,
               anyClient: false
             }
@@ -329,12 +333,39 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
 
           // Merge QSOs and operations sent from the server
           const syncTimes = {}
+          // LOFI-41. Which cursor each side actually went out with. The response cannot answer
+          // this: the server offers a cursor on the millisecond path too (that is how a client
+          // picks up its first one), so `nextCursor` coming back says nothing about how the page
+          // carrying it was built - and `_backfillFallbackMillis` needs exactly that.
+          const cursorKeys = syncDirection === 'backfill'
+            ? { operations: 'backfillOperationCursor', qsos: 'backfillQSOCursor' }
+            : { operations: 'forwardOperationCursor', qsos: 'forwardQSOCursor' }
+          const sentCursors = {
+            operations: localData?.sync?.[cursorKeys.operations],
+            qsos: localData?.sync?.[cursorKeys.qsos]
+          }
+
+          const applyCursor = (side, receivedCount) => {
+            const next = _nextSyncCursor({
+              sideMeta: response.json?.meta?.[side],
+              receivedCount,
+              refused: _cursorWasRefused(response, side)
+            })
+            if (next !== undefined) syncTimes[cursorKeys[side]] = next
+          }
+
+          if (inboundSync) {
+            applyCursor('operations', response.json.operations?.length || 0)
+            applyCursor('qsos', response.json.qsos?.length || 0)
+          }
+
           if (inboundSync && response.json.operations?.length > 0) {
             const { latestSyncedAtMillis, earliestSyncedAtMillis } = await dispatch(mergeSyncOperations({ operations: response.json.operations }))
             if (VERBOSE > 1) console.log(' -- new operations', response.json.operations.length, { latestSyncedAtMillis, earliestSyncedAtMillis })
 
             syncTimes.lastestOperationSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestOperationSyncedAtMillis ?? 0)
-            syncTimes.earliestOperationSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestOperationSyncedAtMillis ?? earliestSyncedAtMillis)
+            const fallback = _backfillFallbackMillis({ earliestSyncedAtMillis, sentCursor: sentCursors.operations })
+            syncTimes.earliestOperationSyncedAtMillis = Math.min(fallback, localData?.sync?.earliestOperationSyncedAtMillis ?? fallback)
             if (VERBOSE >= 1) logTimer('sync', 'Done merging operations', { latestSyncedAtMillis, earliestSyncedAtMillis })
           }
 
@@ -343,7 +374,8 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
             if (VERBOSE > 1) console.log(' -- new qsos', response.json.qsos, { latestSyncedAtMillis, earliestSyncedAtMillis })
 
             syncTimes.lastestQSOSyncedAtMillis = Math.max(latestSyncedAtMillis, localData?.sync?.lastestQSOSyncedAtMillis ?? 0)
-            syncTimes.earliestQSOSyncedAtMillis = Math.min(earliestSyncedAtMillis, localData?.sync?.earliestQSOSyncedAtMillis ?? earliestSyncedAtMillis)
+            const fallback = _backfillFallbackMillis({ earliestSyncedAtMillis, sentCursor: sentCursors.qsos })
+            syncTimes.earliestQSOSyncedAtMillis = Math.min(fallback, localData?.sync?.earliestQSOSyncedAtMillis ?? fallback)
             if (VERBOSE >= 1) logTimer('sync', 'Done merging qsos', { latestSyncedAtMillis, earliestSyncedAtMillis })
           }
 
@@ -386,6 +418,11 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
               if (receivedAllUpdates) {
                 GLOBAL.lastFullSync = Date.now()
                 syncTimes.completedFullSync = true
+                // These name a position in the descending `synced_until` sort, which forward mode
+                // does not page. The server refuses a cursor minted for the other window, so
+                // leaving them behind costs a round and an error on the first forward pull.
+                syncTimes.backfillOperationCursor = null
+                syncTimes.backfillQSOCursor = null
               }
             }
             if (VERBOSE > 1) console.log(' -- syncTimes', syncTimes)
@@ -449,12 +486,60 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
 // collapses into a retry every five seconds. That is the cadence of the Aug 2026 incident.
 const MAX_BACKOFF_DOUBLINGS = 8
 
+// LOFI-41. The server's row cursor names a RECORD - `(syncedAtMillis, id)`, opaque - rather than
+// a millisecond, and echoing it back is the only way to resume inside a group of records sharing
+// one `updated_at`. Without it we page by millisecond, and the server has to extend a page to
+// cover the whole millisecond it stops in; that extension is capped at 8000 records, so a
+// millisecond holding more than that is truncated, and asking for `< thatMillisecond` next round
+// skips the remainder permanently - `recordsLeft` counts down to zero around the hole and the
+// backfill reports itself complete.
+//
+// Returns the new value for a stored cursor: a string to store, `null` to clear, or `undefined`
+// to leave whatever is there alone. Those three are genuinely different, and collapsing any two
+// of them is a bug:
+//
+//   - a page that came back and named no position means the cursor we hold is spent; keeping it
+//     re-serves the same tail every round, because the server ignores `syncedUntilMillis`
+//     entirely once a valid cursor arrives
+//   - a refused cursor (wrong window, or a format it no longer understands) is spent for the same
+//     reason, and re-sending it just repeats the refusal
+//   - a round that returned NO page at all - cooldown-gated, counts only - says nothing about
+//     where we are, and clearing on it would throw away a good position
+function _nextSyncCursor ({ sideMeta, receivedCount, refused }) {
+  const offered = sideMeta?.nextCursor ?? sideMeta?.next_cursor
+  if (offered) return offered
+  if (receivedCount > 0 || refused) return null
+  return undefined
+}
+
+// The millisecond watermark is a FALLBACK for the row cursor, read only if the cursor is ever
+// lost - refused after a format change, or a server that stops honouring it. Which value is safe
+// depends on how the page was built, and the two are opposites:
+//
+//   - no cursor sent: the server extended the page over its whole edge millisecond, so `<
+//     earliest` skips nothing. `earliest + 1` here would re-request that millisecond every round.
+//   - cursor sent: the page stopped at the limit wherever that landed, mid-millisecond included,
+//     so records sharing `earliest` may not have been delivered. Falling back to `< earliest`
+//     would skip them for good; `+ 1` re-covers the millisecond, and re-delivery is idempotent.
+function _backfillFallbackMillis ({ earliestSyncedAtMillis, sentCursor }) {
+  return sentCursor ? earliestSyncedAtMillis + 1 : earliestSyncedAtMillis
+}
+
+// Did the server tell us it refused the cursor we sent for this side? It answers the millisecond
+// window instead, so the round is still useful - what must not happen is holding the refused
+// cursor and re-sending it forever. Every hop is checked rather than assumed: this is
+// server-supplied and an unexpected shape must not throw in the middle of a sync round.
+function _cursorWasRefused (response, side) {
+  const forSide = response?.json?.errors?.[side]
+  return !!(forSide && typeof forSide === 'object' && forSide.pagination && forSide.pagination.cursor)
+}
+
 function _delayAfterSyncErrors (count) {
   return (GLOBAL.syncLoopDelay || DEFAULT_SYNC_LOOP_DELAY) + ((2 ** Math.min(count, MAX_BACKOFF_DOUBLINGS)) * 1000)
 }
 
 // Exported for tests; not part of this module's interface.
-export { _delayAfterSyncErrors }
+export { _delayAfterSyncErrors, _nextSyncCursor, _backfillFallbackMillis, _cursorWasRefused }
 
 let nextSyncLoopInterval = 0
 let lastDebouncedSync = 0
