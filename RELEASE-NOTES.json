@@ -1,4 +1,11 @@
 {
+  "26.7.6": {
+    "name": "July '26 (patch 6)",
+    "photoCaption": "KI2D at US-2138 and LLUS-0006",
+    "changes": [
+      "Fixed exports reporting an operator callsign you never entered"
+    ]
+  },
   "26.7.5": {
     "name": "July '26 (patch 5)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
