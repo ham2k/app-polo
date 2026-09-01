@@ -42,9 +42,6 @@ export function qsonToADIF ({ operation, settings, qsos, handler, format, title,
     templates
   }
 
-  if (operation.stationCall !== settings.operatorCall) {
-    common.operatorCall = settings.operatorCall
-  }
   if (operation.local?.operatorCall || operation.operatorCall) {
     common.operatorCall = operation.local?.operatorCall || operation.operatorCall
   }
@@ -208,7 +205,7 @@ function adifFieldsForOneQSO ({ qso, operation, common, privateData, templates, 
     { SRX_STRING: qso.their.exchange },
     { STX_STRING: qso.our.exchange },
     { STATION_CALLSIGN: qso.our.call || common.stationCall },
-    { OPERATOR: qso.our.operatorCall || common.operatorCall || qso.our.call || common.stationCall },
+    { OPERATOR: qso.our.operatorCall || common.operatorCall },
     { GRIDSQUARE: privateData && (qso.their?.grid ?? qso.their?.guess?.grid) },
     { MY_GRIDSQUARE: privateData && (qso?.our?.grid ?? common.grid) },
     { MY_STATE: qso?.our?.state ?? common.state },

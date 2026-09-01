@@ -67,7 +67,7 @@ export default function OpSettingsTab ({ navigation, route }) {
   const [stationInfo, stationInfoColor] = useMemo(() => {
     const stationCall = operation?.stationCall ?? settings?.stationCall ?? settings?.operatorCall ?? ''
     const allCalls = [stationCall, ...(operation.stationCallPlusArray ?? [])]
-    const operatorCall = operation?.local?.operatorCall ?? settings?.operatorCall ?? ''
+    const operatorCall = operation?.local?.operatorCall ?? ''
 
     // if (operation.stationCallPlusArray && operation.stationCallPlusArray.length > 0) {
     //   allCalls.push(...operation.stationCallPlusArray)

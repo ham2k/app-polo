@@ -51,7 +51,7 @@ export function qsonToReg1test ({ operation, qsos, settings, handler, combineSeg
   str += '[REG1TEST;1]\n'
   const defaultHeaders = {
     PCall: operation.stationCall ?? settings.operatorCall,
-    RCall: operation.operatorCall ?? operation.stationCall ?? settings.operatorCall,
+    RCall: operation.local?.operatorCall ?? operation.operatorCall ?? operation.stationCall ?? settings.operatorCall,
     PWWLo: operation.grid
   }
 

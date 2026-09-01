@@ -227,3 +227,60 @@ describe('qsonToADIF segment context', () => {
     expect(adif).toMatch(/<CALL:\d+>K1AAA/)
   })
 })
+
+describe('qsonToADIF operator', () => {
+  // OPERATOR must reflect who actually ran the station. Defaulting it to the station
+  // call, or to the app's own callsign when operating a different station call, would
+  // claim an operator the user never entered.
+  it('omits OPERATOR when the operation has no operator', () => {
+    const adif = qsonToADIF({
+      operation: { ...baseOperation(), stationCall: 'W1CLUB' },
+      settings: baseSettings,
+      qsos: [baseQSO({ uuid: 'q1', call: 'K1AAA', startAtMillis: 2000 })],
+      handler: handlerWithContextFields(),
+      format: 'adif'
+    })
+
+    expect(adif).toMatch(/<STATION_CALLSIGN:\d+>W1CLUB/)
+    expect(adif).not.toMatch(/<OPERATOR:/)
+  })
+
+  it('omits OPERATOR when the station call is the app\'s own callsign', () => {
+    const adif = qsonToADIF({
+      operation: baseOperation(),
+      settings: baseSettings,
+      qsos: [baseQSO({ uuid: 'q1', call: 'K1AAA', startAtMillis: 2000 })],
+      handler: handlerWithContextFields(),
+      format: 'adif'
+    })
+
+    expect(adif).toMatch(/<STATION_CALLSIGN:\d+>K1OP/)
+    expect(adif).not.toMatch(/<OPERATOR:/)
+  })
+
+  it('exports a QSO\'s own operator ahead of the operation\'s', () => {
+    const qso = baseQSO({ uuid: 'q1', call: 'K1AAA', startAtMillis: 2000 })
+    qso.our.operatorCall = 'K1GUEST'
+    const adif = qsonToADIF({
+      operation: { ...baseOperation(), stationCall: 'W1CLUB', local: { operatorCall: 'K1OP' } },
+      settings: baseSettings,
+      qsos: [qso],
+      handler: handlerWithContextFields(),
+      format: 'adif'
+    })
+
+    expect(adif).toMatch(/<OPERATOR:\d+>K1GUEST/)
+  })
+
+  it('exports the operation operator when one is set', () => {
+    const adif = qsonToADIF({
+      operation: { ...baseOperation(), stationCall: 'W1CLUB', local: { operatorCall: 'K1OP' } },
+      settings: baseSettings,
+      qsos: [baseQSO({ uuid: 'q1', call: 'K1AAA', startAtMillis: 2000 })],
+      handler: handlerWithContextFields(),
+      format: 'adif'
+    })
+
+    expect(adif).toMatch(/<OPERATOR:\d+>K1OP/)
+  })
+})
