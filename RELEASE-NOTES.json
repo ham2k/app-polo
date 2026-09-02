@@ -3,7 +3,7 @@
     "name": "July '26 (patch 7)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
-      "Fixed exports reporting an operator callsign you never entered"
+      "Fixed exports with your operator callsign when it should have been blank"
     ]
   },
   "26.7.6": {
