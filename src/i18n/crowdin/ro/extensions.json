@@ -391,9 +391,9 @@
         "unknownSummit": "Vârf necunoscut"
       }
     },
-    "hamdb": {
-      "name": "Căutări de indicative HamDB.org",
-      "description": "Serviciu gratuit, dar limitat la apeluri din SUA, Canada și Germania"
+    "ham2k-lookup": {
+      "name": "Serviciul de căutare Ham2K",
+      "description": "Serviciu gratuit, dar acoperă doar indicativele din SUA, Canada și Germania"
     },
     "hamqth": {
       "name": "Căutări de indicative HamQTH.com",

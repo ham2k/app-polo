@@ -1,0 +1,994 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "밴드 없음",
+      "bandsCount_one": "1개 밴드",
+      "bandsCount_other": "{{count}}개 밴드",
+      "modesCount_zero": "모드 없음",
+      "modesCount_one": "1개 모드",
+      "modesCount_other": "{{count}}개 모드",
+      "total": "총 {{count}} 밴드-모드"
+    },
+    "bca": {
+      "name": "BCA: 벨기에 성 및 요새",
+      "shortName": "BCA",
+      "exportName": "BCA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 성이 선택되지 않음",
+        "title_one": "성 1개 활성화 중",
+        "title_other": "성 {{count}}개 활성화 중",
+        "noCastlesFound": "성 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치",
+        "matchingCastles_zero": "일치하는 성 없음",
+        "matchingCastles_one": "1개의 일치하는 성",
+        "matchingCastles_other": "{{count}}개의 일치하는 성",
+        "searchForCastles": "활성화할 성 검색",
+        "noCastlesNearby": "주변에 성 없음",
+        "nearbyCastles": "주변 성",
+        "searchPlaceholder": "이름 또는 레퍼런스…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "추적한 성 없음",
+        "huntedRefsCount_one": "1개의 성을 추적함",
+        "huntedRefsCount_other": "{{fmtCount}}개의 성을 추적함",
+        "activatorQSOsCount_zero": "액티베이터 QSO 없음",
+        "activatorQSOsCount_one": "1개의 액티베이터 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 액티베이터 QSO",
+        "huntedQSOsCount_zero": "추적 QSO 없음",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}}개의 추적 QSO",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화된 성 없음",
+        "referencesActivatedCount_one": "1개의 성을 활성화함",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 성을 활성화함",
+        "referencesMissedCount_zero": "미완료 성 없음",
+        "referencesMissedCount_one": "1개의 미완료 성",
+        "referencesMissedCount_other": "{{fmtCount}}개의 완료되지 않은 성",
+        "referencesHuntedCount_zero": "추적 완료한 성 없음",
+        "referencesHuntedCount_one": "1개의 성을 추적함",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 성을 추적함"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대방의 BCA"
+      }
+    },
+    "blha": {
+      "name": "BLHA: 벨기에 등대 및 등대선",
+      "shortName": "BLHA",
+      "exportName": "BLHA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 등대가 선택되지 않음",
+        "title_one": "등대 1개 활성화 중",
+        "title_other": "등대 {{count}}개 활성화 중",
+        "noLighthousesFound": "등대를 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치",
+        "matchingLighthouses_zero": "일치하는 등대 없음",
+        "matchingLighthouses_one": "1개의 일치하는 등대",
+        "matchingLighthouses_other": "{{count}}개의 일치하는 등대",
+        "searchForLighthouses": "활성화할 등대 검색",
+        "noLighthousesNearby": "주변에 등대 없음",
+        "nearbyLighthouses": "주변 등대",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "추적한 등대 없음",
+        "huntedRefsCount_one": "1개의 등대를 추적함",
+        "huntedRefsCount_other": "{{fmtCount}}개의 등대를 추적함",
+        "activatorQSOsCount_zero": "액티베이터 QSO 없음",
+        "activatorQSOsCount_one": "1개의 액티베이터 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 액티베이터 QSO",
+        "huntedQSOsCount_zero": "추적 QSO 없음",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}}개의 추적 QSO",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화된 등대 없음",
+        "referencesActivatedCount_one": "1개의 등대가 활성화됨",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 등대가 활성화됨",
+        "referencesMissedCount_zero": "미완료 등대 없음",
+        "referencesMissedCount_one": "1개의 미완료 등대",
+        "referencesMissedCount_other": "{{fmtCount}}개의 미완료 등대",
+        "referencesHuntedCount_zero": "추적된 등대 없음",
+        "referencesHuntedCount_one": "1개의 등대를 추적함",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 등대를 추적함"
+      }
+    },
+    "call-history": {
+      "name": "콜사인 히스토리",
+      "description": "이전 ADIF를 업로드하고 오프라인 콜사인 조회에 사용"
+    },
+    "call-notes": {
+      "name": "콜사인 노트",
+      "description": "콜사인 노트를 파일에 저장하고 오프라인 콜사인 조회에 사용",
+      "description-md_zero": "로드된 노트 없음",
+      "description-md_one": "{{fmtCount}} {{type}} 로드됨",
+      "description-md_other": "{{fmtCount}} {{type}} 로드됨",
+      "builtIn": "내장된 노트",
+      "userDefined": "사용자 노트",
+      "failedToLoad": "로드 실패!",
+      "notesFile": "콜사인 노트 파일",
+      "nameLabel": "이름",
+      "namePlaceholder": "콜사인 노트 파일명",
+      "locationLabel": "위치",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "빌트인",
+      "customTitle": "커스텀",
+      "addFile": "파일 추가",
+      "aboutTitle": "콜사인 노트에 대하여",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K 노트에 등재된 무선사"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "누가 누구인지 보여주는 예시"
+      },
+      "help-md": "콜사인 노트는 간단한 텍스트 파일에 저장되며, 한 줄 당 하나의 콜사인과 로깅 화면에 표시할 정보를 입력합니다. 기본 제공 파일을 사용하거나 자신이 직접 수정한 파일을 추가할 수 있습니다. \n\n다음과 같은 서비스에서 텍스트 파일에 지정된 링크를 붙여넣거나, 또는 \"공유\"를 통해 생성된 링크를 사용합니다.\n* [구글 문서](https: //docs.google.com/)\n* [구글 드라이브](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\n해당 파일의 줄은 다음과 같이 보이게 되며 기본 마크다운 형식이 적용됩니다:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\n이모티콘으로 시작하는 항목은 기본 ⭐ 대신 사용됩니다. \n\n`..` 또는 ` //`을 콜사인 필드에 입력하면 \"callsign 확장\" 기능을 사용할 수 있으며, 위의 예제 마지막 줄의 `//DAN`처럼 표시됩니다."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "캐나다 주 없음",
+      "provincesCount_one": "캐나다 1개 주",
+      "provincesCount_other": "캐나다 {{count}}개 주"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "설정",
+        "year": "연도",
+        "testMode-md": "올해의 이벤트가 아직 시작되지 않았기 때문에 최근 7일간의 QSO로 운용을 테스트할 수 있습니다.",
+        "note-md": "참고: PoLo는 이 날짜 범위 내의 모든 QSO를 포함해 이 기기에 있는 다른 운용내역을 보고합니다.",
+        "info-md": "13개 식민지 특별 이벤트는 매년 7월 1일 오전 9시(동부시간 기준)부터 7월 7일 자정까지 진행됩니다."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "현재 날씨 가져오는 중...",
+      "errorFetchingWeather": "날씨 가져오기 오류",
+      "fetchingSolarWeather": "우주 날씨 가져오는 중...",
+      "errorFetchingSolarWeather": "우주 날씨 가져오기 오류",
+      "addNote": "노트 추가: ‘{{note}}’...",
+      "addNotePrompt": "노트를 추가할까요? 계속 입력하세요...",
+      "addNoteConfirm": "노트 추가 완료",
+      "addTodo": "할일 추가: ‘{{note}}’...",
+      "addTodoPrompt": "할일 항목을 추가할까요? 계속 입력하세요...",
+      "addTodoConfirm": "할일 추가 완료",
+      "sendChat": "채팅 전송: ‘{{note}}’...",
+      "sendChatPrompt": "채팅을 전송할까요? 계속 입력하세요...",
+      "sendChatConfirm": "전송 완료!"
+    },
+    "commands-debug": {
+      "syncall": "모든 로그를 삭제하고 동기화 상태를 초기화하시겠습니까?",
+      "syncallConfirm": "데이터 삭제 및 동기화 중...",
+      "syncup": "로컬 데이터를 다시 전송하여 동기화 서비스에 업로드하시겠습니까?",
+      "syncupConfirm": "재전송 중...",
+      "wipedb": "전체 데이터베이스를 삭제하시겠습니까? 설정은 유지됩니다.",
+      "wipedbConfirm": "데이터베이스 삭제 중...",
+      "factory": "모든 데이터와 설정을 삭제하시겠습니까?",
+      "factoryConfirm": "공장 초기화 진행 중...",
+      "switchLanguage": "언어를 `{{lang}}` {{name}}(으)로 전환하시겠습니까?",
+      "switchLanguagePrompt": "언어 `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "`{{lang}}` {{name}}(으)로 전환 중…"
+    },
+    "commands-devmode": {
+      "activate": "개발자 모드를 활성화하시겠습니까?",
+      "activateConfirm": "개발자 모드 활성화중!",
+      "deactivate": "개발자 모드를 비활성화하시겠습니까?",
+      "deactivateConfirm": "개발자 모드 비활성화됨",
+      "on": "개발자 모드 켜짐!!",
+      "off": "개발자 모드 꺼짐"
+    },
+    "commands-misc": {
+      "rtfm": "상세 매뉴얼을 읽으시겠습니까?",
+      "rtfmConfirm": "매뉴얼 여는 중",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "주파수 없이 셀프 스팟 불가능",
+        "selfSpotWithComments": "‘{{comments}}’로 셀프 스팟하시겠습니까?",
+        "selfSpotPrompt": "셀프 스팟하시겠습니까?",
+        "selfSpottingWithComments": "{{freq}}에서 ‘{{comments}}’로 셀프 스팟 중",
+        "selfSpotting": "{{freq}}에서 셀프 스팟 중"
+      }
+    },
+    "commands-operation": {
+      "start": "운용을 시작할까요?",
+      "startConfirm": "운용 시작!",
+      "break": "휴식 시간을 추가할까요?",
+      "breakConfirm": "운용 휴식 추가됨!",
+      "stop": "운용을 중지할까요?",
+      "stopConfirm": "운용 중지됨!"
+    },
+    "commands-operator": {
+      "change": "오퍼레이터를 {{operator}}로 변경하시겠습니까?",
+      "changeConfirm": "오퍼레이터가 {{operator}}로 설정되었습니다"
+    },
+    "commands-radio": {
+      "band": "밴드를 {{band}}로 변경할까요?",
+      "bandConfirm": "밴드가 {{band}}로 설정되었습니다",
+      "frequency": "주파수를 {{freq}} MHz로 변경할까요?",
+      "frequencyConfirm": "주파수가 {{freq}} MHz로 설정되었습니다",
+      "frequencyAndMode": "주파수를 {{freq}} MHz ({{mode}})로 변경할까요?",
+      "frequencyAndModeConfirm": "주파수가 {{freq}} MHz ({{mode}})로 설정되었습니다",
+      "power": "출력을 {{power}}W로 변경할까요?",
+      "powerConfirm": "출력이 {{power}}W로 설정되었습니다",
+      "mode": "모드를 {{mode}}로 변경할까요?",
+      "modeConfirm": "모드가 {{mode}}로 설정되었습니다"
+    },
+    "commands-settings": {
+      "set": "{{name}}을 설정 중입니까?",
+      "setChange": "{{label}}을(를) {{value}}로 변경할까요?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}}이(가) {{value}}로 설정되었습니다",
+      "setNotChanged": "변경되지 않음"
+    },
+    "commands-time": {
+      "setTime": "시간을 {{time}}으로 설정할까요?",
+      "setDate": "날짜를 {{date}}으로 설정할까요?",
+      "timeSet": "시간이 {{time}}으로 설정되었습니다",
+      "dateSet": "날짜가 {{date}}으로 설정되었습니다",
+      "changeTimeByHours": "{{delta}}시간만큼 변경할까요?",
+      "changeTimeByMinutes": "{{delta}}분만큼 변경할까요?",
+      "changeTimeBySeconds": "{{delta}}초만큼 변경할까요?",
+      "changeTimeByDays": "{{delta}}일만큼 변경할까요?",
+      "changeTimeByWeeks": "{{delta}}주만큼 변경할까요?",
+      "changeTimeToNow": "시간을 현재로 변경할까요?",
+      "changeTimeToToday": "시간을 오늘로 변경할까요?",
+      "changeTimeToYesterday": "시간을 어제로 변경할까요?",
+      "timeSetToNow": "시간이 현재로 설정되었습니다",
+      "timeSetToToday": "시간이 오늘로 설정되었습니다",
+      "timeSetToYesterday": "시간이 어제로 설정되었습니다"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "활성화할 레퍼런스가 선택되지 않음",
+        "title_one": "1개의 레퍼런스 활성화 중",
+        "title_other": "{{count}}개의 레퍼런스 활성화 중",
+        "addMoreReferences": "레퍼런스 추가",
+        "addReference": "레퍼런스 추가",
+        "activityLabel": "액티비티 - ADIF 파일 내 MY_SIG 항목 (선택 사항)",
+        "activityPlaceholder": "예시: SOTA…",
+        "referenceLabel": "레퍼런스 - ADIF 파일 내 MY_SIG_INFO 항목",
+        "referencePlaceholder": "예시: HL/XY-123…",
+        "nameLabel": "이름 (선택 사항)",
+        "namePlaceholder": "예: 북한산…",
+        "addButton": "{{mySig}} {{mySigInfo}} 추가"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대방 레퍼런스"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "데이터 제목 강제 지정",
+        "pota-all-parks": "POTA: 모든 공원",
+        "sota-all-summits": "SOTA: 모든 산정상"
+      },
+      "loading": {
+        "progress": "`{{processedLines}}`개의 레퍼런스 로드됨\n\n`{{percent}}` • {{secondsLeft}}초 남음",
+        "downloadingRawData": "Raw 데이터 다운로드 중…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "DXCC 엔티티 없음",
+      "entitiesCount_one": "DXCC 엔티티 1개 ",
+      "entitiesCount_other": "DXCC 엔티티 {{count}}개"
+    },
+    "eca": {
+      "name": "ECA: 영국 성 어워드",
+      "shortName": "ECA",
+      "exportName": "ECA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 성이 선택되지 않았습니다.",
+        "title_one": "1개의 성을 활성화 중입니다.",
+        "title_other": "{{count}}개의 성을 활성화 중입니다.",
+        "noCastlesFound": "성 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치",
+        "matchingCastles_zero": "일치하는 성이 없습니다.",
+        "matchingCastles_one": "1개의 일치하는 성",
+        "matchingCastles_other": "{{count}}개의 일치하는 성",
+        "searchForCastles": "활성화할 성 검색",
+        "noCastlesNearby": "주변에 성이 없습니다.",
+        "nearbyCastles": "주변 성",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…"
+      }
+    },
+    "ela": {
+      "name": "ELA: 영국 등대 어워드",
+      "shortName": "ELA",
+      "exportName": "ELA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 등대가 선택되지 않았습니다.",
+        "title_one": "1개의 등대를 활성화 중입니다.",
+        "title_other": "{{count}}개의 등대를 활성화 중입니다.",
+        "noLighthousesFound": "등대를 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치합니다.",
+        "matchingLighthouses_zero": "일치하는 등대가 없습니다.",
+        "matchingLighthouses_one": "1개의 일치하는 등대",
+        "matchingLighthouses_other": "{{count}}개의 일치하는 등대",
+        "searchForLighthouses": "활성화할 등대 검색",
+        "noLighthousesNearby": "주변에 등대가 없습니다.",
+        "nearbyLighthouses": "주변 등대",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "교환 정보",
+        "classLabel": "클래스",
+        "locationLabel": "위치",
+        "additionalInformation": "추가 정보",
+        "highestTransmitterPowerLabel": "최대 송신 전력",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W 이하",
+        "qroOption": "QRO: 100W 이하",
+        "moreThan100WOption": "100W 초과",
+        "powerSourceLabel": "전원 공급원",
+        "powerSourcePlaceholder": "전원 공급원 선택",
+        "batteriesOption": "배터리, 태양광, 풍력",
+        "commercialPowerOption": "상용 전원, 발전기",
+        "bonusesTitle": "보너스 점수: {{count}}개 획득, {{points}}점",
+        "bonusesDescription": "로그와 함께 보너스 점수도 제출하세요!",
+        "bonusTitle": "{{title}} ({{points}}점)",
+        "information-md": "ARRL 필드 데이의 클래스는 `2A`처럼 두 글자로 구성되며, 상세 내역은 아래와 같습니다.\n\n- 송신기의 수에 따라 `1`, `2`, `3`...\n- 그룹(3인 이상) 포터블 스테이션의 경우 `A`\n- 1인 또는 2인 포터블 스테이션의 경우 `B`\n- 이동 스테이션의 경우 `C`\n- 홈 스테이션의 경우 `D`\n- 비상 전력으로 작동하는 홈 스테이션의 경우 `E`\n- 비상 운영 센터의 경우 `F`\n\n위치는 ARRL 섹션, RAC 섹션, `MX`는 멕시코, `DX`는 기타 지역입니다.\n\n자세한 정보는 **[공식 규칙](https://www.arrl.org/field-day-rules)**에서 확인하세요."
+      },
+      "bonusName": {
+        "transmitters": "송신기",
+        "emergencyPower": "100% 비상 전원",
+        "mediaPublicity": "미디어 홍보",
+        "publicLocation": "공공 장소",
+        "informationTable": "공개 안내 테이블",
+        "messageToSM": "ARRL SM/SEC로 보내는 메시지",
+        "ntsMessages": "메시지 처리",
+        "ntsMessagesCount": "처리한 메시지 수",
+        "satelliteQSO": "위성 QSO",
+        "alternatePowerQSOs": "대체 전원 QSO",
+        "w1awMessage": "W1AW Field Day 메시지",
+        "electedOfficialVisit": "선출 대표자의 방문",
+        "agencyOfficialVisit": "협력 기관 공식 관계자의 방문",
+        "educationalActivity": "교육 활동",
+        "youthElement": "청소년 참여자",
+        "safetyOfficer": "안전 담당자",
+        "siteResponsibilities": "현장 책임",
+        "socialMedia": "SNS",
+        "gotaQSOs": "GOTA 무선국과의 QSO",
+        "gotaQSOsCount": "GOTA QSO 수",
+        "gotaCoach": "GOTA 코치",
+        "webSubmission": "웹 제출"
+      },
+      "bonusDescription": {
+        "transmitters": "송신기당 100점(최대 20대), GOTA 또는 VHF는 제외.",
+        "emergencyPower": "모든 교신에 비상 전원을 사용하는 경우 송신기당 100점(최대 20대).",
+        "mediaPublicity": "지역 미디어를 통해 홍보. 등록 시 홍보물 사본을 제출.",
+        "publicLocation": "운용 장소를 공원, 학교, 쇼핑센터와 같은 공공 장소로 정함(Class A, B 또는 F만 해당).",
+        "informationTable": "Field Day 현장에서 공개 안내 테이블을 운영(Class A, B 또는 F만 해당).",
+        "messageToSM": "ARRL Section Manager 또는 Section Emergency Coordinator에게 공식 메시지 전달.",
+        "ntsMessages": "운용 기간 중 처리한 NTS 또는 ICS-213 메시지당 10점(최대 10건).",
+        "satelliteQSO": "아마추어 무선 위성을 통해 하나 이상의 QSO를 완료(Class A, B 또는 F만 해당).",
+        "alternatePowerQSOs": "태양광, 풍력 또는 수력과 같은 대체 발전을 사용하여 하나 이상의 QSO를 완료(Class A, B, E 또는 F만 해당).",
+        "w1awMessage": "W1AW 또는 K6KPH에서 송신한 특별 Field Day 게시문을 정확히 수신하여 기록.",
+        "electedOfficialVisit": "초청된 선출직 정부 공무원의 방문 주최.",
+        "agencyOfficialVisit": "초청된 협력 기관 공식 관계자의 방문 주최.",
+        "educationalActivity": "작성된 수업 계획을 바탕으로 공식 교육 활동 실시.",
+        "youthElement": "운용에 청소년 참가자 포함.",
+        "safetyOfficer": "현장에 지정된 안전 담당자 있음(Class A만 해당).",
+        "siteResponsibilities": "현장 책임 요건 완료(Classes B, C, D, E, F).",
+        "socialMedia": "소셜 미디어에서 Field Day 운용 홍보.",
+        "gotaQSOs": "GOTA 스테이션에서 완료한 각 QSO당 5점.",
+        "gotaCoach": "GOTA 스테이션 운용을 지원할 GOTA 코치가 있음.",
+        "webSubmission": "field-day.arrl.org의 웹 앱을 사용하여 제출."
+      }
+    },
+    "gma": {
+      "name": "GMA: 전세계 산 활성화 프로그램",
+      "shortName": "GMA",
+      "exportName": "GMA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 산정상이 선택되지 않음",
+        "title_one": "1개의 산정상 활성화 중",
+        "title_other": "{{count}}개의 산정상 활성화 중",
+        "noSummitsFound": "산정상을 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치",
+        "matchingSummits_zero": "일치하는 산정상 없음",
+        "matchingSummits_one": "1개의 일치하는 산정상",
+        "matchingSummits_other": "{{count}}개의 일치하는 산정상",
+        "searchForSummits": "활성화할 산정상 검색",
+        "noSummitsNearby": "주변에 산정상 없음",
+        "nearbySummits": "주변 산정상",
+        "searchPlaceholder": "이름 또는 레퍼런스…",
+        "unknownSummit": "알 수 없는 산정상"
+      }
+    },
+    "ham2k-lookup": {
+      "name": "Ham2K 검색 서비스",
+      "description": "무료 - 미국, 캐나다 및 독일 호출 부호만 지원"
+    },
+    "hamqth": {
+      "name": "HamQTH.com 호출 부호 조회",
+      "description": "무료 - 조회에 계정 필요"
+    },
+    "llota": {
+      "name": "LLOTA: 호수 및 석호 교신",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 호수가 선택되지 않음",
+        "title_one": "1개의 호수 활성화 중",
+        "title_other": "{{count}}개의 호수 활성화 중",
+        "noLakesFound": "호수를 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{limit}}개 중 {{count}}개 일치",
+        "matchingRefs_zero": "일치하는 호수 없음",
+        "matchingRefs_one": "1개의 일치하는 호수",
+        "matchingRefs_other": "{{count}}개의 일치하는 호수",
+        "searchForRefs": "활성화할 호수를 검색하세요!",
+        "noRefsNearby": "근처에 호수 없음",
+        "nearbyRefs": "근처의 호수",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호..."
+      },
+      "scoring": {
+        "ref2refCount_zero": "L2L 없음",
+        "ref2refCount_one": "1개의 L2L",
+        "ref2refCount_other": "{{fmtCount}}개의 L2L",
+        "huntedRefsCount_zero": "추적된 호수 없음",
+        "huntedRefsCount_one": "1개의 추적된 호수",
+        "huntedRefsCount_other": "{{fmtCount}}개의 추적된 호수",
+        "activatorQSOsCount_zero": "활성 QSO 없음",
+        "activatorQSOsCount_one": "1개의 활성 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 활성 QSO",
+        "ref2refQSOsCount_zero": "L2L QSO 없음",
+        "ref2refQSOsCount_one": "1개의 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}}개의 L2L QSO",
+        "huntedQSOsCount_zero": "사냥된 QSO가 없습니다.",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}}개의 추적 QSO",
+        "operationTotals": "작업 총계",
+        "referencesActivatedCount_zero": "활성화된 호수가 없습니다.",
+        "referencesActivatedCount_one": "1개의 활성화된 호수",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 활성화된 호수",
+        "referencesMissedCount_zero": "완료되지 않은 호수가 없습니다.",
+        "referencesMissedCount_one": "1개의 완료되지 않은 호수",
+        "referencesMissedCount_other": "{{fmtCount}}개의 완료되지 않은 호수",
+        "referencesHuntedCount_zero": "추적된 호수 없음",
+        "referencesHuntedCount_one": "1개의 추적된 호수",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 추적된 호수"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "LLOTA 스팟 게시 오류",
+        "serverResponse": "서버가 오류로 응답했습니다 {{status}}: {{body}}"
+      },
+      "exampleRefName": "호수 예시",
+      "unknownRefName": "알 수 없는 호수",
+      "noRefsNearby": "주변에 호수가 없습니다!"
+    },
+    "mota": {
+      "name": "MOTA: 풍차 교신",
+      "shortName": "MOTA",
+      "exportName": "MOTA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 풍차가 선택되지 않음",
+        "title_one": "1개의 풍차 활성화 중",
+        "title_other": "{{count}}개의 풍차 활성화 중",
+        "noMillsFound": "풍차를 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치합니다.",
+        "matchingMills_zero": "일치하는 풍차 없음",
+        "matchingMills_one": "1개의 일치하는 풍차",
+        "matchingMills_other": "{{count}}개의 일치하는 풍차",
+        "searchForMills": "활성화할 풍차를 검색하세요!",
+        "noMillsNearby": "주변에 풍차 없음",
+        "nearbyMills": "주변 풍차",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…",
+        "unknownMill": "알 수 없는 풍차"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 풍차"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks 보기",
+      "description": "주로 VK 및 ZL에서 사용",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL 스팟)",
+        "dialogTitle": "ParksnPeaks 계정",
+        "description": "계정: {{username}}",
+        "noAccount": "계정 없음",
+        "pleaseEnterDetails": "ParksnPeaks 계정 정보를 입력해 주세요:"
+      },
+      "usernameLabel": "사용자명 (호출부호 아님)",
+      "usernamePlaceholder": "계정 사용자명",
+      "apiKeyLabel": "API 키 (비밀번호 아님)",
+      "apiKeyPlaceholder": "API 키"
+    },
+    "pga": {
+      "name": "폴란드 Gmina 어워드",
+      "shortName": "PGA",
+      "exportName": "PGA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 gmina가 선택되지 않음",
+        "title_one": "1개의 gmina를 활성화 중",
+        "title_other": "{{count}}개의 gmina를 활성화 중",
+        "noGminasFound": "gmina 찾을 수 없음",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치",
+        "matchingGminas_zero": "일치하는 gmina 없음",
+        "matchingGminas_one": "1개의 일치하는 gmina",
+        "matchingGminas_other": "{{count}}개의 일치하는 gmina",
+        "searchForGminas": "활성화할 gmina를 검색하세요!",
+        "noGminasNearby": "근처에 gmina 없음",
+        "nearbyGminas": "주변 gmina",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…",
+        "unknownGmina": "알 수 없는 gmina"
+      }
+    },
+    "pota": {
+      "name": "POTA: 공원 교신",
+      "shortName": "POTA",
+      "exportName": "POTA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 공원이 선택되지 않음",
+        "title_one": "1개의 공원 활성화 중",
+        "title_other": "{{count}}개의 공원 활성화 중",
+        "noParksFound": "공원이 검색되지 않음",
+        "nearestMatches": "가까운 {{limit}}개 중 {{count}}개 매칭",
+        "matchingParks_zero": "일치하는 공원 없음",
+        "matchingParks_one": "1개의 일치하는 공원",
+        "matchingParks_other": "{{count}}개의 일치하는 공원",
+        "searchForParks": "활성화할 공원 검색",
+        "noParksNearby": "근처에 공원이 없음",
+        "nearbyParks": "근처 공원",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "P2P 없음",
+        "ref2refCount_one": "P2P 1개",
+        "ref2refCount_other": "P2P {{fmtCount}}개",
+        "huntedRefsCount_zero": "추적한 공원 없음",
+        "huntedRefsCount_one": "1개의 공원을 추적함",
+        "huntedRefsCount_other": "{{fmtCount}}개의 공원을 추적함",
+        "activatorQSOsCount_zero": "활성화 QSO 없음",
+        "activatorQSOsCount_one": "1개의 활성화 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 활성화 QSO",
+        "ref2refQSOsCount_zero": "P2P QSO 없음",
+        "ref2refQSOsCount_one": "P2P QSO 1개",
+        "ref2refQSOsCount_other": "P2P QSO {{fmtCount}}개",
+        "huntedQSOsCount_zero": "추적 QSO 없음",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "추적 QSO {{fmtCount}}개",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화한 공원 없음",
+        "referencesActivatedCount_one": "1개의 공원 활성화함",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 공원 활성화함",
+        "referencesMissedCount_zero": "미완료 공원 없음",
+        "referencesMissedCount_one": "1개의 미완료 공원",
+        "referencesMissedCount_other": "{{fmtCount}}개의 미완료 공원",
+        "referencesHuntedCount_zero": "추적한 공원 없음",
+        "referencesHuntedCount_one": "1개의 공원을 추적함",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 공원을 추적함"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 POTA"
+      },
+      "postSpotAPI": {
+        "error": "POTA 스팟 등록 오류",
+        "serverResponse": "서버가 오류 {{status}}: {{body}}와 함께 응답했습니다"
+      },
+      "exampleRefName": "국립 공원 예시",
+      "unknownRefName": "알 수 없는 공원",
+      "noRefsNearby": "근처에 공원이 없습니다!"
+    },
+    "qrz": {
+      "name": "QRZ.com 콜사인 조회",
+      "description": "무료 계정으로는 이름만 조회되며, 위치 조회에는 유료 계정이 필요합니다"
+    },
+    "sats": {
+      "name": "위성 운용"
+    },
+    "siota": {
+      "name": "SiOTA: 사일로 교신",
+      "shortName": "SIOTA",
+      "exportName": "SIOTA 활성화",
+      "account": {
+        "title": "ParksnPeaks (SiOTA 스포팅)",
+        "dialogTitle": "ParksnPeaks 계정",
+        "description": "계정: {{username}}",
+        "noAccount": "계정이 없습니다",
+        "pleaseEnterDetails": "ParksnPeaks 계정 정보를 입력하세요:",
+        "usernameLabel": "사용자명 (콜사인 아님)",
+        "usernamePlaceholder": "계정 사용자명",
+        "apiKeyLabel": "API 키(비밀번호 아님)",
+        "apiKeyPlaceholder": "API 키"
+      },
+      "activityOptions": {
+        "title_zero": "활성화할 사일로가 선택되지 않았습니다",
+        "title_one": "1개의 사일로 활성화",
+        "title_other": "{{count}}개의 사일로 활성화",
+        "noSilosFound": "사일로를 찾을 수 없습니다",
+        "nearestMatches": "가까운 {{limit}}개 중 {{count}}개 매칭",
+        "matchingSilos_zero": "일치하는 사일로가 없습니다",
+        "matchingSilos_one": "1개의 일치하는 사일로",
+        "matchingSilos_other": "{{count}}개의 일치하는 사일로",
+        "searchForSilos": "활성화할 사일로 검색!",
+        "noSilosNearby": "근처에 사일로가 없습니다",
+        "nearbySilos": "근처 사일로",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…",
+        "unknownSilo": "알 수 없는 사일로"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 사일로"
+      },
+      "postSpotAPI": {
+        "error": "SiOTA 스팟 등록 오류",
+        "serverResponse": "서버가 오류 {{status}}: {{body}}와 함께 응답했습니다"
+      }
+    },
+    "sota": {
+      "name": "SOTA: 산정상 교신",
+      "account": {
+        "title": "SOTA (자체 스팟용 SOTAWatch)",
+        "dialogTitle": "SOTA 계정",
+        "description": "계정: {{callsign}}",
+        "noAccount": "계정이 없습니다",
+        "error": "계정 정보를 가져오는 중 오류 발생",
+        "connect": "SOTA 계정 연결"
+      },
+      "notLoggedInAlertTitle": "경고",
+      "notLoggedInAlertText": "POTA에 로그인이 안 되어 있어 자체 스팟을 할 수 없습니다. PoLo 설정으로 이동하세요",
+      "activityOptions": {
+        "title_zero": "활성화할 산정상이 선택되지 않았습니다",
+        "title_one": "1개의 산정상 활성화",
+        "title_other": "{{count}}개의 산정상 활성화",
+        "noSummitsFound": "산정상을 찾을 수 없습니다",
+        "nearestMatches": "가까운 {{limit}}개 중 {{count}}개 매칭",
+        "matchingSummits_zero": "일치하는 산정상이 없습니다",
+        "matchingSummits_one": "1개의 일치하는 산정상",
+        "matchingSummits_other": "{{count}}개의 일치하는 산정상",
+        "searchForSummits": "활성화할 산정상을 검색!",
+        "noSummitsNearby": "근처에 산정상이 없습니다",
+        "nearbySummits": "근처의 산정상",
+        "searchPlaceholder": "이름 또는 SOTA 번호…",
+        "unknownSummit": "알 수 없는 산정상"
+      },
+      "scoring": {
+        "ref2refCount_zero": "S2S 없음",
+        "ref2refCount_one": "1개의 S2S",
+        "ref2refCount_other": "{{fmtCount}}개의 S2S",
+        "huntedRefsCount_zero": "추적한 산정상 없음",
+        "huntedRefsCount_one": "1개의 신정상을 추적함",
+        "huntedRefsCount_other": "{{fmtCount}}개의 산정상을 추적함",
+        "activatorQSOsCount_zero": "활성화 QSOs 없음",
+        "activatorQSOsCount_one": "1개의 활성화 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 활성화 QSOs",
+        "ref2refQSOsCount_zero": "S2S QSO 없음",
+        "ref2refQSOsCount_one": "S2S QSO 1개",
+        "ref2refQSOsCount_other": "S2S QSO {{fmtCount}}개",
+        "huntedQSOsCount_zero": "추적 QSO 없음",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}}개의 추적 QSO",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화한 산정상 없음",
+        "referencesActivatedCount_one": "1개의 산정상을 활성화함",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 산정상을 활성화함",
+        "referencesMissedCount_zero": "미완료 산정상 없음",
+        "referencesMissedCount_one": "1개의 미완료 산정상",
+        "referencesMissedCount_other": "{{fmtCount}}개의 미완료 산정상",
+        "referencesHuntedCount_zero": "추적한 산정상 없음",
+        "referencesHuntedCount_one": "1개의 산정상을 추적함",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 산정상을 추적함"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 SOTA"
+      },
+      "postSpotAPI": {
+        "error": "SOTA 스팟 등록 오류",
+        "serverResponse": "서버가 상태 {{status}} {{message}}로 응답했습니다",
+        "sotaAccountLoggedOut": "SOTA 계정이 로그아웃되었습니다. PoLo 설정에서 다시 로그인하세요"
+      },
+      "exampleRefName": "산정상 예시",
+      "unknownRefName": "알 수 없는 산정상",
+      "noRefsNearby": "근처에 산정상이 없습니다!"
+    },
+    "tota": {
+      "name": "TOTA: 타워 교신",
+      "activityOptions": {
+        "title_zero": "활성화할 타워가 선택되지 않음",
+        "title_one": "1개의 타워 활성화 중",
+        "title_other": "{{count}}개 타워 활성화 중",
+        "noTowersFound": "타워가 발견되지 않음",
+        "nearestMatches": "가장 가까운 {{limit}}개 중 {{count}}개 일치",
+        "matchingTowers_zero": "일치하는 타워 없음",
+        "matchingTowers_one": "1개의 타워 일치",
+        "matchingTowers_other": "{{count}}개 타워 일치",
+        "searchForTowers": "활성화할 타워를 검색하세요!",
+        "noTowersNearby": "주변에 타워 없음",
+        "nearbyTowers": "주변 타워",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…",
+        "unknownTower": "알 수 없는 타워"
+      },
+      "scoring": {
+        "ref2refCount_zero": "R2R 없음",
+        "ref2refCount_one": "1개의 R2R",
+        "ref2refCount_other": "{{fmtCount}}개의 R2R",
+        "huntedRefsCount_zero": "추적한 타워가 없음",
+        "huntedRefsCount_one": "1개의 타워 추적함",
+        "huntedRefsCount_other": "{{fmtCount}}개의 타워 추적함",
+        "activatorQSOsCount_zero": "활성화 QSO 없음",
+        "activatorQSOsCount_one": "1개의 활성화 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 활성화 QSO",
+        "ref2refQSOsCount_zero": "R2R QSO 없음",
+        "ref2refQSOsCount_one": "1개의 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}}개의 R2R QSO",
+        "huntedQSOsCount_zero": "추적 QSO 없음",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}}개의 추적 QSO",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화한 타워 없음",
+        "referencesActivatedCount_one": "1개의 타워 활성화함",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 타워 활성화함",
+        "referencesMissedCount_zero": "미완료 타워 없음",
+        "referencesMissedCount_one": "1개의 미완료 타워",
+        "referencesMissedCount_other": "{{fmtCount}}개의 미완료 타워",
+        "referencesHuntedCount_zero": "추적한 타워가 없음",
+        "referencesHuntedCount_one": "1개의 타워 추적함",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 타워 추적함"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 타워"
+      },
+      "exampleRefName": "타워 예시",
+      "unknownRefName": "알 수 없는 타워",
+      "noRefsNearby": "주변에 타워 없음!",
+      "postSpotAPI": {
+        "error": "TOTA 스팟 등록 오류",
+        "serverResponse": "서버가 {{status}} {{message}} 상태로 응답함"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "미국 주 없음",
+      "statesCount_one": "미국 주 1개",
+      "statesCount_other": "미국 주 {{count}}개"
+    },
+    "wab": {
+      "name": "영국/아일랜드 전지역 교신하기",
+      "description": "작업에 WAB/WAI 그리드 추가",
+      "workedAllBritainSquare": "영국 전지역 교신 그리드",
+      "workedAllIrelandSquare": "아일랜드 전지역 교신 그리드",
+      "enterSquare": "그리드 입력",
+      "placeholderBritain": "예: SU14",
+      "placeholderIreland": "예: N93",
+      "currentSquare": "현재 그리드:",
+      "noSquareSet": "설정된 그리드 없음"
+    },
+    "wca": {
+      "name": "WCA: 세계 성 어워드",
+      "shortName": "WCA",
+      "exportName": "WCA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 성이 선택되지 않았습니다",
+        "title_one": "성 1개 활성화 중",
+        "title_other": "성 {{count}}개 활성화 중",
+        "noCastlesFound": "성을 찾을 수 없습니다",
+        "nearestMatches": "가장 가까운 {{count}}개 중 {{limit}}개 일치",
+        "matchingCastles_zero": "일치하는 성이 없습니다",
+        "matchingCastles_one": "일치하는 성 1개",
+        "matchingCastles_other": "일치하는 성 {{count}}개",
+        "searchForCastles": "활성화할 성을 검색하세요!",
+        "noCastlesNearby": "근처에 성이 없습니다",
+        "nearbyCastles": "근처의 성들",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "추적한 성이 없습니다",
+        "huntedRefsCount_one": "추적한 성 1개",
+        "huntedRefsCount_other": "추적한 성 {{fmtCount}}개",
+        "activatorQSOsCount_zero": "활성화 QSO가 없습니다",
+        "activatorQSOsCount_one": "활성화 QSO 1개",
+        "activatorQSOsCount_other": "활성화 QSO {{fmtCount}}개",
+        "huntedQSOsCount_zero": "추적 QSO가 없습니다",
+        "huntedQSOsCount_one": "추적 QSO 1개",
+        "huntedQSOsCount_other": "추적 QSO {{fmtCount}}개",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화한 성이 없습니다",
+        "referencesActivatedCount_one": "활성화한 성 1개",
+        "referencesActivatedCount_other": "활성화한 성 {{fmtCount}}개",
+        "referencesMissedCount_zero": "미완료 성이 없습니다",
+        "referencesMissedCount_one": "미완료 성 1개",
+        "referencesMissedCount_other": "미완료 성 {{fmtCount}}개",
+        "referencesHuntedCount_zero": "추적한 성이 없습니다",
+        "referencesHuntedCount_one": "추적한 성 1개",
+        "referencesHuntedCount_other": "추적한 성 {{fmtCount}}개"
+      },
+      "exampleRefName": "성 예시",
+      "unknownRefName": "알 수 없는 성",
+      "noRefsNearby": "근처에 성이 없습니다!"
+    },
+    "wfd": {
+      "name": "동계 필드 데이",
+      "shortName": "WFD",
+      "exportName": "WFD 활성화",
+      "activityOptions": {
+        "exchangeInformation": "정보 교환",
+        "classLabel": "클래스",
+        "locationLabel": "위치",
+        "objectives_zero": "달성한 목표 없음",
+        "objectives_one": "1개 목표 달성, OM ×{{multiplier}}",
+        "objectives_other": "{{count}}개 목표 달성, OM ×{{multiplier}}",
+        "objectivesTitle": "목표 {{count}}개 달성, OM ×{{multiplier}}",
+        "objectivesDescription": "로그 제출 시 목표를 함께 보고하세요!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "대체 전원",
+        "awayFromHome": "집 밖에서 운용",
+        "fmSatelliteContact": "FM 위성 교신",
+        "ssbSatelliteContact": "SSB 또는 CW 위성 교신",
+        "winlinkEmails": "Winlink 이메일",
+        "specialBulletin": "특별 공지",
+        "sixBands": "6개 밴드",
+        "twelveBands": "12개 밴드",
+        "multipleModes": "다중 모드",
+        "qrpOperation": "QRP 운용",
+        "sixContinuousHours": "6시간 연속"
+      },
+      "objectiveDescription": {
+        "altPower": "배터리, 태양광, 풍력 등 대체 전원으로 100% 운영",
+        "awayFromHome": "집에서 최소 800미터 떨어진 장소에 야외 무선국 설치",
+        "fmSatelliteContact": "운영 기간 동안 FM 위성 교신 최소 1회",
+        "ssbSatelliteContact": "SSB 또는 CW를 이용한 교신 최소 1회",
+        "winlinkEmails": "RF를 통한 Winlink로 이메일 송수신 최소 1회",
+        "specialBulletin": "특수 공지 메시지를 정확하게 복사하여 로그 제출 시 포함",
+        "sixBands": "최소 6개 밴드에서 각각 최소 3회 교신",
+        "twelveBands": "최소 12개 밴드에서 각각 최소 3회 교신",
+        "multipleModes": "운용 기간 동안 여러 모드 사용",
+        "qrpOperation": "QRP 전력(보이스 10W 이하, CW 또는 디지털 5W 이하)으로 운영",
+        "sixContinuousHours": "운용 기간 동안 최소 6시간 연속 운영"
+      },
+      "information-md": "겨울 야외 활동의 클래스는 `2M` 처럼 표시되며, 다음 내용과 같이 구성됩니다:\n\n- 송신기의 수에 따라 `1`, `2`, `3`...\n- 홈 스테이션의 경우 `H`\n- 실내의 경우 `I`\n- 실외의 경우 `O`\n- 이동 또는 이동 정거장의 경우 `M`\n\n위치는 ARRL 섹션, RAC 섹션, `MX`는 멕시코, `DX`는 기타 지역입니다.\n\n자세한 정보는 **[공식 규칙](https://www.winterfieldday.com/sop.php)**에서 확인하세요."
+    },
+    "wwbota": {
+      "name": "WWBOTA: 전 세계 벙커 어워드",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 벙커가 선택되지 않음",
+        "title_one": "1개의 벙커 활성화",
+        "title_other": "{{count}}개의 벙커 활성화",
+        "noBunkersFound": "벙커를 찾을 수 없음",
+        "nearestMatches": "가까운 {{limit}}개 중 {{count}}개 매칭",
+        "matchingBunkers_zero": "일치하는 벙커 없음",
+        "matchingBunkers_one": "1개의 일치하는 벙커",
+        "matchingBunkers_other": "{{count}}개의 일치하는 벙커",
+        "searchForBunkers": "활성화할 벙커 검색!",
+        "noBunkersNearby": "근처에 벙커 없음",
+        "nearbyBunkers": "근처의 벙커",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…",
+        "unknownBunker": "알 수 없는 벙커"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 벙커"
+      },
+      "postSpotAPI": {
+        "error": "WWBOTA 스팟 등록 오류",
+        "serverResponse": "서버가 상태 {{status}} {{message}}로 응답했습니다"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: 전 세계 자연보호구역",
+      "shortName": "WWFF",
+      "exportName": "WWFF 활성화",
+      "activityOptions": {
+        "title_zero": "활성화할 공원이 선택되지 않음",
+        "title_one": "1개의 공원 활성화",
+        "title_other": "{{count}}개의 공원 활성화",
+        "noParksFound": "공원을 찾을 수 없음",
+        "nearestMatches": "가까운 {{limit}}개 중 {{count}}개 매칭",
+        "matchingParks_zero": "일치하는 공원이 없음",
+        "matchingParks_one": "1개의 일치하는 공원",
+        "matchingParks_other": "{{count}}개의 일치하는 공원",
+        "searchForParks": "활성화할 공원을 검색하세요!",
+        "noParksNearby": "근처에 공원이 없음",
+        "nearbyParks": "근처의 공원",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…",
+        "unknownPark": "알 수 없는 공원"
+      },
+      "scoring": {
+        "ref2refCount_zero": "P2P 없음",
+        "ref2refCount_one": "P2P 1개",
+        "ref2refCount_other": "P2P {{fmtCount}}개",
+        "huntedRefsCount_zero": "추적한 공원 없음",
+        "huntedRefsCount_one": "1개의 공원을 추적함",
+        "huntedRefsCount_other": "{{fmtCount}}개의 공원을 추적함",
+        "activatorQSOsCount_zero": "활성화 QSOs 없음",
+        "activatorQSOsCount_one": "1개의 활성화 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 활성화 QSO",
+        "ref2refQSOsCount_zero": "P2P QSO 없음",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "P2P QSO {{fmtCount}}개",
+        "huntedQSOsCount_zero": "추적 QSO 없음",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}}개의 추적 QSO",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화한 공원 없음",
+        "referencesActivatedCount_one": "1 활성화한 공원",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 활성화한 공원",
+        "referencesMissedCount_zero": "미완료 공원 없음",
+        "referencesMissedCount_one": "1개의 미완료 공원",
+        "referencesMissedCount_other": "{{fmtCount}}개의 미완료 공원",
+        "referencesHuntedCount_zero": "추적한 공원 없음",
+        "referencesHuntedCount_one": "1 헌트된 공원",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 추적한 공원"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 WWFF"
+      },
+      "exampleRefName": "공원 예시",
+      "unknownRefName": "알 수 없는 공원",
+      "noRefsNearby": "근처에 공원 없음!",
+      "postSpotAPI": {
+        "error": "WWFF 스팟 등록 오류",
+        "serverResponse": "서버가 상태 {{status}} {{message}}로 응답했습니다"
+      }
+    },
+    "zlota": {
+      "name": "ZLOTA: ZL 교신",
+      "account": {
+        "title": "ZLOTA(ZLOTA 스팟)",
+        "dialogTitle": "ZLOTA 계정",
+        "description": "계정: {{callsign}}",
+        "noAccount": "계정이 없습니다",
+        "pleaseEnterDetails": "ZLOTA 계정 정보를 입력하세요:",
+        "callsignLabel": "콜사인",
+        "callsignPlaceholder": "계정 콜사인",
+        "pinLabel": "PIN(비밀번호 아님)",
+        "pinPlaceholder": "PIN"
+      },
+      "activityOptions": {
+        "title_zero": "활성화할 레퍼런스가 선택되지 않음",
+        "title_one": "1개의 레퍼런스 활성화",
+        "title_other": "{{count}}개의 레퍼런스 활성화",
+        "noReferencesFound": "레퍼런스를 찾을 수 없습니다",
+        "nearestMatches": "가까운 {{limit}}개 중 {{count}}개 매칭",
+        "matchingReferences_zero": "일치하는 레퍼런스 없음",
+        "matchingReferences_one": "1개의 일치하는 레퍼런스",
+        "matchingReferences_other": "{{count}}개의 일치하는 레퍼런스",
+        "searchForReferences": "활성화할 레퍼런스 검색!",
+        "noReferencesNearby": "근처에 레퍼런스가 없습니다",
+        "nearbyReferences": "근처의 레퍼런스",
+        "searchPlaceholder": "이름 또는 레퍼런스 번호…",
+        "unknownReference": "알 수 없는 레퍼런스"
+      },
+      "loggingControl": {
+        "theirRefLabel": "상대의 레퍼런스"
+      },
+      "postSpotAPI": {
+        "error": "ZLOTA 스팟 등록 오류",
+        "serverResponse": "서버가 상태 {{status}} {{message}}로 응답했습니다"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "중복 없음",
+        "dupesCount_one": "중복 1개",
+        "dupesCount_other": "중복 {{fmtCount}}개",
+        "ref2refCount_zero": "Ref2Ref 없음",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "Ref2Ref {{fmtCount}}개",
+        "huntedRefsCount_zero": "추적한 레퍼런스 없음",
+        "huntedRefsCount_one": "1개의 추적한 레퍼런스",
+        "huntedRefsCount_other": "{{fmtCount}}개의 추적한 레퍼런스",
+        "activatorQSOsCount_zero": "활성화 QSO 없음",
+        "activatorQSOsCount_one": "1개의 활성화 QSO",
+        "activatorQSOsCount_other": "{{fmtCount}}개의 활성화 QSO",
+        "ref2refQSOsCount_zero": "Ref2Ref QSO 없음",
+        "ref2refQSOsCount_one": "Ref2Ref QSO 1개",
+        "ref2refQSOsCount_other": "Ref2Ref QSO {{fmtCount}}개",
+        "huntedQSOsCount_zero": "추적 QSO 없음",
+        "huntedQSOsCount_one": "1개의 추적 QSO",
+        "huntedQSOsCount_other": "{{fmtCount}}개의 추적 QSO",
+        "operationTotals": "운용 총계",
+        "referencesActivatedCount_zero": "활성화한 레퍼런스 없음",
+        "referencesActivatedCount_one": "1개의 활성화한 레퍼런스",
+        "referencesActivatedCount_other": "{{fmtCount}}개의 활성화한 레퍼런스",
+        "referencesMissedCount_zero": "미완료 레퍼런스 없음",
+        "referencesMissedCount_one": "1개의 미완료 레퍼런스",
+        "referencesMissedCount_other": "{{fmtCount}}개의 미완료 레퍼런스",
+        "referencesHuntedCount_zero": "추적한 레퍼런스 없음",
+        "referencesHuntedCount_one": "1개의 추적한 레퍼런스",
+        "referencesHuntedCount_other": "{{fmtCount}}개의 추적한 레퍼런스"
+      }
+    }
+  }
+}

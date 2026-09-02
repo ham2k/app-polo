@@ -337,7 +337,7 @@
         "alternatePowerQSOs": "QSO s alternatívnym napájaním",
         "w1awMessage": "Správa W1AW Field Day",
         "electedOfficialVisit": "Návšteva voleného predstaviteľa",
-        "agencyOfficialVisit": "Návšteva predstaviteľa obsluhovanej organizácie",
+        "agencyOfficialVisit": "Úradná návšteva zástupcu agentúry",
         "educationalActivity": "Vzdelávacia aktivita",
         "youthElement": "Účasť mládeže",
         "safetyOfficer": "Bezpečnostný pracovník",
@@ -354,11 +354,11 @@
         "mediaPublicity": "Získajte publicitu v miestnych médiách. K prihláške priložte kópiu.",
         "publicLocation": "Umiestnite prevádzku na verejnom mieste, napríklad v parku, škole alebo nákupnom centre (iba trieda A, B alebo F).",
         "informationTable": "Prevádzkujte verejný informačný stánok na mieste Field Day (iba trieda A, B alebo F).",
-        "messageToSM": "Vytvorte formálnu správu pre svojho ARRL Section Managera alebo Section Emergency Coordinatora.",
+        "messageToSM": "Vytvorte formálnu správu pre svojho ARRL vedúceho oddelenia alebo koordinátora pre mimoriadne situácie.",
         "ntsMessages": "10 bodov za správu NTS alebo ICS-213 (max. 10) spracovanú počas prevádzkového obdobia.",
         "satelliteQSO": "Uskutočnite aspoň jedno QSO cez amatérsky rádiový satelit (iba trieda A, B alebo F).",
         "alternatePowerQSOs": "Uskutočnite aspoň jedno QSO s použitím alternatívnej výroby energie, napríklad solárnej, veternej alebo vodnej (iba trieda A, B, E alebo F).",
-        "w1awMessage": "Presne odpíšte špeciálny bulletin Field Day vysielaný stanicou W1AW alebo K6KPH.",
+        "w1awMessage": "Presne prepisujte špeciálny bulletin k Field Day, ktorý vysiela stanica W1AW alebo K6KPH.",
         "electedOfficialVisit": "Zorganizujte návštevu pozvaného voleného vládneho predstaviteľa.",
         "agencyOfficialVisit": "Zorganizujte návštevu pozvaného predstaviteľa obsluhovanej organizácie.",
         "educationalActivity": "Uskutočnite formálnu vzdelávaciu aktivitu s písomným plánom lekcie.",
@@ -391,9 +391,9 @@
         "unknownSummit": "Neznámy vrchol"
       }
     },
-    "hamdb": {
-      "name": "Vyhľadávanie volacích znakov na HamDB.org",
-      "description": "Bezplatná služba, ale obmedzená len na volacie znaky v USA, Kanade a Nemecku"
+    "ham2k-lookup": {
+      "name": "Vyhľadávacia služba Ham2K",
+      "description": "Bezplatná služba, ale pokrýva len volacie znaky v USA, Kanade a Nemecku"
     },
     "hamqth": {
       "name": "Vyhľadávanie volacích znakov na HamQTH.com",

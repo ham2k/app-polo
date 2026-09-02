@@ -391,8 +391,8 @@
         "unknownSummit": "Cume desconhecido"
       }
     },
-    "hamdb": {
-      "name": "Pesquisas de Indicativo HamDB.org",
+    "ham2k-lookup": {
+      "name": "Serviço de Consulta Ham2K",
       "description": "Serviço gratuito, mas limitado a indicativos dos EUA, Canadá e Alemanha"
     },
     "hamqth": {

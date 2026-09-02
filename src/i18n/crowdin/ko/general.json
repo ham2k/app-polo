@@ -1,0 +1,366 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "영어 - English",
+        "ar": "아랍어 - العربية",
+        "ast": "아스투리아어 - Asturianu",
+        "bn": "벵골어 - বাংলা",
+        "ca": "카탈루냐어 - Català",
+        "cs": "체코어 - Čeština",
+        "cy": "웨일즈어 - Cymraeg",
+        "da": "덴마크어 - Dansk",
+        "de": "독일어 - Deutsch",
+        "en-PL": "피그 라틴",
+        "en-PT": "해적어",
+        "eo": "에스페란토 - Esperanto",
+        "es": "스페인어 - Español",
+        "et": "에스토니아어 - Eesti",
+        "eu": "바스크어 - Euskara",
+        "fi": "핀란드어 - Suomi",
+        "fr": "프랑스어 - Français",
+        "ga": "아이리시어 - Gaeilge",
+        "gl": "갈리시아어 - Galego",
+        "hi": "힌디어 - हिंदी",
+        "id": "인도네시아어 - Bahasa Indonesia",
+        "it": "이탈리아어 - Italiano",
+        "ja": "일본어 - 日本語",
+        "ko": "한국어",
+        "lt": "리투아니아어 - Lietuvių",
+        "lv": "라트비아어 - Latvijas",
+        "ms": "말레이어 - Bahasa Melayu",
+        "nb": "노르웨이어 보크몰 - Norsk bokmål",
+        "nl": "네덜란드어 - Nederlands",
+        "nn": "노르웨이어 뉘노르스크 - Nynorsk",
+        "pl": "폴란드어 - Polski",
+        "pt-BR": "포르투갈어 (브라질) - Português (Brasil)",
+        "pt-PT": "포르투갈어 (포르투갈) - Português (Portugal)",
+        "pt": "포르투갈어 - Português",
+        "ro": "루마니아어 - Română",
+        "ru": "러시아어 - Русский",
+        "sk": "슬로바키아어 - Slovenčina",
+        "sv": "스웨덴어 - Svenska",
+        "th": "태국어 - ภาษาไทย",
+        "tl": "타갈로그어 - Wikang Filipino",
+        "tlh": "클링온 - ᏣᎳᎩ",
+        "tr": "터키어 - Türkçe",
+        "uk": "우크라이나어 - Українська",
+        "ur": "우르두어 - اردو",
+        "vi": "베트남어 - Tiếng Việt",
+        "zh": "중국어 - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "QSO",
+      "QSOs-a11y": "QSO",
+      "Operation": "운용",
+      "generalOperation": "일반 운용"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ".",
+      "list": {
+        "separator": ", ",
+        "conjunction": " 그리고 "
+      },
+      "time": {
+        "tomorrow": "내일",
+        "today": "오늘",
+        "yesterday": "어제",
+        "ago": "{{time}} 전",
+        "fromNow": "{{time}} 후",
+        "shortSeconds": "{{s}}초",
+        "shortMinutes": "{{m}}분",
+        "shortMinutesAndSeconds": "{{m}}분 {{s}}초",
+        "shortHours": "{{h}}시간",
+        "shortHoursAndMinutes": "{{h}}시간 {{m}}분",
+        "shortDays": "{{d}}일",
+        "shortDaysAndHours": "{{d}}일 {{h}}시간",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "1월",
+        "2": "2월",
+        "3": "3월",
+        "4": "4월",
+        "5": "5월",
+        "6": "6월",
+        "7": "7월",
+        "8": "8월",
+        "9": "9월",
+        "10": "10월",
+        "11": "11월",
+        "12": "12월"
+      },
+      "monthAbbr": {
+        "1": "1월",
+        "2": "2월",
+        "3": "3월",
+        "4": "4월",
+        "5": "5월",
+        "6": "6월",
+        "7": "7월",
+        "8": "8월",
+        "9": "9월",
+        "10": "10월",
+        "11": "11월",
+        "12": "12월"
+      },
+      "weekday": {
+        "1": "월요일",
+        "2": "화요일",
+        "3": "수요일",
+        "4": "목요일",
+        "5": "금요일",
+        "6": "토요일",
+        "7": "일요일"
+      },
+      "weekdayAbbr": {
+        "1": "월",
+        "2": "화",
+        "3": "수",
+        "4": "목",
+        "5": "금",
+        "6": "토",
+        "7": "일"
+      },
+      "ordinalDay": {
+        "1": "1일",
+        "2": "2일",
+        "3": "3일",
+        "4": "4일",
+        "5": "5일",
+        "6": "6일",
+        "7": "7일",
+        "8": "8일",
+        "9": "9일",
+        "10": "10일",
+        "11": "11일",
+        "12": "12일",
+        "13": "13일",
+        "14": "14일",
+        "15": "15일",
+        "16": "16일",
+        "17": "17일",
+        "18": "18일",
+        "19": "19일",
+        "20": "20일",
+        "21": "21일",
+        "22": "22일",
+        "23": "23일",
+        "24": "24일",
+        "25": "25일",
+        "26": "26일",
+        "27": "27일",
+        "28": "28일",
+        "29": "29일",
+        "30": "30일",
+        "31": "31일"
+      },
+      "distance": {
+        "away": "{{distance}}"
+      }
+    },
+    "buttons": {
+      "cancel": "취소",
+      "ok": "확인",
+      "close": "닫기",
+      "login": "로그인",
+      "logout": "로그아웃",
+      "delete": "삭제",
+      "refresh": "새로고침",
+      "done": "완료",
+      "accept": "확인",
+      "accept-a11y": "변경 사항 확인",
+      "revert": "되돌리기",
+      "revert-a11y": "변경 사항 되돌리기",
+      "apply": "적용",
+      "connect": "연결",
+      "save": "저장",
+      "export": "내보내기"
+    },
+    "errors": {
+      "generic": "문제가 발생했습니다. 나중에 다시 시도해 주세요.",
+      "genericShort": "문제가 발생했습니다."
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "패치 {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "업데이트 확인 중…",
+        "stable": "정식 업데이트 확인 중…",
+        "unstable": "베타 업데이트 확인 중…",
+        "bleedingEdge": "최신 업데이트 확인 중…"
+      },
+      "tracksPlural": {
+        "stable": "안정",
+        "unstable": "불안정",
+        "bleedingEdge": "최신",
+        "Production": "안정",
+        "Staging": "불안정",
+        "Development": "최신"
+      },
+      "trackSingular": {
+        "stable": "안정",
+        "unstable": "불안정",
+        "bleedingEdge": "최신",
+        "Production": "안정",
+        "Staging": "불안정",
+        "Development": "최신"
+      },
+      "versionIsAvailable-md": "{{versionName}}로 업데이트 가능합니다.",
+      "updateNow": "지금 업데이트",
+      "newVersionAvailable-md": "PoLo의 새로운 버전이 사용 가능합니다!"
+    },
+    "dataFiles": {
+      "loading": "{{name}} 로딩 중",
+      "downloading": "{{name}} 다운로드 중",
+      "dataHasToBeDownloaded-md": "**{{name}}**의 데이터를 다운로드해야 합니다.",
+      "dataHasNotBeenUpdatedInAWhile-md": "**{{name}}**의 데이터가 한동안 업데이트되지 않았습니다.",
+      "downloadNow": "지금 다운로드",
+      "refreshNow": "지금 새로고침"
+    },
+    "notices": {
+      "action": {
+        "ok": "확인!",
+        "__comment__": "알림 강제 지정"
+      },
+      "title": {
+        "__comment__": "알림 제목 강제 지정"
+      },
+      "text": {
+        "__comment__": "알림 텍스트 강제 지정"
+      },
+      "dialogTitle": {
+        "__comment__": "대화 제목 강제 지정"
+      },
+      "dialogText": {
+        "__comment__": "대화 텍스트 강제 지정"
+      },
+      "dataFiles": {
+        "fetching": "{{title}} 가져오는 중...",
+        "progress": "{{title}} 가져오는 중\n\n{{progress}}",
+        "done": "{{title}} 가져오기 완료",
+        "error": "{{title}} 가져오기 오류"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "텍스트",
+        "csv": "쉼표로 구분된 값 (CSV)",
+        "tsv": "탭으로 구분된 값 (TSV)",
+        "other": "데이터"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "핵심 기능",
+        "locationBased": "위치 기반 활동",
+        "contestsAndFieldOps": "컨테스트 및 필드 운용",
+        "lookup": "데이터 조회 및 찾기",
+        "devmode": "개발자 모드",
+        "other": "기타 기능"
+      }
+    },
+    "continents": {
+      "AF": "아프리카",
+      "AS": "아시아",
+      "EU": "유럽",
+      "NA": "북미",
+      "SA": "남미",
+      "OC": "오세아니아"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "SSB",
+        "USB": "USB",
+        "USB-a11y": "USB",
+        "LSB": "LSB",
+        "LSB-a11y": "LSB",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "RTTY",
+        "CW": "CW",
+        "CW-a11y": "CW",
+        "FM": "FM",
+        "FM-a11y": "FM",
+        "AM": "AM",
+        "AM-a11y": "AM",
+        "other": "기타",
+        "other-a11y": "기타 모드"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 m",
+        "80m-a11y": "80 m",
+        "60m-a11y": "60 m",
+        "40m-a11y": "40 m",
+        "30m-a11y": "30 m",
+        "20m-a11y": "20 m",
+        "17m-a11y": "17 m",
+        "15m-a11y": "15 m",
+        "12m-a11y": "12 m",
+        "11m-a11y": "11 m",
+        "10m-a11y": "10 m",
+        "6m-a11y": "6 m",
+        "2m-a11y": "2 m",
+        "70cm-a11y": "70 cm",
+        "23cm-a11y": "23 cm",
+        "13cm-a11y": "13 cm",
+        "9cm-a11y": "9 cm",
+        "6cm-a11y": "6 cm",
+        "3cm-a11y": "3 cm",
+        "1-25cm-a11y": "1.25 cm",
+        "6mm-a11y": "6 mm",
+        "4mm-a11y": "4 mm",
+        "2-5mm-a11y": "2.5 mm",
+        "2mm-a11y": "2 mm",
+        "1mm-a11y": "1 mm",
+        "submm-a11y": "sub-mm",
+        "other": "기타",
+        "other-a11y": "기타 밴드"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

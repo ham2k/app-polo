@@ -391,9 +391,9 @@
         "unknownSummit": "Ukjent topp"
       }
     },
-    "hamdb": {
-      "name": "HamDB.org Kallesignaloppslag",
-      "description": "Gratis tjeneste, men begrenset til samtaler i USA, Canada og Tyskland"
+    "ham2k-lookup": {
+      "name": "Ham2K-oppslagstjeneste",
+      "description": "Gratis tjeneste, men dekker bare kallesignaler fra USA, Canada og Tyskland"
     },
     "hamqth": {
       "name": "HamQTH.com Kallesignaloppslag",

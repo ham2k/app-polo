@@ -391,9 +391,9 @@
         "unknownSummit": "Bilinmeyen zirve"
       }
     },
-    "hamdb": {
-      "name": "HamDB.org Çağrı İşareti Sorguları",
-      "description": "Ücretsiz hizmet, ancak ABD, Kanada ve Almanya çağrılarıyla sınırlı"
+    "ham2k-lookup": {
+      "name": "Ham2K Arama Hizmeti",
+      "description": "Ücretsiz hizmet, ancak yalnızca ABD, Kanada ve Almanya çağrı işaretlerini kapsar"
     },
     "hamqth": {
       "name": "HamQTH.com Çağrı İşareti Sorguları",

@@ -359,8 +359,8 @@
         "satelliteQSO": "Completa almenys un QSO mitjançant un satèl·lit de radioaficionat (només per a les classes A, B o F).",
         "alternatePowerQSOs": "Completa almenys un QSO utilitzant generació d'energia alternativa, com ara solar, eòlica o hidràulica (només classes A, B, E o F).",
         "w1awMessage": "Copia amb precisió el butlletí especial del Field Day transmès per W1AW o K6KPH.",
-        "electedOfficialVisit": "Rebeu la visita d'un convidat representant governamental.",
-        "agencyOfficialVisit": "Rebeu la visita d’un convidat representant d’un organisme al qual es dona servei.",
+        "electedOfficialVisit": "Acollir una visita d'un càrrec públic electe convidat.",
+        "agencyOfficialVisit": "Acollir la visita d'un representant convidat d'un organisme al qual es dona servei.",
         "educationalActivity": "Duu a terme una activitat educativa formal amb un pla d'estudis escrit.",
         "youthElement": "Incloeu participants joves en l'operació.",
         "safetyOfficer": "Tingueu un responsable de seguretat designat al lloc (només classe A).",
@@ -391,9 +391,9 @@
         "unknownSummit": "Cim desconegut"
       }
     },
-    "hamdb": {
-      "name": "Consultes d'indicatius HamDB.org",
-      "description": "Servei gratuït, però limitat a crides dels EUA, Canadà i Alemanya"
+    "ham2k-lookup": {
+      "name": "Servei de cerca de Ham2K",
+      "description": "Servei gratuït, però només cobreix indicatius dels EUA, Canadà i Alemanya"
     },
     "hamqth": {
       "name": "Consultes d'indicatius HamQTH.com",

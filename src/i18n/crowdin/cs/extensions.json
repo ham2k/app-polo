@@ -391,9 +391,9 @@
         "unknownSummit": "Neznámý vrchol"
       }
     },
-    "hamdb": {
-      "name": "Vyhledávání volacích znaků na HamDB.org",
-      "description": "Bezplatná služba, ale omezená na hovory v USA, Kanadě a Německu"
+    "ham2k-lookup": {
+      "name": "Vyhledávací služba Ham2K",
+      "description": "Bezplatná služba, ale pokrývá pouze volací znaky z USA, Kanady a Německa"
     },
     "hamqth": {
       "name": "Vyhledávání volacích znaků na HamQTH.com",

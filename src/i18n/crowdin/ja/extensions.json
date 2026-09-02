@@ -346,7 +346,7 @@
         "gotaQSOs": "GOTAステーションQSO",
         "gotaQSOsCount": "GOTA QSO数",
         "gotaCoach": "GOTAコーチ",
-        "webSubmission": "Web提出"
+        "webSubmission": "Web 投稿"
       },
       "bonusDescription": {
         "transmitters": "送信機ごとに100点（最大20台）、GOTAまたはVHFは含みません。",
@@ -372,7 +372,7 @@
       }
     },
     "gma": {
-      "name": "GMA: グローバルマウンテンアクティビティ",
+      "name": "GMA: Global Mountain Activity (グローバルマウンテンアクティビティ)",
       "shortName": "GMA",
       "exportName": "GMAアクティベーション",
       "activityOptions": {
@@ -391,16 +391,16 @@
         "unknownSummit": "不明な山頂"
       }
     },
-    "hamdb": {
-      "name": "HamDB.org コールサイン検索",
-      "description": "無料サービスですが、米国、カナダ、ドイツのコールに限定されます"
+    "ham2k-lookup": {
+      "name": "Ham2K 検索サービス",
+      "description": "無料サービスですが、米国、カナダ、ドイツのコールサインのみを対象としています"
     },
     "hamqth": {
       "name": "HamQTH.com コールサイン検索",
       "description": "検索には無料アカウントが必要です"
     },
     "llota": {
-      "name": "LLOTA: 電波で湖やラグーンを",
+      "name": "LLOTA: Lakes and Lagoon (湖とラグーン) on the Air",
       "shortName": "LLOTA",
       "exportName": "LLOTAアクティベーション",
       "activityOptions": {
@@ -421,18 +421,18 @@
         "ref2refCount_zero": "L2Lなし",
         "ref2refCount_one": "1 L2L",
         "ref2refCount_other": "L2L数: {{fmtCount}}",
-        "huntedRefsCount_zero": "狩られた湖はありません",
-        "huntedRefsCount_one": "狩られた湖：1つ",
-        "huntedRefsCount_other": "狩られた湖：{{fmtCount}}つ",
+        "huntedRefsCount_zero": "ハントした湖はありません",
+        "huntedRefsCount_one": "ハントした湖：1つ",
+        "huntedRefsCount_other": "ハントした湖：{{fmtCount}}つ",
         "activatorQSOsCount_zero": "アクティベーターQSOはありません",
         "activatorQSOsCount_one": "アクティベーター QSO 数: 1",
         "activatorQSOsCount_other": "アクティベーター QSO 数: {{fmtCount}}",
         "ref2refQSOsCount_zero": "L2L QSO なし",
         "ref2refQSOsCount_one": "L2L QSOの数: 1",
         "ref2refQSOsCount_other": "L2L QSOの数: {{fmtCount}}",
-        "huntedQSOsCount_zero": "狩られた QSOはありません",
-        "huntedQSOsCount_one": "狩られた QSO数: 1",
-        "huntedQSOsCount_other": "狩られた QSO数: {{fmtCount}}",
+        "huntedQSOsCount_zero": " ハントしたQSOはありません",
+        "huntedQSOsCount_one": "ハントした QSO数: 1",
+        "huntedQSOsCount_other": "ハントしたQSO数: {{fmtCount}}",
         "operationTotals": "オペレーション合計",
         "referencesActivatedCount_zero": "アクティベートした湖: 0",
         "referencesActivatedCount_one": "アクティベートした湖: 1",
@@ -440,9 +440,9 @@
         "referencesMissedCount_zero": "未達成の湖はありません",
         "referencesMissedCount_one": "未達成の湖: 1",
         "referencesMissedCount_other": "未達成の湖: {{fmtCount}}",
-        "referencesHuntedCount_zero": "狩られた湖はありません",
-        "referencesHuntedCount_one": "狩られた湖: 1",
-        "referencesHuntedCount_other": "狩られた湖: {{fmtCount}}"
+        "referencesHuntedCount_zero": "ハントした湖はありません",
+        "referencesHuntedCount_one": "ハントした湖: 1",
+        "referencesHuntedCount_other": "ハントした湖: {{fmtCount}}"
       },
       "loggingControl": {
         "theirRefLabel": "彼らのLLOTA"
@@ -456,7 +456,7 @@
       "noRefsNearby": "近くに湖はありません！"
     },
     "mota": {
-      "name": "MOTA: Mills on the Air",
+      "name": "MOTA: Mills (風車・水車) on the Air",
       "shortName": "MOTA",
       "exportName": "MOTAアクティベーション",
       "activityOptions": {
@@ -578,7 +578,7 @@
       "name": "サテライト操作"
     },
     "siota": {
-      "name": "SiOTA: Silos on the Air",
+      "name": "SiOTA: Silos (穀物サイロ) on the Air",
       "shortName": "SIOTA",
       "exportName": "SIOTAアクティベーション",
       "account": {
@@ -616,7 +616,7 @@
       }
     },
     "sota": {
-      "name": "SOTA: Summits on the Air",
+      "name": "SOTA: Summits (山頂) on the Air",
       "account": {
         "title": "SOTA (SOTAWatch でのスポット)",
         "dialogTitle": "SOTA アカウント",
@@ -682,19 +682,19 @@
       "noRefsNearby": "近くに山頂はありません!"
     },
     "tota": {
-      "name": "TOTA: Towers on the Air",
+      "name": "TOTA: Towers (塔) on the Air",
       "activityOptions": {
-        "title_zero": "アクティベートするタワーが選択されていません",
-        "title_one": "アクティベート中のタワー：1ヶ所",
-        "title_other": "アクティベート中のタワー：{{count}}ヶ所",
-        "noTowersFound": "タワーが見つかりません",
+        "title_zero": "アクティベートする塔が選択されていません",
+        "title_one": "アクティベート中の塔：1ヶ所",
+        "title_other": "アクティベート中の塔：{{count}}ヶ所",
+        "noTowersFound": "塔が見つかりません",
         "nearestMatches": "一致する{{count}}ヶ所のうち最も近い{{limit}}ヶ所",
-        "matchingTowers_zero": "一致するタワーがありません",
-        "matchingTowers_one": "一致するタワー：1ヶ所",
-        "matchingTowers_other": "一致するタワー：{{count}}ヶ所",
-        "searchForTowers": "アクティベートするタワーを探しましょう！",
-        "noTowersNearby": "近くにタワーがありません",
-        "nearbyTowers": "近くのタワー",
+        "matchingTowers_zero": "一致する塔がありません",
+        "matchingTowers_one": "一致する塔：1ヶ所",
+        "matchingTowers_other": "一致する塔：{{count}}ヶ所",
+        "searchForTowers": "アクティベートする塔を探しましょう！",
+        "noTowersNearby": "近くに塔がありません",
+        "nearbyTowers": "近くの塔",
         "searchPlaceholder": "名前または参照コード…",
         "unknownTower": "不明なタワー"
       },
@@ -702,35 +702,35 @@
         "ref2refCount_zero": "R2Rはありません",
         "ref2refCount_one": "R2R数: 1",
         "ref2refCount_other": "R2R数: {{fmtCount}}",
-        "huntedRefsCount_zero": "ハンティングしたタワーはありません",
-        "huntedRefsCount_one": "ハンティングしたタワー：1ヶ所",
-        "huntedRefsCount_other": "ハンティングしたタワー：{{fmtCount}}ヶ所",
+        "huntedRefsCount_zero": "ハントしたタワーはありません",
+        "huntedRefsCount_one": "ハントしたタワー：1ヶ所",
+        "huntedRefsCount_other": "ハントしたタワー：{{fmtCount}}ヶ所",
         "activatorQSOsCount_zero": "アクティベーターQSOはありません",
         "activatorQSOsCount_one": "アクティベーター QSO 数: 1",
         "activatorQSOsCount_other": "アクティベーター QSO 数: {{fmtCount}}",
         "ref2refQSOsCount_zero": "R2R QSO なし",
         "ref2refQSOsCount_one": "R2R QSOの数: 1",
         "ref2refQSOsCount_other": "R2R QSOの数: {{fmtCount}}",
-        "huntedQSOsCount_zero": "ハンティングした QSOはありません",
+        "huntedQSOsCount_zero": "ハントした QSOはありません",
         "huntedQSOsCount_one": "ハンティングした QSO数: 1",
         "huntedQSOsCount_other": "ハンティングした QSO数: {{fmtCount}}",
         "operationTotals": "オペレーション合計",
-        "referencesActivatedCount_zero": "アクティベートされたタワーはありません",
-        "referencesActivatedCount_one": "アクティベートされたタワー：1ヶ所",
-        "referencesActivatedCount_other": "アクティベートされたタワー：{{fmtCount}}ヶ所",
-        "referencesMissedCount_zero": "未達成のタワーはありません",
-        "referencesMissedCount_one": "未達成のタワー：1ヶ所",
-        "referencesMissedCount_other": "未達成のタワー：{{fmtCount}}ヶ所",
-        "referencesHuntedCount_zero": "ハンティングしたタワーはありません",
-        "referencesHuntedCount_one": "ハンティングしたタワー：1ヶ所",
-        "referencesHuntedCount_other": "ハンティングしたタワー：{{fmtCount}}ヶ所"
+        "referencesActivatedCount_zero": "アクティベートされた塔はありません",
+        "referencesActivatedCount_one": "アクティベートされた塔：1ヶ所",
+        "referencesActivatedCount_other": "アクティベートされた塔：{{fmtCount}}ヶ所",
+        "referencesMissedCount_zero": "未達成の塔はありません",
+        "referencesMissedCount_one": "未達成の塔：1ヶ所",
+        "referencesMissedCount_other": "未達成の塔：{{fmtCount}}ヶ所",
+        "referencesHuntedCount_zero": "ハンティングした塔はありません",
+        "referencesHuntedCount_one": "ハンティングした塔：1ヶ所",
+        "referencesHuntedCount_other": "ハンティングした塔：{{fmtCount}}ヶ所"
       },
       "loggingControl": {
-        "theirRefLabel": "彼らのタワー"
+        "theirRefLabel": "彼らの塔"
       },
-      "exampleRefName": "例のタワー",
-      "unknownRefName": "不明なタワー",
-      "noRefsNearby": "近くにタワーがありません！",
+      "exampleRefName": "例の塔",
+      "unknownRefName": "不明な塔",
+      "noRefsNearby": "近くに塔がありません！",
       "postSpotAPI": {
         "error": "TOTAスポットの投稿中にエラーが発生しました",
         "serverResponse": "サーバーがステータス {{status}} {{message}} で応答しました"
@@ -753,7 +753,7 @@
       "noSquareSet": "スクエアが設定されていません"
     },
     "wca": {
-      "name": "世界の城アワード",
+      "name": "WCA: World Castles Awards (世界の城アワード)",
       "shortName": "WCA",
       "exportName": "WCAアクティべーション",
       "activityOptions": {
@@ -923,7 +923,7 @@
       }
     },
     "zlota": {
-      "name": "ZLOTA: ZL on the Air",
+      "name": "ZLOTA: ZL (ニュージーランド) on the Air",
       "account": {
         "title": "ZLOTA (ZLOTA スポット)",
         "dialogTitle": "ZLOTA アカウント",

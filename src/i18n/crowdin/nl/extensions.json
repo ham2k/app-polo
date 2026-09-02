@@ -391,9 +391,9 @@
         "unknownSummit": "Onbekende summit"
       }
     },
-    "hamdb": {
-      "name": "HamDB.org Roepnaam Opzoekingen",
-      "description": "Gratis service, maar beperkt tot VS, Canada en Duitsland"
+    "ham2k-lookup": {
+      "name": "Ham2K-opzoekservice",
+      "description": "Gratis service, maar beperkt tot roepletters uit de VS, Canada en Duitsland"
     },
     "hamqth": {
       "name": "HamQTH.com Roepnaam Opzoekingen",

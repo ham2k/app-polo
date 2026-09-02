@@ -3,6 +3,7 @@
     "name": "July '26 (patch 7)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
+      "Korean translations (thanks to DS1TUW)",
       "Fixed exports with your operator callsign when it should have been blank"
     ]
   },

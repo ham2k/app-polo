@@ -294,7 +294,7 @@
         "core": "Kernfunktionen",
         "locationBased": "Ortsbezogene Aktivitäten",
         "contestsAndFieldOps": "Wettbewerbe & Feldbetrieb",
-        "lookup": "Datenabfrage & Spotting",
+        "lookup": "Datenabfrage & Spotting\n",
         "devmode": "Entwicklermodus",
         "other": "Andere Funktionen"
       }

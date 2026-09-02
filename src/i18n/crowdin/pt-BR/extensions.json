@@ -391,9 +391,9 @@
         "unknownSummit": "Pico desconhecido"
       }
     },
-    "hamdb": {
-      "name": "Consultas de Indicativo HamDB.org",
-      "description": "Serviço gratuito, mas limitado a chamadas nos EUA, Canadá e Alemanha"
+    "ham2k-lookup": {
+      "name": "Serviço de Consulta Ham2K",
+      "description": "Serviço gratuito, mas cobre apenas indicativos dos EUA, Canadá e Alemanha"
     },
     "hamqth": {
       "name": "Consultas de Indicativo HamQTH.com",

@@ -391,9 +391,9 @@
         "unknownSummit": "Sommet inconnu"
       }
     },
-    "hamdb": {
-      "name": "Recherches d'indicatifs sur HamDB.org",
-      "description": "Service gratuit, mais limité aux appels aux États-Unis, au Canada et en Allemagne"
+    "ham2k-lookup": {
+      "name": "Service de recherche Ham2K",
+      "description": "Service gratuit, mais ne couvrant que les indicatifs des États-Unis, du Canada et d’Allemagne"
     },
     "hamqth": {
       "name": "Recherches d'indicatifs sur HamQTH.com",

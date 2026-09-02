@@ -391,9 +391,9 @@
         "unknownSummit": "Vetta sconosciuta"
       }
     },
-    "hamdb": {
-      "name": "Ricerca del nominativo con HamDB.org",
-      "description": "Servizio gratuito, ma limitato ai nominativi di USA, Canada e Germania"
+    "ham2k-lookup": {
+      "name": "Servizio di ricerca Ham2K",
+      "description": "Servizio gratuito, ma copre solo i nominativi di USA, Canada e Germania"
     },
     "hamqth": {
       "name": "Ricerca del nominativo con HamQTH.com",

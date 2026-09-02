@@ -21,7 +21,7 @@
     "clean:all": "npm run clean:js && npm run clean:android && npm run clean:ios && npm run clean:watchman",
     "postinstall": "patch-package",
     "crowdin:push": "crowdin push sources",
-    "crowdin:pull": "crowdin pull translations -l ca -l cs -l de -l es-ES -l fr -l it -l ja -l pt-PT -l pt-BR -l nb -l nl -l ro -l sk -l tr -l zh-CN"
+    "crowdin:pull": "crowdin pull translations -l ca -l cs -l de -l es-ES -l fr -l it -l ja -l ko -l pt-PT -l pt-BR -l nb -l nl -l ro -l sk -l tr -l zh-CN"
   },
   "dependencies": {
     "@ham2k/h2k-native-text-input": "file:./modules/h2k-native-text-input",

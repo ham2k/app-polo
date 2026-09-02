@@ -391,9 +391,9 @@
         "unknownSummit": "未知山峰"
       }
     },
-    "hamdb": {
-      "name": "HamDB.org 呼号查询",
-      "description": "免费服务，但仅限于美国、加拿大和德国的呼叫"
+    "ham2k-lookup": {
+      "name": "Ham2K 查询服务",
+      "description": "免费服务，但仅覆盖美国、加拿大和德国呼号"
     },
     "hamqth": {
       "name": "HamQTH.com 呼号查询",

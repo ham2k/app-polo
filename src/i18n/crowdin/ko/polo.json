@@ -1,0 +1,1005 @@
+{
+  "screens": {
+    "start": {
+      "credits": "KI2D & 친구들 제작",
+      "Loading Extensions": "확장 파일 로딩 중",
+      "Development Build": "포터블 로거 개발 빌드",
+      "messages": {
+        "Reticulating splines": "스플라인 다듬는 중",
+        "Tuning the antenna": "안테나 조정 중",
+        "Checking the tubes": "진공관 체크 중",
+        "Warming up the tubes": "진공관 예열 중",
+        "Unfolding the map": "지도 펼치는 중",
+        "Charging the flux capacitor": "납땜기 켜는 중",
+        "Purging the dilithium chamber": "작업 공방 청소 중",
+        "Activating the turbo encabulator": "샤크 조명 켜는 중",
+        "Engaging the warp drive": "파워 서플라이 켜는 중"
+      }
+    },
+    "home": {
+      "title": "포터블 로거",
+      "newOperation": "새로운 운용",
+      "newOperation-a11y": "새로운 운용",
+      "operationList-a11y": "운용 목록",
+      "noOperations": "운용 로그 없음!",
+      "settings-a11y": "설정",
+      "quickCallLookupPlaceholder": "빠른 콜사인 조회…",
+      "spots-a11y": "스팟"
+    },
+    "operation": {
+      "title": "운용"
+    },
+    "operationDetails": {
+      "title": "운용 상세",
+      "operationTitle": "제목",
+      "newOperation": "새로운 운용",
+      "operationNotes": "메모",
+      "anythingYouWantToWriteAboutThisOperation": "해당 운용에 대해 써놓을 내용"
+    },
+    "operationStationInfo": {
+      "title": "무선국 및 오퍼레이터 정보",
+      "invalidCallsign": "잘못된 호출 부호: {{callsign}}",
+      "invalidCallsigns": "잘못된 호출 부호: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` 사용됨.\n`{{newStation}}`가 새로운 QSO에 사용됩니다.",
+      "noStationUsed-md": "현재까지 사용된 콜사인 없음.\n`{{newStation}}`가 새로운 QSO에 사용됩니다.",
+      "updateStation-md_zero": "기존 QSO 0개에 대해 `{{newStation}}`로 업데이트",
+      "updateStation-md_one": "기존 QSO 1개에 대해 `{{newStation}}`로 업데이트",
+      "updateStation-md_other": "기존 QSO {{count}}개에 대해 `{{newStation}}`로 업데이트",
+      "multipleStationsUsed-md": "이미 여러 콜사인으로 로깅된 QSO가 있습니다: `{{stations}}`.\n\n`{{newStation}}`가 새로운 QSO에 사용됩니다.",
+      "singleOperatorUsed-md": "`{{oldOperator}}`가 여태까지 사용되었습니다.\n`{{newOperator}}`가 새로운 QSO에 사용됩니다.",
+      "noOperatorUsed-md": "현재까지 사용한 콜사인 없음.\n`{{newOperator}}`가 새로운 QSO에 사용됩니다.",
+      "updateOperator-md": "모든 QSO에 대해 `{{newOperator}}`를 OP로 업데이트",
+      "multipleOperatorsUsed-md": "이미 여러 OP 콜사인으로 로깅된 QSO가 있습니다: `{{operators}}`.\n\n`{{newOperator}}`가 새로운 QSO에 사용됩니다.",
+      "whatIsTheCallsignUsedOnTheAir": "운용 시 사용한 콜사인?",
+      "stationCallsign": "무선국 콜사인",
+      "whoIsOperatingTheStation": "운용하는 OP는 누구인가요? (선택 사항)",
+      "operatorCallsign": "오퍼레이터 콜사인",
+      "multiStationOperation": "여러 무선국에서 함께 운용하나요?",
+      "multiStationOperationYes": "예 - 이 무선국은 함께 운용하는 여러 무선국 중 하나입니다",
+      "multiStationOperationNo": "아니요 - 그냥 일반 무선국입니다",
+      "identifierForThisStation": "이 무선국의 구분 ID (숫자만)"
+    },
+    "operationLocation": {
+      "title": "운용 위치",
+      "selectedLocation": "선택된 위치",
+      "maidenheadGridSquareLocator": "그리드 로케이터",
+      "suggestedLocations": "추천 위치",
+      "deviceGps": "기기 GPS",
+      "locating": "위치 찾는 중…",
+      "gpsError": "GPS 오류",
+      "noGps": "GPS 없음",
+      "stateOrProvince": "주/도 (선택 사항)",
+      "county": "시/군 (선택 사항)"
+    },
+    "operationAddActivity": {
+      "title": "운용 추가",
+      "cantFindActivity": "원하는 운용을 찾을 수 없습니까?",
+      "thereAreMoreOptions": "설정 > 기능에 더 많은 옵션이 있습니다"
+    },
+    "operationActivityOptions": {
+      "title": "운용 옵션",
+      "removeActivity": "이 운용에서 {{activity}} 제거",
+      "activityHasNoOptions": "이 운용에는 옵션이 따로 없습니다.",
+      "activityNotEnabled": "\"{{name}}\" 운용이 활성화되어 있지 않습니다.",
+      "lookInSettings": "설정 > 기능에서 찾아보세요"
+    },
+    "operationData": {
+      "title": "운용 데이터",
+      "selectFromTheExportOptionsBelow": "아래의 내보내기 옵션 중에서 선택",
+      "exportSelectedFiles_zero": "선택한 파일 0개 내보내기",
+      "exportSelectedFiles_one": "선택한 파일 1개 내보내기",
+      "exportSelectedFiles_other": "선택한 파일 {{count}}개 내보내기",
+      "exportActionsShare": "공유",
+      "exportActionsSave": "저장",
+      "exportActionsExport": "내보내기",
+      "exportActionsStash": "보관",
+      "exportActionsLogStash": "Ham2K File Stash로 보내기",
+      "exportQSOs": "QSO 내보내기",
+      "pendingToDoItems_zero": "할 일 없음",
+      "pendingToDoItems_one": "할 일 1개 있음",
+      "pendingToDoItems_other": "{{count}} 개의 할 일 있음",
+      "importQSOs": "QSO 가져오기",
+      "addQSOsFromADIFFile": "ADIF 파일에서 QSO 추가",
+      "ham2kLoFiSync": "Ham2K LoFi 동기화",
+      "operation": "운용",
+      "exportSettings": "내보내기 설정",
+      "useCompactFileNames": "짧은 파일명 사용",
+      "wavelogExport": "Wavelog 내보내기",
+      "exportQSOsToWavelogDescription": "Wavelog로 이 운용의 모든 QSO 보내기",
+      "wavelogDialog": {
+        "title": "Wavelog로 QSO 내보내기",
+        "status": "Wavelog로 이 작업에 대한 모든 QSO 내보내기",
+        "exporting": "Wavelog로 내보내는 중..."
+      },
+      "deleteOperationDialog": {
+        "title": "운용 삭제?",
+        "description": "이 운용을 정말로 삭제하시겠습니까?"
+      },
+      "errorSavingExport": "파일을 저장할 수 없습니다",
+      "logStashDialogTitle": "Ham2K File Stash",
+      "logStashDialogIntro": "PoLo가 파일을 Ham2K 서버에 업로드하며, 아무 브라우저에서나 다운로드할 수 있습니다.",
+      "logStashDialogTiers": "무료 계정은 한 번에 파일 하나만 보낼 수 있습니다. 유료 구독자는 원하는 만큼 보낼 수 있습니다.",
+      "logStashDialogSubscribe": "구독하기",
+      "exportUpsellTitle": "해당 운용이 클라우드 동기화 서비스에 저장되었습니다",
+      "exportUpsellBody": "백업은 무료로 제공되지만, 구독 시 추가로 여러 기기에서 빠른 속도로 동기화 및 접속이 가능합니다.",
+      "exportUpsellSupport": "또한 구독을 통해 열일중인 Ham2K 개발 팀을 후원해주실 수 있습니다.",
+      "exportUpsellSubscribe": "구독하기",
+      "exportUpsellNotNow": "나중에",
+      "exportOptionsInfoLabel": "내보내기 옵션에 대해",
+      "exportOptionsInfoTitle": "내보내기 옵션",
+      "exportOptionsInfoStash-md": "**Stash**는 파일을 Ham2K File Stash에 업로드하며, 나중에 어떤 브라우저에서든 **[stash.ham2k.net](https://stash.ham2k.net)**에서 다운로드할 수 있습니다. 현장에서 휴대폰에서 파일을 꺼낼 다른 쉬운 방법이 없을 때 유용합니다.",
+      "exportOptionsInfoShare-md": "**공유**는 파일을 기기의 다른 앱으로 전달합니다 (이메일, 문자, 클라우드 저장소, 다른 로깅 프로그램 등)",
+      "exportOptionsInfoExport-md": "**내보내기**는 파일을 기기의 다른 앱으로 전달합니다  (이메일, 문자, 클라우드 저장소, 다른 로깅 프로그램 등)",
+      "exportOptionsInfoSave-md": "**저장**은 다른 앱을 거치지 않고 파일을 기기의 폴더에 바로 저장합니다.",
+      "exportOptionsInfoSelection-md": "이 옵션들은 선택한 모든 파일에 적용됩니다. 파일 하나만 탭하여 해당 파일만 공유할 수도 있습니다.",
+      "freeTierOneFileTitle": "무료 계정은 한 번에 파일 하나만 보낼 수 있습니다",
+      "freeTierOneFileMessage": "\"{{fileName}}\"만 보내시겠습니까?",
+      "freeTierOneFileConfirm": "{{fileName}} 보내기",
+      "freeTierRecentUploadTitle": "최근 업로드 항목이 대체됩니다",
+      "freeTierRecentUploadMessage": "\"{{fileName}}\" 파일을 6시간 이내에 업로드했으며 아직 다운로드되지 않았습니다. 이 파일을 보내면 기존 파일이 대체됩니다. 대신에 기다리시겠습니까?",
+      "freeTierRecentUploadConfirm": "어쨌든 보내기",
+      "errorSendingToLogStash": "Ham2K File Stash로 보낼 수 없습니다",
+      "sentToLogStash": "Ham2K File Stash로 보냈습니다",
+      "sentToLogStashRetrieve-md": "어떤 브라우저에서든 **[stash.ham2k.net](https://stash.ham2k.net)**에 접속하면 {{filesLabel}}을 가져올 수 있습니다.",
+      "sentToLogStashEmailOffer": "또는 해당 링크를 이메일로 보낼 수 있습니다.",
+      "retrieveSingularFile": "해당 파일",
+      "retrievePluralFiles": "해당 파일들",
+      "emailMeALink": "링크를 이메일로 받기",
+      "linkEmailed": "다운로드 링크를 이메일로 보냈습니다.",
+      "errorEmailingLink": "이메일을 보낼 수 없습니다"
+    },
+    "callInfo": {
+      "title": "콜사인 정보",
+      "messages": {
+        "duplicate": "중복",
+        "invalidBand": "잘못된 밴드",
+        "ourGrid": "내 위치 누락",
+        "newBand": "새로운 밴드",
+        "newMode": "새로운 모드",
+        "newRef": "새로운 레퍼런스",
+        "newMult": "새로운 Mult",
+        "newDay": "새로운 날짜",
+        "newGrid": "새 그리드",
+        "newLocation": "새 위치",
+        "maybeDupe": "중복?",
+        "partialDupe": "중복",
+        "potaActivation-newDay": "새로운 POTA 날짜",
+        "potaActivation-newRef": "새로운 공원",
+        "sotaActivation-newDay": "새로운 SOTA 날짜",
+        "sotaActivation-newRef": "새로운 산정상",
+        "sotaActivation-duplicate": "SOTA 중복!",
+        "wwffActivation-duplicate": "WWFF 중복!",
+        "wwbotaActivation-newDay": "새로운 WWBOTA 날짜",
+        "wwbotaActivation-newRef": "새로운 벙커",
+        "motaActivation-newRef": "새로운 방앗간"
+      },
+      "history": {
+        "last7days": "지난 7일간 {{count}}개",
+        "today": "오늘 {{count}}개",
+        "yesterday": "어제 {{count}}개",
+        "qsos_zero": "0 QSO",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSO"
+      },
+      "thisOpCount_zero": "이 운용에서 0 QSO",
+      "thisOpCount_one": "이 운용에서 1 QSO",
+      "thisOpCount_other": "이 운용에서 {{count}} QSO",
+      "otherOpsCount_zero": "다른 운용에서 0 QSO",
+      "otherOpsCount_one": "다른 운용에서 1 QSO",
+      "otherOpsCount_other": "다른 운용에서 {{count}} QSO",
+      "andMoreCount_zero": "... + {{count}}개",
+      "andMoreCount_one": "... + {{count}}개",
+      "andMoreCount_other": "... + {{count}}개",
+      "showImage": "이미지 표시",
+      "notes": "메모",
+      "potentialCall": "예상 콜사인: {{call}}",
+      "withCall": "{{call}}와 함께"
+    },
+    "spots": {
+      "title": "스팟"
+    },
+    "editQSO": {
+      "title": "QSO 수정",
+      "sections": {
+        "qso": "QSO 상세",
+        "their": "상대의 정보",
+        "our": "나의 정보",
+        "more": "더보기"
+      },
+      "fields": {
+        "time": "시간",
+        "date": "날짜",
+        "freq": "주파수",
+        "mode": "모드",
+        "band": "밴드",
+        "power": "출력",
+        "call": "콜사인",
+        "sent": "RST",
+        "exchange": "교환",
+        "name": "이름",
+        "city": "도시",
+        "state": "주/도",
+        "county": "시/군",
+        "entity": "엔티티",
+        "cqZone": "CQ 존",
+        "ituZone": "ITU 존",
+        "arrlSection": "ARRL 섹션",
+        "grid": "그리드",
+        "latitude": "위도",
+        "longitude": "경도",
+        "notes": "메모"
+      }
+    },
+    "opInfo": {
+      "title": "운용 정보"
+    },
+    "settings": {
+      "title": "설정",
+      "sections": {
+        "settings": "설정",
+        "accounts": "계정",
+        "about": "Ham2K에 대해",
+        "help": "도움이 필요한가요?"
+      },
+      "operatorCallsign": {
+        "title": "오퍼레이터 콜사인",
+        "noCall": "콜사인 없음",
+        "dialogTitle": "오퍼레이터 콜사인",
+        "pleaseEnterCallsign": "콜사인을 입력하세요!",
+        "callsignLabel": "오퍼레이터 콜사인"
+      },
+      "generalSettings": {
+        "title": "일반 설정",
+        "description": "다크 모드, 숫자입력 툴, 단위 및 기타"
+      },
+      "loggingSettings": {
+        "title": "로깅 설정",
+        "description": "로깅 방법 커스터마이징"
+      },
+      "dataSettings": {
+        "title": "데이터 설정",
+        "description": "데이터 파일, 콜사인 메모 등"
+      },
+      "syncSettings": {
+        "title": "동기화 설정",
+        "description": "클라우드 동기화 및 백업"
+      },
+      "accountsSettings": {
+        "title": "계정 및 서비스",
+        "description": "QRZ.com 및 기타 서비스"
+      },
+      "appFeatures": {
+        "title": "기능",
+        "description": "POTA, SOTA 등 기타 기능 관리"
+      },
+      "developerSettings": {
+        "title": "개발자 설정",
+        "description": "호랑이굴 (위험 지역)"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}}님은 Ham2K 후원자입니다",
+        "couldBeASupporter": "{{callsign}}님도 Ham2K의 후원자가 될 수 있습니다"
+      },
+      "versionSettings": {
+        "description": "최근 변경 사항 보기"
+      },
+      "creditsSettings": {
+        "title": "크레딧",
+        "description": "Sebastián Delmont KI2D & Team PoLo"
+      },
+      "noticesSettings": {
+        "title": "최근 공지",
+        "description": "아직 읽지 않은 메시지"
+      },
+      "readTheFineManual": {
+        "title": "상세 메뉴얼 읽기",
+        "description": "PoLo 관련 문서 검색"
+      },
+      "ham2KForums": {
+        "title": "Ham2K 포럼",
+        "description": "도움받기, 피드백 제공, 아이디어 토론…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K 채팅",
+        "description": "Ham2K Discord 서버"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "비디오 & 라이브스트림"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "사진은 많을수록 좋으니까요!"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "소식 및 업데이트를 위해 팔로우하세요"
+      },
+      "contactUs": {
+        "title": "연락처",
+        "description": "help@ham2k.com\n   (이메일 문의를 보내기 전 포럼이나 채팅을 먼저 시도해보세요)"
+      }
+    },
+    "generalSettings": {
+      "title": "일반 설정",
+      "theme": {
+        "title": "테마",
+        "descriptionDark": "항상 다크 모드",
+        "descriptionLight": "항상 라이트 모드",
+        "descriptionDevice": "기기 테마와 동일하게",
+        "dialogTitle": "테마"
+      },
+      "fontScale": {
+        "title": "글꼴 크기",
+        "descriptionXS": "아주 작게",
+        "descriptionSM": "작게",
+        "descriptionMD": "표준",
+        "descriptionLG": "크게",
+        "descriptionXL": "아주 크게",
+        "dialogTitle": "글꼴 크기",
+        "dialogDescription": "크기는 기기 설정에 따라 달라질 수 있습니다. (디스플레이, 접근성 등)"
+      },
+      "language": {
+        "title": "언어: {{lang}}",
+        "description": "앱 언어 변경하기",
+        "dialogTitle": "언어",
+        "dialogDescription": "언어 변경",
+        "deviceDefault": "기기 설정 사용 ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (기기 설정)은 현재 지원되지 않습니다."
+      },
+      "showNumbersRow": {
+        "title": "숫자 입력 키보드 사용",
+        "descriptionOn": "숫자 입력 퀵 버튼",
+        "descriptionOff": "숫자 키보드 사용하지 않기"
+      },
+      "showExtraInNumbersRow": {
+        "title": "마침표와 슬래시 사용하기",
+        "descriptionOn": "\".\" 와 \"/\" 표시",
+        "descriptionOff": "숫자만 표시"
+      },
+      "showCommaInNumbersRow": {
+        "title": "쉼표 사용하기",
+        "descriptionOn": "쉼표 키 표시",
+        "descriptionOff": "쉼표 키 없음"
+      },
+      "vibrateNumbersRow": {
+        "title": "숫자 입력 시 진동",
+        "descriptionOn": "진동 사용하기",
+        "descriptionOff": "진동 사용하지 않음"
+      },
+      "useMetricUnits": {
+        "title": "미터법 사용",
+        "descriptionOn": "거리 측정에 마일 사용",
+        "descriptionOff": "거리 측정에 킬로미터 사용"
+      },
+      "keepDeviceAwake": {
+        "title": "기기 화면 켜짐 유지하기",
+        "descriptionOn": "기기 화면 잠금 방지, 켜짐 유지",
+        "descriptionOff": "시간 지나면 화면 잠금 허용"
+      },
+      "useSplitViews": {
+        "title": "분할 보기 사용",
+        "descriptionOn": "화면이 충분히 클 때 분할 보기 사용",
+        "descriptionOff": "분할 보기 사용 안 함"
+      },
+      "useGrid8": {
+        "title": "고정밀 위치 사용하기",
+        "descriptionOn": "8자리 그리드 사용",
+        "descriptionOff": "6자리 그리드 사용"
+      },
+      "smartKeyboard": {
+        "title": "스마트 키보드 기능",
+        "descriptionOn": "스마트 키보드 기능 활성화",
+        "descriptionOff": "키보드 호환성 문제가 있다면 시도 - 간단한 키보드 사용"
+      },
+      "exportSettings": {
+        "title": "내보내기 설정",
+        "description": "파일 이름 및 기타 설정 사용자 정의"
+      },
+      "privacy": {
+        "title": "개인정보"
+      },
+      "shareAppUsageData": {
+        "title": "앱 사용 데이터 공유",
+        "descriptionOn": "앱 개선을 위해 사용, 앱 충돌 및 성능 데이터를 공유해주세요.",
+        "descriptionOff": "앱 사용 데이터를 비공개로 유지합니다.\nHam2K 팀은 앱 충돌 또는 기타 문제를 조회할 수 없습니다."
+      },
+      "shareOperationData": {
+        "title": "운용 데이터 공유",
+        "descriptionOn": "일부 운용 데이터를 공개적으로 및 다른 사용자와 공유",
+        "descriptionOff": "운용 데이터 비공개 유지"
+      },
+      "privacyPolicy": {
+        "title": "개인정보처리방침",
+        "description": "개인정보처리방침 읽어보기"
+      },
+      "termsOfService": {
+        "title": "서비스 약관",
+        "description": "서비스 약관 읽어보기"
+      }
+    },
+    "loggingSettings": {
+      "title": "로깅 설정",
+      "leftieMode": {
+        "title": "왼손잡이 모드",
+        "descriptionOn": "왼손잡이 레이아웃 사용",
+        "descriptionOff": "오른손잡이 레이아웃 사용"
+      },
+      "countryFlags": {
+        "title": "국가 깃발 표시",
+        "descriptionNone": "깃발 표시하지 않음",
+        "descriptionAll": "모든 QSO에 깃발 표시",
+        "descriptionDefault": "DX QSO에만 표시"
+      },
+      "showBearing": {
+        "title": "방위각 표시",
+        "descriptionOn": "예측 방위각 표시",
+        "descriptionOff": "방위각 정보 표시하지 않음"
+      },
+      "switchSignalReportOrder": {
+        "title": "시그널 리포트 순서 변경",
+        "descriptionOn": "보낸 RST -> 받은 RST ",
+        "descriptionOff": "받은 RST -> 보낸 RST"
+      },
+      "jumpAfterRST": {
+        "title": "RST 입력 후 다음 필드로 자동 점프",
+        "descriptionOn": "RST 입력 후 자동 이동",
+        "descriptionOff": "자동으로 이동 안함"
+      },
+      "suggestDefaultOperator": {
+        "title": "운용 시작 시 오퍼레이터 미리입력 제안",
+        "descriptionOn": "다른 콜사인으로 운용 시 {{operatorCall}}를 오퍼레이터로 설정",
+        "descriptionOff": "사용된 콜사인에 상관없이 오퍼레이터를 제안하지 않음"
+      },
+      "suggestTemplates": {
+        "title": "운용 템플릿 사용",
+        "descriptionOn": "새로운 운용을 위한 템플릿 제안",
+        "descriptionOff": "템플릿 제안하지 않기"
+      },
+      "bandsModes": {
+        "title": "밴드 및 모드",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "확장 기능"
+      }
+    },
+    "featuresSettings": {
+      "title": "기능",
+      "activatingExtension": "기능 활성화 중입니다. 잠시만 기다려 주세요...",
+      "fewerOf": "적은 {{category}}…",
+      "moreOf": "더 많은 {{category}}…"
+    },
+    "dataSettings": {
+      "title": "데이터 설정",
+      "offlineDataTitle": "오프라인 데이터",
+      "extensionsTitle": "확장 기능",
+      "logDataTitle": "로그 데이터",
+      "importHistoryFromADIF": "ADIF에서 기록 가져오기",
+      "importHistoryFromADIFDescription": "오프라인 조회 및 QSO 통계에 사용",
+      "clearADIFHistory": "ADIF 기록 지우기",
+      "clearADIFHistoryDescription": "ADIF에서 가져온 기록 제거",
+      "updatedRelative": "{{date}} 갱신",
+      "fetching-md": "### **{{title}}** 가져오는 중…",
+      "progress-md": "### **{{title}}** 가져오는 중\n\n{{progress}}",
+      "updated-md": "{{date}} 기준 업데이트됨",
+      "version-md": "버전: {{version}}",
+      "confirmClearHistory": {
+        "title": "확실한가요?",
+        "description": "이 작업은 ADIF 파일에서 이전에 가져온 모든 기록을 제거합니다",
+        "recordsNotDeleted": "운용 기록은 삭제되지 않습니다"
+      },
+      "importingHistoricalADIF": "ADIF 기록을 가져오는 중... 잠시만 기다려 주세요!",
+      "errorImportingHistoricalADIF": "이전 ADIF 가져오기 오류",
+      "errorDeletingHistoricalRecords": "이전 기록 삭제 오류",
+      "recordsCount_zero": "기록 없음",
+      "recordsCount_one": "1개의 기록",
+      "recordsCount_other": "{{fmtCount}}개의 기록"
+    },
+    "accountsSettings": {
+      "title": "계정 및 서비스",
+      "description": "QRZ.com 및 기타 서비스",
+      "accountsSection": " 인증 정보",
+      "servicesSection": "서비스",
+      "accountsQRZ": {
+        "title": "QRZ (콜사인 조회용)",
+        "description": "로그인: {{login}}",
+        "noAccount": "계정 없음",
+        "errorEmail": "로그인에 이메일을 사용하지 마세요.",
+        "dialogTitle": "QRZ.com 계정",
+        "pleaseEnterDetails": "QRZ.com 계정의 세부 정보를 입력하세요:",
+        "loginLabel": "로그인 (콜사인)",
+        "loginPlaceholder": "로그인",
+        "passwordLabel": "비밀번호",
+        "passwordPlaceholder": "비밀번호",
+        "checkCredentials": "인증 정보 확인"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog 설정",
+      "description": "Wavelog API 연결 구성",
+      "noStationsFoundOrInvalidResponse": "콜사인을 찾을 수 없거나 응답 없음",
+      "errorFetchingStations": "콜사인 가져오기 오류: {{message}}",
+      "fetchStations": "무선국 가져오기",
+      "selectStation": "무선국 선택",
+      "selectedStation": "선택된 무선국: {{station}}"
+    },
+    "syncSettings": {
+      "title": "동기화 설정",
+      "description": "Ham2K LoFi는 기기 간 데이터를 동기화하고 클라우드에 운용 데이터를 백업합니다.",
+      "activePlan": "활성 플랜: {{plan}}",
+      "noActivePlan": "활성 플랜 없음",
+      "syncService": "동기화",
+      "syncService.enabled": "활성화됨",
+      "syncService.disabled": "비활성화됨",
+      "syncServiceDialog": {
+        "title": "Ham2K 로그 파일러 동기화 서비스",
+        "custom": "사용자 정의"
+      },
+      "syncLinkingDialog": {
+        "title": "Ham2K 로그 파일러 동기화 서비스",
+        "enterCode": "이 계정에 연결하려면 다른 기기에 표시된 코드를 입력하세요.",
+        "linkExpired": "요청이 만료되었습니다. 다시 시도하세요.",
+        "areYouSure-md": "\"**{{device}}**\"를 이 계정에 연결하시겠습니까?",
+        "requestNotFound": "요청을 찾을 수 없습니다. 다시 시도하세요.",
+        "buttonCancel": "아니요, 취소합니다",
+        "buttonProcees": "네, 연결합니다"
+      },
+      "deviceNotLinked": "장치가 연결되지 않았습니다 ({{id}})",
+      "anonymousAccount": "익명 계정 (#{{id}})",
+      "enableSyncToLinkDevice": "이 기기를 연결하기 위해 동기화를 활성화하세요",
+      "pendingChallenges": "연결 요청",
+      "pendingChallengesDescription": "다른 장치들을 이 계정에 연결하기 위한 요청이 대기 중입니다.",
+      "checkEmailInboxForConfirmation": "(확인을 위해 이메일 수신함을 확인하세요)",
+      "accountNumber": "계정 #{{id}}",
+      "pendingEmailConfirmation": "(이메일 확인 대기중)",
+      "accountPendingConfirmation": "(확인 대기 중)",
+      "tapToConfigure": "설정하려면 탭하세요",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (개발)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (공식)",
+        "custom": "사용자 지정 ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "이 장치는 다른 계정 (#{{id}})과 마지막으로 동기화되었습니다.\n\n계속 동기화하려면 다음 옵션 중 하나를 선택합니다:",
+        "option1withEmail-md": "옵션 #1: 이 장치의 데이터를 서버의 **{{email}}** 계정 데이터로 교체합니다.",
+        "option1noEmail-md": "옵션 #1: 서버에 있는 새로운 계정의 데이터로 기기의 데이터를 대체합니다.",
+        "option1button": "#1 선택: 서버 데이터로 대체",
+        "option2withEmail-md": "옵션 #2: 이 기기의 데이터를 서버의 **{{email}}** 계정 데이터와 결합합니다.",
+        "option2noEmail-md": "옵션 #2: 서버에 있는 새로운 계정의 데이터와 이 기기의 데이터를 결합합니다.",
+        "option2button": "#2 선택: 데이터 결합",
+        "option3-md": "옵션 #3: 이전 계정 **{{email}}**과 다시 연결합니다.",
+        "option3button": "#3 선택: 이전 계정",
+        "buttonCancel": "아니요, 취소합니다",
+        "buttonProcees": "네, 위험을 무릅쓰고 모두 대체합니다!"
+      },
+      "combineDataAlert": {
+        "title": "로컬 데이터와 결합할까요?",
+        "text": "이 운용들과 QSO를 새로운 계정과 결합할까요?\n\n해당 작업은 이 기기의 QSO를 동기화 서비스에 있는 새로운 계정과 결합하게 되며, 관련 없는 로그가 혼합될 수 있습니다!\n\n이 작업은 되돌릴 수 없습니다.",
+        "buttonCancel": "아니요, 취소합니다",
+        "buttonText": "네, 위험을 무릅쓰고 결합합니다!",
+        "buttonProcees": "네, 위험을 무릅쓰고 결합합니다!"
+      },
+      "replaceDataAlert": {
+        "title": "로컬 데이터를 대체할까요?",
+        "text": "새로운 계정의 운용 및 QSO 데이터로 이 장치의 모든 데이터를 대체할까요?\n\n작업 후 앱이 재시작됩니다.\n\n동기화되지 않은 데이터는 손실됩니다.",
+        "buttonCancel": "아니요, 취소합니다",
+        "buttonProcees": "네, 위험을 무릅쓰고 모두 대체합니다!"
+      },
+      "linkBackErrorAlert": {
+        "title": "이전 계정으로 다시 연결 오류",
+        "text": "이전 계정으로 다시 연결하는 중 오류가 발생했습니다.\n\n{{error}}\n\n나중에 다시 시도하세요.",
+        "buttonCancel": "확인"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi 계정",
+        "changeEmailText": "이 계정의 복구 이메일 변경:",
+        "setEmailText": "계정에 사용할 이메일을 설정하세요. 나중에 복구하는 데 유용할 수 있습니다.",
+        "emailAddressLabel": "이메일 주소",
+        "linkWithOtherButton": "다른 계정 사용",
+        "linkAccountText": "기존 계정에 연결:",
+        "pendingEmailTextPre": "이메일이 전송되었습니다.",
+        "pendingEmailTextPost": "읽고 지시 사항에 따라 주시기 바랍니다.",
+        "confirmLink-md": "**{{email}}**과 연결된 기기에서 앱을 열고 다음 코드를 입력하여 이 요청을 확인하세요:",
+        "confirmLinkPost-md": "이 계정과 연결된 다른 장치에 액세스할 수 없는 경우, 다음을 수행할 수 있습니다:",
+        "accountNotFound": "계정을 찾을 수 없습니다.",
+        "connectViaEmailButton": "이메일로 연결",
+        "linkViaQRAccountText": "기존 Ham2K LoFi 계정이 있는 기기로 이 QR 코드를 스캔하세요",
+        "linkViaQRButton": "QR 코드로 연결",
+        "confirmViaEmailButton": "이메일로 확인",
+        "changeAccountButton": "계정 변경",
+        "resendButton": "이메일 다시 보내기",
+        "revertButton": "이메일 변경",
+        "syncFirstButton": "뒤로 가서 먼저 동기화를 완료하세요.",
+        "continueAnywayButton": "알겠으니까 계속합니다!",
+        "potentialForDataLoss": "데이터가 손실될 수 있습니다!!!",
+        "potentialForDataLossDescription": "이 기기의 모든 데이터를 동기화하지 않았습니다.\n\n이 기기를 새 계정에 연결하면 새 계정의 데이터로 교체할 것인지 묻게 됩니다.\n\n그러면 아직 동기화되지 않은 기존 활동을 복구하지 못할 수도 있습니다.\n\n먼저 이 기기의 동기화를 완료하시길 권장드립니다!"
+      },
+      "syncServiceDescription-md": "기본 서비스는 무료이지만, 서버 과부하를 방지하기 위해 속도가 제한되며 두 대의 기기 또는 앱까지만 사용할 수 있습니다.\n\n전체 서비스는 유료 구독이 필요하며, 여러 기기 또는 앱 간에 모든 운용을 최대 속도로 동기화할 수 있습니다.\n\n",
+      "thisDevice": "이 기기",
+      "notAuthenticated": "인증되지 않음",
+      "lofiServer": "LoFi 서버",
+      "otherDevices": "다른 기기",
+      "devSettings": "개발자 설정",
+      "resetSyncStatus": "동기화 상태 재설정",
+      "noDataStored": "저장된 데이터 없음",
+      "syncCountDescription": {
+        "operations": "운용: {{synced}}개 동기화됨, {{pending}}개 대기중",
+        "qsos": "QSO: {{synced}}개 동기화됨, {{pending}}개 대기중"
+      },
+      "cloudCountDescription": {
+        "operations": "운용: 총 {{total}}개",
+        "qsos": "QSO: {{total}}개 저장됨"
+      }
+    },
+    "versionSettings": {
+      "title": "버전 정보",
+      "recentChanges": "최근 변경 사항",
+      "coverPhoto": "표지: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "패치 확인 중…",
+      "newMajorReleaseAvailable": "새로운 버전 사용 가능",
+      "patchAvailable": "{{track}} 패치 가능",
+      "checkForUpdates": "{{track}} 업데이트 확인",
+      "checkForUpdatesGeneric": "업데이트 확인",
+      "updateAvailable": "업데이트 가능",
+      "downloading": "다운로드 중…",
+      "downloadingProgress": "다운로드 중 {{progress}}%",
+      "installing": "설치 중…",
+      "errorDownloadingUpdate": "업데이트 다운로드 오류",
+      "errorCheckingForUpdates": "업데이트 확인 오류",
+      "noUpdatesAvailable": "업데이트 없음",
+      "versionDescription": "{{version}} - 기본 빌드 {{build}}"
+    },
+    "creditsSettings": {
+      "title": "크레딧",
+      "createdBy": "{{callsign}}에 의해 제작됨",
+      "openSource": "Ham2K PoLo는 오픈 소스입니다",
+      "checkOutCode": "GitHub에서 코드를 확인하고 기여하세요!",
+      "teamPoLo": "PoLo 팀",
+      "creator": "제작자 및 주 개발자",
+      "developer": "개발자",
+      "leadSupport": "서포트 및 문서 부문 대표자",
+      "moreCodeAndDocsContributors": "기여자 더 보기…",
+      "contributorCode": "코딩 기여자: {{contributions}}",
+      "contributorDocumentation": "문서",
+      "translations": "번역",
+      "translationsService": "번역 툴 제공: CrowdIn",
+      "translationsServiceDescription": "CrowdIn에 의해 번역 프로세스 관리 툴이 후원되었습니다"
+    },
+    "devModeSettings": {
+      "title": "개발자 설정",
+      "wipeDatabase": {
+        "title": "데이터베이스 삭제?",
+        "description": "모든 운용, QSO 및 기타 데이터를 삭제할까요?",
+        "noCancel": "아니요, 취소",
+        "yesWipeIt": "네, 삭제합니다!"
+      },
+      "import": {
+        "title": "가져오기",
+        "importQSONFile": "QSON 파일 가져오기"
+      },
+      "experiments": {
+        "title": "실험기능",
+        "enableWavelogExperiments": "Wavelog 실험기능 활성화"
+      },
+      "manageDatabase": {
+        "title": "데이터베이스 관리",
+        "exportDatabase": "데이터베이스 내보내기",
+        "exportDatabaseDescription": "현재 데이터베이스 파일 내보내기",
+        "replaceDatabase": "데이터베이스 대체",
+        "replaceDatabaseDescription": "새로운 데이터베이스 파일을 가져오고 모든 데이터를 대체합니다",
+        "wipeDatabase": "데이터베이스 삭제",
+        "wipeDatabaseDescription": "데이터베이스의 모든 데이터를 삭제합니다."
+      },
+      "internationalization": {
+        "title": "국제화",
+        "crowdInPersonalTokenLabel": "CrowdIn 개인 접근 토큰",
+        "crowdInPersonalTokenPlaceholder": "CrowdIn 계정 설정 페이지에서 토큰 받기",
+        "refreshCrowdInTranslations": {
+          "title": "번역 새로고침 중…",
+          "starting": "번역 새로고침 중입니다. 잠시 기다려 주세요...",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "새로고침 완료!",
+          "errorTitle": "번역 새로고침 오류",
+          "error": "CrowdIn 번역 새로고침 오류: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "고급 설정 다운로드",
+        "locationLabel": "위치",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "시스템 정보",
+        "shareWithDevelopmentTeam": "개발 팀과 공유"
+      },
+      "updatePatches": {
+        "title": "패치 업데이트",
+        "selectTrackForPatches": "패치를 위한 트랙 선택",
+        "selectTrackForPatchesDescription": "패치를 위한 트랙 선택",
+        "checkingForUpdates": "업데이트 확인 중…",
+        "checkForUpdates": "{{track}} 업데이트 확인",
+        "updateAvailable": "업데이트 가능",
+        "updateAvailableForTrack": "{{track}} 업데이트 가능",
+        "downloading": "다운로드 중…",
+        "downloadingProgress": "다운로드 중 {{progress}}%",
+        "installing": "설치 중…",
+        "errorDownloadingUpdate": "업데이트 다운로드 오류",
+        "errorCheckingForUpdates": "업데이트 확인 오류",
+        "noUpdatesAvailable": "사용 가능한 업데이트 없음"
+      }
+    },
+    "bandModeSettings": {
+      "title": "밴드 및 모드",
+      "bands": {
+        "title": "밴드",
+        "showCommonBands": "일반 밴드 표시",
+        "showAllBands": "모든 밴드 표시"
+      },
+      "modes": {
+        "title": "모드",
+        "showMoreModes": "더 많은 모드 표시",
+        "showEvenMoreModes": "더 많은 모드 표시",
+        "showFewerModes": "모드 적게 표시"
+      }
+    },
+    "exportSettings": {
+      "title": "설정 내보내기",
+      "exportTypes": "내보내기 유형",
+      "customTemplates": "맞춤 템플릿",
+      "defaultTemplates": "기본 템플릿",
+      "customTemplatesDescription": "내보내기에 맞춤 템플릿 사용",
+      "defaultTemplatesDescription": "내보내기에 기본 템플릿 사용",
+      "includePrivateData": "비공개 데이터 포함",
+      "ignoreLookupData": "조회 데이터 무시",
+      "fileNameTemplate": "파일 이름 템플릿",
+      "titleTemplate": "제목 템플릿",
+      "adifNotes": "ADIF QSO 노트",
+      "adifComments": "ADIF QSO 코멘트",
+      "adifQslMessage": "ADIF QSL 메시지",
+      "templateHelpTitle": "템플릿 도움말",
+      "includePrivateDataDescription": "이름, 노트, 주소 등",
+      "ignoreLookupDataDescription": "QRZ.com 같은 조회 서비스의 데이터 무시하기",
+      "templateHelp-md": "예제 템플릿 요소...\n\n### 로그 내보내기\n내보내려는 로그에 대한 속성\n`{{log.station}}` → `{{call}}` 내보내기에 사용되는 무선국\n`{{log.ref}}` → `XX-1234` 내보내기에 사용되는 레퍼런스\n`{{log.refName}}` → `국립공원 예시` 레퍼런스 이름\n`{{log.refShortName}}` → `NP 예시` 짧은 레퍼런스 이름\n`{{log.handlerType}}` → `pota` 내보내기에 사용되는 핸들러 유형\n`{{log.handlerName}}` → `Parks On The Air` 내보내기에 사용되는 핸들러 이름\n`{{log.handlerShortName}}` → `POTA` 짧은 핸들러 이름\n\n### 작업 호출코드\n`{{op.station}}` → `{{call}}` 첫 운용 무선국\n`{{op.operator}}` → `{{call}}` 오퍼레이터\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` 모든 운용 무선국\n`{{op.otherStations}}` → `{{otherCalls}}` 기타 운용 무선국\n\n### 작업 날짜\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### 기타 작업 세부사항\n`{{op.title}}` → `XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `X월 특별 운용`\n`{{op.userNotes}}` → `이른 아침에 도착했는데…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` 운용에 해당하는 그리드\n\n### QSO 정보\n`{{qso.notes}}` → `보이스가 뭉개져서 안 들렸다`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 상대가 보낸 시그널 리포트\n`{{qso.our.sent}}` → `55` 우리가 보낸 시그널 리포트\n`{{qso.their.grid}}` → `FF99` 상대의 그리드\n`{{qso.refs}}` → 해당 QSO에 대한 모든 레퍼런스 목록(운용 레퍼런스 및 QSO 전용 레퍼런스 포함)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "기본값",
+        "description": "모든 내보내기의 기본 설정",
+        "fileNameNormal": "레퍼런스 해당 운용 파일 이름(일반)",
+        "fileNameCompact": "레퍼런스 해당 운용 파일 이름(짧게)",
+        "titleReferenceActivities": "레퍼런스 해당 운용 제목",
+        "fileNameOtherActivitiesNormal": "기타 운용 파일 이름(일반)",
+        "fileNameOtherActivitiesCompact": "기타 운용 파일 이름(짧게)",
+        "titleOtherActivities": "기타 활동 제목",
+        "adifNotes": "ADIF QSO 노트",
+        "adifComments": "ADIF QSO 코멘트",
+        "adifQSLMessage": "ADIF QSL 메시지"
+      }
+    },
+    "noticesSettings": {
+      "title": "최근 공지",
+      "undated": "날짜 없음",
+      "noRecentNotices": "최근 공지 없음"
+    },
+    "extensionSettings": {
+      "title": "확장"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "패널 구분선",
+      "qsosTab": "QSO",
+      "qsosTab-a11y": "QSO 탭",
+      "infoTab": "정보",
+      "infoTab-a11y": "정보 탭",
+      "operationInfo-a11y": "운용 정보",
+      "spotsTab": "스팟",
+      "spotsTab-a11y": "스팟 탭",
+      "mapTab": "지도",
+      "mapTab-a11y": "지도 탭",
+      "settingsTab": "운용",
+      "settingsCompactTab": "운용",
+      "settingsTab-a11y": "운용 설정 탭",
+      "menu": {
+        "loggingSettings": "로깅 설정",
+        "rstFields": "RST 필드",
+        "stateField": "주 필드",
+        "gridField": "그리드 필드",
+        "showDeletedQSOs": "삭제된 QSO 표시",
+        "numbersRow": "숫자 키보드",
+        "actions": "작업",
+        "lookupAllQSOs": "모든 QSO 조회",
+        "confirmSpots": "스팟 확인"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "QSO 없음",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSO",
+      "qsosCompactTabCount_zero": "Q 없음",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Q",
+      "noQSOsYet": "아직 QSO 없음!",
+      "currentlySetTo": "현재 설정:",
+      "missingInfoError": {
+        "message": "오류: 유효한 운용을 위해 **{{errors}}**을(를) 입력하세요",
+        "errors": {
+          "band": "밴드",
+          "mode": "모드",
+          "callsign": "콜사인"
+        }
+      },
+      "actions": {
+        "undo-a11y": "실행 취소",
+        "erase-a11y": "지우기",
+        "delete-a11y": "삭제",
+        "addQSO-a11y": "QSO 추가",
+        "saveQSO-a11y": "QSO 저장"
+      },
+      "deletedQSO": "삭제된 QSO",
+      "qsoWillBeDeleted": "QSO가 삭제됩니다!",
+      "noQSOsBy-md": "아직 {{callsign}}의 QSO가 없습니다... 운용을 시작하세요!",
+      "noQSOsYet-md": "아직 QSO가 없습니다... 운용을 시작하세요!",
+      "qsoCount_zero": "QSO 없음",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO",
+      "qsosInTime": "{{timeText}}동안 {{countText}}",
+      "last10QSOs": "최근 10개: {{rate}} QSO/h",
+      "last100QSOs": "최근 100개: {{rate}} QSO/h",
+      "timeSinceLast": "최근 QSO로부터 {{time}}",
+      "moreLabel": "더보기",
+      "theirCallLabel": "상대 콜사인",
+      "ourSentLabel": "Sent",
+      "theirSentLabel": "Rcvd",
+      "stateLabel": "주",
+      "gridLabel": "그리드",
+      "timeLabel": "시간",
+      "dateLabel": "날짜",
+      "timeControls-a11y": "시간 조정",
+      "powerLabel": "출력",
+      "powerControls-a11y": "출력 조정",
+      "modeLabel": "모드",
+      "bandLabel": "밴드",
+      "frequencyLabel": "주파수",
+      "bandMissing": "밴드???",
+      "modeMissing": "모드???",
+      "radioControls-a11y": "무전기 제어 {{parts}}",
+      "notesLabel": "메모",
+      "notesLabel-a11y": "메모",
+      "activeControlsLabel": "활성 제어",
+      "activeControlsLabel-a11y": "활성 제어",
+      "selectToRemoveActiveControls": "제거하려면 선택",
+      "selectToRemoveActiveControls-a11y": "제거하려면 선택",
+      "moreControlsLabel": "기타 제어",
+      "moreControlsLabel-a11y": "기타 제어",
+      "selectToAddMoreControls": "추가하려면 선택",
+      "selectToAddMoreControls-a11y": "추가하려면 선택",
+      "showSecondaryControlSettings-a11y": "보조 제어 설정 표시",
+      "hideMostSecondaryControls-a11y": "대부분의 보조제어 숨기기",
+      "showAllSecondaryControls-a11y": "모든 보조제어 표시",
+      "spotting": {
+        "selfSpottingAt": "{{freq}}에서 자체 스팟",
+        "stopAutoRespotting": "자동 재스팟 중지",
+        "setFrequencyFirst": "스팟하려면 먼저 주파수를 지정하세요.",
+        "reSpotEvery": "{{minutes}}분마다 재스팟",
+        "reSpotAt": "{{freq}}에서 재스팟",
+        "selfSpottedAt": "{{time}}에 자체 스팟",
+        "spotAt": "{{call}}를 {{freq}}에서 스팟",
+        "tooLateToSpot": "{{call}}를 스팟하기에 너무 늦었습니다",
+        "nothingToSpot": "스팟할 내용 없음",
+        "selfSpottingLabel": "자체 스팟",
+        "selfSpottingControls-a11y": "자체 스팟 설정",
+        "spottingLabel": "스팟",
+        "spottingControls-a11y": "스팟 설정",
+        "autoRespottingLabel": "자동 재스팟",
+        "autoRespottingControls-a11y": "자동 재스팟 설정",
+        "commentsLabel": "코멘트"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "줄 없음?\n먼저 위치를 설정해야 합니다.\n\n설정하려면 여기를 탭하세요.",
+      "manyNoLocation": "대부분의 QSO는 부정확한 위치일 수 있습니다.\n\n위치 조회를 위해 유료 QRZ.com 계정이 필요할 수도 있습니다."
+    },
+    "opSpotsTab": {
+      "noSpots": "스팟 없음",
+      "spotsCount_zero": "스팟 없음",
+      "spotsCount_one": "1개의 스팟",
+      "spotsCount_other": "{{fmtCount}}개의 스팟",
+      "showingSpots": "{{count}}개 중 {{total}}개 표시 중",
+      "loadingSpots": "스팟 로딩 중...",
+      "sections": {
+        "specialSpots": "특별 스팟",
+        "newMultipliers": "새로운 멀티",
+        "callsOfNote": "특별한 호출부호",
+        "mostRecentSpots": "최신 스팟"
+      },
+      "allBands": "모든 밴드",
+      "auto": "자동",
+      "allModes": "모든 모드",
+      "filters": "필터",
+      "filtersBand": "밴드",
+      "filtersAllBands": "모든 밴드",
+      "filtersBandAutomatic": "자동 (현재 {{band}})",
+      "filtersMode": "모드",
+      "filtersAllModes": "모든 모드",
+      "filtersModeAutomatic": "자동 (현재 {{mode}})",
+      "filtersMaximumAge": "최대 경과시간",
+      "filtersAnyAge": "모든 경과시간",
+      "filtersAge10Minutes": "10 분",
+      "filtersAge20Minutes": "20 분",
+      "filtersAge30Minutes": "30 분",
+      "filtersAge45Minutes": "45 분",
+      "filtersAge60Minutes": "60 분",
+      "filtersSorting": "정렬",
+      "filtersSortByTime": "스팟 시간 별",
+      "filtersSortByFrequency": "주파수 별",
+      "filtersGroupSpecialSpots": "특별 스팟 우선",
+      "filtersGroupCallsWithNotes": "메모가 있는 콜사인 우선",
+      "filtersSpotSources": "스팟 출처",
+      "filtersFilterByContinent": "대륙별 필터링",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "보이스",
+        "DIGITAL": "디지털",
+        "DATA": "디지털",
+        "phoneOrCW": "보이스 또는 CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "유효하지 않은 콜사인 {{callsign}}",
+      "invalidCallsigns": "유효하지 않은 콜사인 {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (운영자: {{operator}})",
+      "noStationCallsignDefined": "\u0000\u0000콜사인 지정되지 않음",
+      "showMoreTemplates": "더 많이 표시하기",
+      "templatesAvailable_zero": "사용 가능한 템플릿 없음",
+      "templatesAvailable_one": "1개의 템플릿 사용 가능",
+      "templatesAvailable_other": "{{count}}개의 템플릿 사용 가능",
+      "stationAndOperatorTitle": "무선국\u0000 & OP\u0000",
+      "locationTitle": "위치",
+      "gridDescription-md": "그리드: `{{grid}}`",
+      "stateDescription-md": "주: `{{state}}`",
+      "countyDescription-md": "시/군: `{{county}}`",
+      "locationDescriptionNone-md": "위치 설정되지 않음",
+      "operationDetailsTitle": "운용 세부사항",
+      "operationDetailsDescription": "이 운용에 대한 메모 추가",
+      "addTitleOrNotesForOperation": "이 운용에 대한 제목이나 메모 추가",
+      "activitiesTitle": "활동",
+      "addActivityTitle": "활동 추가",
+      "addActivityDescription": "POTA, SOTA, WWFF 및 기타 등등!",
+      "addActivityDescription-noFeatures": "설정에서 활동 관련 기능을 설정하세요.",
+      "operationDataTitle": "운용 데이터",
+      "manageOperationLogsTitle": "운용 로그 관리",
+      "manageOperationLogsDescription": "데이터 내보내기, 가져오기 및 관리",
+      "useAsTemplateTitle": "템플릿으로 사용",
+      "useAsTemplateDescription": "동일 설정으로 새로운 운용 시작",
+      "dangerZoneTitle": "위험 구역",
+      "undeleteOperationTitle": "운용 복구",
+      "deleteOperationTitle": "운용 삭제"
+    },
+    "opInfoPanel": {
+      "statsTitle": "운용 통계",
+      "operationTotalsTitle-md": "운용 총계:",
+      "qsosInTime_zero": "QSO 없음",
+      "qsosInTime_one": "{{time}} 당 1 QSO ",
+      "qsosInTime_other": "{{time}} 당 {{fmtCount}} QSO",
+      "qsoCount_zero": "QSO 없음",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO",
+      "timeSinceLast": "최근 QSO로부터 {{time}} 경과",
+      "last10QSOs": "최근 10개 QSO: {{rate}} Q/시간",
+      "last100QSOs": "최근 100개 QSO: {{rate}} Q/시간"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "QSON 가져오기 오류",
+      "invalidName": "잘못된 이름",
+      "invalidNameDescription": "파일명은 .qson 또는 .json으로 끝나야 합니다.",
+      "unknownError": "알 수 없는 오류"
+    },
+    "importADIF": {
+      "error": "ADIF를 운용에 가져오기 오류",
+      "historicalImportError": "이전 ADIF 가져오기 오류",
+      "unknownError": "알 수 없는 오류"
+    }
+  }
+}
