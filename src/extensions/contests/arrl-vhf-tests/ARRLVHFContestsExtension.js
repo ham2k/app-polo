@@ -23,11 +23,17 @@ const Extension = {
 
 export default Extension
 
-const ActivityHook = {
+export const ActivityHook = {
   ...Info,
   Options: ActivityOptions,
 
-  standardExchangeFields: { state: false, grid: true },
+  standardExchangeFields: ({ operation }) => {
+    const ref = findRef(operation, Info.key)
+    if (!ref?.ref) return { state: false, grid: true }
+
+    const test = vhfTestData({ ref })
+    return { state: false, grid: { show: true, requiredLength: _requiredGridLength(test) } }
+  },
 
   sampleOperations: ({ settings, callInfo }) => {
     return [
@@ -39,7 +45,7 @@ const ActivityHook = {
   processQSOBeforeSaveWithDispatch
 }
 
-const ReferenceHandler = {
+export const ReferenceHandler = {
   ...Info,
 
   descriptionPlaceholder: '',
@@ -166,7 +172,9 @@ const ReferenceHandler = {
 
     const { band, mode } = qso
 
-    if (test.bands.indexOf(band) < 0) {
+    if (test.bands.indexOf(band) < 0 ||
+      (_scoresByDistance(test) && !test?.multipliers?.[band]) ||
+      (test?.options?.score === 'points' && !test?.points?.[band])) {
       return { value: 0, alerts: ['invalidBand'], type: Info.key }
     }
 
@@ -190,7 +198,13 @@ const ReferenceHandler = {
     const ourGrid = _trimmedGrid({ grid: scoredRef?.grid || operation.grid || '', test })
     const theirGrid = _trimmedGrid({ grid: qso.their?.grid ?? qso.their?.guess?.grid ?? '', test })
 
-    if (test?.options?.score === 'distance') {
+    if (_scoresByDistance(test)) {
+      if (!theirGrid) {
+        scoring.alerts.push('theirGrid')
+      } else if (theirGrid.length < _requiredGridLength(test)) {
+        scoring.alerts.push('shortGrid')
+      }
+
       if (theirGrid && ourGrid) {
         if (theirGrid === ourGrid) {
           scoring.distance = 1
@@ -202,7 +216,16 @@ const ReferenceHandler = {
         }
 
         if (test?.points?.qso) {
-          scoring.value = scoring.value + test?.points?.qso
+          // QSO points are awarded once per unique call sign per band, regardless of location,
+          // and only to contacts with a full-length grid. Earlier contacts count under the same rule.
+          const sameCallOnBand = qsos.some(q => (
+            _isPriorContactWith({ q, qso }) && q.band === band &&
+            _trimmedGrid({ grid: q.their?.grid ?? q.their?.guess?.grid ?? '', test }).length >= _requiredGridLength(test)
+          ))
+          const fullGrid = theirGrid.length >= _requiredGridLength(test)
+          scoring.distancePoints = scoring.value
+          scoring.qsoPoints = (sameCallOnBand || !fullGrid) ? 0 : test?.points?.qso
+          scoring.value = scoring.distancePoints + scoring.qsoPoints
         }
       }
     } else if (test?.options?.score === 'points') {
@@ -248,14 +271,19 @@ const ReferenceHandler = {
       bands: {},
       total: 0,
       distanceTotal: 0,
+      distancePoints: 0,
+      qsoPoints: 0,
       maxDistance: 0,
       maxDistancePerBand: {},
       qsoCount: 0,
       dupeCount: 0
     }
 
-    if (qsoScore.value === 0) {
-      score.dupeCount = score.dupeCount + 1
+    if (!qsoScore.value) {
+      // Dupes are counted; anything else unscorable (invalid band, missing grid) contributes nothing
+      if (qsoScore.alerts?.includes('duplicate')) {
+        score.dupeCount = score.dupeCount + 1
+      }
       return score
     }
 
@@ -265,6 +293,8 @@ const ReferenceHandler = {
     score.total = score.total + qsoScore.value
 
     score.distanceTotal = score.distanceTotal + qsoScore.distance
+    score.distancePoints = score.distancePoints + (qsoScore.distancePoints ?? 0)
+    score.qsoPoints = score.qsoPoints + (qsoScore.qsoPoints ?? 0)
     score.maxDistance = Math.max(score.maxDistance, qsoScore.distance)
     score.maxDistancePerBand[qsoScore.band] = Math.max(score.maxDistancePerBand[qsoScore.band] || 0, qsoScore.distance)
 
@@ -285,7 +315,9 @@ const ReferenceHandler = {
     score.label = `${test.name}`
 
     const parts = []
-    if (test?.options?.score === 'distance') {
+    if (_scoresByDistance(test) && test?.points?.qso) {
+      parts.push(`**${fmtNumber(score.distancePoints)} distance points + ${fmtNumber(score.qsoPoints)} QSO points** (${fmtNumber(score.distanceTotal)} km total) ${score.dupeCount > 0 ? `(${score.dupeCount} dupe${score.dupeCount > 1 ? 's' : ''})` : ''}`)
+    } else if (_scoresByDistance(test)) {
       parts.push(`**${fmtNumber(score.total)} points** (${fmtNumber(score.distanceTotal)} km total) ${score.dupeCount > 0 ? `(${score.dupeCount} dupe${score.dupeCount > 1 ? 's' : ''})` : ''}`)
     } else {
       parts.push(`**${fmtNumber(score.total)} points** ${score.dupeCount > 0 ? `(${score.dupeCount} dupe${score.dupeCount > 1 ? 's' : ''})` : ''}`)
@@ -294,7 +326,7 @@ const ReferenceHandler = {
     parts.push(
       Object.keys(score.bands ?? {}).sort().map(band => {
         if (score?.bands[band]) {
-          if (test?.options?.score === 'distance') {
+          if (_scoresByDistance(test)) {
             return (`${fmtNumber(score.bands[band] ?? 0)} ${band} QSOs • Longest: ${fmtNumber(score.maxDistancePerBand[band])} km`)
           } else {
             return (`${fmtNumber(score.bands[band] ?? 0)} ${band} QSOs`)
@@ -356,8 +388,32 @@ function _testModeForMode (mode) {
   return 'DG'
 }
 
+// 'distanceAndPoints' is descriptive only: the QSO points come from `points.qso` in the event data
+function _scoresByDistance (test) {
+  return test?.options?.score === 'distance' || test?.options?.score === 'distanceAndPoints'
+}
+
+function _requiredGridLength (test) {
+  return test?.exchange?.[0] === 'grid6' ? 6 : 4
+}
+
 function _trimmedGrid ({ grid, test }) {
-  return grid?.substring(0, test?.exchange?.[0] === 'grid6' ? 6 : 4)
+  return grid?.substring(0, _requiredGridLength(test))
+}
+
+// Is `q` a real (non-event, non-deleted) contact with the same station, logged before `qso`?
+// Ties on startAtMillis are broken by uuid so that two QSOs never both see each other as prior.
+function _isPriorContactWith ({ q, qso }) {
+  if (q.event || q.deleted || q.their?.call !== qso.their?.call || q.uuid === qso?.uuid) {
+    return false
+  }
+  if (qso?.startAtMillis && q.startAtMillis > qso?.startAtMillis) {
+    return false
+  }
+  if (qso?.startAtMillis && q.startAtMillis === qso?.startAtMillis && (q.uuid ?? '') > (qso?.uuid ?? '')) {
+    return false
+  }
+  return true
 }
 
 function _nearDupesFor ({ test, qso, qsos, operation, ourGrid, theirGrid }) {
@@ -368,10 +424,7 @@ function _nearDupesFor ({ test, qso, qsos, operation, ourGrid, theirGrid }) {
       ourRollingGrid = _trimmedGrid({ grid: q?.event?.operation?.grid ?? '', test })
     }
 
-    if (q.event || q.deleted || q.their?.call !== qso.their?.call || q.uuid === qso?.uuid) {
-      return false
-    }
-    if (qso?.startAtMillis && q.startAtMillis > qso?.startAtMillis) {
+    if (!_isPriorContactWith({ q, qso })) {
       return false
     }
 

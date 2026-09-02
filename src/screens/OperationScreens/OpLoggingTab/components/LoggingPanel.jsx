@@ -742,8 +742,14 @@ function prepareStyles(themeStyles, { style, themeColor, leftieMode, isKeyboardV
   }
 }
 
+const VALID_GRID_REGEX = /^[A-R]{2}[0-9]{2}([a-x]{2}([0-9]{2})?)?$/i
+
 const PanelSelector = ({ qso, opMessage, styles, setQSO, ...props }) => {
   const { t } = useTranslation()
+
+  const hasCall = qso?.their?.call?.length > 2
+  // Without a call, a complete grid alone is enough to show distance and bearing
+  const hasGridOnly = !hasCall && VALID_GRID_REGEX.test(qso?.their?.grid ?? '') && !!props.operation?.grid
 
   if (qso?.deleted || qso?._willBeDeleted) {
     return (
@@ -762,7 +768,7 @@ const PanelSelector = ({ qso, opMessage, styles, setQSO, ...props }) => {
         {...props}
       />
     )
-  } else if (!opMessage?.hideCallInfo && qso?.their?.call?.length > 2) {
+  } else if (!opMessage?.hideCallInfo && (hasCall || hasGridOnly)) {
     return (
       <CallInfo
         qso={qso}
@@ -772,7 +778,7 @@ const PanelSelector = ({ qso, opMessage, styles, setQSO, ...props }) => {
         {...props}
       />
     )
-  } else if (opMessage?.text || (qso?.their?.call?.length || 0) <= 2) {
+  } else if (opMessage?.text || !hasCall) {
     return (
       <OpInfo
         message={opMessage}

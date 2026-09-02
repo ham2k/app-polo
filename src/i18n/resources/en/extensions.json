@@ -188,6 +188,8 @@
       "startConfirm": "Operation started!",
       "break": "Add a break?",
       "breakConfirm": "Added an operation break!",
+      "roverqth": "Add a break and set a new location?",
+      "roverqthConfirm": "Added a break, now set your new location",
       "stop": "Stop the operation?",
       "stopConfirm": "Operation stopped!"
     },

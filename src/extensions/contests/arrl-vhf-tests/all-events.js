@@ -157,7 +157,8 @@ export default [
       '4mm': 4, // 75G
       '2mm': 5, // 123G
       '2.5mm': 5, // 134G
-      '1mm': 5 // 241G
+      '1mm': 5, // 241G
+      submm: 5 // 300G and up, including light
     },
     rules: 'https://contests.arrl.org/ContestRules/10-GHz-Rules.pdf'
   },
@@ -184,7 +185,8 @@ export default [
       '4mm': 4, // 75G
       '2mm': 5, // 123G
       '2.5mm': 5, // 134G
-      '1mm': 5 // 241G
+      '1mm': 5, // 241G
+      submm: 5 // 300G and up, including light
     },
     rules: 'https://contests.arrl.org/ContestRules/10-GHz-Rules.pdf'
   }

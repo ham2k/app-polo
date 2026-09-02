@@ -25,6 +25,8 @@ export const MESSAGES_FOR_SCORING = {
   duplicate: 'Dupe!',
   invalidBand: 'Invalid Band',
   ourGrid: 'Missing our location',
+  theirGrid: 'Missing their grid',
+  shortGrid: 'Grid too short',
   newBand: 'New Band',
   newMode: 'New Mode',
   newRef: 'New Reference',
@@ -64,7 +66,7 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, vfo, sty
 
   useEffect(() => { // Merge all data sources and update guesses and QSO
     // console.log('CallInfo effect', { qsoCall: theirCall, qsoName: qso?.their?.guess?.name, qsoStatus: qso?.their?.lookup?.status, lookupCall: call, lookupName: guess?.name, lookupStatus: status })
-    if (theirCall === call && status && qso?.their?.lookup?.status !== status) {
+    if (theirCall?.length > 2 && theirCall === call && status && qso?.their?.lookup?.status !== status) {
       const updates = { their: { guess, lookup: { ...lookup, status } } }
 
       if (guess?.refs?.length > 0) {
@@ -99,17 +101,25 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, vfo, sty
       else if (guess.postindicators.indexOf('PM') >= 0) leftParts.push('[ 🪂 ]')
     }
 
-    if (operation?.grid && guess?.grid) {
+    let distanceIndex = -1
+    if (operation?.grid && (qso?.their?.grid || guess?.grid)) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
-      let bearing
+      let bearing, reverseBearing
       if (settings.showBearing) {
         bearing = bearingForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } })
+        if (settings.showReverseBearing) {
+          // The great-circle bearing back to us, which is not simply bearing + 180 on long paths
+          reverseBearing = bearingForQSON({ our: { grid: qso?.their?.grid ?? guess?.grid }, their: { grid: operation.grid } })
+        }
       }
       const str = [
         dist && fmtDistance(dist, { units: settings.distanceUnits }),
-        bearing && `(${Math.round(bearing)}°)`
+        bearing && (reverseBearing ? `(${Math.round(bearing)}° / ${Math.round(reverseBearing)}°)` : `(${Math.round(bearing)}°)`)
       ].filter(x => x).join(' ')
-      if (str) leftParts.push(`${str} to`)
+      if (str) {
+        distanceIndex = leftParts.length
+        leftParts.push(str)
+      }
     }
 
     if (entity && entity.entityPrefix !== ourInfo.entityPrefix) {
@@ -134,6 +144,10 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, vfo, sty
       leftParts = [...leftParts, ...rightParts]
       rightParts = []
     }
+    // "12 km to Canada", but just "12 km" when there is nothing to point at
+    if (distanceIndex >= 0 && (leftParts.slice(distanceIndex + 1).some(x => x) || rightParts.some(x => x))) {
+      leftParts[distanceIndex] = `${leftParts[distanceIndex]} to`
+    }
 
     const locationText = [leftParts.filter(x => x).join(' '), rightParts.filter(x => x).join(' ')].filter(x => x).join(' – ')
 
@@ -149,7 +163,7 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, vfo, sty
     // }
 
     return [locationText, entity?.flag ? entity.flag : '']
-  }, [lookup?.dxccCode, guess, operation.grid, ourInfo, qso?.their?.city, qso?.their?.state, qso?.their?.grid, settings.distanceUnits, settings.showBearing, refs])
+  }, [lookup?.dxccCode, guess, operation.grid, ourInfo, qso?.their?.city, qso?.their?.state, qso?.their?.grid, settings.distanceUnits, settings.showBearing, settings.showReverseBearing, refs])
 
   const stationInfo = useMemo(() => {
     const parts = []
@@ -173,13 +187,14 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, vfo, sty
   }, [guess?.note, guess?.name, call, theirCall, allCalls?.length, lookup?.error, qso?.their?.name])
 
   const scoreInfo = useMemo(() => {
+    if (!(theirCall?.length > 2)) return []
     const scoringHandlers = scoringHandlersForOperation({ operation, settings })
 
     const lastSection = sections && sections[sections.length - 1]
     const scores = scoringHandlers.map(({ handler, ref }) => handler.scoringForQSO({ qso, qsos, score: lastSection?.scores?.[ref.type || ref.key], operation, vfo, ref, ourInfo })).filter(x => x)
 
     return scores
-  }, [operation, qso, qsos, sections, settings, ourInfo])
+  }, [operation, qso, qsos, sections, settings, ourInfo, theirCall])
 
   const messages = useMemo(() => {
     const newMessages = []
@@ -270,7 +285,7 @@ export function CallInfo ({ qso, qsos, activeQSOs, sections, operation, vfo, sty
 
   return (
     <H2kPressable
-      onPress={() => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key })}
+      onPress={theirCall?.length > 2 ? () => navigation.navigate('CallInfo', { operation, qso, uuid: operation.uuid, call, qsoUUID: qso?.uuid, qsoKey: qso?.key }) : undefined}
       style={styles.callInfoPanel.root}
     >
 

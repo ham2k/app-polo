@@ -76,6 +76,16 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
             onPress={() => dispatch(setSettings({ showBearing: !settings.showBearing }))}
           />
 
+          {settings.showBearing && (
+            <H2kListItem title={t('screens.loggingSettings.showReverseBearing.title', 'Also show reverse bearing')}
+              description={settings.showReverseBearing ? t('screens.loggingSettings.showReverseBearing.descriptionOn', 'Show bearing from station too, as "45° / 225°"') : t('screens.loggingSettings.showReverseBearing.descriptionOff', 'Only show bearing to station') }
+              leftIcon="compass-outline"
+              rightSwitchValue={!!settings.showReverseBearing}
+              rightSwitchOnValueChange={(value) => dispatch(setSettings({ showReverseBearing: value }))}
+              onPress={() => dispatch(setSettings({ showReverseBearing: !settings.showReverseBearing }))}
+            />
+          )}
+
           <H2kListItem
             title={t('screens.loggingSettings.switchSignalReportOrder.title', 'Switch signal report order')}
             description={!settings.switchSentRcvd ? t('screens.loggingSettings.switchSignalReportOrder.descriptionOn', 'Sent first, Rcvd second') : t('screens.loggingSettings.switchSignalReportOrder.descriptionOff', 'Rcvd first, Sent second')}

@@ -155,13 +155,20 @@ export const MainExchangePanel = ({
     grid: false
   }
   // An activity can request a field as `true` (shown unless the user overrides) or `'always'`
-  // (forced on, and not overridable by the user's show/hide setting).
+  // (forced on, and not overridable by the user's show/hide setting), or as an object
+  // `{ show: true | 'always', requiredLength: n }` to also flag entries shorter than `n` as errors.
   const alwaysFields = {}
+  const requiredLengths = {}
   findHooks('activity').filter(activity => activity.standardExchangeFields).forEach(activity => {
     const requestedFields = valueOrFunction(activity.standardExchangeFields, { qso, operation, vfo, settings })
     for (const field of Object.keys(requestedFields)) {
-      if (requestedFields[field] === 'always') alwaysFields[field] = true
-      extraFields[field] = extraFields[field] || !!requestedFields[field]
+      let request = requestedFields[field]
+      if (request && typeof request === 'object') {
+        if (request.requiredLength) requiredLengths[field] = Math.max(requiredLengths[field] ?? 0, request.requiredLength)
+        request = request.show ?? true
+      }
+      if (request === 'always') alwaysFields[field] = true
+      extraFields[field] = extraFields[field] || !!request
     }
   })
   if (!alwaysFields.state && (settings.showStateField === true || settings.showStateField === false)) {
@@ -198,6 +205,7 @@ export const MainExchangePanel = ({
         value={qso?.their?.grid ?? ''}
         label={t('screens.opLoggingTab.gridLabel', 'Grid')}
         placeholder={qso?.their?.guess?.grid ?? ''}
+        requiredLength={requiredLengths.grid}
         onChange={handleFieldChange}
         onSubmitEditing={onSubmitEditing}
         fieldId={'grid'}

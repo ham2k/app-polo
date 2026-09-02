@@ -183,6 +183,8 @@
       "startConfirm": "OPERATION STARTED!",
       "break": "ADD A BREAK?",
       "breakConfirm": "ADDED AN OPERATION BREAK!",
+      "roverqth": "ADD A BREAK AND SET A NEW LOCATION?",
+      "roverqthConfirm": "ADDED A BREAK, NOW SET YOUR NEW LOCATION",
       "stop": "STOP THE OPERATION?",
       "stopConfirm": "OPERATION STOPPED!"
     },

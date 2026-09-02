@@ -116,6 +116,8 @@
         "duplicate": "DUPLICATE",
         "invalidBand": "INVALID BAND",
         "ourGrid": "MISSING OUR LOCATION",
+        "theirGrid": "MISSING THEIR GRID",
+        "shortGrid": "GRID TOO SHORT",
         "newBand": "NEW BAND",
         "newMode": "NEW MODE",
         "newRef": "NEW REFERENCE",
@@ -398,6 +400,11 @@
         "title": "SHOW BEARING",
         "descriptionOn": "SHOW ESTIMATED BEARING TO STATION",
         "descriptionOff": "DON'T SHOW BEARING INFORMATION"
+      },
+      "showReverseBearing": {
+        "title": "ALSO SHOW REVERSE BEARING",
+        "descriptionOn": "SHOW BEARING FROM STATION TOO, AS \"45° / 225°\"",
+        "descriptionOff": "ONLY SHOW BEARING TO STATION"
       },
       "switchSignalReportOrder": {
         "title": "SWITCH SIGNAL REPORT ORDER",

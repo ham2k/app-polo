@@ -16,6 +16,7 @@ const Extension = {
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: StartOperationCommandHook })
     registerHook('command', { priority: 100, hook: BreakOperationCommandHook })
+    registerHook('command', { priority: 100, hook: RoverQTHCommandHook })
     registerHook('command', { priority: 100, hook: StopOperationCommandHook })
   }
 }
@@ -59,6 +60,27 @@ const BreakOperationCommandHook = {
     markOperationBreak({ operation, qsos, dispatch })
 
     return t?.('extensions.commands-operation.breakConfirm', 'Added an operation break!') || 'Added an operation break!'
+  }
+}
+
+const RoverQTHCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-operation-roverqth',
+  match: /^(ROVERQTH)$/i,
+  allowSpaces: true,
+  describeCommand: (match, { operation, settings, t }) => {
+    if (!operation) { return false }
+
+    return t?.('extensions.commands-operation.roverqth', 'Add a break and set a new location?') || 'Add a break and set a new location?'
+  },
+  invokeCommand: (match, { operation, qsos, dispatch, settings, t, navigation }) => {
+    if (!operation) { return }
+
+    markOperationBreak({ operation, qsos, dispatch })
+    navigation?.navigate('OperationLocation', { operation: operation.uuid })
+
+    return t?.('extensions.commands-operation.roverqthConfirm', 'Added a break, now set your new location') || 'Added a break, now set your new location'
   }
 }
 

@@ -116,6 +116,8 @@
         "duplicate": "duplicate",
         "invalidBand": "invalid band",
         "ourGrid": "missing our location",
+        "theirGrid": "missing their grid",
+        "shortGrid": "grid too short",
         "newBand": "new band",
         "newMode": "new mode",
         "newRef": "new reference",
@@ -398,6 +400,11 @@
         "title": "show bearing",
         "descriptionOn": "show estimated bearing to station",
         "descriptionOff": "don't show bearing information"
+      },
+      "showReverseBearing": {
+        "title": "also show reverse bearing",
+        "descriptionOn": "show bearing from station too, as \"45° / 225°\"",
+        "descriptionOff": "only show bearing to station"
       },
       "switchSignalReportOrder": {
         "title": "switch signal report order",

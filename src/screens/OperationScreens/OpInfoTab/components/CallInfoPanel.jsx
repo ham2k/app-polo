@@ -57,15 +57,19 @@ export function CallInfoPanel ({ qso, operation, qsos, activeQSOs, sections, the
       else if (guess.postindicators.indexOf('PM') >= 0) parts.push('[ 🪂 ]')
     }
 
-    if (operation?.grid && guess?.grid) {
+    if (operation?.grid && (qso?.their?.grid || guess?.grid)) {
       const dist = distanceForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } }, { units: settings.distanceUnits })
-      let bearing
+      let bearing, reverseBearing
       if (settings.showBearing) {
         bearing = bearingForQSON({ our: { ...ourInfo, grid: operation.grid }, their: { grid: qso?.their?.grid, guess } })
+        if (settings.showReverseBearing) {
+          // The great-circle bearing back to us, which is not simply bearing + 180 on long paths
+          reverseBearing = bearingForQSON({ our: { grid: qso?.their?.grid ?? guess?.grid }, their: { grid: operation.grid } })
+        }
       }
       const str = [
         dist && fmtDistance(dist, { units: settings.distanceUnits }),
-        bearing && `(${Math.round(bearing)}°)`
+        bearing && (reverseBearing ? `(${Math.round(bearing)}° / ${Math.round(reverseBearing)}°)` : `(${Math.round(bearing)}°)`)
       ].filter(x => x).join(' ')
       if (str) parts.push(t('general.formatting.distance.away', '{{distance}} away', { distance: str }))
     }
@@ -75,7 +79,7 @@ export function CallInfoPanel ({ qso, operation, qsos, activeQSOs, sections, the
     const locationText = parts.filter(x => x).join(' ')
 
     return locationText
-  }, [guess, operation.grid, ourInfo, qso?.their?.grid, settings.distanceUnits, settings.showBearing, t])
+  }, [guess, operation.grid, ourInfo, qso?.their?.grid, settings.distanceUnits, settings.showBearing, settings.showReverseBearing, t])
 
   const [thisOpTitle, thisOpQSOs, historyTitle, historyRecent, historyAndMore] = useMemo(() => {
     const thisQs = (lookup?.history || []).filter(q => operation && q.operation === operation?.uuid)
