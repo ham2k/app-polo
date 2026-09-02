@@ -1,9 +1,19 @@
 {
+  "26.7.7": {
+    "name": "July '26 (patch 7)",
+    "photoCaption": "KI2D at US-2138 and LLUS-0006",
+    "changes": [
+      "Fixed exports reporting an operator callsign you never entered"
+    ]
+  },
   "26.7.6": {
     "name": "July '26 (patch 6)",
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
-      "Fixed exports reporting an operator callsign you never entered"
+      "Updated 30m band plan for Australia, New Zealand and Africa",
+      "Fixed sync bugs for accounts with large number of QSOs",
+      "QSO Party updates",
+      "Translation updates"
     ]
   },
   "26.7.5": {
@@ -11,8 +21,27 @@
     "photoCaption": "KI2D at US-2138 and LLUS-0006",
     "changes": [
       "Added Ham2K Lookup Service (free US, Canada and Germany callsign lookups), replacing HamDB",
+      "Fixed error in QSO Party extensions",
       "Fixed power setting getting wiped when tapping a spot or deep link",
-      "Fixed bugs when empty activities are added to operations"
+      "Fixed bugs when empty activities are added to operations",
+      "Translation updates"
+    ]
+  },
+  "26.7.4": {
+    "name": "July '25 (patch 4)",
+    "photoCaption": "KI2D at US-2138 and LLUS-0006",
+    "changes": [
+      "Colorado QSO Party updates",
+      "Italian Translations (thanks to IV3BVK, IU3QEZ, IW3HCN)",
+      "Assorted bug fixes"
+    ]
+  },
+  "26.7.3": {
+    "name": "July '25 (patch 3)",
+    "photoCaption": "KI2D at US-2138 and LLUS-0006",
+    "changes": [
+      "Fixed sync bug that prevented changing an operation activities",
+      "Fixed RST fields reusing the previous QSO's report when tabbing past them"
     ]
   },
   "26.7.2": {
@@ -22,7 +51,9 @@
       "Fixed phantom empty operations bug",
       "Use GMA's new server address",
       "Spot multi-station operations (beta)",
-      "Ham2K File Stash: upload exported files and download them later from any browser"
+      "Ham2K File Stash: upload exported files and download them later from any browser",
+      "Fixed VFO staying on a spot's frequency after logging it",
+      "Fixed sync fetching the same operation over and over after logging"
     ]
   },
   "26.7.1": {
@@ -186,6 +217,11 @@
       "Fixed bug in ADIF export for QSO Parties",
       "Fixed QSO count in full-screen map view"
     ]
+  },
+  "26.4.0-pre0": {
+    "name": "April '26 - Pre 0",
+    "photoCaption": "HB9/OK1PTR/P at CH-0165",
+    "changes": []
   },
   "26.2.3": {
     "name": "February '26 (patch 3)",
