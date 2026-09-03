@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
 import { fmtCabrilloDate, fmtCabrilloTime } from '@ham2k/lib-format-tools'
+import { EHF_BANDS, SHF_BANDS, UHF_BANDS, VHF_BANDS } from '@ham2k/lib-operation-data'
 import { findRef } from '@ham2k/lib-qson-tools'
 
 import packageJson from '../../package.json'
@@ -33,7 +34,7 @@ export function qsonToCabrillo ({ operation, qsos, settings, handler, combineSeg
       continue
     }
 
-    let combinations = handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref })
+    let combinations = handler.qsoToCabrilloParts && handler.qsoToCabrilloParts({ qso, operation, ref, settings })
     if (!Array.isArray(combinations?.[0])) {
       combinations = [combinations]
     }
@@ -63,8 +64,10 @@ const DEFAULT_FREQUENCIES_PER_BAND = {
   '12m': '24890', // Not a Cabrillo Standard
   '10m': '28000',
   '6m': '50',
+  '5m': '60', // Not a Cabrillo Standard
   '4m': '70',
   '2m': '144',
+  '1.25m': '222',
   '70cm': '432',
   '33cm': '902',
   '23cm': '1.2G',
@@ -81,13 +84,14 @@ const DEFAULT_FREQUENCIES_PER_BAND = {
   submm: 'LIGHT'
 }
 
+const BANDS_REPORTED_AS_IDENTIFIERS = new Set([...VHF_BANDS, ...UHF_BANDS, ...SHF_BANDS, ...EHF_BANDS])
+
 // VHF+ Cabrillo logs use specific values per band; HF logs use kHz.
+// The band decides, not the frequency: microwave operators often log '10368.1' meaning MHz,
+// and a magnitude test would report that as an HF frequency instead of '10G'.
 function cabrilloFreq (qso) {
-  if (qso.freq) {
-    return qso.freq < 50000
-      ? `${Math.round(qso.freq)}`
-      : DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
-  }
+  if (BANDS_REPORTED_AS_IDENTIFIERS.has(qso.band)) return DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
+  if (qso.freq) return `${Math.round(qso.freq)}`
   return DEFAULT_FREQUENCIES_PER_BAND[qso.band] ?? '0'
 }
 
