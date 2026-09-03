@@ -17,6 +17,7 @@ const Extension = {
   onActivation: ({ registerHook }) => {
     registerHook('command', { priority: 100, hook: ModeCommandHook })
     registerHook('command', { priority: 100, hook: BandCommandHook })
+    registerHook('command', { priority: 100, hook: GigBandCommandHook })
     registerHook('command', { priority: 99, hook: FrequencyCommandHook })
     registerHook('command', { priority: 98, hook: PowerCommandHook })
   }
@@ -40,6 +41,71 @@ const BandCommandHook = {
 
     handleFieldChange({ fieldId: 'band', value: match[1] + 'm' })
     return t?.('extensions.commands-radio.bandConfirm', 'Band set to {{band}}', { band: `${match[1]}m` }) || `Band set to ${match[1]}m`
+  }
+}
+
+// Microwave operators name their bands in GHz — '10G', not '3cm' — and that is also
+// what contest exchanges and Cabrillo logs use. Typing a frequency instead is a trap:
+// '10368.1' is read as kHz, so the band is only right by way of a fallback.
+// Several bands go by more than one designation, so both are accepted.
+// 119G and 142G are not: they name allocations that no longer exist, and fall
+// outside every band we have.
+const BANDS_FOR_GIG_DESIGNATIONS = {
+  '1.2G': '23cm',
+  '1.3G': '23cm',
+  '2.3G': '13cm',
+  '2.4G': '13cm',
+  '3.3G': '9cm',
+  '3.4G': '9cm',
+  '5.7G': '6cm',
+  '5.8G': '6cm',
+  '10G': '3cm',
+  '24G': '1.25cm',
+  '47G': '6mm',
+  '75G': '4mm', // The Cabrillo label; 76G and 78G are where the band is actually worked
+  '76G': '4mm',
+  '78G': '4mm',
+  '122G': '2.5mm', // The Cabrillo label, though the band itself starts at 122.25 GHz
+  '123G': '2.5mm',
+  '134G': '2mm',
+  '241G': '1mm'
+}
+
+// Built from the designations we know, so a callsign like '9G' isn't taken for one.
+// A period is matched as either itself or a slash: the callsign field rewrites periods
+// to slashes once the text has a letter in it, which is how '1.2GHZ' arrives as '1/2GHZ'.
+const GIG_DESIGNATIONS_REGEX = new RegExp(
+  `^(${Object.keys(BANDS_FOR_GIG_DESIGNATIONS).map(d => d.replace(/\./g, '[/.]')).join('|')})(HZ)?$`, 'i'
+)
+
+function bandForGigDesignation (designation) {
+  return BANDS_FOR_GIG_DESIGNATIONS[designation.toUpperCase().replaceAll('/', '.')]
+}
+
+const GigBandCommandHook = {
+  ...Info,
+  extension: Extension,
+  key: 'commands-radio-gig-band',
+  match: GIG_DESIGNATIONS_REGEX,
+  describeCommand: (match, { qso, t }) => {
+    if (!qso) return
+
+    const band = bandForGigDesignation(match[1])
+    const label = `${match[1].toUpperCase().replaceAll('/', '.')} (${band})`
+    return t?.('extensions.commands-radio.band', 'Change band to {{band}}?', { band: label }) || `Change band to ${label}?`
+  },
+  invokeCommand: (match, { handleFieldChange, qso, t }) => {
+    if (!qso) return
+
+    const band = bandForGigDesignation(match[1])
+    // The regex is built from the table, and a test holds them to each other. Bail out
+    // rather than pass an undefined on: that would clear the QSO's band and its frequency,
+    // and still tell the operator the band was set.
+    if (!band) return
+
+    const label = `${match[1].toUpperCase().replaceAll('/', '.')} (${band})`
+    handleFieldChange({ fieldId: 'band', value: band })
+    return t?.('extensions.commands-radio.bandConfirm', 'Band set to {{band}}', { band: label }) || `Band set to ${label}`
   }
 }
 
