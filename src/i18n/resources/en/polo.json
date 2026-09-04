@@ -349,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Show numbers row",
-        "descriptionOn": "Quick buttons for numbers",
-        "descriptionOff": "Don't show numbers row"
+        "descriptionOn": "Showing quick buttons for numbers",
+        "descriptionOff": "Not showing the numbers row"
       },
       "showExtraInNumbersRow": {
         "title": "Period in numbers row",
-        "descriptionOn": "Include period (and slash)",
-        "descriptionOff": "Just show the numbers"
+        "descriptionOn": "Including period and slash keys",
+        "descriptionOff": "Showing just the numbers"
       },
       "showCommaInNumbersRow": {
         "title": "Comma in numbers row",
-        "descriptionOn": "Include a comma key",
+        "descriptionOn": "Including a comma key",
         "descriptionOff": "No comma key"
       },
       "vibrateNumbersRow": {
         "title": "Use vibration in numbers row",
-        "descriptionOn": "Vibrate when pressing numbers",
-        "descriptionOff": "Don't vibrate when pressing numbers"
+        "descriptionOn": "Vibrating when pressing numbers",
+        "descriptionOff": "Not vibrating when pressing numbers"
       },
       "useMetricUnits": {
         "title": "Use Metric Units",
-        "descriptionOn": "Use Miles for distances",
-        "descriptionOff": "Use Kilometers for distances"
+        "descriptionOn": "Using miles for distances",
+        "descriptionOff": "Using kilometers for distances"
       },
       "keepDeviceAwake": {
         "title": "Keep device awake",
-        "descriptionOn": "Prevent device from locking screen",
-        "descriptionOff": "Allow regular screen locking"
+        "descriptionOn": "Keeping the screen awake",
+        "descriptionOff": "Letting the screen lock as usual"
       },
       "useSplitViews": {
         "title": "Use Split Views",
-        "descriptionOn": "Use Split Views when screen is large enough",
-        "descriptionOff": "Don't use split views"
+        "descriptionOn": "Using split views when the screen is large enough",
+        "descriptionOff": "Not using split views"
       },
       "useGrid8": {
         "title": "High precision location",
-        "descriptionOn": "Use 8-digit grids",
-        "descriptionOff": "Use 6-digit grids"
+        "descriptionOn": "Using 8-digit grids",
+        "descriptionOff": "Using 6-digit grids"
       },
       "smartKeyboard": {
         "title": "Smart Keyboard Features",
-        "descriptionOn": "Enable smart keyboard features",
-        "descriptionOff": "Use simpler keyboards for compatibility reasons with some devices"
+        "descriptionOn": "Using smart keyboard features",
+        "descriptionOff": "Using simpler keyboards, for compatibility with some devices"
       },
       "exportSettings": {
         "title": "Export Settings",
@@ -401,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Share app usage data",
-        "descriptionOn": "Help us improve the app by sharing usage, crash and performance data",
-        "descriptionOff": "Keep app usage data private.\nThe Ham2K team won't be able to detect crashes or other issues."
+        "descriptionOn": "Sharing usage, crash and performance data to help us improve the app",
+        "descriptionOff": "Keeping app usage data private.\nThe Ham2K team won't be able to detect crashes or other issues."
       },
       "shareOperationData": {
         "title": "Share operation data",
-        "descriptionOn": "Share some operation data publicly and with other users",
-        "descriptionOff": "Keep operation data private"
+        "descriptionOn": "Sharing some operation data publicly and with other users",
+        "descriptionOff": "Keeping operation data private"
       },
       "privacyPolicy": {
         "title": "Privacy Policy",
@@ -422,24 +422,24 @@
       "title": "Logging Settings",
       "leftieMode": {
         "title": "Leftie Mode",
-        "descriptionOn": "Use layout for left-handed users",
-        "descriptionOff": "Use layout for right-handed users"
+        "descriptionOn": "Using the left-handed layout",
+        "descriptionOff": "Using the right-handed layout"
       },
       "countryFlags": {
         "title": "Country Flags",
-        "descriptionNone": "Don't show any flags",
-        "descriptionAll": "Show flags for all contacts",
-        "descriptionDefault": "Show only for DX contacts"
+        "descriptionNone": "Not showing any flags",
+        "descriptionAll": "Showing flags for all contacts",
+        "descriptionDefault": "Showing flags only for DX contacts"
       },
       "showBearing": {
         "title": "Show Bearing",
-        "descriptionOn": "Show estimated bearing to station",
-        "descriptionOff": "Don't show bearing information"
+        "descriptionOn": "Showing estimated bearing to station",
+        "descriptionOff": "Not showing bearing information"
       },
       "showReverseBearing": {
         "title": "Also show reverse bearing",
-        "descriptionOn": "Show bearing from station too, as \"45° / 225°\"",
-        "descriptionOff": "Only show bearing to station"
+        "descriptionOn": "Showing bearing from station too, as \"45° / 225°\"",
+        "descriptionOff": "Showing only bearing to station"
       },
       "switchSignalReportOrder": {
         "title": "Switch signal report order",
@@ -448,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "Jump to next field on RST entry",
-        "descriptionOn": "Jump after RST is entered",
-        "descriptionOff": "Don't jump automatically"
+        "descriptionOn": "Jumping to the next field after RST",
+        "descriptionOff": "Not jumping automatically"
       },
       "suggestDefaultOperator": {
         "title": "Suggest default operator",
-        "descriptionOn": "Set {{operatorCall}} as operator in operations where station call is different",
-        "descriptionOff": "Don't suggest default operator regardless of station call used"
+        "descriptionOn": "Using {{operatorCall}} as operator in operations where station call is different",
+        "descriptionOff": "Not suggesting a default operator, regardless of station call used"
       },
       "suggestTemplates": {
         "title": "Use operation templates",
-        "descriptionOn": "Suggest templates for new operations",
-        "descriptionOff": "Don't suggest templates"
+        "descriptionOn": "Suggesting templates for new operations",
+        "descriptionOff": "Not suggesting templates"
       },
       "bandsModes": {
         "title": "Bands & Modes",
@@ -754,8 +754,8 @@
       "exportTypes": "Export Types",
       "customTemplates": "Custom templates",
       "defaultTemplates": "Default templates",
-      "customTemplatesDescription": "Use custom templates for the export",
-      "defaultTemplatesDescription": "Use default templates for the export",
+      "customTemplatesDescription": "Using custom templates for this export",
+      "defaultTemplatesDescription": "Using the default templates",
       "includePrivateData": "Include private data",
       "ignoreLookupData": "Ignore lookup data",
       "fileNameTemplate": "File name template",
@@ -764,8 +764,10 @@
       "adifComments": "ADIF QSO Comments",
       "adifQslMessage": "ADIF QSL Message",
       "templateHelpTitle": "Template Help",
-      "includePrivateDataDescription": "Names, notes, addresses, etc.",
-      "ignoreLookupDataDescription": "Ignore data from lookup services like QRZ.com",
+      "includePrivateDataDescription": "Including names, notes, addresses, etc.",
+      "excludePrivateDataDescription": "Excluding names, notes, addresses, etc.",
+      "ignoreLookupDataDescription": "Ignoring data from lookup services like QRZ.com",
+      "useLookupDataDescription": "Including data from lookup services like QRZ.com",
       "templateHelp-md": "Some sample template elements…\n\n### Log Export\nAttributes for the log being exported\n`{{log.station}}` → `{{call}}` Station for this export\n`{{log.ref}}` → `XX-1234` Reference for this export\n`{{log.refName}}` → `Example National Park` Reference name for this export\n`{{log.refShortName}}` → `Example NP` Short reference name for this export\n`{{log.handlerType}}` → `pota` Handler type for this export\n`{{log.handlerName}}` → `Parks On The Air` Handler name for this export\n`{{log.handlerShortName}}` → `POTA` Short handler name for this export\n\n### Operation Callsigns\n`{{op.station}}` → `{{call}}` First station for the operation\n`{{op.operator}}` → `{{call}}` Operator for the operation\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` All stations for the operation\n`{{op.otherStations}}` → `{{otherCalls}}` Other stations for the operation\n\n### Operation Date\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Other Operation Details\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `My Special Operation`\n`{{op.userNotes}}` → `Went early in the morning…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid for this operation\n\n### QSO Information\n`{{qso.notes}}` → `Terrible audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` The signal report they sent\n`{{qso.our.sent}}` → `55` The signal report we sent\n`{{qso.their.grid}}` → `FF99` The grid they reported\n`{{qso.refs}}` → A list of all the references for the QSO (includes both Operation refs and QSO-only refs)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Defaults",

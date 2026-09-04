@@ -1,0 +1,1012 @@
+{
+  "screens": {
+    "start": {
+      "credits": "KI2D ir draugų projektas",
+      "Loading Extensions": "Priedų įkėlimas",
+      "Development Build": "Programėlės kūrimo versija",
+      "messages": {
+        "Reticulating splines": "Spline`ų retikuliacija",
+        "Tuning the antenna": "Antenos derinimas",
+        "Checking the tubes": "Lempų tikrinimas",
+        "Warming up the tubes": "Lempų pašildymas",
+        "Unfolding the map": "Žemėlapio išskleidimas",
+        "Charging the flux capacitor": "Srauto kondensatoriaus įkrovimas",
+        "Purging the dilithium chamber": "Dilitio kameros valymas",
+        "Activating the turbo encabulator": "Turbo encabulatoriiaus aktyvavimas",
+        "Engaging the warp drive": "Įtraukimas į hiperdrive"
+      }
+    },
+    "home": {
+      "title": "Portabilus logas",
+      "newOperation": "Nauja operacija",
+      "newOperation-a11y": "Nauja operacija",
+      "operationList-a11y": "Operacijų sąrašas",
+      "noOperations": "Nėra operacijų!",
+      "settings-a11y": "Nustatymai",
+      "quickCallLookupPlaceholder": "Greita šaukinio paieška",
+      "spots-a11y": "Taškai"
+    },
+    "operation": {
+      "title": "Operacija"
+    },
+    "operationDetails": {
+      "title": "Operacijos detalės",
+      "operationTitle": "Pavadinimas",
+      "newOperation": "Nauja operacija",
+      "operationNotes": "Pastabos",
+      "anythingYouWantToWriteAboutThisOperation": "Bet koks norimas įrašas apie šią operaciją"
+    },
+    "operationStationInfo": {
+      "title": "Stoties ir operatoriaus informacija",
+      "invalidCallsign": "Neteisingas šaukinys: {{callsign}}",
+      "invalidCallsigns": "Neteisingi šaukinia: {{callsigns}}",
+      "singleStationUsed-md": "{{oldStation}}`{{oldStation}}` naudojama iki šiol.\n{{newStation}}` bus naudojama naujiems QSO.",
+      "noStationUsed-md": "Iki šiol nenaudotas šaukinys.\n{{newStation}} bus naudojama naujiems QSO.",
+      "updateStation-md_zero": "Atnaujinti `{{newStation}}` pagal nuliį esamų QSO",
+      "updateStation-md_one": "Atnaujinti `{{newStation}}` pagal vieną esamą QSO",
+      "updateStation-md_other": "Atnaujinti `{{newStation}}` pagal {{count}} esamų QSO",
+      "multipleStationsUsed-md": "Šis logas jau turi QSO naudojant skirtingus šaukinius: `{{stations}}`.\n\n`{{newStation}}` bus naudojamas tik naujiems QSO.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` naudojama iki šiol.\n{{newOperator}}` bus naudojama naujiems QSO.",
+      "noOperatorUsed-md": "Iki šiol nenaudotas šaukinys.\n{{newOperator}} bus naudojama naujiems QSO.",
+      "updateOperator-md": "Atnaujinti `{{newOperator}}` kaip operatorių visiems QSO",
+      "multipleOperatorsUsed-md": "Ši logas jau turi QSO naudojant skirtingus šaukinius: `{{operators}}`.\n\n`{{newOperator}}` bus naudojamas tik naujiems QSO.",
+      "whatIsTheCallsignUsedOnTheAir": "Koks naudojamas šaukinys eteryje?",
+      "stationCallsign": "Stoties šaukinio ženklas",
+      "whoIsOperatingTheStation": "Kas valdo stotį? (pasirinktinai)",
+      "operatorCallsign": "Operatoriaus šaukinio ženklas",
+      "multiStationOperation": "Multiple stoties operacija?",
+      "multiStationOperationYes": "Taip, mes esame viena daugelių!",
+      "multiStationOperationNo": "Ne, tik reguliari stotis",
+      "identifierForThisStation": "Šios stoties identifikatorius (tik skaičiai)"
+    },
+    "operationLocation": {
+      "title": "Operacijos vieta",
+      "selectedLocation": "Pasirinkta vieta",
+      "maidenheadGridSquareLocator": "Maidenhead grotelių kvadratų paieška",
+      "suggestedLocations": "Siūlomos vietos",
+      "deviceGps": "Įrenginio GPS",
+      "locating": "Vietos nustatymas...",
+      "gpsError": "GPS klaida",
+      "noGps": "Nėra GPS",
+      "stateOrProvince": "Valstija arba provincija (nebūtina)",
+      "county": "Apskritis (nebūtina)"
+    },
+    "operationAddActivity": {
+      "title": "Pridėti veiklą",
+      "cantFindActivity": "Nerandate ieškomos veiklos?",
+      "thereAreMoreOptions": "Daugiau parinkčių yra Nustatymuose > Programos funkcijos"
+    },
+    "operationActivityOptions": {
+      "title": "Veiklos parinktys",
+      "removeActivity": "Pašalinti {{activity}} iš šios operacijos",
+      "activityHasNoOptions": "Ši veikla neturi parinkčių.",
+      "activityNotEnabled": "Veikla „{{name}}“ neįjungta.",
+      "lookInSettings": "Ieškokite jos skiltyje Nustatymai > Programėlės funkcijos"
+    },
+    "operationData": {
+      "title": "Operacijos duomenys",
+      "selectFromTheExportOptionsBelow": "Pasirinkite iš eksporto parinkčių žemiau",
+      "exportSelectedFiles_zero": "Eksportuoti 0 pasirinktų failų",
+      "exportSelectedFiles_one": "Eksportuoti 1 pasirinktą failą",
+      "exportSelectedFiles_other": "Eksportuoti {{count}} pasirinktų failų",
+      "exportActionsShare": "Dalintis",
+      "exportActionsSave": "Išsaugoti",
+      "exportActionsExport": "Eksportuoti",
+      "exportActionsStash": "Saugykla",
+      "exportActionsLogStash": "Siųsti į Ham2K File Stash",
+      "exportQSOs": "Eksportuoti QSO",
+      "pendingToDoItems_zero": "Nėra jokių laukiančių užduočių",
+      "pendingToDoItems_one": "1 laukiamas užduotis",
+      "pendingToDoItems_other": "{{count}} laukiami užduočių",
+      "importQSOs": "Importuoti QSO",
+      "addQSOsFromADIFFile": "Pridėti QSO iš ADIF failo",
+      "ham2kLoFiSync": "Ham2K LoFi sinchronizavimas",
+      "operation": "Operacija",
+      "exportSettings": "Eksporto nustatymai",
+      "useCompactFileNames": "Naudoti kompaktiškus failų pavadinimus",
+      "wavelogExport": "Bangų žurnalą eksportuoti",
+      "exportQSOsToWavelogDescription": "Siųsti visus šios operacijos QSO bangų žurnalui",
+      "wavelogDialog": {
+        "title": "Eksportuoti QSO į bangų žurnalą",
+        "status": "Eksportuoti visus šios operacijos QSO į bangų žurnalą.",
+        "exporting": "Eksportuojama į Wavelog..."
+      },
+      "deleteOperationDialog": {
+        "title": "Ištrinti operaciją?",
+        "description": "Ar tikrai norite ištrinti šią operaciją?"
+      },
+      "errorSavingExport": "Nepavyko išsaugoti failo",
+      "logStashDialogTitle": "Ham2K File Stash",
+      "logStashDialogIntro": "PoLo įkels jūsų failus į Ham2K serverius, o jūs galėsite juos atsisiųsti iš bet kurios naršyklės.",
+      "logStashDialogTiers": "Nemokamos paskyros vienu metu gali turėti tik vieną saugyklos įrašą. Prenumeratoriai gali turėti tiek, kiek nori.",
+      "logStashDialogSubscribe": "Prenumeruoti",
+      "exportUpsellTitle": "Ši operacija taip pat išsaugota mūsų debesies sinchronizavimo paslaugoje",
+      "exportUpsellBody": "Ši atsarginė kopija yra nemokama, bet užsiprenumeravę galite ją sinchronizuoti keliuose įrenginiuose ir pasiekti visu greičiu.",
+      "exportUpsellSupport": "O dar svarbiau – jūsų prenumerata remia mūsų pastangas čia, Ham2K.",
+      "exportUpsellSubscribe": "Prenumeruoti",
+      "exportUpsellNotNow": "Ne dabar",
+      "exportOptionsInfoLabel": "Apie eksportavimo parinktis",
+      "exportOptionsInfoTitle": "Eksportavimo parinktys",
+      "exportOptionsInfoStash-md": "**Stash** įkelia jūsų failus į Ham2K File Stash, o vėliau galite juos atsisiųsti iš bet kurios naršyklės adresu **[stash.ham2k.net](https://stash.ham2k.net)**. Naudinga lauko sąlygomis, kai nėra kito paprasto būdo perkelti failą iš telefono.",
+      "exportOptionsInfoShare-md": "**Bendrinti** perduoda jūsų failus kitai programai jūsų įrenginyje — el. paštui, susirašinėjimo programai, debesies saugyklai arba kitai ryšių žurnalo programai.",
+      "exportOptionsInfoExport-md": "**Eksportuoti** perduoda jūsų failus kitai programai jūsų įrenginyje — el. paštui, susirašinėjimo programai, debesies saugyklai arba kitai ryšių žurnalo programai.",
+      "exportOptionsInfoSave-md": "**Išsaugoti** įrašo jūsų failus tiesiai į aplanką jūsų įrenginyje, nenaudojant kitos programos.",
+      "exportOptionsInfoSelection-md": "Šie veiksmai taikomi visiems failams, kuriuos pažymėjote žemiau. Taip pat galite paliesti bet kurį atskirą failą, kad bendrintumėte tik jį.",
+      "freeTierRecentUploadTitle": "Naujausias įkėlimas bus pakeistas",
+      "freeTierRecentUploadMessage": "Išsiuntėte „{{name}}“ mažiau nei prieš 6 valandas ir jis dar nebuvo atsisiųstas. Siunčiant dabar, jis bus pakeistas. Ar norite verčiau palaukti?",
+      "freeTierRecentUploadConfirm": "Vis tiek siųsti",
+      "errorSendingToLogStash": "Nepavyko išsiųsti į Ham2K File Stash",
+      "sentToLogStash": "Išsiųsta į Ham2K File Stash",
+      "sentToLogStashRetrieve-md": "Galite gauti {{filesLabel}} apsilankę **[stash.ham2k.net](https://stash.ham2k.net)** bet kurioje naršyklėje.",
+      "sentToLogStashEmailOffer": "Arba, jūsų patogumui, galime atsiųsti jums el. laišką su tiesiogine nuoroda.",
+      "retrieveSingularFile": "šį failą",
+      "retrievePluralFiles": "šiuos failus",
+      "emailMeALink": "Atsiųsti man nuorodą el. paštu",
+      "linkEmailed": "Atsisiuntimo nuorodą išsiuntėme jums el. paštu.",
+      "errorEmailingLink": "Nepavyko išsiųsti el. laiško"
+    },
+    "callInfo": {
+      "title": "Šaukinio ženklų informacija",
+      "messages": {
+        "duplicate": "Dublikatas",
+        "invalidBand": "Netinkamas dažnis",
+        "ourGrid": "Trūksta mūsų vietos",
+        "theirGrid": "Trūksta jų lokatoriaus",
+        "shortGrid": "Lokatorius per trumpas",
+        "newBand": "Naujas dažnis",
+        "newMode": "Naujas darbo būdas",
+        "newRef": "Nauja nuoroda",
+        "newMult": "Naujas daugiklis",
+        "newDay": "Nauja diena",
+        "newGrid": "Naujas lokatorius",
+        "newLocation": "Nauja vieta",
+        "maybeDupe": "Dublikatas?",
+        "partialDupe": "Dublis",
+        "potaActivation-newDay": "Nauja POTA diena",
+        "potaActivation-newRef": "Naujas parkas",
+        "sotaActivation-newDay": "Nauja SOTA diena",
+        "sotaActivation-newRef": "Naujas viršukalnė",
+        "sotaActivation-duplicate": "SOTA dublis!",
+        "wwffActivation-duplicate": "WWFF dublis!",
+        "wwbotaActivation-newDay": "Nauja WWBOTA diena",
+        "wwbotaActivation-newRef": "Naujas bunkeris",
+        "motaActivation-newRef": "Naujas malūnas"
+      },
+      "history": {
+        "last7days": "{{count}} per paskutines 7 dienas",
+        "today": "{{count}} šiandien",
+        "yesterday": "{{count}} vakar",
+        "qsos_zero": "0 QSO",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSO"
+      },
+      "thisOpCount_zero": "0 QSO šiame veikloje",
+      "thisOpCount_one": "1 QSO šiame veikloje",
+      "thisOpCount_other": "{{count}} QSO šiame veikloje",
+      "otherOpsCount_zero": "0 QSO kituose loguose",
+      "otherOpsCount_one": "1 QSO kituose loguose",
+      "otherOpsCount_other": "{{count}} QSO kituose loguose",
+      "andMoreCount_zero": "... ir {{count}} daugiau",
+      "andMoreCount_one": "... ir {{count}} daugiau",
+      "andMoreCount_other": "... ir {{count}} daugiau",
+      "showImage": "Rodyti vaizdą",
+      "notes": "Pastabos",
+      "potentialCall": "Potencialus šaukinys: {{call}}",
+      "withCall": "su {{call}}"
+    },
+    "spots": {
+      "title": "Taškai"
+    },
+    "editQSO": {
+      "title": "Redaguoti QSO",
+      "sections": {
+        "qso": "QSO Detalės",
+        "their": "Jų informacija",
+        "our": "Mūsų informacija",
+        "more": "Daugiau"
+      },
+      "fields": {
+        "time": "Laikas",
+        "date": "Data",
+        "freq": "Dažnis",
+        "mode": "Būdas",
+        "band": "Juosta",
+        "power": "Galia",
+        "call": "Stoties šaukinys",
+        "sent": "RST",
+        "exchange": "Mainai",
+        "name": "Vardas",
+        "city": "Miestas",
+        "state": "Valstija / provincija",
+        "county": "Apskritis",
+        "entity": "Entitetas",
+        "cqZone": "CQ Zona",
+        "ituZone": "ITU Zona",
+        "arrlSection": "ARRL Sekcija",
+        "grid": "Tinklelis",
+        "latitude": "Platuma",
+        "longitude": "Ilguma",
+        "notes": "Pastabos"
+      }
+    },
+    "opInfo": {
+      "title": "Operacijos informacija"
+    },
+    "settings": {
+      "title": "Nustatymai",
+      "sections": {
+        "settings": "Nustatymai",
+        "accounts": "Paskyros",
+        "about": "Apie Ham2K",
+        "help": "Reikia pagalbos?"
+      },
+      "operatorCallsign": {
+        "title": "Operatoriaus skambučio ženklas",
+        "noCall": "Nėra skambučio",
+        "dialogTitle": "Operatoriaus skambučio ženklas",
+        "pleaseEnterCallsign": "Prašome įvesti skambučio ženklą!",
+        "callsignLabel": "Operatoriaus skambučio ženklas"
+      },
+      "generalSettings": {
+        "title": "Bendrieji nustatymai",
+        "description": "Tamsus režimas, skaičių eilutė, vienetai ir kt."
+      },
+      "loggingSettings": {
+        "title": "Registravimo nustatymai",
+        "description": "Pridėkite personalizuotą registravimo patirtį"
+      },
+      "dataSettings": {
+        "title": "Duomenų nustatymai",
+        "description": "Duomenų failai, skambučio pastabos ir kt."
+      },
+      "syncSettings": {
+        "title": "Sinchronizacijos nustatymai",
+        "description": "Daiļa sinchronizacija ir atsarginių kopijų kūrimas"
+      },
+      "accountsSettings": {
+        "title": "Paskyros ir paslaugos",
+        "description": "QRZ.com ir kitos paslaugos"
+      },
+      "appFeatures": {
+        "title": "Programos funkcijos",
+        "description": "Tvarkyti funkcijas, kaip POTA, SOTA ir kt."
+      },
+      "developerSettings": {
+        "title": "Kūrėjo nustatymai",
+        "description": "Čia gyvens drakonai"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} yra Ham2K remėjas",
+        "couldBeASupporter": "{{callsign}} galėtų būti Ham2K remėjas"
+      },
+      "versionSettings": {
+        "description": "Žiūrėti neseniai pakeistas"
+      },
+      "creditsSettings": {
+        "title": "Kreditas",
+        "description": "Sebastián Delmont KI2D ir PoLo komanda"
+      },
+      "noticesSettings": {
+        "title": "Naujausios pastabos",
+        "description": "Galbūt neatkreipėte dėmesio į pranešimus?"
+      },
+      "readTheFineManual": {
+        "title": "Rankinio skaitymas",
+        "description": "Naršykite PoLo dokumentaciją"
+      },
+      "ham2KForums": {
+        "title": "Ham2K forumai",
+        "description": "Raskite pagalbą, teikite atsiliepimus, diskutuokite apie idėjas..."
+      },
+      "ham2KChat": {
+        "title": "Ham2K pokalbiai",
+        "description": "Mūsų bendruomenės \"Facebook\" serveris"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K „YouTube“",
+        "description": "Vaizdo įrašai ir gyvi transliacijos"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K „Instagram“",
+        "description": "Nes negalite turėti per daug nuotraukų..."
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K „BlueSky“",
+        "description": "Sekite mus, kad gautumėte naujienų ir atnaujinimų"
+      },
+      "contactUs": {
+        "title": "Susisiekite su mumis",
+        "description": "help@ham2k.com\n   (tačiau pabandykite pirmiausia \"Facebook\" ar \"Pokalbio\"!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Bendrieji nustatymai",
+      "theme": {
+        "title": "Tema",
+        "descriptionDark": "Visada tamsiame režime",
+        "descriptionLight": "Visada šviesiame režime",
+        "descriptionDevice": "Tokiu pačiu būdu, kaip įrenginys",
+        "dialogTitle": "Tema"
+      },
+      "fontScale": {
+        "title": "Šrifto mastelis",
+        "descriptionXS": "Mažiausia",
+        "descriptionSM": "Mažesnis",
+        "descriptionMD": "Normalus",
+        "descriptionLG": "Didesnis",
+        "descriptionXL": "Didžiausias",
+        "dialogTitle": "Šrifto mastelis",
+        "dialogDescription": "Šie dydžiai taip pat yra paveikti įrenginio nustatymų, tokių kaip Ekrano ir Prieinamumo."
+      },
+      "language": {
+        "title": "Kalba: {{lang}}",
+        "description": "Pakeisti programos kalbą",
+        "dialogTitle": "Kalba",
+        "dialogDescription": "Pakeisti kalbą",
+        "deviceDefault": "Naudokite įrenginio nustatymus ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Įrenginio nustatymai) šiuo metu nepalaikoma."
+      },
+      "showNumbersRow": {
+        "title": "Rodyti skaičių eilutę",
+        "descriptionOn": "Rodomi spartieji skaičių mygtukai",
+        "descriptionOff": "Skaičių eilutė nerodoma"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Periodas skaičių eilutėje",
+        "descriptionOn": "Įtraukiami taško ir pasvirojo brūkšnio klavišai",
+        "descriptionOff": "Rodomi tik skaičiai"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Kablelis skaičių eilutėje",
+        "descriptionOn": "Įtraukiamas kablelio klavišas",
+        "descriptionOff": "Nėra kablelio rakto"
+      },
+      "vibrateNumbersRow": {
+        "title": "Naudoti vibraciją skaičių eilutėje",
+        "descriptionOn": "Vibruojama spaudžiant skaičius",
+        "descriptionOff": "Nevibruojama spaudžiant skaičius"
+      },
+      "useMetricUnits": {
+        "title": "Naudoti metrinius vienetus",
+        "descriptionOn": "Atstumams naudojamos mylios",
+        "descriptionOff": "Atstumams naudojami kilometrai"
+      },
+      "keepDeviceAwake": {
+        "title": "Palaikyti aktyvų režimą",
+        "descriptionOn": "Ekranas išlaikomas įjungtas",
+        "descriptionOff": "Ekranui leidžiama užsirakinti kaip įprasta"
+      },
+      "useSplitViews": {
+        "title": "Naudoti padalintus vaizdus",
+        "descriptionOn": "Kai ekranas pakankamai didelis, naudojami padalinti rodiniai",
+        "descriptionOff": "Padalinti rodiniai nenaudojami"
+      },
+      "useGrid8": {
+        "title": "Aukšto tikslumo vieta",
+        "descriptionOn": "Naudojami 8 ženklų lokatoriai",
+        "descriptionOff": "Naudojami 6 ženklų lokatoriai"
+      },
+      "smartKeyboard": {
+        "title": "Išmaniosios klaviatūros funkcijos",
+        "descriptionOn": "Naudojamos išmaniosios klaviatūros funkcijos",
+        "descriptionOff": "Naudojamos paprastesnės klaviatūros, kad būtų suderinama su kai kuriais įrenginiais"
+      },
+      "exportSettings": {
+        "title": "Eksportavimo nustatymai",
+        "description": "Pritaikyti failų pavadinimų ir kitus nustatymus"
+      },
+      "privacy": {
+        "title": "Privatumas"
+      },
+      "shareAppUsageData": {
+        "title": "Dalintis programos naudojimo duomenimis",
+        "descriptionOn": "Bendrinami naudojimo, strigčių ir našumo duomenys, kad padėtumėte mums tobulinti programėlę",
+        "descriptionOff": "Programėlės naudojimo duomenys laikomi privačiais.\nHam2K komanda negalės aptikti strigčių ar kitų problemų."
+      },
+      "shareOperationData": {
+        "title": "Dalinkitės operacinių duomenimis",
+        "descriptionOn": "Kai kurie operacijos duomenys bendrinami viešai ir su kitais naudotojais",
+        "descriptionOff": "Operacijos duomenys laikomi privačiais"
+      },
+      "privacyPolicy": {
+        "title": "Privatumo politika",
+        "description": "Skaitykite mūsų privatumo politiką"
+      },
+      "termsOfService": {
+        "title": "Paslaugų teikimo sąlygos",
+        "description": "Skaitykite mūsų paslaugų teikimo sąlygas"
+      }
+    },
+    "loggingSettings": {
+      "title": "Registracijos nustatymai",
+      "leftieMode": {
+        "title": "Kairiarankių režimas",
+        "descriptionOn": "Naudojamas kairiarankiams skirtas išdėstymas",
+        "descriptionOff": "Naudojamas dešiniarankiams skirtas išdėstymas"
+      },
+      "countryFlags": {
+        "title": "Šalių vėliavos",
+        "descriptionNone": "Vėliavos nerodomos",
+        "descriptionAll": "Rodomos visų kontaktų vėliavos",
+        "descriptionDefault": "Vėliavos rodomos tik DX kontaktams"
+      },
+      "showBearing": {
+        "title": "Rodyti kryptį",
+        "descriptionOn": "Rodomas apytikslis azimutas iki stoties",
+        "descriptionOff": "Azimuto informacija nerodoma"
+      },
+      "showReverseBearing": {
+        "title": "Taip pat rodyti atvirkštinį azimutą",
+        "descriptionOn": "Rodomas ir azimutas nuo stoties, pvz., „45° / 225°“",
+        "descriptionOff": "Rodomas tik azimutas iki stoties"
+      },
+      "switchSignalReportOrder": {
+        "title": "Pakeisti signalo ataskaitos eilės tvarką",
+        "descriptionOn": "Pirma siunčiama, tada gauta",
+        "descriptionOff": "Pirma gauta, tada siunčiama"
+      },
+      "jumpAfterRST": {
+        "title": "Peršokti į kitą laukelį įvedus RST",
+        "descriptionOn": "Po RST pereinama į kitą lauką",
+        "descriptionOff": "Automatiškai nepereinama"
+      },
+      "suggestDefaultOperator": {
+        "title": "Pasiūlyti numatytąjį operatorių",
+        "descriptionOn": "Operacijose, kuriose stoties šaukinys skiriasi, kaip operatorius naudojamas {{operatorCall}}",
+        "descriptionOff": "Numatytasis operatorius nesiūlomas, nepriklausomai nuo naudojamo stoties šaukinio"
+      },
+      "suggestTemplates": {
+        "title": "Naudokite operacijų šablonus",
+        "descriptionOn": "Naujoms operacijoms siūlomi šablonai",
+        "descriptionOff": "Šablonai nesiūlomi"
+      },
+      "bandsModes": {
+        "title": "Juostos ir režimai",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Papildiniai"
+      }
+    },
+    "featuresSettings": {
+      "title": "Programos funkcijos",
+      "activatingExtension": "Aktyvuojamas plėtinys, tai gali užtrukti...",
+      "fewerOf": "Mažiau {{category}}...",
+      "moreOf": "Daugiau {{category}}..."
+    },
+    "dataSettings": {
+      "title": "Duomenų nustatymai",
+      "offlineDataTitle": "Duomenys be interneto",
+      "extensionsTitle": "Papildiniai",
+      "logDataTitle": "Žurnalo duomenys",
+      "importHistoryFromADIF": "Istorijos importas iš ADIF",
+      "importHistoryFromADIFDescription": "Naudojami užklausoms be interneto ir QSO statistikai",
+      "clearADIFHistory": "Išvalyti ADIF istoriją",
+      "clearADIFHistoryDescription": "Pašalinti importuotus ADIF įrašus",
+      "updatedRelative": "Atnaujinta {{date}}",
+      "fetching-md": "### Atsisiunčiama **{{title}}**…",
+      "progress-md": "### Atsisiunčiama **{{title}}**\n\n{{progress}}",
+      "updated-md": "Atnaujinta {{date}}",
+      "version-md": "Versija: {{version}}",
+      "confirmClearHistory": {
+        "title": "Ar jūs tikras?",
+        "description": "Tai ištrins visus į ADIF failus anksčiau importuotus įrašus",
+        "recordsNotDeleted": "Operacijų įrašai nebus ištrinti"
+      },
+      "importingHistoricalADIF": "Importuojami ADIF įrašai... Prašome kantrybės!",
+      "errorImportingHistoricalADIF": "Klaida importuojant istorinius ADIF įrašus",
+      "errorDeletingHistoricalRecords": "Klaida ištrinant istorinius įrašus",
+      "recordsCount_zero": "Nieko nėra",
+      "recordsCount_one": "1 įrašas",
+      "recordsCount_other": "{{fmtCount}} įrašų"
+    },
+    "accountsSettings": {
+      "title": "Paskyros ir paslaugos",
+      "description": "QRZ.com ir kitos paslaugos",
+      "accountsSection": "Autentifikavimo duomenys",
+      "servicesSection": "Paslaugos",
+      "accountsQRZ": {
+        "title": "QRZ (callsign paieškai)",
+        "description": "Prisijungimas: {{login}}",
+        "noAccount": "Nėra paskyros",
+        "errorEmail": "Nenaudokite savo el. pašto prisijungimui.",
+        "dialogTitle": "QRZ.com paskyra",
+        "pleaseEnterDetails": "Prašome įvesti savo QRZ.com paskyros duomenis:",
+        "loginLabel": "Prisijungimas (jūsų šaukinys)",
+        "loginPlaceholder": "jūsų prisijungimas",
+        "passwordLabel": "Slaptažodis",
+        "passwordPlaceholder": "jūsų slaptažodis",
+        "checkCredentials": "Tikrinti autentifikavimo duomenis"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog Nuostatos",
+      "description": "Konfigūruoti Wavelog API ryšį",
+      "noStationsFoundOrInvalidResponse": "Nerasta stočių arba negaliojantis atsakymas",
+      "errorFetchingStations": "Klaida gaunant stotis: {{message}}",
+      "fetchStations": "Gauti Stotis",
+      "selectStation": "Pasirinkti Stotį",
+      "selectedStation": "Pasirinkta stotis: {{station}}"
+    },
+    "syncSettings": {
+      "title": "Sinchronizavimo nustatymai",
+      "description": "\"Ham2K HamAfo\" siūlo patikimą sinchronizavimo paslaugą tarp visų jūsų įrenginių ir suteikia atsarginę duomenų kopiją debesyje.",
+      "activePlan": "Aktyvus planas: {{plan}}",
+      "noActivePlan": "Nėra aktyvaus plano",
+      "syncService": "Sinchronizavimo paslauga",
+      "syncService.enabled": "Įjungta",
+      "syncService.disabled": "Išjungta",
+      "syncServiceDialog": {
+        "title": "Ham2K Žurnalo Įrašų Sinchronizavimo Paslauga",
+        "custom": "Pasirinktinis"
+      },
+      "syncLinkingDialog": {
+        "title": "Ham2K Žurnalo Filerio Sinchronizavimo Paslauga",
+        "enterCode": "Įveskite kodą, rodomą kitame įrenginyje, norėdami susieti jį su šia paskyra.",
+        "linkExpired": "Užklausa pasibaigusi. Bandykite dar kartą.",
+        "areYouSure-md": "Ar tikrai norite susieti \"**{{device}}**\" su šia paskyra?",
+        "requestNotFound": "Užklausa nerasta. Bandykite dar kartą.",
+        "buttonCancel": "Ne, atšaukti",
+        "buttonProcees": "Taip, susiekite!"
+      },
+      "deviceNotLinked": "Įrenginys nesusietas! ({{id}})",
+      "anonymousAccount": "Anoniminė paskyra (#{{id}})",
+      "enableSyncToLinkDevice": "Įgalinkite sinchronizavimą, kad susietumėt šį įrenginį",
+      "pendingChallenges": "Ryšio Prašymai",
+      "pendingChallengesDescription": "Yra laukiančių prašymų prijungti kitus įrenginius prie šios paskyros.",
+      "checkEmailInboxForConfirmation": "(patikrinkite savo el. pašto dėžutę dėl patvirtinimo)",
+      "accountNumber": "Paskyra #{{id}}",
+      "pendingEmailConfirmation": "(laukiama el. pašto patvirtinimo)",
+      "accountPendingConfirmation": "(laukiama patvirtinimo)",
+      "tapToConfigure": "Spauskite norėdami konfigūruoti",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K HamAfo (Dev)",
+        "https://lofi.ham2k.net": "Ham2K HamAfo (Oficialus)",
+        "custom": "Pasirinktinis ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Šis prietaisas paskutinį kartą buvo sinchronizuotas su kita paskyra (#{{id}}).\n\nNorėdami tęsti sinchronizavimą, turite pasirinkti vieną iš šių variantų:",
+        "option1withEmail-md": "Variantas #1: Pakeisti šiame įrenginyje esančius duomenis į tuos, kurie yra serveryje esamoje **{{email}}** paskyroje.",
+        "option1noEmail-md": "1 variantas: Pakeisti savo turimą paskyros duomenų įrenginį naujos paskyros duomenimis iš serverio.",
+        "option1button": "Pirmas variantas: pakeisti serverio duomenimis",
+        "option2withEmail-md": "Variantas #2: Sujungti šiame įrenginyje esančius duomenis su tais, kurie yra serveryje esamoje **{{email}}** paskyroje.",
+        "option2noEmail-md": "2 variantas: Derinti šio įrenginio duomenis su naujos paskyros duomenimis iš serverio.",
+        "option2button": "Antras variantas: derinti duomenis",
+        "option3-md": "Variantas #3: Prisijungti atgal prie ankstesnės paskyros, **{{email}}**.",
+        "option3button": "Trečias variantas: ankstesnė paskyra",
+        "buttonCancel": "Ne, atšaukti",
+        "buttonProcees": "Taip, rizikuosiu! Pakeisti viską!"
+      },
+      "combineDataAlert": {
+        "title": "Vietinio duomenų derinimas?",
+        "text": "Ar tikrai norite derinti šias operacijas ir QSO su nauja paskyra?\n\nTai derins QSO šiame įrenginyje su tuo, ką jau turi sinchronizavimo paslauga naujai paskyrai, ir gali atsitiktinai maišyti nesusijusius žurnalėlius!\n\nŠios operacijos negalima atšaukti.",
+        "buttonCancel": "Ne, atšaukti",
+        "buttonText": "Taip, rizikuosiu! Sujungti juos!",
+        "buttonProcees": "Taip, rizikuosiu! Derinkite juos!"
+      },
+      "replaceDataAlert": {
+        "title": "Vietinio duomenų keitimas?",
+        "text": "Ar tikrai norite pakeisti visus duomenis šioje įrangoje su naujos paskyros operacijomis ir QSO iš sinchronizavimo paslaugos?\n\nProgramėlė bus paleista iš naujo.\n\nJei turite nesinusinchronizuotų duomenų, tai jie BUS PANAUDOTI.",
+        "buttonCancel": "Ne, atšaukti",
+        "buttonProcees": "Taip, rizikuosiu! Keiskite viską!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Klaida jungiantis atgal prie ankstesnės paskyros",
+        "text": "Įvyko klaida jungiantis atgal prie ankstesnės paskyros.\n\n{{error}}\n\nPrašome pabandyti vėliau.",
+        "buttonCancel": "Gerai"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi Paskyra",
+        "changeEmailText": "Keisti atstatymo el. paštą šiai paskyrai:",
+        "setEmailText": "Nustatykite el. paštą savo paskyrai. Jis gali būti naudojamas ją identifikuoti ir palengvinti atradimą vėliau.",
+        "emailAddressLabel": "El. pašto adresas",
+        "linkWithOtherButton": "Naudoti kitą paskyrą",
+        "linkAccountText": "Prisijungti prie esamos paskyros:",
+        "pendingEmailTextPre": "El. laiškas buvo išsiųstas adresu",
+        "pendingEmailTextPost": "Patikrinkite jį ir vykdykite instrukcijas.",
+        "confirmLink-md": "Atidarykite programą įrenginyje, kuris jau susietas su **{{email}}** ir patvirtinkite šį prašymą įveskite šį kodą:",
+        "confirmLinkPost-md": "Jei neturite prieigos prie kito įrenginio, kuris susietas su šia paskyra, galite:",
+        "accountNotFound": "Paskyra nerasta.",
+        "connectViaEmailButton": "Prisijungti el. paštu",
+        "linkViaQRAccountText": "Nuskaitykite šį QR kodą naudodamiesi esama Ham2K LoFi Paskyra",
+        "linkViaQRButton": "Prisijungti naudojant QR kodą",
+        "confirmViaEmailButton": "Patvirtinti el. paštu",
+        "changeAccountButton": "Keisti paskyrą",
+        "resendButton": "Išsiųsti el. laišką dar kartą",
+        "revertButton": "Keisti el. paštą",
+        "syncFirstButton": "Pirmiausiai eik atgal ir užbaigti sinchronizavimą",
+        "continueAnywayButton": "Aš žinau, ką darau! Tęsti bet kokia kaina",
+        "potentialForDataLoss": "Potenciali duomenų praradimo rizika!!!",
+        "potentialForDataLossDescription": "Šiame įrenginyje dar nesinchronizuoti visi duomenys.\n\nJei susiesite šį įrenginį su nauja paskyra, rezultatų duomenis gali tekti pakeisti tuo, kas yra naujoje paskyroje.\n\nTokiu atveju galbūt nepavyks atkurti anksčiau nesinchronizuotos veiklos.\n\nSiūlome pirmą kartą sinchronizuoti šį įrenginį išsamiai!"
+      },
+      "syncServiceDescription-md": "Pagrindinė paslauga yra nemokama, tačiau, siekiant neperkrauti serverių, ji ribojama iki dviejų įrenginių arba programų ir veikia mažesniu greičiu.\n\nVisa paslauga reikalauja mokamos prenumeratos ir apima visų jūsų operacijų sinchronizavimą visu greičiu tarp bet kokio pagrįsto skaičiaus įrenginių ar programų.\n\n",
+      "thisDevice": "Šis įrenginys",
+      "notAuthenticated": "Neautentifikuota",
+      "lofiServer": "LoFi serveris",
+      "otherDevices": "Kiti įrenginiai",
+      "devSettings": "Dev Nustatymai",
+      "resetSyncStatus": "Atstatyti sinchronizavimo statusą",
+      "noDataStored": "Duomenų nepavyko išsaugoti",
+      "syncCountDescription": {
+        "operations": "Operacijos: {{synced}} sinchronizuotos, {{pending}} laukiančios",
+        "qsos": "QSO: {{synced}} sinchronizuoti, {{pending}} laukiančios"
+      },
+      "cloudCountDescription": {
+        "operations": "Operacijos: {{total}} iš viso",
+        "qsos": "QSO: {{total}} saugojamas"
+      }
+    },
+    "versionSettings": {
+      "title": "Versijos informacija",
+      "recentChanges": "Naujausi pokyčiai",
+      "coverPhoto": "Pagrindinė nuotrauka: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Tikrinama, ar yra pataisų...",
+      "newMajorReleaseAvailable": "Galima nauja major versija",
+      "patchAvailable": "{{track}} pataisa galima",
+      "checkForUpdates": "Patikrinkite, ar yra {{track}} atnaujinimai",
+      "checkForUpdatesGeneric": "Patikrinkite atnaujinimus",
+      "updateAvailable": "Galimas atnaujinimas",
+      "downloading": "Atsisiunčiama...",
+      "downloadingProgress": "Atsisiunčiama {{progress}}%",
+      "installing": "Įdiegiama...",
+      "errorDownloadingUpdate": "Klaida atsisiunčiant atnaujinimą",
+      "errorCheckingForUpdates": "Klaida tikrinant atnaujinimus",
+      "noUpdatesAvailable": "Nėra atnaujinimų",
+      "versionDescription": "{{version}} - Pagrindinis {{build}} statymas"
+    },
+    "creditsSettings": {
+      "title": "Paskolos",
+      "createdBy": "Sukurta {{callsign}}",
+      "openSource": "Ham2K PoLo yra atviro kodo",
+      "checkOutCode": "Peržiūrėkite kodą ir prisidėkite GitHub!",
+      "teamPoLo": "Komanda PoLo",
+      "creator": "Kūrėjas ir vyriausiasis programuotojas",
+      "developer": "Kūrėjas",
+      "leadSupport": "Pagrindinis palaikymas ir dokumentacija",
+      "moreCodeAndDocsContributors": "Daugiau prisidėjusiu...",
+      "contributorCode": "Kodo prisidėjimas: {{contributions}}",
+      "contributorDocumentation": "Dokumentacija",
+      "translations": "Vertimai",
+      "translationsService": "Vertimo įrankiai, sukurti CrowdIn",
+      "translationsServiceDescription": "Įrankiai vertimo procesui valdyti, dosniai dovanoja CrowdIn"
+    },
+    "devModeSettings": {
+      "title": "Kūrėjo nustatymai",
+      "wipeDatabase": {
+        "title": "Išvalyti duomenų bazę?",
+        "description": "Ar tikrai norite ištrinti visas operacijas, QOS ir kitus duomenis?",
+        "noCancel": "Ne, atšaukti",
+        "yesWipeIt": "Taip, ištrinkite!"
+      },
+      "import": {
+        "title": "Importuoti",
+        "importQSONFile": "Importuoti QSON failą"
+      },
+      "experiments": {
+        "title": "Eksperimentai",
+        "enableWavelogExperiments": "Įgalinti Wavelog eksperimentus"
+      },
+      "manageDatabase": {
+        "title": "Duomenų bazės valdymas",
+        "exportDatabase": "Eksportuoti duomenų bazę",
+        "exportDatabaseDescription": "Eksportuokite dabartinio duomenų bazės failą",
+        "replaceDatabase": "Pakeisti duomenų bazę",
+        "replaceDatabaseDescription": "Importuokite naują duomenų bazės failą ir pakeiskite visus duomenis",
+        "wipeDatabase": "Išvalyti duomenų bazę",
+        "wipeDatabaseDescription": "Ištrinkite visus duomenis iš duomenų bazės."
+      },
+      "internationalization": {
+        "title": "Tarptautizacija",
+        "crowdInPersonalTokenLabel": "CrowdIn Asmeninis prieigos raktas",
+        "crowdInPersonalTokenPlaceholder": "Gaukite iš CrowdIn paskyros nustatymų puslapio",
+        "refreshCrowdInTranslations": {
+          "title": "Atnaujinamos vertimai...",
+          "starting": "Prašome palaukti, kol atnaujinsime vertimus...",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Atnaujinimas baigtas!",
+          "errorTitle": "Klaida atnaujinant vertimus",
+          "error": "CrowdIn vertimų atnaujinimo klaida: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Išplėstinių nustatymų atsisiuntimas",
+        "locationLabel": "Vieta",
+        "locationPlaceholder": "https://example.com/dir/nustatymai.yml"
+      },
+      "systemInformation": {
+        "title": "Sistemos informacija",
+        "shareWithDevelopmentTeam": "Dalintis su komandos nariais"
+      },
+      "updatePatches": {
+        "title": "Atnaujinimai",
+        "selectTrackForPatches": "Pasirinkite atnaujinimų kryptį",
+        "selectTrackForPatchesDescription": "Pasirinkite atnaujinimo kryptį",
+        "checkingForUpdates": "Tikrinama, ar yra atnaujinimų...",
+        "checkForUpdates": "Patikrinkite {{track}} atnaujinimus",
+        "updateAvailable": "Atnaujinimas galimas",
+        "updateAvailableForTrack": "{{track}} atnaujinimas galimas",
+        "downloading": "Atsisiunčiama...",
+        "downloadingProgress": "Atsisiunčiama {{progress}}%",
+        "installing": "Įdiegiama...",
+        "errorDownloadingUpdate": "Klaida atsisiunčiant atnaujinimą",
+        "errorCheckingForUpdates": "Klaida tikrinant atnaujinimus",
+        "noUpdatesAvailable": "Nėra atnaujinimų"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Juostos ir režimai",
+      "bands": {
+        "title": "Juostos",
+        "showCommonBands": "Rodyti bendras juostas",
+        "showAllBands": "Rodyti visas juostas"
+      },
+      "modes": {
+        "title": "Režimai",
+        "showMoreModes": "Rodyti daugiau režimų",
+        "showEvenMoreModes": "Rodyti dar daugiau režimų",
+        "showFewerModes": "Rodyti mažiau režimų"
+      }
+    },
+    "exportSettings": {
+      "title": "Eksporto Nustatymai",
+      "exportTypes": "Eksporto Tipai",
+      "customTemplates": "Individualūs Šablonai",
+      "defaultTemplates": "Numatytieji Šablonai",
+      "customTemplatesDescription": "Šiam eksportui naudojami pasirinktiniai šablonai",
+      "defaultTemplatesDescription": "Naudojami numatytieji šablonai",
+      "includePrivateData": "Įtraukti privačius duomenis",
+      "ignoreLookupData": "Ignoruoti paieškos duomenis",
+      "fileNameTemplate": "Failo Pavadinimo Šablonas",
+      "titleTemplate": "Antraštės Šablonas",
+      "adifNotes": "ADIF QSO Pastabos",
+      "adifComments": "ADIF QSO Komentarai",
+      "adifQslMessage": "ADIF QSL Žinutė",
+      "templateHelpTitle": "Šablono Pagalba",
+      "includePrivateDataDescription": "Įtraukiami vardai, pastabos, adresai ir kt.",
+      "excludePrivateDataDescription": "Neįtraukiami vardai, pastabos, adresai ir kt.",
+      "ignoreLookupDataDescription": "Nepaisoma duomenų iš paieškos paslaugų, pvz., QRZ.com",
+      "useLookupDataDescription": "Įtraukiami duomenys iš paieškos paslaugų, pvz., QRZ.com",
+      "templateHelp-md": "Keli pavyzdiniai šablonų elementai…\n\n### Dienoraščio Eksportas\nAtributai eksportuojamam dienoraščiui\n`{{log.station}}` → `{{call}}` Stotis šiam eksportui\n`{{log.ref}}` → `XX-1234` Nuoroda šiam eksportui\n`{{log.refName}}` → `Pavyzdys Nacionalinis parkas` Nuorodos pavadinimas šiam eksportui\n`{{log.refShortName}}` → `Pavyzdys NP` Trumpas nuorodos pavadinimas šiam eksportui\n`{{log.handlerType}}` → `pota` Apdorojimo tipas šiam eksportui\n`{{log.handlerName}}` → `Parkai Eteryje` Apdorojimo pavadinimas šiam eksportui\n`{{log.handlerShortName}}` → `POTA` Trumpas apdorojimo pavadinimas šiam eksportui\n\n### Veiklos Šaukiniai\n`{{op.station}}` → `{{call}}` Pirmoji stotis veiklai\n`{{op.operator}}` → `{{call}}` Operatorius veiklai\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Visos stotys veiklai\n`{{op.otherStations}}` → `{{otherCalls}}` Kitos stotys veiklai\n\n### Veiklos Data\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Kitos Veiklos Detalės\n`{{op.title}}` → `XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mano ypatinga veikla`\n`{{op.userNotes}}` → `Atėjau anksti ryte…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Tinklelis šiai veiklai\n\n### QSO Informacija\n`{{qso.notes}}` → `Baisus garsas!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Pranešimas, kurį jie siuntė\n`{{qso.our.sent}}` → `55` Pranešimas, kurį mes siuntėme\n`{{qso.their.grid}}` → `FF99` Tinklelis, kurį pranešė\n`{{qso.refs}}` → Visų QSO nuorodų sąrašas (apima ir Veiklos nuorodas, ir tik QSO nuorodas)\n`{{first8 qso.uuid}}` → `123e4567`",
+      "default": {
+        "name": "Numatytieji Parametrai",
+        "description": "Bazės nustatymai visam eksportui",
+        "fileNameNormal": "Failo pavadinimas nuorodų veiklai (Normalus)",
+        "fileNameCompact": "Failo pavadinimas nuorodų veiklai (Kompaktiškas)",
+        "titleReferenceActivities": "Veiklos Nuorodos Antraštė",
+        "fileNameOtherActivitiesNormal": "Failo pavadinimas kitoms veikloms (Normalus)",
+        "fileNameOtherActivitiesCompact": "Failo pavadinimas kitoms veikloms (Kompaktiškas)",
+        "titleOtherActivities": "Kitos Veiklos Antraštė",
+        "adifNotes": "ADIF QSO Pastabos",
+        "adifComments": "ADIF QSO Komentarai",
+        "adifQSLMessage": "ADIF QSL Žinutė"
+      }
+    },
+    "noticesSettings": {
+      "title": "Naujausi Pranešimai",
+      "undated": "Be datos",
+      "noRecentNotices": "Nėra naujausių pranešimų"
+    },
+    "extensionSettings": {
+      "title": "Pratęsimas"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Skydelio Skirstiklis",
+      "qsosTab": "QSO",
+      "qsosTab-a11y": "Qso Skirtuk",
+      "infoTab": "Informacija",
+      "infoTab-a11y": "Informacijos Skirtukas",
+      "operationInfo-a11y": "Operacijos Informacija",
+      "spotsTab": "Dėmės",
+      "spotsTab-a11y": "Dėmių Skirtukas",
+      "mapTab": "Žemėlapis",
+      "mapTab-a11y": "Žemėlapio Skirtukas",
+      "settingsTab": "Operacija",
+      "settingsCompactTab": "Oper.",
+      "settingsTab-a11y": "Operacijos Nustatymų Skirtukas",
+      "menu": {
+        "loggingSettings": "Registravimo nustatymai",
+        "rstFields": "RST Laukai",
+        "stateField": "Būklės Laukas",
+        "gridField": "Tinklelio laukas",
+        "showDeletedQSOs": "Rodyti Ištrintus QSO",
+        "numbersRow": "Skaičių Eilutė",
+        "actions": "Veiksmai",
+        "lookupAllQSOs": "Ieškoti visų QSO",
+        "confirmSpots": "Patvirtinti Dėmes"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Nėra QSO",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSO",
+      "qsosCompactTabCount_zero": "Nėra Q",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Q",
+      "noQSOsYet": "Dar nėra QSO!",
+      "currentlySetTo": "Šiuo metu nustatyta į",
+      "missingInfoError": {
+        "message": "KLAIDA: Įveskite **{{errors}}** tinkamai operacijai",
+        "errors": {
+          "band": "juosta",
+          "mode": "moduliacija",
+          "callsign": "šaukinys"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Atšaukti",
+        "erase-a11y": "Trinti",
+        "delete-a11y": "Pašalinti",
+        "addQSO-a11y": "Pridėti QSO",
+        "saveQSO-a11y": "Išsaugoti QSO"
+      },
+      "deletedQSO": "Ištrintas QSO",
+      "qsoWillBeDeleted": "QSO bus ištrintas!",
+      "noQSOsBy-md": "Dar nėra QSO pagal {{callsign}}… Susisieksime!",
+      "noQSOsYet-md": "Dar nėra QSO... Susisieksime!",
+      "qsoCount_zero": "Nėra QSO",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO",
+      "qsosInTime": "{{countText}} per {{timeText}}",
+      "last10QSOs": "{{rate}} Q/h per pastaruosius 10",
+      "last100QSOs": "{{rate}} Q/h per pastaruosius 100",
+      "timeSinceLast": "{{time}} nuo paskutinio",
+      "moreLabel": "Daugiau",
+      "theirCallLabel": "Jų Šaukinys",
+      "ourSentLabel": "Išsiųsta",
+      "theirSentLabel": "Gauta",
+      "stateLabel": "Valstija",
+      "gridLabel": "Tinklelis",
+      "timeLabel": "Laikas",
+      "dateLabel": "Data",
+      "timeControls-a11y": "Laiko valdymas",
+      "powerLabel": "Galia",
+      "powerControls-a11y": "Galios valdymas",
+      "modeLabel": "Būdas",
+      "bandLabel": "Juosta",
+      "frequencyLabel": "Dažnis",
+      "bandMissing": "Juosta???",
+      "modeMissing": "Moduliacija???",
+      "modeOutOfBand": "Už diapazono ribų",
+      "radioControls-a11y": "Radijo valdymas {{parts}}",
+      "notesLabel": "Pastabos",
+      "notesLabel-a11y": "Pastabos",
+      "activeControlsLabel": "Aktyvios valdymas",
+      "activeControlsLabel-a11y": "Aktyvios valdymas",
+      "selectToRemoveActiveControls": "pasirinkite, kad pašalintumėte juos",
+      "selectToRemoveActiveControls-a11y": "pasirinkite, kad pašalintumėte juos",
+      "moreControlsLabel": "Daugiau valdymo",
+      "moreControlsLabel-a11y": "Daugiau valdymo",
+      "selectToAddMoreControls": "pasirinkite, kad pridėtumėte juos",
+      "selectToAddMoreControls-a11y": "pasirinkite, kad pridėtumėte juos",
+      "showSecondaryControlSettings-a11y": "Rodyti antrinius valdymo nustatymus",
+      "hideMostSecondaryControls-a11y": "Paslėpti daugumą antrinių valdymo nustatymų",
+      "showAllSecondaryControls-a11y": "Rodyti visus antrinius valdymo nustatymus",
+      "spotting": {
+        "selfSpottingAt": "Savęs eksponavimas prie {{freq}}",
+        "stopAutoRespotting": "Sustabdyti automatinį eksponavimą",
+        "setFrequencyFirst": "Pirmai nustatykite dažnį eksponavimui.",
+        "reSpotEvery": "Eksponavimas kas {{minutes}} min",
+        "reSpotAt": "Eksponavimas prie {{freq}}",
+        "selfSpottedAt": "Savęs eksponavimas prie {{time}}",
+        "spotAt": "Eksponuoti {{call}} prie {{freq}}",
+        "tooLateToSpot": "Per vėlu eksponuoti {{call}}",
+        "nothingToSpot": "Nieko eksponuoti",
+        "selfSpottingLabel": "Savęs eksponavimas",
+        "selfSpottingControls-a11y": "Savęs eksponavimo valdymas",
+        "spottingLabel": "Eksponavimas",
+        "spottingControls-a11y": "Eksponavimo valdymas",
+        "autoRespottingLabel": "Automatinis eksponavimas",
+        "autoRespottingControls-a11y": "Automatinio eksponavimo valdymas",
+        "commentsLabel": "Komentarai"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Jokios linijos?\nPirma turite nustatyti savo buvimo vietą.\n\nPaspauskite čia, kad tai padarytumėte.",
+      "manyNoLocation": "Daugelis šių QSO neturi tikslaus buvimo vietos.\n\nGalbūt jums reikia mokamos QRZ.com paskyros vietos paieškoms."
+    },
+    "opSpotsTab": {
+      "noSpots": "Nėra Dėmių",
+      "spotsCount_zero": "Nėra Dėmių",
+      "spotsCount_one": "1 Dėmė",
+      "spotsCount_other": "{{fmtCount}} Dėmės",
+      "showingSpots": "Rodomos {{count}} iš {{total}}",
+      "loadingSpots": "Įkeliami įrašai...",
+      "sections": {
+        "specialSpots": "Specialios Dėmės",
+        "newMultipliers": "Nauji Daugikliai",
+        "callsOfNote": "Pažymėti Šaukiniai",
+        "mostRecentSpots": "Paskutinės Dėmės"
+      },
+      "allBands": "Visos Juostos",
+      "auto": "Automatinis",
+      "allModes": "Visi Režimai",
+      "filters": "Filtrai",
+      "filtersBand": "Juosta",
+      "filtersAllBands": "Visos Juostos",
+      "filtersBandAutomatic": "Automatinis (Dabartinė {{band}})",
+      "filtersMode": "Režimas",
+      "filtersAllModes": "Visi Režimai",
+      "filtersModeAutomatic": "Automatinis (Dabartinis {{mode}})",
+      "filtersMaximumAge": "Maksimalus Amžius",
+      "filtersAnyAge": "Bet koks amžius",
+      "filtersAge10Minutes": "10 minučių",
+      "filtersAge20Minutes": "20 minučių",
+      "filtersAge30Minutes": "30 minučių",
+      "filtersAge45Minutes": "45 minutės",
+      "filtersAge60Minutes": "60 minučių",
+      "filtersSorting": "Rūšiavimas",
+      "filtersSortByTime": "Pagal dėmės laiką",
+      "filtersSortByFrequency": "Pagal dažnį",
+      "filtersGroupSpecialSpots": "Pirma Grupės Specialios Dėmės",
+      "filtersGroupCallsWithNotes": "Grupuoti Šaukinius su Pastabomis",
+      "filtersSpotSources": "Dėmių Šaltiniai",
+      "filtersFilterByContinent": "Filtruoti pagal Žemyną",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Telefonas",
+        "DIGITAL": "Skaitmeninė",
+        "DATA": "Skaitmeninė",
+        "phoneOrCW": "Telefonas arba CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Negaliojantis Šaukinys {{callsign}}",
+      "invalidCallsigns": "Negaliojantys Šaukiniai {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (valdoma {{operator}})",
+      "noStationCallsignDefined": "NĖRA STOTIES ŠAUKINIO",
+      "showMoreTemplates": "Rodyti Daugiau Šablonų",
+      "templatesAvailable_zero": "Nėra šablonų",
+      "templatesAvailable_one": "1 šablonas",
+      "templatesAvailable_other": "{{count}} šablonai",
+      "stationAndOperatorTitle": "Stotis ir Operatorius",
+      "locationTitle": "Vieta",
+      "gridDescription-md": "Tinklelis `{{grid}}`",
+      "stateDescription-md": "Valstija: `{{state}}`",
+      "countyDescription-md": "Apskritis: `{{county}}`",
+      "locationDescriptionNone-md": "Teritorija nenustatyta",
+      "operationDetailsTitle": "Operacijos detalės",
+      "operationDetailsDescription": "Pridėkite pastabas šiai operacijai",
+      "addTitleOrNotesForOperation": "Pridėkite pavadinimą arba pastabas šiai operacijai",
+      "activitiesTitle": "Veiklos",
+      "addActivityTitle": "Pridėti veiklą",
+      "addActivityDescription": "POTA, SOTA, lauko diena ir dar daugiau!",
+      "addActivityDescription-noFeatures": "Pirmiausia įgalinkite kai kurias veiklos funkcijas pagrindiniame nustatymų ekrane",
+      "operationDataTitle": "Operacijos duomenys",
+      "manageOperationLogsTitle": "Valdyti operacijų žurnalus",
+      "manageOperationLogsDescription": "Eksportuoti, importuoti ir tvarkyti duomenis",
+      "useAsTemplateTitle": "Naudoti kaip šabloną",
+      "useAsTemplateDescription": "Pradėti naują operaciją su panašiais nustatymais",
+      "dangerZoneTitle": "Pavojinga zona",
+      "undeleteOperationTitle": "Atkurti operaciją",
+      "deleteOperationTitle": "Ištrinti operaciją"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Operacijos statistika",
+      "operationTotalsTitle-md": "Operacijos bendri duomenys:",
+      "qsosInTime_zero": "Nėra QSOs",
+      "qsosInTime_one": "1 QSO per {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSOs per {{time}}",
+      "qsoCount_zero": "Nėra QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "timeSinceLast": "{{time}} nuo paskutinio QSO",
+      "last10QSOs": "{{rate}} Q/h per pastaruosius 10",
+      "last100QSOs": "{{rate}} Q/h per pastaruosius 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Klaida importuojant QSON",
+      "invalidName": "Neteisingas pavadinimas",
+      "invalidNameDescription": "Failo vardas turi baigtis .qson arba .json",
+      "unknownError": "Nežinoma klaida"
+    },
+    "importADIF": {
+      "error": "Klaida importuojant ADIF į Operaciją",
+      "historicalImportError": "Klaida importuojant istorinius ADIF",
+      "unknownError": "Nežinoma klaida"
+    }
+  }
+}

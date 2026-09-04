@@ -1,0 +1,996 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Nėra diapazonų",
+      "bandsCount_one": "1 diapazonas",
+      "bandsCount_other": "{{count}} diapazonas/ai",
+      "modesCount_zero": "Nėra moduliacijų",
+      "modesCount_one": "1 moduliacija",
+      "modesCount_other": "{{count}} moduliacija/os",
+      "total": "Iš viso {{count}}"
+    },
+    "bca": {
+      "name": "BCA: Belgijos pilys ir tvirtovės",
+      "shortName": "BCA",
+      "exportName": "BCA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Nebuvo pasirinktos pilys aktyvavimui",
+        "title_one": "1 pilies aktyvavimas",
+        "title_other": "{{count}} pilių aktyvavimas",
+        "noCastlesFound": "Nepavyko rasti pilių",
+        "nearestMatches": "{{limit}} artimiausi iš {{count}} atitikties",
+        "matchingCastles_zero": "Nerasta atitinkančių pilių",
+        "matchingCastles_one": "1 atitinkanti pilis",
+        "matchingCastles_other": "{{count}} atitinkančios pilys",
+        "searchForCastles": "Ieškokite pilių, kurias norėtumėte aktyvuoti!",
+        "noCastlesNearby": "Netoliese pilių nėra",
+        "nearbyCastles": "Netoliese esančios pilys",
+        "searchPlaceholder": "Vardas ar nuoroda…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Niekas medžiotų pilių",
+        "huntedRefsCount_one": "1 pilis medžiota",
+        "huntedRefsCount_other": "{{fmtCount}} pilys medžiotos",
+        "activatorQSOsCount_zero": "Nėra aktyvatorių QSOs",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatorių QSOs",
+        "huntedQSOsCount_zero": "Niekas medžiotų QSOs",
+        "huntedQSOsCount_one": "1 sumedžiotas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} sumedžiotų QSOs",
+        "operationTotals": "Veiklos sumos",
+        "referencesActivatedCount_zero": "Nėra aktyvuotų pilių",
+        "referencesActivatedCount_one": "1 aktyvuota pilis",
+        "referencesActivatedCount_other": "{{fmtCount}} aktyvuota pilis",
+        "referencesMissedCount_zero": "Nėra nebaigtų pilių",
+        "referencesMissedCount_one": "1 nebaigta pilis",
+        "referencesMissedCount_other": "{{fmtCount}} nebaigtos pilys",
+        "referencesHuntedCount_zero": "Niekas medžiotų pilių",
+        "referencesHuntedCount_one": "1 medžiota pilis",
+        "referencesHuntedCount_other": "{{fmtCount}} medžiotos pilys"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų BCA"
+      }
+    },
+    "blha": {
+      "name": "BLHA: Belgijos švyturiai ir plaukiojančios švyturėlio platformos",
+      "shortName": "BLHA",
+      "exportName": "BLHA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Nebuvo pasirinkti švyturiai aktyvavimui",
+        "title_one": "1 švyturio aktyvavimas",
+        "title_other": "{{count}} švyturių aktyvavimas",
+        "noLighthousesFound": "Nepavyko rasti švyturių",
+        "nearestMatches": "{{limit}} artimiausi iš {{count}} atitikties",
+        "matchingLighthouses_zero": "Nerasta atitinkančių švyturių",
+        "matchingLighthouses_one": "1 atitinkantis švyturys",
+        "matchingLighthouses_other": "{{count}} atitinkantys švyturiai",
+        "searchForLighthouses": "Ieškokite švyturių, kuriuos norėtumėte aktyvuoti!",
+        "noLighthousesNearby": "Netoliese švyturių nėra",
+        "nearbyLighthouses": "Netoliese esantys švyturiai",
+        "searchPlaceholder": "Vardas ar nuoroda…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Niekas medžiotų švyturių",
+        "huntedRefsCount_one": "1 medžiotas švyturys",
+        "huntedRefsCount_other": "{{fmtCount}} medžiotų švyturių",
+        "activatorQSOsCount_zero": "Niekas aktyvatorių QSOs",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatoriaus QSOs",
+        "huntedQSOsCount_zero": "Nėra medžiotų QSOs",
+        "huntedQSOsCount_one": "1 medžiotas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} medžiotų QSOs",
+        "operationTotals": "Veiklos sumos",
+        "referencesActivatedCount_zero": "Nėra aktyvuotų švyturių",
+        "referencesActivatedCount_one": "1 aktyvuotas švyturys",
+        "referencesActivatedCount_other": "{{fmtCount}} aktyvuotų švyturių",
+        "referencesMissedCount_zero": "Niekas nebaigtų švyturių",
+        "referencesMissedCount_one": "1 nebaigtas švyturys",
+        "referencesMissedCount_other": "{{fmtCount}} nebaigtų švyturių",
+        "referencesHuntedCount_zero": "Niekas medžiotų švyturių",
+        "referencesHuntedCount_one": "1 medžiotas švyturys",
+        "referencesHuntedCount_other": "{{fmtCount}} medžiotų švyturių"
+      }
+    },
+    "call-history": {
+      "name": "Skambučių istorija",
+      "description": "Įkelkite istorinius ADIF failus ir naudokite juos be prisijungimo paieškų metu"
+    },
+    "call-notes": {
+      "name": "Skambučių ženklų pastabos",
+      "description": "Callsign pastabų saugojimas faile ir panaudojimas neprisijungus",
+      "description-md_zero": "Pastabos neįkeltos.",
+      "description-md_one": "{{fmtCount}} {{type}} įkelta.",
+      "description-md_other": "{{fmtCount}} {{type}} įkelta.",
+      "builtIn": "Įmontuotos pastabos",
+      "userDefined": "Vartotojo pastabos",
+      "failedToLoad": "Įkelti nepavyko!",
+      "notesFile": "Skambučių ženklų pastabų byla",
+      "nameLabel": "Vardas",
+      "namePlaceholder": "Nurodykite vardą savo skambučių ženklų pastabų bylai",
+      "locationLabel": "Vieta",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Įmontuotas",
+      "customTitle": "Pasirinktinis",
+      "addFile": "Pridėti naują bylą",
+      "aboutTitle": "Apie skambučių ženklų pastabas",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K įžymiųjų operatorių sąrašas"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Įspūdingas radijo pasaulio žinomų ir nežinomų sąrašas"
+      },
+      "help-md": "Skambučių ženklai saugomi paprastose tekstinėse bylose, viena eilutė vienam skambučiui, po kurio pateikiama informacija, kurią norite pamatyti registravimo ekrane. Galite naudoti įmontuotas bylas arba pridėti savo.\n\nPateikite tiesioginę nuorodą į paprastą tekstinę bylą arba „dalinimosi nuorodą“ iš paslaugos, kaip kad:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nEilutės toje byloje turėtų atrodyti taip ir gali palaikyti pagrindinį „markdown“ formatavimą:\n\n```nK2HRC 🎉 Ham2K radijo klubas!!!\nKE8PZN 👑 Džeimsas POTA karalius\nWD4DAN Danas POTA _karališkoji šeima_\nDAN WD4DAN, WD4JMM\n```\n\nJei įrašas prasideda su emocijomis, jis bus naudojamas vietoj numatytojo ⭐.\n\nĮrašai gali būti naudojami „skambučių ženklų išplėtimui“, jei pirmiausiai įrašote `..` arba ` //` skambučio lauke, kaip `//DAN` šiame pavyzdyje."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Nėra Kanados provincijų",
+      "provincesCount_one": "1 Kanados provincija",
+      "provincesCount_other": "{{count}} Kanados provincijos"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Nustatymai",
+        "year": "Metai",
+        "testMode-md": "Kadangi šių metų renginys dar neprasidėjo, galite išbandyti savo veiklą su QSOs iš pastarųjų septynių dienų.",
+        "note-md": "PASTABA: PoLo praneš jūsų rezultatus, naudodamas visas QSOs pasirinktoje datų intervale, įskaitant bet kokias kitas operacijas šiame įrenginyje.",
+        "info-md": "13 kolonijų specialus renginys vyksta kasmet nuo liepos 1 d. 9 val. ET iki liepos 7 d. vidurnakčio ET."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Gaunama dabartinė orų informacija...",
+      "errorFetchingWeather": "Klaida gaunant orų informaciją",
+      "fetchingSolarWeather": "Gaunama saulės orų informacija...",
+      "errorFetchingSolarWeather": "Klaida gaunant saulės orų informaciją",
+      "addNote": "Pridėti pastabą: '{{note}}'...",
+      "addNotePrompt": "Pridėti pastabą? rašykite toliau...",
+      "addNoteConfirm": "Pastaba pridėta!",
+      "addTodo": "Pridėti darbų sąrašo punktą: '{{note}}'...",
+      "addTodoPrompt": "Pridėti darbų sąrašo punktą? rašykite toliau...",
+      "addTodoConfirm": "Darbų sąrašas pridėtas!",
+      "sendChat": "Siųsti žinutę: '{{note}}'...",
+      "sendChatPrompt": "Siųsti pranešimą? rašykite toliau...",
+      "sendChatConfirm": "Išsiųsta!"
+    },
+    "commands-debug": {
+      "syncall": "Ištrinti visas operacijas ir atstatyti sinchronizavimo būseną?",
+      "syncallConfirm": "Trinamos duomenys ir sinchronizuojama iš naujo...",
+      "syncup": "Perkartoti vietinius duomenis į sinchronizavimo paslaugą?",
+      "syncupConfirm": "Perkraunama...",
+      "wipedb": "Ištrinti visą duomenų bazę (bet palikti nustatymus)? ",
+      "wipedbConfirm": "Valo duomenų bazę…",
+      "factory": "Trinti visus duomenis ir nustatymus?",
+      "factoryConfirm": "Gamyklinis atstatymas vykdomas…",
+      "switchLanguage": "Pakeisti kalbą į `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Kalba `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Perjungiama į `{{lang}}` {{name}}..."
+    },
+    "commands-devmode": {
+      "activate": "Aktyvuoti kūrėjo režimą?",
+      "activateConfirm": "Kūrėjo režimas aktyvuotas!",
+      "deactivate": "Deaktyvuoti kūrėjo režimą?",
+      "deactivateConfirm": "Kūrėjo režimas deaktyvuotas!",
+      "on": "Kūrėjo režimas: ĮJUNGTA!!!",
+      "off": "Kūrėjo režimas: IŠJUNGTA"
+    },
+    "commands-misc": {
+      "rtfm": "Perskaityti instrukciją?",
+      "rtfmConfirm": "Atidaroma instrukcija",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Negalima paženklinti savęs be dažnio",
+        "selfSpotWithComments": "Pažymėti save su ‘{{comments}}’?",
+        "selfSpotPrompt": "Žymėti save patį?",
+        "selfSpottingWithComments": "Pažymima adresu {{freq}} su ‘{{comments}}’",
+        "selfSpotting": "Pažymima adresu {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Pradėti veiklą?",
+      "startConfirm": "Pradėta operacija!",
+      "break": "Pridėti pertrauką?",
+      "breakConfirm": "Pridėta operacijos pertrauka!",
+      "roverqth": "Pridėti pertrauką ir nustatyti naują vietą?",
+      "roverqthConfirm": "Pertrauka pridėta, dabar nustatykite naują vietą",
+      "stop": "Sustabdyti veiklą?",
+      "stopConfirm": "Operacija sustabdyta!"
+    },
+    "commands-operator": {
+      "change": "Pakeisti operatorių į {{operator}}?",
+      "changeConfirm": "Operatorius nustatytas {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Pakeisti juostą į {{band}}?",
+      "bandConfirm": "Grupė nustatyta į {{band}}",
+      "frequency": "Keisti dažnį į {{freq}} MHz?",
+      "frequencyConfirm": "Dažnis nustatytas į {{freq}} MHz",
+      "frequencyAndMode": "Keisti dažnį į {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Dažnis nustatytas iki {{freq}} MHz ({{mode}})",
+      "power": "Pakeisti galią iki {{power}}W?",
+      "powerConfirm": "Galia nustatyta iki {{power}}W",
+      "mode": "Keisti režimą į {{mode}}?",
+      "modeConfirm": "Režimas nustatytas į {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Nustatyti {{name}}?",
+      "setChange": "Keisti {{label}} iki {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} nustatytas iki {{value}}",
+      "setNotChanged": "Nepakeistas"
+    },
+    "commands-time": {
+      "setTime": "Nustatyti laiką iki {{time}}?",
+      "setDate": "Nustatyti datą iki {{date}}?",
+      "timeSet": "Laikas nustatytas iki {{time}}",
+      "dateSet": "Data nustatyta iki {{date}}",
+      "changeTimeByHours": "Keiskite laiką {{delta}} valandomis?",
+      "changeTimeByMinutes": "Keiskite laiką {{delta}} minutėmis?",
+      "changeTimeBySeconds": "Keisti laiką {{delta}} sekundėmis?",
+      "changeTimeByDays": "Keiskite laiką {{delta}} dienomis?",
+      "changeTimeByWeeks": "Keiskite laiką {{delta}} savaitėmis?",
+      "changeTimeToNow": "Keisti laiką iki dabar?",
+      "changeTimeToToday": "Keisti laiką iki šiandien?",
+      "changeTimeToYesterday": "Keisti laiką iki vakar?",
+      "timeSetToNow": "Laikas nustatytas iki dabar",
+      "timeSetToToday": "Laikas nustatytas iki šiandien",
+      "timeSetToYesterday": "Laikas nustatytas iki vakar"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Nepasirinkta jokia nuoroda aktyvavimui",
+        "title_one": "1 nuorodos aktyvavimas",
+        "title_other": "{{count}} nuorodų aktyvavimas",
+        "addMoreReferences": "Pridėti daugiau nuorodų",
+        "addReference": "Pridėti nuorodą",
+        "activityLabel": "Veikla - MY_SIG ADIF (Pasirinktinai)",
+        "activityPlaceholder": "pvz., COTA...",
+        "referenceLabel": "Nuoroda - MY_SIG_INFO ADIF",
+        "referencePlaceholder": "pvz., XY-1234...",
+        "nameLabel": "Vardas (Pasirinktinai)",
+        "namePlaceholder": "pvz., XYZ pilis...",
+        "addButton": "Pridėti {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų Ref"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Pakeiskite čia nurodytų duomenų failų pavadinimus",
+        "pota-all-parks": "POTA: Visi parkai",
+        "sota-all-summits": "SOTA: Visi viršūnės"
+      },
+      "loading": {
+        "progress": "Įkeltos `{{processedLines}}` nuorodos.\n\n`{{percent}}` • {{secondsLeft}} sekundės liko.",
+        "downloadingRawData": "Atsisiunčiami neapdoroti duomenys..."
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Nėra DXCC vienetų",
+      "entitiesCount_one": "1 DXCC vienetas",
+      "entitiesCount_other": "{{count}} DXCC vienetai"
+    },
+    "eca": {
+      "name": "ECA: Anglijos pilių apdovanojimai",
+      "shortName": "ECA",
+      "exportName": "ECA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Nebuvo pasirinktos pilys aktyvavimui",
+        "title_one": "1 pilies aktyvavimas",
+        "title_other": "{{count}} pilių aktyvavimas",
+        "noCastlesFound": "Nepavyko rasti pilių",
+        "nearestMatches": "{{limit}} artimiausi iš {{count}} atitikties",
+        "matchingCastles_zero": "Nerasta atitinkančių pilių",
+        "matchingCastles_one": "1 atitinkanti pilis",
+        "matchingCastles_other": "{{count}} atitinkančios pilys",
+        "searchForCastles": "Ieškokite pilių, kurias norėtumėte aktyvuoti!",
+        "noCastlesNearby": "Netoliese pilių nėra",
+        "nearbyCastles": "Netoliese esančios pilys",
+        "searchPlaceholder": "Vardas ar nuoroda…"
+      }
+    },
+    "ela": {
+      "name": "ELA: Anglijos švyturių apdovanojimai",
+      "shortName": "ELA",
+      "exportName": "ELA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Nebuvo pasirinkti švyturiai aktyvavimui",
+        "title_one": "1 švyturio aktyvavimas",
+        "title_other": "{{count}} švyturių aktyvavimas",
+        "noLighthousesFound": "Nepavyko rasti švyturių",
+        "nearestMatches": "{{limit}} artimiausi iš {{count}} atitikties",
+        "matchingLighthouses_zero": "Nerasta atitinkančių švyturių",
+        "matchingLighthouses_one": "1 atitinkantis švyturys",
+        "matchingLighthouses_other": "{{count}} atitinkantys švyturiai",
+        "searchForLighthouses": "Ieškokite švyturių, kuriuos norėtumėte aktyvuoti!",
+        "noLighthousesNearby": "Netoliese švyturių nėra",
+        "nearbyLighthouses": "Netoliese esantys švyturiai",
+        "searchPlaceholder": "Vardas ar nuoroda…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Mainų informacija",
+        "classLabel": "Klasė",
+        "locationLabel": "Vieta",
+        "additionalInformation": "Papildoma informacija",
+        "highestTransmitterPowerLabel": "Pavaros siųstuvo galingumas",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W ar mažiau",
+        "qroOption": "QRO: 100W ar mažiau",
+        "moreThan100WOption": "Daugiau nei 100W",
+        "powerSourceLabel": "Maitinimo šaltinis",
+        "powerSourcePlaceholder": "Pasirinkite maitinimo šaltinį",
+        "batteriesOption": "Baterijos, Saulės, Vėjas",
+        "commercialPowerOption": "Komercinė galia, Generatorius",
+        "bonusesTitle": "Papildomi taškai: pareikšta {{count}}, {{points}} tšk.",
+        "bonusesDescription": "Nepamirškite šių premijos taškų taip pat nurodyti pateikdami savo žurnalą!",
+        "bonusTitle": "{{title}} ({{points}} tšk.)",
+        "information-md": "ARRL lauko dienos klasė, pavyzdžiui, `2A`:\n\n  - `1`, `2`, `3`... siųstuvų skaičius.\n  - `A` grupei (3 ar daugiau) Nešiojama stotis\n  - `B` vieno arba dviejų asmenų nešiojama stotis\n  - `C` mobilioji stotis\n  - `D` namų stotis\n  - `E` Namų stotis su avarine energija \n  - `F` Avarinių operacijų centras\n\nVieta yra ARRL sekcija, RAC sekcija, `MX` už Meksiką arba `DX` už bet ką kitą.\n\nPlačiau oficialiose [taisyklių puslapyje](https://www.arrl.org/field-day-rules) **[oficialiose taisyklėse](https://www.arrl.org/field-day-rules)**."
+      },
+      "bonusName": {
+        "transmitters": "Siųstuvai",
+        "emergencyPower": "100 % avarinis maitinimas",
+        "mediaPublicity": "Viešinimas žiniasklaidoje",
+        "publicLocation": "Vieša vieta",
+        "informationTable": "Viešosios informacijos stalas",
+        "messageToSM": "Pranešimas ARRL SM/SEC",
+        "ntsMessages": "Pranešimų tvarkymas",
+        "ntsMessagesCount": "Tvarkytų pranešimų skaičius",
+        "satelliteQSO": "Palydovinis QSO",
+        "alternatePowerQSOs": "QSO naudojant alternatyvų maitinimą",
+        "w1awMessage": "W1AW Field Day pranešimas",
+        "electedOfficialVisit": "Išrinkto pareigūno vizitas",
+        "agencyOfficialVisit": "Aptarnaujamos agentūros pareigūno vizitas",
+        "educationalActivity": "Švietėjiška veikla",
+        "youthElement": "Jaunimo dalyvavimas",
+        "safetyOfficer": "Saugos pareigūnas",
+        "siteResponsibilities": "Vietos atsakomybės",
+        "socialMedia": "Socialinė žiniasklaida",
+        "gotaQSOs": "GOTA stoties QSO",
+        "gotaQSOsCount": "GOTA QSO skaičius",
+        "gotaCoach": "GOTA treneris",
+        "webSubmission": "Pateikimas internetu"
+      },
+      "bonusDescription": {
+        "transmitters": "100 taškų už siųstuvą (daugiausia 20), neskaičiuojant GOTA ar VHF.",
+        "emergencyPower": "100 taškų už siųstuvą (daugiausia 20), jei visi ryšiai naudoja avarinį maitinimą.",
+        "mediaPublicity": "Gaukite viešinimą vietinėje žiniasklaidoje. Pateikite kopiją su savo paraiška.",
+        "publicLocation": "Vykdykite operaciją viešoje vietoje, pavyzdžiui, parke, mokykloje ar prekybos centre (tik A, B arba F klasėms).",
+        "informationTable": "Field Day vietoje įrenkite viešosios informacijos stalą (tik A, B arba F klasėms).",
+        "messageToSM": "Parenkite oficialų pranešimą savo ARRL Section Manager arba Section Emergency Coordinator.",
+        "ntsMessages": "10 taškų už kiekvieną NTS arba ICS-213 pranešimą (daugiausia 10), tvarkytą operavimo laikotarpiu.",
+        "satelliteQSO": "Užbaikite bent vieną QSO per mėgėjiško radijo palydovą (tik A, B arba F klasėms).",
+        "alternatePowerQSOs": "Užbaikite bent vieną QSO naudodami alternatyvią energijos gamybą, pvz., saulės, vėjo ar vandens (tik A, B, E arba F klasėms).",
+        "w1awMessage": "Tiksliai nukopijuokite specialų Field Day biuletenį, perduotą W1AW arba K6KPH.",
+        "electedOfficialVisit": "Priimkite pakviesto išrinkto valdžios pareigūno vizitą.",
+        "agencyOfficialVisit": "Priimkite pakviesto aptarnaujamos agentūros pareigūno vizitą.",
+        "educationalActivity": "Surenkite oficialią švietėjišką veiklą su rašytiniu pamokos planu.",
+        "youthElement": "Įtraukite jaunimo dalyvius į operaciją.",
+        "safetyOfficer": "Vietoje turėkite paskirtą saugos pareigūną (tik A klasei).",
+        "siteResponsibilities": "Įvykdykite vietos atsakomybės reikalavimus (B, C, D, E ir F klasėms).",
+        "socialMedia": "Reklamuokite savo Field Day operaciją socialinėje žiniasklaidoje.",
+        "gotaQSOs": "5 taškai už kiekvieną GOTA stotyje užbaigtą QSO.",
+        "gotaCoach": "Yra GOTA treneris, padedantis vykdyti GOTA stoties veiklą.",
+        "webSubmission": "Pateikite savo paraišką naudodami žiniatinklio programėlę adresu field-day.arrl.org."
+      }
+    },
+    "gma": {
+      "name": "GMA: Pasaulinė kalnų veikla",
+      "shortName": "GMA",
+      "exportName": "GMA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Nėra pasirinkta viršūnės aktyvavimui",
+        "title_one": "1 viršūnės aktyvavimas",
+        "title_other": "{{count}} viršūnių aktyvavimas",
+        "noSummitsFound": "Nepavyko rasti viršūnių",
+        "nearestMatches": "{{limit}} artimiausi iš {{count}} atitikties",
+        "matchingSummits_zero": "Nerasta atitinkančių viršūnių",
+        "matchingSummits_one": "1 atitinkanti viršūnė",
+        "matchingSummits_other": "{{count}} atitinkančios viršūnės",
+        "searchForSummits": "Ieškokite viršūnių, kurias norėtumėte aktyvuoti!",
+        "noSummitsNearby": "Netoliese viršūnių nėra",
+        "nearbySummits": "Netoliese esančios viršūnės",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownSummit": "Nežinoma viršūnė"
+      }
+    },
+    "ham2k-lookup": {
+      "name": "Ham2K paieškos paslauga",
+      "description": "Nemokama paslauga, tačiau apimanti tik JAV, Kanados ir Vokietijos šaukinius"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Callsign paieška",
+      "description": "Reikalinga nemokama abonemento registracija paieškai"
+    },
+    "llota": {
+      "name": "LLOTA: Ežerai ir lagūnos eteryje",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA aktyvacija",
+      "activityOptions": {
+        "title_zero": "Nepasirinkta jokių ežerų aktyvacijai",
+        "title_one": "Aktyvuoti 1 ežerą",
+        "title_other": "Aktyvuoti {{count}} ežerus",
+        "noLakesFound": "Nerasta jokių ežerų",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} rezultatų",
+        "matchingRefs_zero": "Nėra ežerų pagal sutampančius kriterijus",
+        "matchingRefs_one": "1 ežeras atitiko kriterijus",
+        "matchingRefs_other": "{{count}} ežerai atitiko kriterijus",
+        "searchForRefs": "Ieškokite ežerų, kuriuos norite aktyvuoti!",
+        "noRefsNearby": "Netoli nėra ežerų",
+        "nearbyRefs": "Netoliese esančių ežerų",
+        "searchPlaceholder": "Pavadinimas ar nuoroda…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Nėra L2L",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ls",
+        "huntedRefsCount_zero": "Nėra medžiotų ežerų",
+        "huntedRefsCount_one": "1 medžiotas ežeras",
+        "huntedRefsCount_other": "Medžiota ežerų: {{fmtCount}}",
+        "activatorQSOsCount_zero": "Nėra aktyvatoriaus QSO",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "Aktyvatorių QSO: {{fmtCount}}",
+        "ref2refQSOsCount_zero": "Nėra L2L QSO",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "L2L QSO: {{fmtCount}}",
+        "huntedQSOsCount_zero": "Nėra medžiotų QSO",
+        "huntedQSOsCount_one": "1 medžiotas QSO",
+        "huntedQSOsCount_other": "Medžiotų QSO: {{fmtCount}}",
+        "operationTotals": "Operacijos suma",
+        "referencesActivatedCount_zero": "Nėra aktyvuotų ežerų",
+        "referencesActivatedCount_one": "1 aktyvuotas ežeras",
+        "referencesActivatedCount_other": "Aktyvuoti ežerai: {{fmtCount}}",
+        "referencesMissedCount_zero": "Nėra nebaigtų ežerų",
+        "referencesMissedCount_one": "1 nebaigtas ežeras",
+        "referencesMissedCount_other": "Nebaigti ežerai: {{fmtCount}}",
+        "referencesHuntedCount_zero": "Nėra medžiotų ežerų",
+        "referencesHuntedCount_one": "1 medžiotas ežeras",
+        "referencesHuntedCount_other": "{{fmtCount}} medžioti ežerai"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Klaida siunčiant LLTOTA vietos ženklą",
+        "serverResponse": "Serveris atsakė klaida {{status}}: {{body}}"
+      },
+      "exampleRefName": "Pavyzdinis ežeras",
+      "unknownRefName": "Nežinomas ežeras",
+      "noRefsNearby": "Netoliese nėra ežerų!"
+    },
+    "mota": {
+      "name": "MOTA: Malūnai ore",
+      "shortName": "MOTA",
+      "exportName": "MOTA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Neparinkti malūnai aktyvavimui",
+        "title_one": "1 malūno aktyvavimas",
+        "title_other": "{{count}} malūnų aktyvavimas",
+        "noMillsFound": "Nepavyko rasti malūnų",
+        "nearestMatches": "{{limit}} artimiausi iš {{count}} atitikties",
+        "matchingMills_zero": "Nerasta atitinkančių malūnų",
+        "matchingMills_one": "1 atitinkantis malūnas",
+        "matchingMills_other": "{{count}} atitinkantys malūnai",
+        "searchForMills": "Ieškokite malūnų, kuriuos norėtumėte aktyvuoti!",
+        "noMillsNearby": "Netoliese malūnų nėra",
+        "nearbyMills": "Netoliese esantys malūnai",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownMill": "Nežinomas malūnas"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų Malūnas"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Daugiausia naudojama VK ir ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL stebėjimas)",
+        "dialogTitle": "ParksnPeaks paskyra",
+        "description": "Paskyra: {{username}}",
+        "noAccount": "Nėra paskyros",
+        "pleaseEnterDetails": "Įveskite savo ParksnPeaks paskyros duomenis:"
+      },
+      "usernameLabel": "Vartotojo vardas (ne callsign)",
+      "usernamePlaceholder": "jūsų paskyros vartotojo vardas",
+      "apiKeyLabel": "API raktas (ne slaptažodis)",
+      "apiKeyPlaceholder": "jūsų API raktas"
+    },
+    "pga": {
+      "name": "Lenkijos savivaldybių apdovanojimai",
+      "shortName": "PGA",
+      "exportName": "PGA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Neparinkta savivaldybių aktyvavimui",
+        "title_one": "1 savivaldybės aktyvavimas",
+        "title_other": "{{count}} savivaldybių aktyvavimas",
+        "noGminasFound": "Nepavyko rasti savivaldybių",
+        "nearestMatches": "{{limit}} artimiausi iš {{count}} atitikties",
+        "matchingGminas_zero": "Nerasta atitinkančių savivaldybių",
+        "matchingGminas_one": "1 atitinkanti savivaldybė",
+        "matchingGminas_other": "{{count}} atitinkančios savivaldybės",
+        "searchForGminas": "Ieškokite savivaldybių, kurias norėtumėte aktyvuoti!",
+        "noGminasNearby": "Netoliese savivaldybių nėra",
+        "nearbyGminas": "Netoliese esančios savivaldybės",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownGmina": "Nežinoma savivaldybė"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parks on the Air",
+      "shortName": "POTA",
+      "exportName": "POTA aktyvavimas",
+      "activityOptions": {
+        "title_zero": "Neparinkta parkų aktyvavimui",
+        "title_one": "1 parko aktyvavimas",
+        "title_other": "{{count}} parkų aktyvavimas",
+        "noParksFound": "Nerasta parkų",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} atitikmenys",
+        "matchingParks_zero": "Nėra atitinkančių parkų",
+        "matchingParks_one": "1 atitinkantis parkas",
+        "matchingParks_other": "{{count}} atitinkantys parkai",
+        "searchForParks": "Ieškokite parkų, kuriuos norite aktyvuoti!",
+        "noParksNearby": "Nėra parkų šalia",
+        "nearbyParks": "Netoliese esantys parkai",
+        "searchPlaceholder": "Vardas ar nuoroda…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Nėra P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2Ps",
+        "huntedRefsCount_zero": "Niekas medžiotų parkų",
+        "huntedRefsCount_one": "1 parkas medžiotas",
+        "huntedRefsCount_other": "{{fmtCount}} parkus medžiota",
+        "activatorQSOsCount_zero": "Niekas aktyvatorių QSOs",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatoriaus QSOs",
+        "ref2refQSOsCount_zero": "Nėra P2P QSO",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Niekas medžiotų QSOs",
+        "huntedQSOsCount_one": "1 medžiotas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} medžiotų QSOs",
+        "operationTotals": "Veiklos sumos",
+        "referencesActivatedCount_zero": "Niekas aktyvuotų parkų",
+        "referencesActivatedCount_one": "1 aktyvuotas parkas",
+        "referencesActivatedCount_other": "{{fmtCount}} aktyvuotas parkas",
+        "referencesMissedCount_zero": "Niekas nebaigtų parkų",
+        "referencesMissedCount_one": "1 nebaigtas parkas",
+        "referencesMissedCount_other": "{{fmtCount}} nebaigtų parkų",
+        "referencesHuntedCount_zero": "Niekas medžiotų parkų",
+        "referencesHuntedCount_one": "1 parkas medžiotas",
+        "referencesHuntedCount_other": "{{fmtCount}} parkus medžiota"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų POTA"
+      },
+      "postSpotAPI": {
+        "error": "Klaida skelbiant POTA tašką",
+        "serverResponse": "Serveris atsakė klaidos būseną {{status}}: {{body}}"
+      },
+      "exampleRefName": "Pavyzdinis nacionalinis parkas",
+      "unknownRefName": "Nežinomas parkas",
+      "noRefsNearby": "Nėra parkų šalia!"
+    },
+    "qrz": {
+      "name": "QRZ.com Callsign paieška",
+      "description": "Reikalinga nemokama abonemento registracija vardams, mokama - vietoms"
+    },
+    "sats": {
+      "name": "Palydovų veikla"
+    },
+    "siota": {
+      "name": "SiOTA: Silosai ore",
+      "shortName": "SIOTA",
+      "exportName": "SIOTA aktyvacija",
+      "account": {
+        "title": "ParksnPeaks (SiOTA informacijai)",
+        "dialogTitle": "ParksnPeaks paskyra",
+        "description": "Paskyra: {{username}}",
+        "noAccount": "Nėra paskyros",
+        "pleaseEnterDetails": "Įveskite savo ParksnPeaks paskyros detales:",
+        "usernameLabel": "Prisijungimo vardas (ne šaukinys)",
+        "usernamePlaceholder": "jūsų paskyros prisijungimo vardas",
+        "apiKeyLabel": "API raktas (ne slaptažodis)",
+        "apiKeyPlaceholder": "jūsų API raktas"
+      },
+      "activityOptions": {
+        "title_zero": "Aktyvacijai nepasirinkta nė viena cisterna",
+        "title_one": "Aktyvuojama 1 cisterna",
+        "title_other": "Aktyvuojamos {{count}} cisternos",
+        "noSilosFound": "Nerasta cisterenų",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} atitikmenys",
+        "matchingSilos_zero": "Nėra atitinkančių cisterenų",
+        "matchingSilos_one": "1 atitinkanti cisterna",
+        "matchingSilos_other": "{{count}} atitinkančios cisternos",
+        "searchForSilos": "Ieškokite cisterenų, kurias norite aktyvuoti!",
+        "noSilosNearby": "Nėra cisterenų netoliese",
+        "nearbySilos": "Netoliese esančios cisternos",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownSilo": "Nežinoma cisterna"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų Silo"
+      },
+      "postSpotAPI": {
+        "error": "Klaida skelbiant SiOTA tašką",
+        "serverResponse": "Serveris atsakė klaidos būseną {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "name": "SOTA: Viršūnės ore",
+      "account": {
+        "title": "SOTA (SOTAWatch savarankiškam matavimui)",
+        "dialogTitle": "SOTA paskyra",
+        "description": "Paskyra: {{callsign}}",
+        "noAccount": "Nėra paskyros",
+        "error": "Klaida gaunant paskyros informaciją",
+        "connect": "Prisijunkite savo SOTA paskyrą"
+      },
+      "notLoggedInAlertTitle": "Įspėjimas",
+      "notLoggedInAlertText": "Kačiuojami neesate prisijungę prie SOTAWatch. Prašome eiti į PoLo nustatymus",
+      "activityOptions": {
+        "title_zero": "Aktyvacijai nepasirinkta nė viena viršukalnė",
+        "title_one": "Aktyvuojama 1 viršukalnė",
+        "title_other": "Aktyvuojamos {{count}} viršukalnės",
+        "noSummitsFound": "Nerasta viršukalnių",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} atitikmenys",
+        "matchingSummits_zero": "Nėra atitinkančių viršukalnių",
+        "matchingSummits_one": "1 atitinkanti viršukalnė",
+        "matchingSummits_other": "{{count}} atitinkančios viršukalnės",
+        "searchForSummits": "Ieškokite viršukalnių, kurias norite aktyvuoti!",
+        "noSummitsNearby": "Nėra viršukalnių netoliese",
+        "nearbySummits": "Netoliese esančios viršukalnės",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownSummit": "Nežinoma viršukalnė"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Nėra S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Niekas medžiotų viršūnes",
+        "huntedRefsCount_one": "1 viršūnė medžiota",
+        "huntedRefsCount_other": "{{fmtCount}} viršūnių medžiota",
+        "activatorQSOsCount_zero": "Niekas aktyvatorių QSOs",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatoriaus QSOs",
+        "ref2refQSOsCount_zero": "Nėra S2S QSO",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSOs",
+        "huntedQSOsCount_zero": "Niekas medžiotų QSOs",
+        "huntedQSOsCount_one": "1 medžiotas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} medžiotų QSOs",
+        "operationTotals": "Veiklos sumos",
+        "referencesActivatedCount_zero": "Niekas aktyvuotų viršūnes",
+        "referencesActivatedCount_one": "1 aktyvuota viršūnė",
+        "referencesActivatedCount_other": "{{fmtCount}} aktyvuotos viršūnės",
+        "referencesMissedCount_zero": "Niekas nebaigtų viršūnių",
+        "referencesMissedCount_one": "1 nebaigta viršūnė",
+        "referencesMissedCount_other": "{{fmtCount}} nebaigtų viršūnių",
+        "referencesHuntedCount_zero": "Niekas medžiotų viršūnes",
+        "referencesHuntedCount_one": "1 viršūnė medžiota",
+        "referencesHuntedCount_other": "{{fmtCount}} viršūnių medžiota"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Klaida skelbiant SOTA tašką",
+        "serverResponse": "Serveris atsakė būseną {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA paskyra atsijungta. Prašome prisijungti iš naujo PoLo nustatymuose"
+      },
+      "exampleRefName": "Pavyzdinė viršūnė",
+      "unknownRefName": "Nežinoma viršūnė",
+      "noRefsNearby": "Nėra viršūnių šalia!"
+    },
+    "tota": {
+      "name": "TOTA: Bokštai ore",
+      "activityOptions": {
+        "title_zero": "Neaktyvintos bokštų",
+        "title_one": "Aktyvintas 1 bokštas",
+        "title_other": "Aktyvinama {{count}} bokštų",
+        "noTowersFound": "Bokštų nerasta",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} derinių",
+        "matchingTowers_zero": "Atitinkamų bokštų nėra",
+        "matchingTowers_one": "1 atitinkantis bokštas",
+        "matchingTowers_other": "{{count}} atitinkantys bokštai",
+        "searchForTowers": "Ieškokite bokštų aktyvavimui!",
+        "noTowersNearby": "Nėra bokštų netoliese",
+        "nearbyTowers": "Netoliese esantys bokštai",
+        "searchPlaceholder": "Pavadinimas ar nuoroda…",
+        "unknownTower": "Nežinomas bokštas"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Nėra R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Jokie bokštai neieškota",
+        "huntedRefsCount_one": "1 bokštas ieškotas",
+        "huntedRefsCount_other": "{{fmtCount}} ieškoti bokštai",
+        "activatorQSOsCount_zero": "Nėra aktyvatoriaus QSOs",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatorių QSOs",
+        "ref2refQSOsCount_zero": "Nėra R2R QSOs",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "Jokio ieškotojo QSOs",
+        "huntedQSOsCount_one": "1 ieškomas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ieškomi QSOs",
+        "operationTotals": "Operacijos suvestinės",
+        "referencesActivatedCount_zero": "Bokštai neaktyvinti",
+        "referencesActivatedCount_one": "1 bokštas aktyvintas",
+        "referencesActivatedCount_other": "{{fmtCount}} bokštai aktyvinti",
+        "referencesMissedCount_zero": "No incomplete towers",
+        "referencesMissedCount_one": "1 incomplete tower",
+        "referencesMissedCount_other": "{{fmtCount}} incomplete towers",
+        "referencesHuntedCount_zero": "Neieškoti bokštai",
+        "referencesHuntedCount_one": "1 bokštas ieškotas",
+        "referencesHuntedCount_other": "{{fmtCount}} ieškoti bokštai"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų bokštas"
+      },
+      "exampleRefName": "Pavyzdinis bokštas",
+      "unknownRefName": "Nežinomas bokštas",
+      "noRefsNearby": "Nėra bokštų netoliese!",
+      "postSpotAPI": {
+        "error": "Klaida siunčiant TOTA vietą",
+        "serverResponse": "Serveris atsakė su statusu {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Nėra JAV valstijų",
+      "statesCount_one": "1 JAV valstija",
+      "statesCount_other": "{{count}} JAV valstijos"
+    },
+    "wab": {
+      "name": "Išdirbtas Didžiosios Britanijos/Airijos kilometrų kvadratas",
+      "description": "Pridėti WAB/WAI kvadratą prie operacijos",
+      "workedAllBritainSquare": "Išdirbtas Didžiosios Britanijos kvadratas",
+      "workedAllIrelandSquare": "Išdirbtas Airijos kvadratas",
+      "enterSquare": "Įvesti kvadratą",
+      "placeholderBritain": "pvz. SU14",
+      "placeholderIreland": "pvz. N93",
+      "currentSquare": "Dabartinis kvadratas:",
+      "noSquareSet": "Kvadratas nenustatytas"
+    },
+    "wca": {
+      "name": "WCA: Pasaulio pilys apdovanojimai",
+      "shortName": "PPA",
+      "exportName": "PPA aktyvacija",
+      "activityOptions": {
+        "title_zero": "Neelektuota nei viena pilis",
+        "title_one": "Aktyvinama 1 pilis",
+        "title_other": "Aktyvinamos {{count}} pilys",
+        "noCastlesFound": "Nerasta pilių",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} atitikmenų",
+        "matchingCastles_zero": "Nėra tinkamų pilių",
+        "matchingCastles_one": "1 tinkama pilis",
+        "matchingCastles_other": "{{count}} tinkamos pilys",
+        "searchForCastles": "Ieškokite pilių aktyvavimui!",
+        "noCastlesNearby": "Netoliese nėra pilių",
+        "nearbyCastles": "Netoliese esančios pilys",
+        "searchPlaceholder": "Vardas ar nuoroda…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Nesumedžiota nei viena pilis",
+        "huntedRefsCount_one": "1 pilis sumedžiota",
+        "huntedRefsCount_other": "{{fmtCount}} pilys sumedžiotos",
+        "activatorQSOsCount_zero": "Nėra aktyvatorių QSO",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatorių QSO",
+        "huntedQSOsCount_zero": "Nėra sumedžioti QSO",
+        "huntedQSOsCount_one": "1 sumedžiotas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} sumedžioti QSO",
+        "operationTotals": "Operacijų suma",
+        "referencesActivatedCount_zero": "Neaktyvuotos pilys",
+        "referencesActivatedCount_one": "1 aktyvuota pilis",
+        "referencesActivatedCount_other": "{{fmtCount}} aktyvuotos pilys",
+        "referencesMissedCount_zero": "Nėra neužbaigtų pilių",
+        "referencesMissedCount_one": "1 neužbaigta pilis",
+        "referencesMissedCount_other": "{{fmtCount}} neužbaigtos pilys",
+        "referencesHuntedCount_zero": "Nesumedžiotos pilys",
+        "referencesHuntedCount_one": "1 sumedžiota pilis",
+        "referencesHuntedCount_other": "{{fmtCount}} sumedžiotos pilys"
+      },
+      "exampleRefName": "Pavyzdinė pilis",
+      "unknownRefName": "Nežinoma pilis",
+      "noRefsNearby": "Šalia nėra pilių!"
+    },
+    "wfd": {
+      "name": "Žiemos lauko diena",
+      "shortName": "WFD",
+      "exportName": "WFD aktyvacija",
+      "activityOptions": {
+        "exchangeInformation": "Keičiama informacija",
+        "classLabel": "Klasė",
+        "locationLabel": "Vieta",
+        "objectives_zero": "Nei vienas tikslas nepasiektas",
+        "objectives_one": "1 tikslas pasiektas, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} tikslai pasiekti, OM ×{{multiplier}}",
+        "objectivesTitle": "Tikslai: {{count}} pasiekti, OM ×{{multiplier}}",
+        "objectivesDescription": "Net užpildant savo žurnalą nepamirškite pranešti apie šiuos tikslus!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Alternatyvi energija",
+        "awayFromHome": "Dirbkite toli nuo namų",
+        "fmSatelliteContact": "FM palydovo kontaktas",
+        "ssbSatelliteContact": "SSB arba CW palydovo kontaktas",
+        "winlinkEmails": "Winlink el. paštas",
+        "specialBulletin": "Ypatingas biuletenis",
+        "sixBands": "Šešios juostos",
+        "twelveBands": "Dvylika juostų",
+        "multipleModes": "Daugybė modų",
+        "qrpOperation": "QRP veikimas",
+        "sixContinuousHours": "Šešios nuoseklios valandos"
+      },
+      "objectiveDescription": {
+        "altPower": "Visiškai dirbkite naudodami alternatyvius energijos šaltinius, pvz., baterijas, saulės energiją, vėjo energiją ir kt.",
+        "awayFromHome": "Įsirenkite savo lauko stotį bent ½ mylios nuo namų.",
+        "fmSatelliteContact": "Bent vieną FM palydovo kontaktą padarykite veikimo laikotarpiu.",
+        "ssbSatelliteContact": "Padarykite bent vieną kontaktą, naudodami SSB arba CW.",
+        "winlinkEmails": "Siųskite IR gaukite bent vieną el. laišką per Winlink per RF.",
+        "specialBulletin": "Tiksliai nukopijuokite WFD ypatingą biuletenį ir pateikite jį kartu su savo žurnalo pateikimu.",
+        "sixBands": "Padarykite bent tris kontaktus prie kiekvienos iš bent šešių skirtingų juostų.",
+        "twelveBands": "Padarykite bent tris kontaktus prie kiekvienos iš bent dvylikos skirtingų juostų.",
+        "multipleModes": "Naudokite daugybę modų veikimo laikotarpiu.",
+        "qrpOperation": "Dirbkite su QRP galios lygiais (10W arba žemesne telefono galia, 5W arba žemesne CW arba skaitmenine).",
+        "sixContinuousHours": "Veikite bent šešias nuoseklias valandas veikimo laikotarpiu."
+      },
+      "information-md": "Žiemos lauko dienos klasė, pavyzdžiui, `2M`:\n\n  - `1`, `2`, `3`... siųstuvų skaičius.\n  - `H` Už namų stotį\n  - `I` Patalpose\n  - `O` Lauke\n  - `M` Mobiliajai arba mobiliajai nejudančiai stočiai\n\nVieta yra ARRL skyrius, RAC skyrius, `MX` už Meksiką arba `DX` už bet ką kitą.\n\nDaugiau informacijos **[oficialiose taisyklėse](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Pasauliniai bunkeriai",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA aktyvacija",
+      "activityOptions": {
+        "title_zero": "Aktyvacijai nepasirinkta nė vienas bunkeris",
+        "title_one": "Aktyvuojamas 1 bunkeris",
+        "title_other": "Aktyvuojami {{count}} bunkeriai",
+        "noBunkersFound": "Nerasta bunkeriai",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} atitikmenys",
+        "matchingBunkers_zero": "Nėra atitinkančių bunkerių",
+        "matchingBunkers_one": "1 atitinkantis bunkeris",
+        "matchingBunkers_other": "{{count}} atitinkantys bunkeriai",
+        "searchForBunkers": "Ieškokite bunkerių, kuriuos norite aktyvuoti!",
+        "noBunkersNearby": "Nėra bunkerių netoliese",
+        "nearbyBunkers": "Netoliese esantys bunkeriai",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownBunker": "Nežinomas bunkeris"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Klaida skelbiant WWBOTA tašką",
+        "serverResponse": "Serveris atsakė būseną {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Pasaulinė flora ir fauna",
+      "shortName": "WWFF",
+      "exportName": "WWFF aktyvacija",
+      "activityOptions": {
+        "title_zero": "Aktyvacijai nepasirinktas nė vienas parkas",
+        "title_one": "Aktyvuojamas 1 parkas",
+        "title_other": "Aktyvuojami {{count}} parkai",
+        "noParksFound": "Nerasta parkų",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} atitikmenys",
+        "matchingParks_zero": "Nėra atitinkančių parkų",
+        "matchingParks_one": "1 atitinkantis parkas",
+        "matchingParks_other": "{{count}} atitinkantys parkai",
+        "searchForParks": "Ieškokite parkų, kuriuos norite aktyvuoti!",
+        "noParksNearby": "Nėra parkų šalia",
+        "nearbyParks": "Netoliese esantys parkai",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownPark": "Nežinomas parkas"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Nėra P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2Ps",
+        "huntedRefsCount_zero": "Niekas medžiotų parkų",
+        "huntedRefsCount_one": "1 parkas medžiotas",
+        "huntedRefsCount_other": "{{fmtCount}} parkai medžioti",
+        "activatorQSOsCount_zero": "Niekas aktyvatorių QSOs",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatoriaus QSOs",
+        "ref2refQSOsCount_zero": "Be P2P QSO",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO",
+        "huntedQSOsCount_zero": "Be medžiotų QSO",
+        "huntedQSOsCount_one": "1 medžiotas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} medžiotų QSO",
+        "operationTotals": "Operacijos viso",
+        "referencesActivatedCount_zero": "Neaktyvinta parkų",
+        "referencesActivatedCount_one": "1 parkas aktyvuotas",
+        "referencesActivatedCount_other": "{{fmtCount}} aktyvuotų parkų",
+        "referencesMissedCount_zero": "Nebaigta parkų",
+        "referencesMissedCount_one": "1 nebaigtas parkas",
+        "referencesMissedCount_other": "{{fmtCount}} nebaigtų parkų",
+        "referencesHuntedCount_zero": "Nepamedžiota parkų",
+        "referencesHuntedCount_one": "1 parkas pamedžiotas",
+        "referencesHuntedCount_other": "{{fmtCount}} pamedžiotų parkų"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų WWFF"
+      },
+      "exampleRefName": "Pavyzdinis parkas",
+      "unknownRefName": "Nežinomas parkas",
+      "noRefsNearby": "Nėra parkų netoli!",
+      "postSpotAPI": {
+        "error": "Klaida skelbiant WWFF tašką",
+        "serverResponse": "Serveris atsakė būseną {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "name": "ZLOTA: ZL ore",
+      "account": {
+        "title": "ZLOTA (ZLOTA spotting)",
+        "dialogTitle": "ZLOTA paskyra",
+        "description": "Paskyra: {{callsign}}",
+        "noAccount": "Nėra paskyros",
+        "pleaseEnterDetails": "Įveskite savo ZLOTA paskyros detales:",
+        "callsignLabel": "Šaukinys",
+        "callsignPlaceholder": "jūsų paskyros šaukinys",
+        "pinLabel": "PIN (ne slaptažodis)",
+        "pinPlaceholder": "jūsų PIN"
+      },
+      "activityOptions": {
+        "title_zero": "Aktyvacijai nepasirinkta nė viena nuoroda",
+        "title_one": "Aktyvuojama 1 nuoroda",
+        "title_other": "Aktyvuojamos {{count}} nuorodos",
+        "noReferencesFound": "Nerasta nuorodų",
+        "nearestMatches": "Artimiausi {{limit}} iš {{count}} atitikmenys",
+        "matchingReferences_zero": "Nėra atitinkančių nuorodų",
+        "matchingReferences_one": "1 atitinkanti nuoroda",
+        "matchingReferences_other": "{{count}} atitinkančios nuorodos",
+        "searchForReferences": "Ieškokite nuorodų, kurias norite aktyvuoti!",
+        "noReferencesNearby": "Nėra nuorodų netoliese",
+        "nearbyReferences": "Netoliese esančios nuorodos",
+        "searchPlaceholder": "Vardas ar nuoroda…",
+        "unknownReference": "Nežinoma nuoroda"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Jų nuoroda"
+      },
+      "postSpotAPI": {
+        "error": "Klaida skelbiant ZLOTA tašką",
+        "serverResponse": "Serveris atsakė būseną {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "Be dublikatų",
+        "dupesCount_one": "1 dublikatas",
+        "dupesCount_other": "{{fmtCount}} dublikatai",
+        "ref2refCount_zero": "Nėra Ref2Ref",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Ref",
+        "huntedRefsCount_zero": "Nepamedžiota nuorodų",
+        "huntedRefsCount_one": "1 nuoroda pamedžiota",
+        "huntedRefsCount_other": "{{fmtCount}} pamedžiotų nuorodų",
+        "activatorQSOsCount_zero": "Nėra aktyvatoriaus QSO",
+        "activatorQSOsCount_one": "1 aktyvatoriaus QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktyvatoriaus QSO",
+        "ref2refQSOsCount_zero": "Nėra Ref2Ref QSO",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSO",
+        "huntedQSOsCount_zero": "Be medžiotų QSO",
+        "huntedQSOsCount_one": "1 medžiotas QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} medžiotų QSO",
+        "operationTotals": "Operacijos viso",
+        "referencesActivatedCount_zero": "Neaktyvinta nuorodų",
+        "referencesActivatedCount_one": "1 nuoroda aktyvuota",
+        "referencesActivatedCount_other": "{{fmtCount}} aktyvuotų nuorodų",
+        "referencesMissedCount_zero": "Nebaigta nuorodų",
+        "referencesMissedCount_one": "1 nebaigta nuoroda",
+        "referencesMissedCount_other": "{{fmtCount}} nebaigtų nuorodų",
+        "referencesHuntedCount_zero": "Nepamedžiota nuorodų",
+        "referencesHuntedCount_one": "1 nuoroda pamedžiota",
+        "referencesHuntedCount_other": "{{fmtCount}} pamedžiotų nuorodų"
+      }
+    }
+  }
+}

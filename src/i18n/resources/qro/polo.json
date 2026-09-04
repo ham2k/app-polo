@@ -78,16 +78,22 @@
     },
     "operationActivityOptions": {
       "title": "ACTIVITY OPTIONS",
-      "removeActivity": "REMOVE {{activity}} FROM THIS OPERATION"
+      "removeActivity": "REMOVE {{activity}} FROM THIS OPERATION",
+      "activityHasNoOptions": "THIS ACTIVITY HAS NO OPTIONS.",
+      "activityNotEnabled": "ACTIVITY \"{{name}}\" IS NOT ENABLED.",
+      "lookInSettings": "LOOK FOR IT IN SETTINGS > APP FEATURES"
     },
     "operationData": {
       "title": "OPERATION DATA",
       "selectFromTheExportOptionsBelow": "SELECT FROM THE EXPORT OPTIONS BELOW",
-      "exportSingeFile": "EXPORT ONE FILE",
       "exportSelectedFiles_zero": "EXPORT 0 SELECTED FILES",
       "exportSelectedFiles_one": "EXPORT 1 SELECTED FILE",
       "exportSelectedFiles_other": "EXPORT {{count}} SELECTED FILES",
-      "exportAllFiles": "EXPORT ALL FILES",
+      "exportActionsShare": "SHARE",
+      "exportActionsSave": "SAVE",
+      "exportActionsExport": "EXPORT",
+      "exportActionsStash": "STASH",
+      "exportActionsLogStash": "SEND TO HAM2K'S FILE STASH",
       "exportQSOs": "EXPORT QSOS",
       "pendingToDoItems_zero": "NO PENDING TO-DO ITEMS",
       "pendingToDoItems_one": "1 PENDING TO-DO ITEM",
@@ -108,7 +114,36 @@
       "deleteOperationDialog": {
         "title": "DELETE OPERATION?",
         "description": "ARE YOU SURE YOU WANT TO DELETE THIS OPERATION?"
-      }
+      },
+      "errorSavingExport": "COULDN'T SAVE FILE",
+      "logStashDialogTitle": "HAM2K'S FILE STASH",
+      "logStashDialogIntro": "POLO WILL UPLOAD YOUR FILES TO THE HAM2K SERVERS AND YOU CAN DOWNLOAD FROM ANY BROWSER.",
+      "logStashDialogTiers": "FREE ACCOUNTS CAN ONLY KEEP ONE STASH AT A TIME. SUBSCRIBERS CAN KEEP AS MANY AS THEY WANT.",
+      "logStashDialogSubscribe": "SUBSCRIBE",
+      "exportUpsellTitle": "THIS OPERATION HAS ALSO BEEN SAVED TO OUR CLOUD SYNC SERVICE",
+      "exportUpsellBody": "THIS BACKUP IS FREE, BUT IF YOU SUBSCRIBE YOU CAN SYNC IT ACROSS MULTIPLE DEVICES AND ACCESS IT AT FULL SPEED.",
+      "exportUpsellSupport": "AND MORE IMPORTANTLY, YOUR SUBSCRIPTION SUPPORTS OUR EFFORTS HERE AT HAM2K.",
+      "exportUpsellSubscribe": "SUBSCRIBE",
+      "exportUpsellNotNow": "NOT NOW",
+      "exportOptionsInfoLabel": "ABOUT THE EXPORT OPTIONS",
+      "exportOptionsInfoTitle": "EXPORT OPTIONS",
+      "exportOptionsInfoStash-md": "**STASH** UPLOADS YOUR FILES TO HAM2K'S FILE STASH, AND YOU CAN DOWNLOAD THEM LATER FROM ANY BROWSER AT **[STASH.HAM2K.NET](HTTPS://STASH.HAM2K.NET)**. USEFUL IN THE FIELD, WHEN THERE'S NO OTHER EASY WAY TO GET A FILE OFF YOUR PHONE.",
+      "exportOptionsInfoShare-md": "**SHARE** HANDS YOUR FILES TO ANOTHER APP ON YOUR DEVICE — EMAIL, MESSAGING, CLOUD STORAGE, OR ANOTHER LOGGING PROGRAM.",
+      "exportOptionsInfoExport-md": "**EXPORT** HANDS YOUR FILES TO ANOTHER APP ON YOUR DEVICE — EMAIL, MESSAGING, CLOUD STORAGE, OR ANOTHER LOGGING PROGRAM.",
+      "exportOptionsInfoSave-md": "**SAVE** WRITES YOUR FILES STRAIGHT INTO A FOLDER ON YOUR DEVICE, WITHOUT GOING THROUGH ANOTHER APP.",
+      "exportOptionsInfoSelection-md": "THESE ACT ON ALL THE FILES YOU HAVE CHECKED BELOW. YOU CAN ALSO TAP ANY SINGLE FILE TO SHARE JUST THAT ONE.",
+      "freeTierRecentUploadTitle": "RECENT UPLOAD WILL BE REPLACED",
+      "freeTierRecentUploadMessage": "YOU SENT \"{{name}}\" LESS THAN 6 HOURS AGO AND IT HAS NOT BEEN DOWNLOADED YET. SENDING NOW WILL REPLACE IT. DO YOU WANT TO WAIT INSTEAD?",
+      "freeTierRecentUploadConfirm": "SEND ANYWAY",
+      "errorSendingToLogStash": "COULDN'T SEND TO HAM2K'S FILE STASH",
+      "sentToLogStash": "SENT TO HAM2K'S FILE STASH",
+      "sentToLogStashRetrieve-md": "YOU CAN RETRIEVE {{filesLabel}} BY VISITING **[STASH.HAM2K.NET](HTTPS://STASH.HAM2K.NET)** ON ANY BROWSER.",
+      "sentToLogStashEmailOffer": "OR FOR YOUR CONVENIENCE, WE CAN SEND YOU AN EMAIL WITH A DIRECT LINK.",
+      "retrieveSingularFile": "THIS FILE",
+      "retrievePluralFiles": "THESE FILES",
+      "emailMeALink": "EMAIL ME A LINK",
+      "linkEmailed": "WE'VE EMAILED YOU A DOWNLOAD LINK.",
+      "errorEmailingLink": "COULDN'T SEND THE EMAIL"
     },
     "callInfo": {
       "title": "CALLSIGN INFO",
@@ -314,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "SHOW NUMBERS ROW",
-        "descriptionOn": "QUICK BUTTONS FOR NUMBERS",
-        "descriptionOff": "DON'T SHOW NUMBERS ROW"
+        "descriptionOn": "SHOWING QUICK BUTTONS FOR NUMBERS",
+        "descriptionOff": "NOT SHOWING THE NUMBERS ROW"
       },
       "showExtraInNumbersRow": {
         "title": "PERIOD IN NUMBERS ROW",
-        "descriptionOn": "INCLUDE PERIOD (AND SLASH)",
-        "descriptionOff": "JUST SHOW THE NUMBERS"
+        "descriptionOn": "INCLUDING PERIOD AND SLASH KEYS",
+        "descriptionOff": "SHOWING JUST THE NUMBERS"
       },
       "showCommaInNumbersRow": {
         "title": "COMMA IN NUMBERS ROW",
-        "descriptionOn": "INCLUDE A COMMA KEY",
+        "descriptionOn": "INCLUDING A COMMA KEY",
         "descriptionOff": "NO COMMA KEY"
       },
       "vibrateNumbersRow": {
         "title": "USE VIBRATION IN NUMBERS ROW",
-        "descriptionOn": "VIBRATE WHEN PRESSING NUMBERS",
-        "descriptionOff": "DON'T VIBRATE WHEN PRESSING NUMBERS"
+        "descriptionOn": "VIBRATING WHEN PRESSING NUMBERS",
+        "descriptionOff": "NOT VIBRATING WHEN PRESSING NUMBERS"
       },
       "useMetricUnits": {
         "title": "USE METRIC UNITS",
-        "descriptionOn": "USE MILES FOR DISTANCES",
-        "descriptionOff": "USE KILOMETERS FOR DISTANCES"
+        "descriptionOn": "USING MILES FOR DISTANCES",
+        "descriptionOff": "USING KILOMETERS FOR DISTANCES"
       },
       "keepDeviceAwake": {
         "title": "KEEP DEVICE AWAKE",
-        "descriptionOn": "PREVENT DEVICE FROM LOCKING SCREEN",
-        "descriptionOff": "ALLOW REGULAR SCREEN LOCKING"
+        "descriptionOn": "KEEPING THE SCREEN AWAKE",
+        "descriptionOff": "LETTING THE SCREEN LOCK AS USUAL"
       },
       "useSplitViews": {
         "title": "USE SPLIT VIEWS",
-        "descriptionOn": "USE SPLIT VIEWS WHEN SCREEN IS LARGE ENOUGH",
-        "descriptionOff": "DON'T USE SPLIT VIEWS"
+        "descriptionOn": "USING SPLIT VIEWS WHEN THE SCREEN IS LARGE ENOUGH",
+        "descriptionOff": "NOT USING SPLIT VIEWS"
       },
       "useGrid8": {
         "title": "HIGH PRECISION LOCATION",
-        "descriptionOn": "USE 8-DIGIT GRIDS",
-        "descriptionOff": "USE 6-DIGIT GRIDS"
+        "descriptionOn": "USING 8-DIGIT GRIDS",
+        "descriptionOff": "USING 6-DIGIT GRIDS"
       },
       "smartKeyboard": {
         "title": "SMART KEYBOARD FEATURES",
-        "descriptionOn": "ENABLE SMART KEYBOARD FEATURES",
-        "descriptionOff": "USE SIMPLER KEYBOARDS FOR COMPATIBILITY REASONS WITH SOME DEVICES"
+        "descriptionOn": "USING SMART KEYBOARD FEATURES",
+        "descriptionOff": "USING SIMPLER KEYBOARDS, FOR COMPATIBILITY WITH SOME DEVICES"
       },
       "exportSettings": {
         "title": "EXPORT SETTINGS",
@@ -366,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "SHARE APP USAGE DATA",
-        "descriptionOn": "HELP US IMPROVE THE APP BY SHARING USAGE, CRASH AND PERFORMANCE DATA",
-        "descriptionOff": "KEEP APP USAGE DATA PRIVATE.\nTHE HAM2K TEAM WON'T BE ABLE TO DETECT CRASHES OR OTHER ISSUES."
+        "descriptionOn": "SHARING USAGE, CRASH AND PERFORMANCE DATA TO HELP US IMPROVE THE APP",
+        "descriptionOff": "KEEPING APP USAGE DATA PRIVATE.\nTHE HAM2K TEAM WON'T BE ABLE TO DETECT CRASHES OR OTHER ISSUES."
       },
       "shareOperationData": {
         "title": "SHARE OPERATION DATA",
-        "descriptionOn": "SHARE SOME OPERATION DATA PUBLICLY AND WITH OTHER USERS",
-        "descriptionOff": "KEEP OPERATION DATA PRIVATE"
+        "descriptionOn": "SHARING SOME OPERATION DATA PUBLICLY AND WITH OTHER USERS",
+        "descriptionOff": "KEEPING OPERATION DATA PRIVATE"
       },
       "privacyPolicy": {
         "title": "PRIVACY POLICY",
@@ -387,24 +422,24 @@
       "title": "LOGGING SETTINGS",
       "leftieMode": {
         "title": "LEFTIE MODE",
-        "descriptionOn": "USE LAYOUT FOR LEFT-HANDED USERS",
-        "descriptionOff": "USE LAYOUT FOR RIGHT-HANDED USERS"
+        "descriptionOn": "USING THE LEFT-HANDED LAYOUT",
+        "descriptionOff": "USING THE RIGHT-HANDED LAYOUT"
       },
       "countryFlags": {
         "title": "COUNTRY FLAGS",
-        "descriptionNone": "DON'T SHOW ANY FLAGS",
-        "descriptionAll": "SHOW FLAGS FOR ALL CONTACTS",
-        "descriptionDefault": "SHOW ONLY FOR DX CONTACTS"
+        "descriptionNone": "NOT SHOWING ANY FLAGS",
+        "descriptionAll": "SHOWING FLAGS FOR ALL CONTACTS",
+        "descriptionDefault": "SHOWING FLAGS ONLY FOR DX CONTACTS"
       },
       "showBearing": {
         "title": "SHOW BEARING",
-        "descriptionOn": "SHOW ESTIMATED BEARING TO STATION",
-        "descriptionOff": "DON'T SHOW BEARING INFORMATION"
+        "descriptionOn": "SHOWING ESTIMATED BEARING TO STATION",
+        "descriptionOff": "NOT SHOWING BEARING INFORMATION"
       },
       "showReverseBearing": {
         "title": "ALSO SHOW REVERSE BEARING",
-        "descriptionOn": "SHOW BEARING FROM STATION TOO, AS \"45° / 225°\"",
-        "descriptionOff": "ONLY SHOW BEARING TO STATION"
+        "descriptionOn": "SHOWING BEARING FROM STATION TOO, AS \"45° / 225°\"",
+        "descriptionOff": "SHOWING ONLY BEARING TO STATION"
       },
       "switchSignalReportOrder": {
         "title": "SWITCH SIGNAL REPORT ORDER",
@@ -413,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "JUMP TO NEXT FIELD ON RST ENTRY",
-        "descriptionOn": "JUMP AFTER RST IS ENTERED",
-        "descriptionOff": "DON'T JUMP AUTOMATICALLY"
+        "descriptionOn": "JUMPING TO THE NEXT FIELD AFTER RST",
+        "descriptionOff": "NOT JUMPING AUTOMATICALLY"
       },
       "suggestDefaultOperator": {
         "title": "SUGGEST DEFAULT OPERATOR",
-        "descriptionOn": "SET {{operatorCall}} AS OPERATOR IN OPERATIONS WHERE STATION CALL IS DIFFERENT",
-        "descriptionOff": "DON'T SUGGEST DEFAULT OPERATOR REGARDLESS OF STATION CALL USED"
+        "descriptionOn": "USING {{operatorCall}} AS OPERATOR IN OPERATIONS WHERE STATION CALL IS DIFFERENT",
+        "descriptionOff": "NOT SUGGESTING A DEFAULT OPERATOR, REGARDLESS OF STATION CALL USED"
       },
       "suggestTemplates": {
         "title": "USE OPERATION TEMPLATES",
-        "descriptionOn": "SUGGEST TEMPLATES FOR NEW OPERATIONS",
-        "descriptionOff": "DON'T SUGGEST TEMPLATES"
+        "descriptionOn": "SUGGESTING TEMPLATES FOR NEW OPERATIONS",
+        "descriptionOff": "NOT SUGGESTING TEMPLATES"
       },
       "bandsModes": {
         "title": "BANDS & MODES",
@@ -566,17 +601,16 @@
         "changeEmailText": "CHANGE THE RECOVERY EMAIL FOR THIS ACCOUNT:",
         "setEmailText": "SET AN EMAIL FOR YOUR ACCOUNT. IT CAN BE USED TO IDENTIFY IT AND MAKE IT EASIER TO RECOVER LATER.",
         "emailAddressLabel": "EMAIL ADDRESS",
-        "linkWithOtherButton": "OR… CONNECT WITH AN EXISTING ACCOUNT",
+        "linkWithOtherButton": "USE ANOTHER ACCOUNT",
         "linkAccountText": "CONNECT WITH AN EXISTING ACCOUNT:",
-        "keepExistingAccountButton": "OR… KEEP EXISTING ACCOUNT",
         "pendingEmailTextPre": "AN EMAIL HAS BEEN SENT TO",
         "pendingEmailTextPost": "PLEASE LOOK FOR IT AND FOLLOW THE INSTRUCTIONS.",
         "confirmLink-md": "OPEN THE APP ON A DEVICE ALREADY LINKED WITH **{{email}}** AND CONFIRM THIS REQUEST BY ENTERING THE FOLLOWING CODE:",
         "confirmLinkPost-md": "IF YOU DON'T HAVE ACCESS TO ANOTHER DEVICE LINKED TO THIS ACCOUNT, YOU CAN:",
         "accountNotFound": "ACCOUNT NOT FOUND.",
-        "connectViaEmailButton": "OR… CONNECT VIA EMAIL",
+        "connectViaEmailButton": "CONNECT VIA EMAIL",
         "linkViaQRAccountText": "SCAN THIS QR CODE FROM A DEVICE WITH AN EXISTING HAM2K LOFI ACCOUNT",
-        "linkViaQRButton": "OR… CONNECT VIA QR CODE",
+        "linkViaQRButton": "CONNECT VIA QR CODE",
         "confirmViaEmailButton": "CONFIRM VIA EMAIL",
         "changeAccountButton": "CHANGE ACCOUNT",
         "resendButton": "SEND EMAIL AGAIN",
@@ -586,7 +620,7 @@
         "potentialForDataLoss": "POTENTIAL FOR DATA LOSS!!!",
         "potentialForDataLossDescription": "YOU HAVE NOT SYNCED ALL THE DATA IN THIS DEVICE.\n\nIF YOU LINK THIS DEVICE TO A NEW ACCOUNT, YOU WILL BE ASKED IF YOU WANT TO REPLACE ITS DATA WITH THAT FROM THE NEW ACCOUNT.\n\nIF THIS IS THE CASE, YOU MIGHT NOT BE ABLE TO RECOVER ANY EXISTING ACTIVITY THAT HAS NOT BEEN SYNCED YET.\n\nWE SUGGEST YOU COMPLETE SYNCING THIS DEVICE FIRST!"
       },
-      "syncServiceDescription-md": "BASIC SERVICE IS FREE AND ALLOWS YOU TO SYNC RECENT DATA (UP TO 7 DAYS) BETWEEN TWO DEVICES OR APPS AT LIMITED SPEED.\n\nFULL SERVICE REQUIRES A PAID SUBSCRIPTION AND INCLUDES ALL YOUR OPERATIONS SYNCED BETWEEN ANY REASONABLE NUMBER OF DEVICES OR APPS AT FULL SPEED.\n\nWHILE THE LOFI SERVICE IS IN ITS TESTING PERIOD FOR THE NEXT COUPLE OF MONTHS, THE SERVICE WILL REMAIN FREE. AFTER THAT PRICES WILL DEPEND ON THE COUNTRY AND CURRENCY BUT SHOULD NOT BE MORE THAN US$30/YEAR OR EQUIVALENT, AND PROBABLY LESS.",
+      "syncServiceDescription-md": "BASIC SERVICE IS FREE BUT IT IS LIMITED TO TWO DEVICES OR APPS AT REDUCED SPEEDS TO AVOID OVERLOADING THE SERVERS.\n\nFULL SERVICE REQUIRES A PAID SUBSCRIPTION AND INCLUDES ALL YOUR OPERATIONS SYNCED BETWEEN ANY REASONABLE NUMBER OF DEVICES OR APPS AT FULL SPEED.\n\n",
       "thisDevice": "THIS DEVICE",
       "notAuthenticated": "NOT AUTHENTICATED",
       "lofiServer": "LOFI SERVER",
@@ -600,9 +634,7 @@
       },
       "cloudCountDescription": {
         "operations": "OPERATIONS: {{total}} TOTAL",
-        "operationsSyncable": "OPERATIONS: {{total}} STORED, {{syncable}} SYNCABLE",
-        "qsos": "QSOS: {{total}} STORED",
-        "qsosSyncable": "QSOS: {{total}} STORED, {{syncable}} SYNCABLE"
+        "qsos": "QSOS: {{total}} STORED"
       }
     },
     "versionSettings": {
@@ -722,16 +754,20 @@
       "exportTypes": "EXPORT TYPES",
       "customTemplates": "CUSTOM TEMPLATES",
       "defaultTemplates": "DEFAULT TEMPLATES",
-      "customTemplatesDescription": "USE CUSTOM TEMPLATES FOR THE EXPORT",
-      "defaultTemplatesDescription": "USE DEFAULT TEMPLATES FOR THE EXPORT",
+      "customTemplatesDescription": "USING CUSTOM TEMPLATES FOR THIS EXPORT",
+      "defaultTemplatesDescription": "USING THE DEFAULT TEMPLATES",
       "includePrivateData": "INCLUDE PRIVATE DATA",
+      "ignoreLookupData": "IGNORE LOOKUP DATA",
       "fileNameTemplate": "FILE NAME TEMPLATE",
       "titleTemplate": "TITLE TEMPLATE",
       "adifNotes": "ADIF QSO NOTES",
       "adifComments": "ADIF QSO COMMENTS",
       "adifQslMessage": "ADIF QSL MESSAGE",
       "templateHelpTitle": "TEMPLATE HELP",
-      "includePrivateDataDescription": "NAMES, NOTES, ADDRESSES, ETC.",
+      "includePrivateDataDescription": "INCLUDING NAMES, NOTES, ADDRESSES, ETC.",
+      "excludePrivateDataDescription": "EXCLUDING NAMES, NOTES, ADDRESSES, ETC.",
+      "ignoreLookupDataDescription": "IGNORING DATA FROM LOOKUP SERVICES LIKE QRZ.COM",
+      "useLookupDataDescription": "INCLUDING DATA FROM LOOKUP SERVICES LIKE QRZ.COM",
       "templateHelp-md": "SOME SAMPLE TEMPLATE ELEMENTS…\n\n### LOG EXPORT\nATTRIBUTES FOR THE LOG BEING EXPORTED\n`{{log.station}}` → `{{call}}` STATION FOR THIS EXPORT\n`{{log.ref}}` → `XX-1234` REFERENCE FOR THIS EXPORT\n`{{log.refName}}` → `EXAMPLE NATIONAL PARK` REFERENCE NAME FOR THIS EXPORT\n`{{log.refShortName}}` → `EXAMPLE NP` SHORT REFERENCE NAME FOR THIS EXPORT\n`{{log.handlerType}}` → `POTA` HANDLER TYPE FOR THIS EXPORT\n`{{log.handlerName}}` → `PARKS ON THE AIR` HANDLER NAME FOR THIS EXPORT\n`{{log.handlerShortName}}` → `POTA` SHORT HANDLER NAME FOR THIS EXPORT\n\n### OPERATION CALLSIGNS\n`{{op.station}}` → `{{call}}` FIRST STATION FOR THE OPERATION\n`{{op.operator}}` → `{{call}}` OPERATOR FOR THE OPERATION\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` ALL STATIONS FOR THE OPERATION\n`{{op.otherStations}}` → `{{otherCalls}}` OTHER STATIONS FOR THE OPERATION\n\n### OPERATION DATE\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### OTHER OPERATION DETAILS\n`{{op.title}}` → `AT XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `MY SPECIAL OPERATION`\n`{{op.userNotes}}` → `WENT EARLY IN THE MORNING…`\n`{{op.uuid}}` → `123E4567-E89B-12D3-A456-426614174000`\n`{{first8 op.uuid}}` → `123E4567`\n`{{op.grid}}` → `AA00` GRID FOR THIS OPERATION\n\n### QSO INFORMATION\n`{{qso.notes}}` → `TERRIBLE AUDIO!`\n`{{qso.uuid}}` → `123E4567-E89B-12D3-A456-426614174000`\n`{{qso.their.sent}}` → `59` THE SIGNAL REPORT THEY SENT\n`{{qso.our.sent}}` → `55` THE SIGNAL REPORT WE SENT\n`{{qso.their.grid}}` → `FF99` THE GRID THEY REPORTED\n`{{qso.refs}}` → A LIST OF ALL THE REFERENCES FOR THE QSO (INCLUDES BOTH OPERATION REFS AND QSO-ONLY REFS)\n`{{first8 qso.uuid}}` → `123E4567`\n",
       "default": {
         "name": "DEFAULTS",
@@ -832,6 +868,7 @@
       "frequencyLabel": "FREQUENCY",
       "bandMissing": "BAND???",
       "modeMissing": "MODE???",
+      "modeOutOfBand": "OOB",
       "radioControls-a11y": "RADIO CONTROLS {{parts}}",
       "notesLabel": "NOTES",
       "notesLabel-a11y": "NOTES",

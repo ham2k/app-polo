@@ -188,6 +188,8 @@
       "startConfirm": "Operació iniciada!",
       "break": "Afegir una pausa?",
       "breakConfirm": "Pausa d'operació afegida!",
+      "roverqth": "Afegir una pausa i definir una ubicació nova?",
+      "roverqthConfirm": "S'ha afegit una pausa; ara definiu la ubicació nova",
       "stop": "Aturar l'operació?",
       "stopConfirm": "Operació aturada!"
     },

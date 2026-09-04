@@ -109,7 +109,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.generalSettings.showNumbersRow.title', 'Show numbers row')}
-            description={settings.showNumbersRow ? t('screens.generalSettings.showNumbersRow.descriptionOn', 'Quick buttons for numbers') : t('screens.generalSettings.showNumbersRow.descriptionOff', "Don't show numbers row")}
+            description={settings.showNumbersRow ? t('screens.generalSettings.showNumbersRow.descriptionOn', 'Showing quick buttons for numbers') : t('screens.generalSettings.showNumbersRow.descriptionOff', "Not showing the numbers row")}
             leftIcon="numeric"
             rightSwitchValue={!!settings.showNumbersRow}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ showNumbersRow: value }))}
@@ -120,7 +120,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
             <H2kListItem
               style={{ marginLeft: styles.oneSpace * 8 }}
               title={t('screens.generalSettings.showExtraInNumbersRow.title', 'Period in numbers row')}
-              description={settings.showExtraInNumbersRow ? t('screens.generalSettings.showExtraInNumbersRow.descriptionOn', 'Include period (and slash)') : t('screens.generalSettings.showExtraInNumbersRow.descriptionOff', 'Just show the numbers')}
+              description={settings.showExtraInNumbersRow ? t('screens.generalSettings.showExtraInNumbersRow.descriptionOn', 'Including period and slash keys') : t('screens.generalSettings.showExtraInNumbersRow.descriptionOff', 'Showing just the numbers')}
               disabled={!settings.showNumbersRow}
               rightSwitchValue={!!settings.showExtraInNumbersRow}
               rightSwitchOnValueChange={(value) => dispatch(setSettings({ showExtraInNumbersRow: value }))}
@@ -132,7 +132,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
             <H2kListItem
               style={{ marginLeft: styles.oneSpace * 8 }}
               title={t('screens.generalSettings.showCommaInNumbersRow.title', 'Comma in numbers row')}
-              description={settings.showCommaInNumbersRow ? t('screens.generalSettings.showCommaInNumbersRow.descriptionOn', 'Include a comma key') : t('screens.generalSettings.showCommaInNumbersRow.descriptionOff', 'No comma key')}
+              description={settings.showCommaInNumbersRow ? t('screens.generalSettings.showCommaInNumbersRow.descriptionOn', 'Including a comma key') : t('screens.generalSettings.showCommaInNumbersRow.descriptionOff', 'No comma key')}
               disabled={!settings.showNumbersRow}
               rightSwitchValue={!!settings.showCommaInNumbersRow}
               rightSwitchOnValueChange={(value) => dispatch(setSettings({ showCommaInNumbersRow: value }))}
@@ -144,7 +144,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
             <H2kListItem
               style={{ marginLeft: styles.oneSpace * 8 }}
               title={t('screens.generalSettings.vibrateNumbersRow.title', 'Use vibration in numbers row')}
-              description={settings.vibrateNumbersRow !== false ? t('screens.generalSettings.vibrateNumbersRow.descriptionOn', 'Vibrate when pressing numbers') : t('screens.generalSettings.vibrateNumbersRow.descriptionOff', "Don't vibrate when pressing numbers")}
+              description={settings.vibrateNumbersRow !== false ? t('screens.generalSettings.vibrateNumbersRow.descriptionOn', 'Vibrating when pressing numbers') : t('screens.generalSettings.vibrateNumbersRow.descriptionOff', "Not vibrating when pressing numbers")}
               disabled={!settings.showNumbersRow}
               rightSwitchValue={!!settings.vibrateNumbersRow}
               rightSwitchOnValueChange={(value) => dispatch(setSettings({ vibrateNumbersRow: value }))}
@@ -154,7 +154,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.generalSettings.useMetricUnits.title', 'Use Metric Units')}
-            description={settings.distanceUnits === 'miles' ? t('screens.generalSettings.useMetricUnits.descriptionOn', 'Use Miles for distances') : t('screens.generalSettings.useMetricUnits.descriptionOff', 'Use Kilometers for distances')}
+            description={settings.distanceUnits === 'miles' ? t('screens.generalSettings.useMetricUnits.descriptionOn', 'Using miles for distances') : t('screens.generalSettings.useMetricUnits.descriptionOff', 'Using kilometers for distances')}
             leftIcon="tape-measure"
             rightSwitchValue={settings.distanceUnits !== 'miles'}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ distanceUnits: settings.distanceUnits === 'miles' ? 'km' : 'miles' }))}
@@ -163,7 +163,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.generalSettings.keepDeviceAwake.title', 'Keep device awake')}
-            description={settings.keepDeviceAwake ? t('screens.generalSettings.keepDeviceAwake.descriptionOn', 'Prevent device from locking screen') : t('screens.generalSettings.keepDeviceAwake.descriptionOff', 'Allow regular screen locking')}
+            description={settings.keepDeviceAwake ? t('screens.generalSettings.keepDeviceAwake.descriptionOn', 'Keeping the screen awake') : t('screens.generalSettings.keepDeviceAwake.descriptionOff', 'Letting the screen lock as usual')}
             leftIcon="coffee"
             rightSwitchValue={!!settings.keepDeviceAwake}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ keepDeviceAwake: value }))}
@@ -173,7 +173,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
           {styles.mdOrLarger && (
             <H2kListItem
               title={t('screens.generalSettings.useSplitViews.title', 'Use Split Views')}
-              description={settings.dontSplitViews ? t('screens.generalSettings.useSplitViews.descriptionOff', "Don't use split views") : t('screens.generalSettings.useSplitViews.descriptionOn', 'Use Split Views when screen is large enough')}
+              description={settings.dontSplitViews ? t('screens.generalSettings.useSplitViews.descriptionOff', "Not using split views") : t('screens.generalSettings.useSplitViews.descriptionOn', 'Using split views when the screen is large enough')}
               leftIcon="arrow-split-vertical"
               rightSwitchValue={!settings.dontSplitViews}
               rightSwitchOnValueChange={(value) => dispatch(setSettings({ dontSplitViews: !value }))}
@@ -183,7 +183,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.generalSettings.useGrid8.title', 'High precision location')}
-            description={settings.useGrid8 ? t('screens.generalSettings.useGrid8.descriptionOn', 'Use 8-digit grids') : t('screens.generalSettings.useGrid8.descriptionOff', 'Use 6-digit grids')}
+            description={settings.useGrid8 ? t('screens.generalSettings.useGrid8.descriptionOn', 'Using 8-digit grids') : t('screens.generalSettings.useGrid8.descriptionOff', 'Using 6-digit grids')}
             leftIcon="select-marker"
             rightSwitchValue={!!settings.useGrid8}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ useGrid8: value }))}
@@ -193,7 +193,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
           {Platform.OS === 'android' && (
             <H2kListItem
               title={t('screens.generalSettings.smartKeyboard.title', 'Smart Keyboard Features')}
-              description={settings.smartKeyboard !== false ? t('screens.generalSettings.smartKeyboard.descriptionOn', 'Enable smart keyboard features') : t('screens.generalSettings.smartKeyboard.descriptionOff', 'Use simpler keyboards for compatibility reasons with some devices')}
+              description={settings.smartKeyboard !== false ? t('screens.generalSettings.smartKeyboard.descriptionOn', 'Using smart keyboard features') : t('screens.generalSettings.smartKeyboard.descriptionOff', 'Using simpler keyboards, for compatibility with some devices')}
               leftIcon="keyboard-outline"
               rightSwitchValue={!!settings.smartKeyboard}
               rightSwitchOnValueChange={(value) => dispatch(setSettings({ smartKeyboard: value }))}
@@ -211,7 +211,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
           <H2kListSubheader>{t('screens.generalSettings.privacy.title', 'Privacy')}</H2kListSubheader>
           <H2kListItem
             title={t('screens.generalSettings.shareAppUsageData.title', 'Share app usage data')}
-            description={settings.consentAppData ? t('screens.generalSettings.shareAppUsageData.descriptionOn', 'Help us improve the app by sharing usage, crash and performance data') : t('screens.generalSettings.shareAppUsageData.descriptionOff', 'Keep app usage data private.\nThe Ham2K team won\'t be able to detect crashes or other issues.')}
+            description={settings.consentAppData ? t('screens.generalSettings.shareAppUsageData.descriptionOn', 'Sharing usage, crash and performance data to help us improve the app') : t('screens.generalSettings.shareAppUsageData.descriptionOff', 'Keeping app usage data private.\nThe Ham2K team won\'t be able to detect crashes or other issues.')}
             leftIcon="cellphone-lock"
             rightSwitchValue={!!settings.consentAppData}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ consentAppData: value }))}
@@ -220,7 +220,7 @@ export default function GeneralSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.generalSettings.shareOperationData.title', 'Share operation data')}
-            description={settings.consentOpData ? t('screens.generalSettings.shareOperationData.descriptionOn', 'Share some operation data publicly and with other users') : t('screens.generalSettings.shareOperationData.descriptionOff', 'Keep operation data private')}
+            description={settings.consentOpData ? t('screens.generalSettings.shareOperationData.descriptionOn', 'Sharing some operation data publicly and with other users') : t('screens.generalSettings.shareOperationData.descriptionOff', 'Keeping operation data private')}
             leftIcon="cellphone-lock"
             rightSwitchValue={!!settings.consentOpData}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ consentOpData: value }))}

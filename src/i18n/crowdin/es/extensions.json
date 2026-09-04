@@ -188,6 +188,8 @@
       "startConfirm": "¡Operación iniciada!",
       "break": "¿Agregar una pausa?",
       "breakConfirm": "¡Pausa agregada!",
+      "roverqth": "¿Añadir una pausa y establecer una nueva ubicación?",
+      "roverqthConfirm": "Pausa añadida; ahora establece tu nueva ubicación",
       "stop": "¿Detener la operación?",
       "stopConfirm": "¡Operación detenida!"
     },

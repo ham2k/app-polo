@@ -47,7 +47,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
       <ScrollView style={{ flex: 1, marginLeft: splitView ? 0 : safeAreaInsets.left, marginRight: safeAreaInsets.right }}>
         <H2kListSection>
           <H2kListItem title={t('screens.loggingSettings.leftieMode.title', 'Leftie Mode')}
-            description={settings.leftieMode ? t('screens.loggingSettings.leftieMode.descriptionOn', 'Use layout for left-handed users') : t('screens.loggingSettings.leftieMode.descriptionOff', 'Use layout for right-handed users') }
+            description={settings.leftieMode ? t('screens.loggingSettings.leftieMode.descriptionOn', 'Using the left-handed layout') : t('screens.loggingSettings.leftieMode.descriptionOff', 'Using the right-handed layout') }
             leftIcon="hand-front-left-outline"
             rightSwitchValue={!!settings.leftieMode}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ leftieMode: value }))}
@@ -55,7 +55,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           />
 
           <H2kListItem title={t('screens.loggingSettings.countryFlags.title', 'Country Flags')}
-            description={{ none: t('screens.loggingSettings.countryFlags.descriptionNone', "Don't show any flags"), all: t('screens.loggingSettings.countryFlags.descriptionAll', 'Show flags for all contacts') }[settings.dxFlags] || t('screens.loggingSettings.countryFlags.descriptionDefault', 'Show only for DX contacts')}
+            description={{ none: t('screens.loggingSettings.countryFlags.descriptionNone', "Not showing any flags"), all: t('screens.loggingSettings.countryFlags.descriptionAll', 'Showing flags for all contacts') }[settings.dxFlags] || t('screens.loggingSettings.countryFlags.descriptionDefault', 'Showing flags only for DX contacts')}
             leftIcon="flag"
             onPress={() => setCurrentDialog('flags')}
           />
@@ -69,7 +69,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
           )}
 
           <H2kListItem title={t('screens.loggingSettings.showBearing.title', 'Show Bearing')}
-            description={settings.showBearing ? t('screens.loggingSettings.showBearing.descriptionOn', 'Show estimated bearing to station') : t('screens.loggingSettings.showBearing.descriptionOff', "Don't show bearing information") }
+            description={settings.showBearing ? t('screens.loggingSettings.showBearing.descriptionOn', 'Showing estimated bearing to station') : t('screens.loggingSettings.showBearing.descriptionOff', "Not showing bearing information") }
             leftIcon="compass-outline"
             rightSwitchValue={!!settings.showBearing}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ showBearing: value }))}
@@ -78,7 +78,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
 
           {settings.showBearing && (
             <H2kListItem title={t('screens.loggingSettings.showReverseBearing.title', 'Also show reverse bearing')}
-              description={settings.showReverseBearing ? t('screens.loggingSettings.showReverseBearing.descriptionOn', 'Show bearing from station too, as "45° / 225°"') : t('screens.loggingSettings.showReverseBearing.descriptionOff', 'Only show bearing to station') }
+              description={settings.showReverseBearing ? t('screens.loggingSettings.showReverseBearing.descriptionOn', 'Showing bearing from station too, as "45° / 225°"') : t('screens.loggingSettings.showReverseBearing.descriptionOff', 'Showing only bearing to station') }
               leftIcon="compass-outline"
               rightSwitchValue={!!settings.showReverseBearing}
               rightSwitchOnValueChange={(value) => dispatch(setSettings({ showReverseBearing: value }))}
@@ -97,7 +97,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.loggingSettings.jumpAfterRST.title', 'Jump to next field on RST entry')}
-            description={settings.jumpAfterRST ? t('screens.loggingSettings.jumpAfterRST.descriptionOn', 'Jump after RST is entered') : t('screens.loggingSettings.jumpAfterRST.descriptionOff', "Don't jump automatically") }
+            description={settings.jumpAfterRST ? t('screens.loggingSettings.jumpAfterRST.descriptionOn', 'Jumping to the next field after RST') : t('screens.loggingSettings.jumpAfterRST.descriptionOff', "Not jumping automatically") }
             leftIcon="redo"
             rightSwitchValue={!!settings.jumpAfterRST}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ jumpAfterRST: value }))}
@@ -106,7 +106,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.loggingSettings.suggestDefaultOperator.title', 'Suggest default operator')}
-            description={settings.suggestDefaultOperator ? t('screens.loggingSettings.suggestDefaultOperator.descriptionOn', `Set ${settings?.operatorCall} as operator in operations where station call is different`) : t('screens.loggingSettings.suggestDefaultOperator.descriptionOff', "Don't suggest default operator regardless of station call used") }
+            description={settings.suggestDefaultOperator ? t('screens.loggingSettings.suggestDefaultOperator.descriptionOn', 'Using {{operatorCall}} as operator in operations where station call is different', { operatorCall: settings?.operatorCall }) : t('screens.loggingSettings.suggestDefaultOperator.descriptionOff', "Not suggesting a default operator, regardless of station call used") }
             leftIcon="account-question"
             rightSwitchValue={settings.suggestDefaultOperator !== false}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ suggestDefaultOperator: value }))}
@@ -115,7 +115,7 @@ export default function LoggingSettingsScreen ({ navigation, splitView }) {
 
           <H2kListItem
             title={t('screens.loggingSettings.suggestTemplates.title', 'Suggest operation templates')}
-            description={settings.suggestTemplates !== false ? t('screens.loggingSettings.suggestTemplates.descriptionOn', 'Suggest templates for new operations') : t('screens.loggingSettings.suggestTemplates.descriptionOff', "Don't suggest templates")}
+            description={settings.suggestTemplates !== false ? t('screens.loggingSettings.suggestTemplates.descriptionOn', 'Suggesting templates for new operations') : t('screens.loggingSettings.suggestTemplates.descriptionOff', "Not suggesting templates")}
             leftIcon="progress-question"
             rightSwitchValue={settings.suggestTemplates !== false}
             rightSwitchOnValueChange={(value) => dispatch(setSettings({ suggestTemplates: value }))}

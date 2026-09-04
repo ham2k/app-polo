@@ -188,6 +188,8 @@
       "startConfirm": "Operasjon startet!",
       "break": "Legge til en pause?",
       "breakConfirm": "La til pause i operasjon!",
+      "roverqth": "Legge til en pause og angi en ny posisjon?",
+      "roverqthConfirm": "La til en pause, angi nå den nye posisjonen din",
       "stop": "Stopp operasjonen?",
       "stopConfirm": "Operasjon stoppet!"
     },

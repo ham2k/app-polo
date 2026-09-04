@@ -118,7 +118,7 @@
       "errorSavingExport": "Nu s-a putut salva fișierul",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLo îți va încărca fișierele pe serverele Ham2K și le poți descărca din orice browser.",
-      "logStashDialogTiers": "Conturile gratuite pot trimite doar câte un fișier pe rând. Abonații pot trimite oricâte doresc.",
+      "logStashDialogTiers": "Conturile gratuite pot păstra un singur stash o dată. Abonații pot păstra câte doresc.",
       "logStashDialogSubscribe": "Abonează-te",
       "exportUpsellTitle": "Această operațiune a fost salvată și în Serviciul nostru de sincronizare în cloud",
       "exportUpsellBody": "Această copie de rezervă este gratuită, dar dacă te abonezi o poți sincroniza pe mai multe dispozitive și o poți accesa la viteză maximă.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**Export** trimite fișierele către o altă aplicație de pe dispozitivul tău — e-mail, mesagerie, stocare în cloud sau un alt program de logare.",
       "exportOptionsInfoSave-md": "**Save** scrie fișierele direct într-un dosar de pe dispozitivul tău, fără a trece printr-o altă aplicație.",
       "exportOptionsInfoSelection-md": "Acestea acționează asupra tuturor fișierelor pe care le-ai bifat mai jos. Poți, de asemenea, să atingi orice fișier individual pentru a-l partaja doar pe acela.",
-      "freeTierOneFileTitle": "Conturile gratuite pot trimite doar câte un fișier pe rând",
-      "freeTierOneFileMessage": "Vrei să trimiți doar „{{fileName}}”?",
-      "freeTierOneFileConfirm": "Trimite {{fileName}}",
       "freeTierRecentUploadTitle": "Încărcarea recentă va fi înlocuită",
-      "freeTierRecentUploadMessage": "Ai încărcat „{{fileName}}” acum mai puțin de 6 ore și încă nu a fost descărcat. Trimiterea acestui fișier îl va înlocui. Vrei să aștepți în schimb?",
+      "freeTierRecentUploadMessage": "Ați trimis „{{name}}” cu mai puțin de 6 ore în urmă și încă nu a fost descărcat. Trimiterea acum îl va înlocui. Doriți să așteptați în schimb?",
       "freeTierRecentUploadConfirm": "Trimite oricum",
       "errorSendingToLogStash": "Nu s-a putut trimite la Ham2K File Stash",
       "sentToLogStash": "Trimis la Ham2K File Stash",
@@ -154,6 +151,8 @@
         "duplicate": "Duplicat",
         "invalidBand": "Bandă Invalidă",
         "ourGrid": "Lipsește locația noastră",
+        "theirGrid": "Lipsește grila corespondentului",
+        "shortGrid": "Grila este prea scurtă",
         "newBand": "Bandă Nouă",
         "newMode": "Mod Nou",
         "newRef": "Referință Nouă",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Afișează rândul de numere",
-        "descriptionOn": "Butoane rapide pentru numere",
-        "descriptionOff": "Nu afișa rândul de numere"
+        "descriptionOn": "Se afișează butoane rapide pentru numere",
+        "descriptionOff": "Rândul de numere nu este afișat"
       },
       "showExtraInNumbersRow": {
         "title": "Perioada în rândul de numere",
-        "descriptionOn": "Include perioadă (și bară)",
-        "descriptionOff": "Afișează doar numerele"
+        "descriptionOn": "Se includ tastele punct și bară oblică",
+        "descriptionOff": "Se afișează doar numerele"
       },
       "showCommaInNumbersRow": {
         "title": "Virgulă în rândul de numere",
-        "descriptionOn": "Include o taste virgulă",
+        "descriptionOn": "Se include o tastă virgulă",
         "descriptionOff": "Fără taste virgulă"
       },
       "vibrateNumbersRow": {
         "title": "Utilizează vibrarea în rândul de numere",
-        "descriptionOn": "Vibrează când apăsați numerele",
-        "descriptionOff": "Nu vibrează când apăsați numerele"
+        "descriptionOn": "Vibrează la apăsarea numerelor",
+        "descriptionOff": "Nu vibrează la apăsarea numerelor"
       },
       "useMetricUnits": {
         "title": "Folosește unități de măsură metrice",
-        "descriptionOn": "Folosește Mile pentru distanțe",
-        "descriptionOff": "Folosește Kilometri pentru distanțe"
+        "descriptionOn": "Se folosesc mile pentru distanțe",
+        "descriptionOff": "Se folosesc kilometri pentru distanțe"
       },
       "keepDeviceAwake": {
         "title": "Păstrează dispozitivul treaz",
-        "descriptionOn": "Evită blocarea ecranului dispozitivului",
-        "descriptionOff": "Permite blocarea normală a ecranului"
+        "descriptionOn": "Ecranul rămâne activ",
+        "descriptionOff": "Ecranul se blochează ca de obicei"
       },
       "useSplitViews": {
         "title": "Utilizează Vizualizări Multiple",
-        "descriptionOn": "Utilizează Vizualizări Multiple când ecranul este suficient de mare",
-        "descriptionOff": "Nu folosi vizualizări multiple"
+        "descriptionOn": "Se folosesc vizualizări împărțite când ecranul este suficient de mare",
+        "descriptionOff": "Nu se folosesc vizualizări împărțite"
       },
       "useGrid8": {
         "title": "Locație de înaltă precizie",
-        "descriptionOn": "Folosește grile de opt cifre",
-        "descriptionOff": "Folosește grile de șase cifre"
+        "descriptionOn": "Se folosesc grile de 8 cifre",
+        "descriptionOff": "Se folosesc grile de 6 cifre"
       },
       "smartKeyboard": {
         "title": "Funcții de tastatură inteligentă",
-        "descriptionOn": "Activează funcțiile inteligente ale tastaturii",
-        "descriptionOff": "Folosește tastaturi simple pentru compatibilitate cu anumite dispozitive"
+        "descriptionOn": "Se folosesc funcțiile inteligente ale tastaturii",
+        "descriptionOff": "Se folosesc tastaturi mai simple, pentru compatibilitate cu unele dispozitive"
       },
       "exportSettings": {
         "title": "Setări Export",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Partajează datele de utilizare a aplicației",
-        "descriptionOn": "Ajutați-ne să îmbunătățim aplicația oferind date despre utilizare, erori și performanță",
-        "descriptionOff": "Păstrați datele de utilizare ale aplicației private.\nEchipa Ham2K nu va putea detecta erori sau alte probleme."
+        "descriptionOn": "Se partajează date despre utilizare, blocări și performanță pentru a ne ajuta să îmbunătățim aplicația",
+        "descriptionOff": "Datele de utilizare ale aplicației rămân private.\nEchipa Ham2K nu va putea detecta blocări sau alte probleme."
       },
       "shareOperationData": {
         "title": "Partajați date despre operațiuni",
-        "descriptionOn": "Partajați public unele date despre operațiuni și cu alți utilizatori",
-        "descriptionOff": "Păstrați datele despre operațiuni private"
+        "descriptionOn": "Se partajează public și cu alți utilizatori unele date despre operațiuni",
+        "descriptionOff": "Datele despre operațiuni rămân private"
       },
       "privacyPolicy": {
         "title": "Politica de Confidențialitate",
@@ -423,19 +422,24 @@
       "title": "Setări de logare",
       "leftieMode": {
         "title": "Mod pentru stângaci",
-        "descriptionOn": "Alegeți aspect pentru utilizatorii stângaci",
-        "descriptionOff": "Utilizați layout-ul pentru utilizatorii dreptaci"
+        "descriptionOn": "Se folosește aspectul pentru stângaci",
+        "descriptionOff": "Se folosește aspectul pentru dreptaci"
       },
       "countryFlags": {
         "title": "Steaguri Țări",
-        "descriptionNone": "Nu afișați steaguri",
-        "descriptionAll": "Afișați steagurile pentru toți contactele",
-        "descriptionDefault": "Afișați doar pentru contactele DX"
+        "descriptionNone": "Nu se afișează niciun steag",
+        "descriptionAll": "Se afișează steaguri pentru toate contactele",
+        "descriptionDefault": "Se afișează steaguri doar pentru contactele DX"
       },
       "showBearing": {
         "title": "Afișați Azimutul",
-        "descriptionOn": "Afișați azimutul estimat către stație",
-        "descriptionOff": "Nu afișați informații despre azimut"
+        "descriptionOn": "Se afișează azimutul estimat către stație",
+        "descriptionOff": "Nu se afișează informații despre azimut"
+      },
+      "showReverseBearing": {
+        "title": "Afișează și azimutul invers",
+        "descriptionOn": "Se afișează și azimutul de la stație, ca „45° / 225°”",
+        "descriptionOff": "Se afișează doar azimutul către stație"
       },
       "switchSignalReportOrder": {
         "title": "Schimbați ordinea rapoartelor semnalului",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "Treceți la următorul câmp la completarea RST",
-        "descriptionOn": "Treceți după ce RST este introdus",
-        "descriptionOff": "Nu săriți automat"
+        "descriptionOn": "Se trece la câmpul următor după RST",
+        "descriptionOff": "Nu se trece automat"
       },
       "suggestDefaultOperator": {
         "title": "Sugerați operatorul implicit",
-        "descriptionOn": "Setați {{operatorCall}} ca operator în operațiuni unde apelul stației este diferit",
-        "descriptionOff": "Nu sugerați operatorul implicit indiferent de apelul stației folosit"
+        "descriptionOn": "Se folosește {{operatorCall}} ca operator în operațiunile în care indicativul stației este diferit",
+        "descriptionOff": "Nu se sugerează un operator implicit, indiferent de indicativul stației folosit"
       },
       "suggestTemplates": {
         "title": "Folosește șabloane pentru operațiuni",
-        "descriptionOn": "Sugerează șabloane pentru operațiuni noi",
-        "descriptionOff": "Nu sugera șabloane"
+        "descriptionOn": "Se sugerează șabloane pentru operațiuni noi",
+        "descriptionOff": "Nu se sugerează șabloane"
       },
       "bandsModes": {
         "title": "Benzi și Moduri",
@@ -750,8 +754,8 @@
       "exportTypes": "Tipuri de Export",
       "customTemplates": "Șabloane personalizate",
       "defaultTemplates": "Șabloane implicite",
-      "customTemplatesDescription": "Folosește șabloane personalizate pentru export",
-      "defaultTemplatesDescription": "Folosește șabloane implicite pentru export",
+      "customTemplatesDescription": "Se folosesc șabloane personalizate pentru acest export",
+      "defaultTemplatesDescription": "Se folosesc șabloanele implicite",
       "includePrivateData": "Include date private",
       "ignoreLookupData": "Ignoră datele de căutare",
       "fileNameTemplate": "Șablon nume fișier",
@@ -760,8 +764,10 @@
       "adifComments": "Comentarii ADIF QSO",
       "adifQslMessage": "Mesaj QSL în ADIF",
       "templateHelpTitle": "Ajutor Șabloane",
-      "includePrivateDataDescription": "Nume, note, adrese, etc.",
-      "ignoreLookupDataDescription": "Ignoră datele de la servicii de căutare precum QRZ.com",
+      "includePrivateDataDescription": "Se includ nume, note, adrese etc.",
+      "excludePrivateDataDescription": "Se exclud nume, note, adrese etc.",
+      "ignoreLookupDataDescription": "Se ignoră datele de la servicii de căutare precum QRZ.com",
+      "useLookupDataDescription": "Se includ date de la servicii de căutare precum QRZ.com",
       "templateHelp-md": "\u0006[Elemente de șablon exemplu...](#)\n\n### Exportare jurnal\nAtribute pentru jurnalul care se exportă\n`{{log.station}}` → `{{call}}` Stația pentru acest export\n`{{log.ref}}` → `XX-1234` Referință pentru acest export\n`{{log.refName}}` → `Parcul Național Exemplu` Numele referinței pentru acest export\n`{{log.refShortName}}` → `PN Exemplu` Nume scurt de referință pentru acest export\n`{{log.handlerType}}` → `pota` Tip handler pentru acest export\n`{{log.handlerName}}` → `Parcuri On The Air` Nume handler pentru acest export\n`{{log.handlerShortName}}` → `POTA` Nume scurt handler pentru acest export\n\n### Indicative operațiune\n`{{op.station}}` → `{{call}}` Prima stație pentru operațiune\n`{{op.operator}}` → `{{call}}` Operatorul pentru operațiune\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Toate stațiile pentru operațiune\n`{{op.otherStations}}` → `{{otherCalls}}` Alte stații pentru operațiune\n\n### Data operațiunei\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Alte Detalii Operaționale\n`{{op.title}}` → `la XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Operațiunea Mea Specială`\n`{{op.userNotes}}` → `Am plecat dimineața devreme...`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grila pentru această operațiune\n\n### Informații QSO\n`{{qso.notes}}` → `Audio îngrozitor!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Raportul de semnal primit de la ei\n`{{qso.our.sent}}` → `55` Raportul de semnal trimis de noi\n`{{qso.their.grid}}` → `FF99` Grila raportată de ei\n`{{qso.refs}}` → O listă cu toate referințele pentru QSO (includere referințe operaționale și doar QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Setări implicite",
@@ -862,6 +868,7 @@
       "frequencyLabel": "Frecvență",
       "bandMissing": "Bandă???",
       "modeMissing": "Mod???",
+      "modeOutOfBand": "În afara benzii",
       "radioControls-a11y": "Controale Radio {{parts}}",
       "notesLabel": "Notițe",
       "notesLabel-a11y": "Notițe",

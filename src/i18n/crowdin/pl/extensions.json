@@ -1,0 +1,996 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Brak pasm",
+      "bandsCount_one": "1 pasmo",
+      "bandsCount_other": "Pasma: {{count}}",
+      "modesCount_zero": "Brak trybów",
+      "modesCount_one": "1 Tryb",
+      "modesCount_other": "Emisje: {{count}}",
+      "total": "Łącznie: {{count}}"
+    },
+    "bca": {
+      "name": "BCA: Zamki i Twierdze Belgii",
+      "shortName": "BCA",
+      "exportName": "Aktywacja BCA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano zamków do aktywacji",
+        "title_one": "Aktywacja 1 zamku",
+        "title_other": "Aktywowanych zamków: {{count}}",
+        "noCastlesFound": "Nie znaleziono zamków",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingCastles_zero": "Brak pasujących zamków",
+        "matchingCastles_one": "1 pasujący zamek",
+        "matchingCastles_other": "Pasujących zamków: {{count}}",
+        "searchForCastles": "Wyszukaj zamki do aktywacji!",
+        "noCastlesNearby": "Brak zamków w pobliżu",
+        "nearbyCastles": "Zamki w pobliżu",
+        "searchPlaceholder": "Nazwa lub odnośnik…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Brak upolowanych zamków",
+        "huntedRefsCount_one": "1 zamek upolowany",
+        "huntedRefsCount_other": "Upolowanych zamków: {{fmtCount}}",
+        "activatorQSOsCount_zero": "Brak QSO aktywatora",
+        "activatorQSOsCount_one": "1 QSO aktywatora",
+        "activatorQSOsCount_other": "QSO aktywatora: {{fmtCount}}",
+        "huntedQSOsCount_zero": "Brak upolowanych QSO",
+        "huntedQSOsCount_one": "1 upolowane QSO",
+        "huntedQSOsCount_other": "Upolowanych QSO: {{fmtCount}}",
+        "operationTotals": "Suma operacji",
+        "referencesActivatedCount_zero": "Brak aktywowanych zamków",
+        "referencesActivatedCount_one": "1 aktywowany zamek",
+        "referencesActivatedCount_other": "Aktywowanych zamków: {{fmtCount}}",
+        "referencesMissedCount_zero": "Brak nieukończonych zamków",
+        "referencesMissedCount_one": "1 nieukończony zamek",
+        "referencesMissedCount_other": "Nieukończonych zamków: {{fmtCount}}",
+        "referencesHuntedCount_zero": "Brak zamków myśliwskich",
+        "referencesHuntedCount_one": "1 zamek upolowany",
+        "referencesHuntedCount_other": "Upolowanych zamków: {{fmtCount}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich BCA"
+      }
+    },
+    "blha": {
+      "name": "BLHA: Belgijskie Latarnie Morskie i Latarniowce",
+      "shortName": "BLHA",
+      "exportName": "Aktywacja BLHA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano latarń do aktywacji",
+        "title_one": "Aktywacja 1 latarni",
+        "title_other": "Aktywowanych latarni: {{count}}",
+        "noLighthousesFound": "Nie znaleziono latarni",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingLighthouses_zero": "Brak pasujących latarni",
+        "matchingLighthouses_one": "1 pasująca latarnia",
+        "matchingLighthouses_other": "Pasujących latarni: {{count}}",
+        "searchForLighthouses": "Wyszukaj latarnie do aktywacji!",
+        "noLighthousesNearby": "Brak latarni w pobliżu",
+        "nearbyLighthouses": "Latarnie w pobliżu",
+        "searchPlaceholder": "Nazwa lub odnośnik…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Brak upolowanych latarni",
+        "huntedRefsCount_one": "1 upolowana latarnia",
+        "huntedRefsCount_other": "Upolowanych latarni: {{fmtCount}}",
+        "activatorQSOsCount_zero": "Brak QSO aktywatora",
+        "activatorQSOsCount_one": "1 QSO aktywatora",
+        "activatorQSOsCount_other": "QSO aktywatora: {{fmtCount}}",
+        "huntedQSOsCount_zero": "Brak upolowanych QSO",
+        "huntedQSOsCount_one": "1 pobierany QSO",
+        "huntedQSOsCount_other": "Upolowanych QSO: {{fmtCount}}",
+        "operationTotals": "Suma operacji",
+        "referencesActivatedCount_zero": "Brak aktywowanych latarni",
+        "referencesActivatedCount_one": "1 aktywowana latarnia",
+        "referencesActivatedCount_other": "Aktywowanych latarni: {{fmtCount}}",
+        "referencesMissedCount_zero": "Brak nieukończonych latarni",
+        "referencesMissedCount_one": "1 nieukończona latarnia",
+        "referencesMissedCount_other": "Nieukończonych latarni: {{fmtCount}}",
+        "referencesHuntedCount_zero": "Brak upolowanych latarni",
+        "referencesHuntedCount_one": "1 upolowana latarnia",
+        "referencesHuntedCount_other": "Upolowanych latarni: {{fmtCount}}"
+      }
+    },
+    "call-history": {
+      "name": "Historia wywołań",
+      "description": "Prześlij historyczny plik ADIF i użyj do wyszukiwania offline"
+    },
+    "call-notes": {
+      "name": "Notatki o znakach wywoławczych",
+      "description": "Przechowuj notatki o znakach wywoławczych w pliku i używaj ich do wyszukiwań offline",
+      "description-md_zero": "Brak załadowanych notatek.",
+      "description-md_one": "Załadowano {{fmtCount}} {{type}}.",
+      "description-md_other": "Załadowano {{fmtCount}} {{type}}.",
+      "builtIn": "Wbudowane notatki",
+      "userDefined": "Notatki użytkownika",
+      "failedToLoad": "Błąd ładowania!",
+      "notesFile": "Plik notatek o znakach wywoławczych",
+      "nameLabel": "Nazwa",
+      "namePlaceholder": "Nazwa pliku notatek o znakach wywoławczych",
+      "locationLabel": "Lokalizacja",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Wbudowany",
+      "customTitle": "Własny",
+      "addFile": "Dodaj nowy plik",
+      "aboutTitle": "Informacje o notatkach o znakach wywoławczych",
+      "names": {
+        "ham2k-hams-of-note": "Wartościowe Próbki Ham2K"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Prawdziwa próbka kto jest kim i kto nie jest w świecie radia"
+      },
+      "help-md": "Notatki o o znakach wywoławczych są przechowywane w plikach tekstowych, jeden znak w wierszu, po nim informacje, wyświetlane na na ekranie logowania. Można używać plików wbudowanych lub dodać swoje własne.\n\nPodaj bezpośredni link do pliku tekstowego albo link udostępniania z usługi takiej jak:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nWiersze w tym pliku powinny wyglądać jak niżej i mogą zawierać podstawowe formatowanie typu markdown:\n\n```nK2HRC 🎉 Klub Radio Ham2K!!!\nKE8PZN 👑 James - Król POTA\nWD4DAN Dan Królewski POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nJeśli wpis zaczyna się od emotiokona, zostanie on użyty zamiast domyślnego ⭐.\n\nWpisy mogą być używane do \"rozszerzenia znaku\", jeżeli najpierw wpiszesz `..` lub ` //` w polu znaku, na przykład `//DAN` w powyższym przykładzie."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Bez prowincji kanadyjskich",
+      "provincesCount_one": "1 prowincja kanadyjska",
+      "provincesCount_other": "Prowincje kanadyjskie: {{count}}"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Ustawienia",
+        "year": "Rok",
+        "testMode-md": "Ponieważ wydarzenie w tym roku jeszcze się nie rozpoczęło, można przetestować swoją operację używając łączności z ostatnich siedmiu dni.",
+        "note-md": "UWAGA: PoLo raportuje wyniki na podstawie wszystkich łączności w przedziale dat, w tym wszystkie inne operacje obecne na tym urządzeniu.",
+        "info-md": "Specjalne Wydarzenie 13 Kolonii odbywa się co roku od 9 rano ET 1 lipca do północy ET 7 lipca."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Pobieranie aktualnej pogody…",
+      "errorFetchingWeather": "Błąd pobierania pogody",
+      "fetchingSolarWeather": "Pobieranie pogody słonecznej…",
+      "errorFetchingSolarWeather": "Błąd pobierania pogody słonecznej",
+      "addNote": "Dodaj notatkę: ‘{{note}}’…",
+      "addNotePrompt": "Dodać notatkę? Pisz dalej…",
+      "addNoteConfirm": "Dodano notatkę!",
+      "addTodo": "Dodaj do zrobienia: ‘{{note}}’…",
+      "addTodoPrompt": "Dodać zadanie do zrobienia? Pisz dalej…",
+      "addTodoConfirm": "Dodano do zrobienia!",
+      "sendChat": "Wyślij czat: ‘{{note}}’…",
+      "sendChatPrompt": "Wysłać czat? Pisz dalej…",
+      "sendChatConfirm": "Wysłano czat!"
+    },
+    "commands-debug": {
+      "syncall": "Usunąć wszelkie operacje i zresetować zsynchronizowany status?",
+      "syncallConfirm": "Usuwanie danych i ponowne synchronizowanie wszystkiego…",
+      "syncup": "Wysłać lokalne dane do serwisu synchronizacyjnego?",
+      "syncupConfirm": "Ponowne wysyłanie…",
+      "wipedb": "Usunąć całą bazę danych (ale zachować ustawienia)?",
+      "wipedbConfirm": "Czyszczenie bazy danych…",
+      "factory": "Usunąć wszystkie dane i ustawienia?",
+      "factoryConfirm": "Trwa resetowanie fabryczne…",
+      "switchLanguage": "Przełączyć język na `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Język `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Przełączanie na `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Aktywować tryb dewelopera?",
+      "activateConfirm": "Tryb dewelopera aktywowany!",
+      "deactivate": "Dezaktywować tryb dewelopera?",
+      "deactivateConfirm": "Tryb dewelopera dezaktywowany!",
+      "on": "Tryb dewelopera: WŁĄCZONY!!!",
+      "off": "Tryb dewelopera: WYŁĄCZONY"
+    },
+    "commands-misc": {
+      "rtfm": "Przeczytać szczegółową instrukcję?",
+      "rtfmConfirm": "Otwieranie szczegółowej instrukcji",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Nie można wykonać samodzielnego zgłoszenia bez podania częstotliwości",
+        "selfSpotWithComments": "Samodzielne zgłoszenie: ‘{{comments}}’?",
+        "selfSpotPrompt": "Wykonać samodzielne zgłoszenie?",
+        "selfSpottingWithComments": "Samodzielne zgłoszenie na {{freq}} z ‘{{comments}}’",
+        "selfSpotting": "Samodzielne zgłoszenie na {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Rozpocząć aktywację?",
+      "startConfirm": "Aktywacja rozpoczęta!",
+      "break": "Dodać przerwę?",
+      "breakConfirm": "Dodano przerwę w aktywacji!",
+      "roverqth": "Dodać przerwę i ustawić nową lokalizację?",
+      "roverqthConfirm": "Dodano przerwę, teraz ustaw swoją nową lokalizację",
+      "stop": "Zatrzymać aktywację?",
+      "stopConfirm": "Aktywacja zatrzymana!"
+    },
+    "commands-operator": {
+      "change": "Zmienić operatora na {{operator}}?",
+      "changeConfirm": "Operator ustawiony na {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Zmienić pasmo na {{band}}?",
+      "bandConfirm": "Pasmo ustawione na {{band}}",
+      "frequency": "Zmienić częstotliwość na {{freq}} MHz?",
+      "frequencyConfirm": "Częstotliwość ustawiona na {{freq}} MHz",
+      "frequencyAndMode": "Zmienić częstotliwość na {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Częstotliwość ustawiona na {{freq}} MHz ({{mode}})",
+      "power": "Zmienić moc na {{power}}W?",
+      "powerConfirm": "Moc ustawiona na {{power}}W",
+      "mode": "Zmienić tryb na {{mode}}?",
+      "modeConfirm": "Tryb ustawiony na {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Ustawić {{name}}?",
+      "setChange": "Zmienić {{label}} na {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} ustawione na {{value}}",
+      "setNotChanged": "Nie zmieniono"
+    },
+    "commands-time": {
+      "setTime": "Ustawić czas na {{time}}?",
+      "setDate": "Ustawić datę na {{date}}?",
+      "timeSet": "Czas ustawiony na {{time}}",
+      "dateSet": "Data ustawiona na {{date}}",
+      "changeTimeByHours": "Zmienić czas o {{delta}} godzin?",
+      "changeTimeByMinutes": "Zmienić czas o {{delta}} minut?",
+      "changeTimeBySeconds": "Zmienić czas o {{delta}} sekund?",
+      "changeTimeByDays": "Zmienić czas o {{delta}} dni?",
+      "changeTimeByWeeks": "Zmienić czas o {{delta}} tygodni?",
+      "changeTimeToNow": "Zmień czas na teraz?",
+      "changeTimeToToday": "Zmień czas na dziś?",
+      "changeTimeToYesterday": "Zmień czas na wczoraj?",
+      "timeSetToNow": "Czas ustawiony na teraz",
+      "timeSetToToday": "Czas ustawiony na dziś",
+      "timeSetToYesterday": "Czas ustawiony na wczoraj"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Nie wybrano referencji do aktywacji",
+        "title_one": "Aktywacja 1 referencji",
+        "title_other": "Aktywowanych referencji: {{count}}",
+        "addMoreReferences": "Dodaj więcej referencji",
+        "addReference": "Dodaj referencję",
+        "activityLabel": "Działanie - AKTYWNOSC_W_MYSZ w ADIF (Opcjonalnie)",
+        "activityPlaceholder": "np. COTA…",
+        "referenceLabel": "Odniesienie - MOJA_INF_O_AKTYWNOSCI w ADIF",
+        "referencePlaceholder": "np. XY-1234…",
+        "nameLabel": "Nazwa (Opcjonalnie)",
+        "namePlaceholder": "np. zamek XYZ…",
+        "addButton": "Dodaj {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich Ref"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Nadpisz tutaj konkretne tytuły plików danych",
+        "pota-all-parks": "POTA: wszystkie parki",
+        "sota-all-summits": "SOTA: wszystkie szczyty"
+      },
+      "loading": {
+        "progress": "Załadowanych referencji: `{{processedLines}}`\n\n`{{percent}}` • {{secondsLeft}} sekund pozostało.",
+        "downloadingRawData": "Pobieranie surowych danych…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Brak jednostek DXCC",
+      "entitiesCount_one": "1 Jednostka DXCC",
+      "entitiesCount_other": "Jednostek DXCC: {{count}}"
+    },
+    "eca": {
+      "name": "ECA: Dyplom Zamki Angielskie",
+      "shortName": "ECA",
+      "exportName": "Aktywacja ECA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano zamków do aktywacji",
+        "title_one": "Aktywowanie 1 zamku",
+        "title_other": "Aktywowanych zamków: {{count}}",
+        "noCastlesFound": "Nie znaleziono zamków",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingCastles_zero": "Brak pasujących zamków",
+        "matchingCastles_one": "1 pasujący zamek",
+        "matchingCastles_other": "Pasujących zamków: {{count}}",
+        "searchForCastles": "Wyszukaj zamki do aktywacji!",
+        "noCastlesNearby": "Brak zamków w pobliżu",
+        "nearbyCastles": "Zamki w pobliżu",
+        "searchPlaceholder": "Nazwa lub referencja…"
+      }
+    },
+    "ela": {
+      "name": "ELA: Dyplom Angielskie Latarnie Morskie",
+      "shortName": "ELA",
+      "exportName": "Aktywacja ELA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano latarni do aktywacji",
+        "title_one": "Aktywowanie 1 latarni",
+        "title_other": "Aktywowanych latarni: {{count}}",
+        "noLighthousesFound": "Nie znaleziono latarni",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingLighthouses_zero": "Brak pasujących latarni",
+        "matchingLighthouses_one": "1 pasująca latarnia",
+        "matchingLighthouses_other": "Pasujących latarni: {{count}}",
+        "searchForLighthouses": "Wyszukaj latarnie do aktywacji!",
+        "noLighthousesNearby": "Brak latarni w pobliżu",
+        "nearbyLighthouses": "Latarnie w pobliżu",
+        "searchPlaceholder": "Nazwa lub referencja…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Wymiana informacji",
+        "classLabel": "Klasa",
+        "locationLabel": "Lokalizacja",
+        "additionalInformation": "Dodatkowe Informacje",
+        "highestTransmitterPowerLabel": "Najwyższa moc nadajnika",
+        "highestTransmitterPowerPlaceholder": "100 W",
+        "qrpOption": "QRP: 5 W lub mniej",
+        "qroOption": "QRO: 100 W lub mniej",
+        "moreThan100WOption": "Ponad 100 W",
+        "powerSourceLabel": "Źródło zasilania",
+        "powerSourcePlaceholder": "Wybierz źródło zasilania",
+        "batteriesOption": "Akumulator, energia słoneczna, wiatrowa",
+        "commercialPowerOption": "Sieć zasilająca, generator",
+        "bonusesTitle": "Punkty bonusowe: zgłoszono {{count}}, {{points}} pkt",
+        "bonusesDescription": "Pamiętaj, aby zgłosić te punkty bonusowe również podczas przesyłania logu!",
+        "bonusTitle": "{{title}} ({{points}} pkt)",
+        "information-md": "Klasa dla ARRL Field Day to na przykład `2A`:\n\n  - `1`, `2`, `3`… dla liczby nadajników.\n  - `A` dla grupowej stacji przenośnej (3 lub więcej)\n  - `B` dla stacji przenośnej jedno- lub dwuosobowej\n  - `C` dla stacji mobilnej\n  - `D` dla stacji domowej\n  - `E` dla stacji domowej zasilanej awaryjnie\n  - `F` dla Centrum Operacji Awaryjnej\n\nLokalizacja to sekcja ARRL, sekcja RAC, `MX` dla Meksyku lub `DX` dla pozostałych.\n\nWięcej informacji w **[oficjalnych zasadach](https://www.arrl.org/field-day-rules)**."
+      },
+      "bonusName": {
+        "transmitters": "Nadajniki",
+        "emergencyPower": "100% zasilanie awaryjne",
+        "mediaPublicity": "Rozgłos w mediach",
+        "publicLocation": "Miejsce publiczne",
+        "informationTable": "Publiczne stoisko informacyjne",
+        "messageToSM": "Wiadomość do ARRL SM/SEC",
+        "ntsMessages": "Obsługa wiadomości",
+        "ntsMessagesCount": "Liczba obsłużonych wiadomości",
+        "satelliteQSO": "QSO satelitarne",
+        "alternatePowerQSOs": "QSO z alternatywnego źródła zasilania",
+        "w1awMessage": "Wiadomość W1AW Field Day",
+        "electedOfficialVisit": "Wizyta wybranego urzędnika",
+        "agencyOfficialVisit": "Wizyta przedstawiciela obsługiwanej agencji",
+        "educationalActivity": "Aktywność edukacyjna",
+        "youthElement": "Udział młodzieży",
+        "safetyOfficer": "Oficer bezpieczeństwa",
+        "siteResponsibilities": "Obowiązki dotyczące stanowiska",
+        "socialMedia": "Media społecznościowe",
+        "gotaQSOs": "QSO ze stacji GOTA",
+        "gotaQSOsCount": "Liczba QSO GOTA",
+        "gotaCoach": "Trener GOTA",
+        "webSubmission": "Zgłoszenie przez WWW"
+      },
+      "bonusDescription": {
+        "transmitters": "100 punktów za nadajnik (maks. 20), nie licząc GOTA ani VHF.",
+        "emergencyPower": "100 punktów za nadajnik (maks. 20), jeśli wszystkie łączności korzystają z zasilania awaryjnego.",
+        "mediaPublicity": "Uzyskaj rozgłos w lokalnych mediach. Dołącz kopię do zgłoszenia.",
+        "publicLocation": "Zorganizuj operację w miejscu publicznym, takim jak park, szkoła lub centrum handlowe (tylko klasa A, B lub F).",
+        "informationTable": "Prowadź publiczne stoisko informacyjne w miejscu Field Day (tylko klasa A, B lub F).",
+        "messageToSM": "Sporządź oficjalną wiadomość do menedżera sekcji ARRL lub koordynatora ds. sytuacji nadzwyczajnej.",
+        "ntsMessages": "10 punktów za każdą wiadomość NTS lub ICS-213 (maks. 10) obsłużoną w okresie pracy.",
+        "satelliteQSO": "Przeprowadź co najmniej jedno QSO przez amatorskiego satelitę radiowego (tylko klasa A, B lub F).",
+        "alternatePowerQSOs": "Przeprowadź co najmniej jedno QSO z wykorzystaniem alternatywnego źródła energii, takiego jak energia słoneczna, wiatrowa lub wodna (tylko klasa A, B, E lub F).",
+        "w1awMessage": "Dokładnie odbierz specjalny biuletyn Field Day nadawany przez W1AW lub K6KPH.",
+        "electedOfficialVisit": "Zorganizuj wizytę zaproszonego wybranego urzędnika państwowego.",
+        "agencyOfficialVisit": "Zorganizuj wizytę zaproszonego przedstawiciela obsługiwanej agencji.",
+        "educationalActivity": "Przeprowadź formalną aktywność edukacyjną z pisemnym planem lekcji.",
+        "youthElement": "Włącz młodych uczestników do operacji.",
+        "safetyOfficer": "Zapewnij wyznaczonego oficera bezpieczeństwa na miejscu (tylko klasa A).",
+        "siteResponsibilities": "Spełnij wymagania dotyczące obowiązków na stanowisku (klasy B, C, D, E i F).",
+        "socialMedia": "Promuj swoją operację Field Day w mediach społecznościowych.",
+        "gotaQSOs": "5 punktów za każde QSO przeprowadzone na stacji GOTA.",
+        "gotaCoach": "Dostępny jest trener GOTA, który pomaga w obsłudze stacji GOTA.",
+        "webSubmission": "Prześlij zgłoszenie za pomocą aplikacji WWW na field-day.arrl.org."
+      }
+    },
+    "gma": {
+      "name": "GMA: Globalna Aktywność Górska",
+      "shortName": "GMA",
+      "exportName": "Aktywacja GMA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano szczytów do aktywacji",
+        "title_one": "Aktywowanie 1 szczytu",
+        "title_other": "Aktywowanych szczytów: {{count}}",
+        "noSummitsFound": "Nie znaleziono szczytów",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingSummits_zero": "Brak pasujących szczytów",
+        "matchingSummits_one": "1 pasujący szczyt",
+        "matchingSummits_other": "{{count}} pasujących szczytów",
+        "searchForSummits": "Wyszukaj szczyty do aktywacji!",
+        "noSummitsNearby": "Brak szczytów w pobliżu",
+        "nearbySummits": "Szczyty w pobliżu",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownSummit": "Nieznany szczyt"
+      }
+    },
+    "ham2k-lookup": {
+      "name": "Usługa wyszukiwania Ham2K",
+      "description": "Usługa bezpłatna, ale tylko obejmująca połączenia z USA, Kanadą i Niemcami"
+    },
+    "hamqth": {
+      "name": "Wyszukiwanie znaków wywoławczych HamQTH.com",
+      "description": "Wymaga darmowego konta do wyszukiwań"
+    },
+    "llota": {
+      "name": "LLOTA: Jeziora i Laguny na Powietrzu",
+      "shortName": "LLOTA",
+      "exportName": "Aktywacja LLOTA",
+      "activityOptions": {
+        "title_zero": "Brak wybranych jezior do aktywacji",
+        "title_one": "Aktywacja 1 jeziora",
+        "title_other": "Aktywacja {{count}} jezior",
+        "noLakesFound": "Nie znaleziono jezior",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingRefs_zero": "Brak dopasowanych jezior",
+        "matchingRefs_one": "1 dopasowane jezioro",
+        "matchingRefs_other": "{{count}} dopasowanych jezior",
+        "searchForRefs": "Wyszukaj jeziora do aktywacji!",
+        "noRefsNearby": "Brak jezior w pobliżu",
+        "nearbyRefs": "Jeziora w pobliżu",
+        "searchPlaceholder": "Nazwa lub numer referencyjny…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Brak L2L",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L",
+        "huntedRefsCount_zero": "Brak upolowanych jezior",
+        "huntedRefsCount_one": "1 upolowane jezioro",
+        "huntedRefsCount_other": "{{fmtCount}} upolowane jeziora",
+        "activatorQSOsCount_zero": "Brak QSOs aktywatora",
+        "activatorQSOsCount_one": "1 QSO aktywatora",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktywatora",
+        "ref2refQSOsCount_zero": "Brak QSOs L2L",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSOs",
+        "huntedQSOsCount_zero": "Brak upolowanych QSOs",
+        "huntedQSOsCount_one": "1 upolowane QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} upolowane QSO",
+        "operationTotals": "Suma Operacji",
+        "referencesActivatedCount_zero": "Brak aktywowanych jezior",
+        "referencesActivatedCount_one": "1 aktywowane jezioro",
+        "referencesActivatedCount_other": "{{fmtCount}} aktywowane jeziora",
+        "referencesMissedCount_zero": "Brak niepełnych jezior",
+        "referencesMissedCount_one": "1 niepełne jezioro",
+        "referencesMissedCount_other": "{{fmtCount}} niepełne jeziora",
+        "referencesHuntedCount_zero": "Brak upolowanych jezior",
+        "referencesHuntedCount_one": "1 upolowane jezioro",
+        "referencesHuntedCount_other": "{{fmtCount}} upolowane jeziora"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Błąd przy publikowaniu LLOTA",
+        "serverResponse": "Serwer odpowiedział błędem {{status}}: {{body}}"
+      },
+      "exampleRefName": "Przykładowe Jezioro",
+      "unknownRefName": "Nieznane Jezioro",
+      "noRefsNearby": "Brak pobliskich jezior!"
+    },
+    "mota": {
+      "name": "MOTA: Młyny na Powietrzu",
+      "shortName": "MOTA",
+      "exportName": "Aktywacja MOTA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano młynów do aktywacji",
+        "title_one": "Aktywowanie 1 młyna",
+        "title_other": "Aktywowanie {{count}} młynów",
+        "noMillsFound": "Nie znaleziono młynów",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingMills_zero": "Brak pasujących młynów",
+        "matchingMills_one": "1 pasujący młyn",
+        "matchingMills_other": "{{count}} pasujących młynów",
+        "searchForMills": "Wyszukaj młyny do aktywacji!",
+        "noMillsNearby": "Brak młynów w pobliżu",
+        "nearbyMills": "Młyny w pobliżu",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownMill": "Nieznany młyn"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich Młyn"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Spotting",
+      "description": "Głównie używane w VK i ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL spotting)",
+        "dialogTitle": "Konto ParksnPeaks",
+        "description": "Konto: {{username}}",
+        "noAccount": "Brak konta",
+        "pleaseEnterDetails": "Proszę wprowadzić szczegóły swojego konta ParksnPeaks:"
+      },
+      "usernameLabel": "Nazwa użytkownika (nie znak wywoławczy)",
+      "usernamePlaceholder": "nazwa użytkownika konta",
+      "apiKeyLabel": "Klucz API (nie hasło)",
+      "apiKeyPlaceholder": "twój Klucz API"
+    },
+    "pga": {
+      "name": "Polska Nagroda Gminna",
+      "shortName": "PGA",
+      "exportName": "Aktywacja PGA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano gmin do aktywacji",
+        "title_one": "Aktywowanie 1 gminy",
+        "title_other": "Aktywowanie {{count}} gmin",
+        "noGminasFound": "Nie znaleziono gmin",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingGminas_zero": "Brak pasujących gmin",
+        "matchingGminas_one": "1 pasująca gmina",
+        "matchingGminas_other": "{{count}} pasujących gmin",
+        "searchForGminas": "Wyszukaj gminy do aktywacji!",
+        "noGminasNearby": "Brak gmin w pobliżu",
+        "nearbyGminas": "Gminy w pobliżu",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownGmina": "Nieznana gmina"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parki na powietrzu",
+      "shortName": "POTA",
+      "exportName": "Aktywacja POTA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano parków do aktywacji",
+        "title_one": "Aktywowanie 1 parku",
+        "title_other": "Aktywacja {{count}} parków",
+        "noParksFound": "Nie znaleziono parków",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingParks_zero": "Brak dopasowanych parków",
+        "matchingParks_one": "1 dopasowany park",
+        "matchingParks_other": "{{count}} dopasowanych parków",
+        "searchForParks": "Wyszukaj niektóre parki do aktywacji!",
+        "noParksNearby": "Brak parków w pobliżu",
+        "nearbyParks": "Pobliskie parki",
+        "searchPlaceholder": "Nazwa lub odnośnik…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Brak P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Brak parków myśliwskich",
+        "huntedRefsCount_one": "1 park myśliwski",
+        "huntedRefsCount_other": "{{fmtCount}} parków myśliwskich",
+        "activatorQSOsCount_zero": "Brak aktywatorów QSOs",
+        "activatorQSOsCount_one": "1 aktywator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktywatorów QSOs",
+        "ref2refQSOsCount_zero": "Brak P2P QSOs",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Brak pobieranych QSOs",
+        "huntedQSOsCount_one": "1 pobierany QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} pobieranych QSOs",
+        "operationTotals": "Suma operacji",
+        "referencesActivatedCount_zero": "Brak aktywowanych parków",
+        "referencesActivatedCount_one": "1 aktywowany park",
+        "referencesActivatedCount_other": "{{fmtCount}} aktywowanych parków",
+        "referencesMissedCount_zero": "Brak nieukończonych parków",
+        "referencesMissedCount_one": "1 nieukończony park",
+        "referencesMissedCount_other": "{{fmtCount}} nieukończonych parków",
+        "referencesHuntedCount_zero": "Brak parków myśliwskich",
+        "referencesHuntedCount_one": "1 park myśliwski",
+        "referencesHuntedCount_other": "{{fmtCount}} parków myśliwskich"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich POTA"
+      },
+      "postSpotAPI": {
+        "error": "Błąd podczas dodawania miejsca POTA",
+        "serverResponse": "Serwer odpowiedział błędem {{status}}: {{body}}"
+      },
+      "exampleRefName": "Przykładowy Park Narodowy",
+      "unknownRefName": "Nieznany Park",
+      "noRefsNearby": "Brak parków w pobliżu!"
+    },
+    "qrz": {
+      "name": "Wyszukiwania znaków wywoławczych QRZ.com",
+      "description": "Wymaga darmowego konta do nazw, a płatnego konta do lokalizacji"
+    },
+    "sats": {
+      "name": "Operacje satelitarne"
+    },
+    "siota": {
+      "name": "SiOTA: Silosy na Powietrzu",
+      "shortName": "SIOTA",
+      "exportName": "Aktywacja SIOTA",
+      "account": {
+        "title": "ParksnPeaks (SiOTA wykrywanie)",
+        "dialogTitle": "Konto ParksnPeaks",
+        "description": "Konto: {{username}}",
+        "noAccount": "Brak konta",
+        "pleaseEnterDetails": "Proszę wprowadzić szczegóły konta ParksnPeaks:",
+        "usernameLabel": "Nazwa użytkownika (nie znak wywoławczy)",
+        "usernamePlaceholder": "twoja nazwa użytkownika konta",
+        "apiKeyLabel": "Klucz API (nie hasło)",
+        "apiKeyPlaceholder": "twój Klucz API"
+      },
+      "activityOptions": {
+        "title_zero": "Brak wybranych silosów do aktywacji",
+        "title_one": "Aktywacja 1 silosu",
+        "title_other": "Aktywacja {{count}} silosów",
+        "noSilosFound": "Nie znaleziono silosów",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingSilos_zero": "Brak dopasowanych silosów",
+        "matchingSilos_one": "1 dopasowany silos",
+        "matchingSilos_other": "{{count}} dopasowanych silosów",
+        "searchForSilos": "Wyszukaj niektóre silosy do aktywacji!",
+        "noSilosNearby": "Brak silosów w pobliżu",
+        "nearbySilos": "Pobliskie silosy",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownSilo": "Nieznany silos"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich Silos"
+      },
+      "postSpotAPI": {
+        "error": "Błąd podczas dodawania miejsca SiOTA",
+        "serverResponse": "Serwer odpowiedział błędem {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "name": "SOTA: Szczyty w Eterze",
+      "account": {
+        "title": "SOTA (do SOTAWatch samodetekcji)",
+        "dialogTitle": "Konto SOTA",
+        "description": "Konto: {{callsign}}",
+        "noAccount": "Brak konta",
+        "error": "Błąd pobierania danych konta",
+        "connect": "Podłącz swoje konto SOTA"
+      },
+      "notLoggedInAlertTitle": "Ostrzeżenie",
+      "notLoggedInAlertText": "Nie zalogowano się do SOTAWatch w celu samodzielnego zauważenia. Proszę udać się do ustawień PoLo",
+      "activityOptions": {
+        "title_zero": "Brak wybranych szczytów do aktywacji",
+        "title_one": "Aktywacja 1 szczytu",
+        "title_other": "Aktywacja {{count}} szczytów",
+        "noSummitsFound": "Nie znaleziono szczytów",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingSummits_zero": "Brak dopasowanych szczytów",
+        "matchingSummits_one": "1 dopasowany szczyt",
+        "matchingSummits_other": "{{count}} dopasowanych szczytów",
+        "searchForSummits": "Wyszukaj niektóre szczyty do aktywacji!",
+        "noSummitsNearby": "Brak szczytów w pobliżu",
+        "nearbySummits": "Pobliskie szczyty",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownSummit": "Nieznany szczyt"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Brak S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Brak szczytów myśliwskich",
+        "huntedRefsCount_one": "1 szczyt myśliwski",
+        "huntedRefsCount_other": "{{fmtCount}} szczytów myśliwskich",
+        "activatorQSOsCount_zero": "Brak aktywatorów QSOs",
+        "activatorQSOsCount_one": "1 aktywator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktywatorów QSOs",
+        "ref2refQSOsCount_zero": "Brak S2S QSOs",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSOs",
+        "huntedQSOsCount_zero": "Brak pobieranych QSOs",
+        "huntedQSOsCount_one": "1 pobierany QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} pobieranych QSOs",
+        "operationTotals": "Suma operacji",
+        "referencesActivatedCount_zero": "Brak aktywowanych szczytów",
+        "referencesActivatedCount_one": "1 aktywowany szczyt",
+        "referencesActivatedCount_other": "{{fmtCount}} aktywowanych szczytów",
+        "referencesMissedCount_zero": "Brak nieukończonych szczytów",
+        "referencesMissedCount_one": "1 nieukończony szczyt",
+        "referencesMissedCount_other": "{{fmtCount}} nieukończonych szczytów",
+        "referencesHuntedCount_zero": "Brak szczytów myśliwskich",
+        "referencesHuntedCount_one": "1 szczyt myśliwski",
+        "referencesHuntedCount_other": "{{fmtCount}} szczytów myśliwskich"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Błąd podczas dodawania miejsca SOTA",
+        "serverResponse": "Serwer odpowiedział statusem {{status}} {{message}}",
+        "sotaAccountLoggedOut": "Konto SOTA zostało wylogowane. Proszę zalogować się ponownie w ustawieniach PoLo"
+      },
+      "exampleRefName": "Przykładowy Szczyt",
+      "unknownRefName": "Nieznany Szczyt",
+      "noRefsNearby": "Brak szczytów w pobliżu!"
+    },
+    "tota": {
+      "name": "TOTA: Wieże na Powietrzu",
+      "activityOptions": {
+        "title_zero": "Brak wież wybranych do aktywacji",
+        "title_one": "Aktywacja 1 wieży",
+        "title_other": "Aktywacja {{count}} wież",
+        "noTowersFound": "Nie znaleziono wież",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} wyników",
+        "matchingTowers_zero": "Brak pasujących wież",
+        "matchingTowers_one": "1 pasująca wieża",
+        "matchingTowers_other": "{{count}} pasujących wież",
+        "searchForTowers": "Wyszukaj niektóre wieże do aktywacji!",
+        "noTowersNearby": "Nie ma wież w pobliżu",
+        "nearbyTowers": "Wieże w pobliżu",
+        "searchPlaceholder": "Nazwa lub odniesienie…",
+        "unknownTower": "Nieznana wieża"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Brak R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Brak wież do polowania",
+        "huntedRefsCount_one": "1 wieża do polowania",
+        "huntedRefsCount_other": "{{fmtCount}} wież do polowania",
+        "activatorQSOsCount_zero": "Brak QSOs aktywatorów",
+        "activatorQSOsCount_one": "1 QSO aktywatora",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktywatorów",
+        "ref2refQSOsCount_zero": "Brak QSOs R2R",
+        "ref2refQSOsCount_one": "1 QSO R2R",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs R2R",
+        "huntedQSOsCount_zero": "Brak QSOs do polowania",
+        "huntedQSOsCount_one": "1 QSO do polowania",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs do polowania",
+        "operationTotals": "Szczegóły Operacyjne",
+        "referencesActivatedCount_zero": "Brak aktywowanych wież",
+        "referencesActivatedCount_one": "1 aktywowana wieża",
+        "referencesActivatedCount_other": "{{fmtCount}} aktywowanych wież",
+        "referencesMissedCount_zero": "Brak niekompletnych wież",
+        "referencesMissedCount_one": "1 niekompletna wieża",
+        "referencesMissedCount_other": "{{fmtCount}} niekompletnych wież",
+        "referencesHuntedCount_zero": "Brak wież do polowania",
+        "referencesHuntedCount_one": "1 wieża do polowania",
+        "referencesHuntedCount_other": "{{fmtCount}} wież do polowania"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich Wieża"
+      },
+      "exampleRefName": "Przykładowa Wieża",
+      "unknownRefName": "Nieznana Wieża",
+      "noRefsNearby": "Brak wież w pobliżu!",
+      "postSpotAPI": {
+        "error": "Błąd przy publikowaniu spotu TOTA",
+        "serverResponse": "Serwer odpowiedział ze statusem {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Brak stanów USA",
+      "statesCount_one": "1 Stan USA",
+      "statesCount_other": "{{count}} Stany USA"
+    },
+    "wab": {
+      "name": "Worked All Britain/Ireland",
+      "description": "Dodaj Pole WAB/WAI do operacji",
+      "workedAllBritainSquare": "Worked All Britain Square",
+      "workedAllIrelandSquare": "Worked All Ireland Square",
+      "enterSquare": "Wprowadź Pole",
+      "placeholderBritain": "np. SU14",
+      "placeholderIreland": "np. N93",
+      "currentSquare": "Aktualne Pole:",
+      "noSquareSet": "Nie ustawiono pola"
+    },
+    "wca": {
+      "name": "WCA: Światowe Nagrody za Zamki",
+      "shortName": "WCA",
+      "exportName": "Aktywacja WCA",
+      "activityOptions": {
+        "title_zero": "Nie wybrano zamków do aktywacji",
+        "title_one": "Aktywowanie 1 zamku",
+        "title_other": "Aktywowanie {{count}} zamków",
+        "noCastlesFound": "Nie znaleziono zamków",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingCastles_zero": "Brak dopasowanych zamków",
+        "matchingCastles_one": "1 pasujący zamek",
+        "matchingCastles_other": "{{count}} pasujących zamków",
+        "searchForCastles": "Wyszukaj zamki do aktywacji!",
+        "noCastlesNearby": "Brak zamków w pobliżu",
+        "nearbyCastles": "Zamki w pobliżu",
+        "searchPlaceholder": "Nazwa lub odnośnik…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Nie upolowano zamków",
+        "huntedRefsCount_one": "1 upolowany zamek",
+        "huntedRefsCount_other": "{{fmtCount}} upolowanych zamków",
+        "activatorQSOsCount_zero": "Brak QSOs aktywatora",
+        "activatorQSOsCount_one": "1 QSO aktywatora",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs aktywatorów",
+        "huntedQSOsCount_zero": "Brak upolowanych QSOs",
+        "huntedQSOsCount_one": "1 upolowany QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} upolowanych QSOs",
+        "operationTotals": "Podsumowanie operacji",
+        "referencesActivatedCount_zero": "Nie aktywowano zamków",
+        "referencesActivatedCount_one": "1 aktywowany zamek",
+        "referencesActivatedCount_other": "{{fmtCount}} aktywowanych zamków",
+        "referencesMissedCount_zero": "Brak niekompletnych zamków",
+        "referencesMissedCount_one": "1 niekompletny zamek",
+        "referencesMissedCount_other": "{{fmtCount}} niekompletnych zamków",
+        "referencesHuntedCount_zero": "Nie upolowano zamków",
+        "referencesHuntedCount_one": "1 upolowany zamek",
+        "referencesHuntedCount_other": "{{fmtCount}} upolowanych zamków"
+      },
+      "exampleRefName": "Przykładowy zamek",
+      "unknownRefName": "Nieznany zamek",
+      "noRefsNearby": "Brak zamków w pobliżu!"
+    },
+    "wfd": {
+      "name": "Zimowy dzień w terenie",
+      "shortName": "WFD",
+      "exportName": "Aktywacja WFD",
+      "activityOptions": {
+        "exchangeInformation": "Wymiana informacji",
+        "classLabel": "Klasa",
+        "locationLabel": "Lokalizacja",
+        "objectives_zero": "Brak osiągniętych celów",
+        "objectives_one": "1 osiągnięty cel, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} osiągniętych celów, OM ×{{multiplier}}",
+        "objectivesTitle": "Cele: {{count}} osiągnięte, OM ×{{multiplier}}",
+        "objectivesDescription": "Pamiętaj, aby zgłosić te cele podczas przesyłania swojego dziennika!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Alternatywne źródło energii",
+        "awayFromHome": "Pracuj z dala od domu",
+        "fmSatelliteContact": "Kontakt satelitarny FM",
+        "ssbSatelliteContact": "Kontakt satelitarny SSB lub CW",
+        "winlinkEmails": "E-maile przez Winlink",
+        "specialBulletin": "Specjalny biuletyn",
+        "sixBands": "Sześć pasm",
+        "twelveBands": "Dwanaście pasm",
+        "multipleModes": "Wiele trybów",
+        "qrpOperation": "Praca QRP",
+        "sixContinuousHours": "Sześć ciągłych godzin"
+      },
+      "objectiveDescription": {
+        "altPower": "Pracuj 100% na alternatywnym zasilaniu, takim jak baterie, energia słoneczna, wiatrowa itp.",
+        "awayFromHome": "Rozstaw swoje stacje terenową przynajmniej ½ mili od domu.",
+        "fmSatelliteContact": "Nawiąż przynajmniej 1 kontakt satelitarny FM podczas okresu działania.",
+        "ssbSatelliteContact": "Nawiąż przynajmniej jeden kontakt używając SSB lub CW.",
+        "winlinkEmails": "Wyślij i odbierz przynajmniej jeden e-mail przez Winlink przez RF.",
+        "specialBulletin": "Dokładnie prześlij wiadomość komunikacyjną WFD i wyślij swoją kopię wraz z dziennikiem.",
+        "sixBands": "Nawiąż przynajmniej trzy kontakty na co najmniej sześciu różnych pasmach.",
+        "twelveBands": "Nawiąż przynajmniej trzy kontakty na co najmniej dwunastu różnych pasmach.",
+        "multipleModes": "Użyj wielu trybów w trakcie okresu działania.",
+        "qrpOperation": "Pracuj na poziomach mocy QRP (10W lub mniej na telefonie, 5W lub mniej na CW lub cyfrowo).",
+        "sixContinuousHours": "Pracuj co najmniej sześć ciągłych godzin w trakcie okresu działania."
+      },
+      "information-md": "Klasa dla Zimowego Dnia Pola to na przykład `2M`:\n\n  - `1`, `2`, `3`… dla liczby nadajników.\n  - `H` dla Stacji domowej\n  - `I` dla wewnątrz\n  - `O` dla na zewnątrz\n  - `M` dla Stacji mobilnej lub mobilnej stacjonarnej\n\nLokalizacja to sekcja ARRL, sekcja RAC, `MX` dla Meksyku lub `DX` dla wszędzie indziej.\n\nWięcej informacji w **[oficjalnych zasadach](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Światowe nagrody dla bunkrów",
+      "shortName": "WWBOTA",
+      "exportName": "Aktywacja WWBOTA",
+      "activityOptions": {
+        "title_zero": "Brak wybranych bunkrów do aktywacji",
+        "title_one": "Aktywacja 1 bunkra",
+        "title_other": "Aktywacja {{count}} bunkrów",
+        "noBunkersFound": "Nie znaleziono bunkrów",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingBunkers_zero": "Brak dopasowanych bunkrów",
+        "matchingBunkers_one": "1 dopasowany bunker",
+        "matchingBunkers_other": "{{count}} dopasowanych bunkrów",
+        "searchForBunkers": "Wyszukaj niektóre bunkry do aktywacji!",
+        "noBunkersNearby": "Brak bunkrów w pobliżu",
+        "nearbyBunkers": "Pobliskie bunkry",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownBunker": "Nieznany bunkier"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich Bunkier"
+      },
+      "postSpotAPI": {
+        "error": "Błąd podczas dodawania miejsca WWBOTA",
+        "serverResponse": "Serwer odpowiedział statusem {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Światowe Flora & Fauna",
+      "shortName": "WWFF",
+      "exportName": "Aktywacja WWFF",
+      "activityOptions": {
+        "title_zero": "Brak wybranych parków do aktywacji",
+        "title_one": "Aktywacja 1 parku",
+        "title_other": "Aktywacja {{count}} parków",
+        "noParksFound": "Nie znaleziono parków",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingParks_zero": "Brak dopasowanych parków",
+        "matchingParks_one": "1 dopasowany park",
+        "matchingParks_other": "{{count}} dopasowanych parków",
+        "searchForParks": "Wyszukaj niektóre parki do aktywacji!",
+        "noParksNearby": "Brak parków w pobliżu",
+        "nearbyParks": "Pobliskie parki",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownPark": "Nieznany park"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Brak P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Brak parków myśliwskich",
+        "huntedRefsCount_one": "1 park myśliwski",
+        "huntedRefsCount_other": "{{fmtCount}} parków myśliwskich",
+        "activatorQSOsCount_zero": "Brak aktywatorów QSOs",
+        "activatorQSOsCount_one": "1 aktywator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktywowanych QSOs",
+        "ref2refQSOsCount_zero": "Brak P2P QSOs",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Brak polowanych QSOs",
+        "huntedQSOsCount_one": "1 polowany QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} polowanych QSOs",
+        "operationTotals": "Suma operacji",
+        "referencesActivatedCount_zero": "Brak aktywowanych parków",
+        "referencesActivatedCount_one": "1 aktywowany park",
+        "referencesActivatedCount_other": "{{fmtCount}} aktywowanych parków",
+        "referencesMissedCount_zero": "Brak niedokończonych parków",
+        "referencesMissedCount_one": "1 niedokończony park",
+        "referencesMissedCount_other": "{{fmtCount}} niedokończonych parków",
+        "referencesHuntedCount_zero": "Brak polowanych parków",
+        "referencesHuntedCount_one": "1 polowany park",
+        "referencesHuntedCount_other": "{{fmtCount}} polowanych parków"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich WWFF"
+      },
+      "exampleRefName": "Przykładowy Park",
+      "unknownRefName": "Nieznany Park",
+      "noRefsNearby": "Brak parków w pobliżu!",
+      "postSpotAPI": {
+        "error": "Błąd podczas dodawania miejsca WWFF",
+        "serverResponse": "Serwer odpowiedział statusem {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "name": "ZLOTA: ZL na Powietrzu",
+      "account": {
+        "title": "ZLOTA (ZLOTA wykrywanie)",
+        "dialogTitle": "Konto ZLOTA",
+        "description": "Konto: {{callsign}}",
+        "noAccount": "Brak konta",
+        "pleaseEnterDetails": "Proszę wprowadzić szczegóły konta ZLOTA:",
+        "callsignLabel": "Znak wywoławczy",
+        "callsignPlaceholder": "znak wywoławczy twojego konta",
+        "pinLabel": "PIN (nie hasło)",
+        "pinPlaceholder": "twój PIN"
+      },
+      "activityOptions": {
+        "title_zero": "Brak wybranych referencji do aktywacji",
+        "title_one": "Aktywacja 1 referencji",
+        "title_other": "Aktywacja {{count}} referencji",
+        "noReferencesFound": "Nie znaleziono referencji",
+        "nearestMatches": "Najbliższe {{limit}} z {{count}} dopasowań",
+        "matchingReferences_zero": "Brak dopasowanych referencji",
+        "matchingReferences_one": "1 dopasowana referencja",
+        "matchingReferences_other": "{{count}} dopasowanych referencji",
+        "searchForReferences": "Wyszukaj niektóre referencje do aktywacji!",
+        "noReferencesNearby": "Brak referencji w pobliżu",
+        "nearbyReferences": "Pobliskie referencje",
+        "searchPlaceholder": "Nazwa lub odnośnik…",
+        "unknownReference": "Nieznana referencja"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ich Odniesienie"
+      },
+      "postSpotAPI": {
+        "error": "Błąd podczas dodawania miejsca ZLOTA",
+        "serverResponse": "Serwer odpowiedział statusem {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "Brak duplikatów",
+        "dupesCount_one": "1 duplikat",
+        "dupesCount_other": "{{fmtCount}} duplikaty",
+        "ref2refCount_zero": "Brak Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Brak polowanych odniesień",
+        "huntedRefsCount_one": "1 polowane odniesienie",
+        "huntedRefsCount_other": "{{fmtCount}} polowanych odniesień",
+        "activatorQSOsCount_zero": "Brak aktywowanych QSOs",
+        "activatorQSOsCount_one": "1 aktywowane QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktywowanych QSOs",
+        "ref2refQSOsCount_zero": "Brak Ref2Ref QSOs",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSOs",
+        "huntedQSOsCount_zero": "Brak polowanych QSOs",
+        "huntedQSOsCount_one": "1 polowany QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} polowanych QSOs",
+        "operationTotals": "Suma operacji",
+        "referencesActivatedCount_zero": "Brak aktywowanych odniesień",
+        "referencesActivatedCount_one": "1 aktywowane odniesienie",
+        "referencesActivatedCount_other": "{{fmtCount}} aktywowanych odniesień",
+        "referencesMissedCount_zero": "Brak niekompletnych odniesień",
+        "referencesMissedCount_one": "1 niekompletne odniesienie",
+        "referencesMissedCount_other": "{{fmtCount}} niekompletnych odniesień",
+        "referencesHuntedCount_zero": "Brak polowanych odniesień",
+        "referencesHuntedCount_one": "1 polowane odniesienie",
+        "referencesHuntedCount_other": "{{fmtCount}} polowanych odniesień"
+      }
+    }
+  }
+}

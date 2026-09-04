@@ -1,0 +1,1012 @@
+{
+  "screens": {
+    "start": {
+      "credits": "de KI2D kaj amikoj",
+      "Loading Extensions": "Ŝarĝante etendaĵojn",
+      "Development Build": "Portebla protokolilo evoluiga versio",
+      "messages": {
+        "Reticulating splines": "Miksante radioondojn",
+        "Tuning the antenna": "Agordante la antenon",
+        "Checking the tubes": "Kontrolante la tubojn",
+        "Warming up the tubes": "Varmegigante la vakutubojn",
+        "Unfolding the map": "Malfaldante la mapon",
+        "Charging the flux capacitor": "Ŝarĝante la fluksan kondensatoron",
+        "Purging the dilithium chamber": "Purigante la dualitian ĉambron",
+        "Activating the turbo encabulator": "Aktivigante la turban enkabuligon",
+        "Engaging the warp drive": "Engaĝante la varpilon"
+      }
+    },
+    "home": {
+      "title": "Portebla protokolilo",
+      "newOperation": "Nova operacio",
+      "newOperation-a11y": "Nova operacio",
+      "operationList-a11y": "Listo de Operacioj",
+      "noOperations": "Neniu Operacio!",
+      "settings-a11y": "Agordoj",
+      "quickCallLookupPlaceholder": "Rapida Alvoko Rigarda...",
+      "spots-a11y": "Loko"
+    },
+    "operation": {
+      "title": "Operacio"
+    },
+    "operationDetails": {
+      "title": "Detaloj de Operacio",
+      "operationTitle": "Titolo",
+      "newOperation": "Nova Operacio",
+      "operationNotes": "Notoj",
+      "anythingYouWantToWriteAboutThisOperation": "Ĉion, kion vi volas skribi pri ĉi tiu operacio"
+    },
+    "operationStationInfo": {
+      "title": "Stacio & Operatoro Informo",
+      "invalidCallsign": "Nevalida vokilo: {{callsign}}",
+      "invalidCallsigns": "Nevalidaj vokiloj: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` uzata ĝis nun.\n{{newStation}}` estos uzata por novaj QSO-oj.",
+      "noStationUsed-md": "Neniu voko uzata ĝis nun.\n{{newStation}} estos uzata por novaj QSO-oj.",
+      "updateStation-md_zero": "Ĝisdatigu `{{newStation}}` ĉe nul ekzistantaj QSO-oj",
+      "updateStation-md_one": "Ĝisdatigu `{{newStation}}` ĉe unu ekzistanta QSO",
+      "updateStation-md_other": "Ĝisdatigu `{{newStation}}` ĉe {{count}} ekzistantaj QSO-oj",
+      "multipleStationsUsed-md": "Ĉi tiu agado jam havas QSO-ojn uzantajn plurajn staciajn vokilojn: `{{stations}}`.\n\n`{{newStation}}` nur estos uzata por novaj QSO-oj.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` uzata ĝis nun.\n{{newOperator}}` estos uzata por novaj QSO-oj.",
+      "noOperatorUsed-md": "Neniu voko uzata ĝis nun.\n{{newOperator}} estos uzata por novaj QSO-oj.",
+      "updateOperator-md": "Ĝisdatigu `{{newOperator}}` kiel funkciigiston por ĉiuj QSO-oj",
+      "multipleOperatorsUsed-md": "Ĉi tiu agado jam havas QSO-ojn uzantajn plurajn operatorajn vokilojn: `{{operators}}`.\n\n`{{newOperator}}` nur estos uzata por novaj QSO-oj.",
+      "whatIsTheCallsignUsedOnTheAir": "Kiu estas la vokilo uzata en la aero?",
+      "stationCallsign": "Stacia Vokilo",
+      "whoIsOperatingTheStation": "Kiu estas la funkciigisto de la stacio? (nedeviga)",
+      "operatorCallsign": "Operatora Vokilo",
+      "multiStationOperation": "Multi-stacia funkciado?",
+      "multiStationOperationYes": "Jes, ni estas unu el multaj!",
+      "multiStationOperationNo": "Ne, nur regula stacio",
+      "identifierForThisStation": "Identigilo por ĉi tiu stacio (nur ciferoj)"
+    },
+    "operationLocation": {
+      "title": "Loko de Operacio",
+      "selectedLocation": "Elektita Loko",
+      "maidenheadGridSquareLocator": "Direktkadro Malrespekto Quadratilo",
+      "suggestedLocations": "Sugestitaj Lokoj",
+      "deviceGps": "Aparata GPS",
+      "locating": "Lokalizante...",
+      "gpsError": "GPS Eraro",
+      "noGps": "NENIU GPS",
+      "stateOrProvince": "Ŝtato aŭ Provinco (nedeviga)",
+      "county": "Distrikto (nedeviga)"
+    },
+    "operationAddActivity": {
+      "title": "Aldoni Aktivecon",
+      "cantFindActivity": "Ĉu vi ne povas trovi la aktivecon, kiun vi serĉas?",
+      "thereAreMoreOptions": "Estas pli da opcioj en Agordoj > App Features"
+    },
+    "operationActivityOptions": {
+      "title": "Aktiveco Opcioj",
+      "removeActivity": "Forigi {{activity}} el ĉi tiu operacio",
+      "activityHasNoOptions": "Ĉi tiu aktivado ne havas opciojn.",
+      "activityNotEnabled": "Aktivado \"{{name}}\" ne estas ebligita.",
+      "lookInSettings": "Serĉu ĝin en Agordoj > Aplikaj funkcioj"
+    },
+    "operationData": {
+      "title": "Operaciaj Datumoj",
+      "selectFromTheExportOptionsBelow": "Elektu el la eksportaj opcioj sube",
+      "exportSelectedFiles_zero": "Eksporti 0 elektitajn dosierojn",
+      "exportSelectedFiles_one": "Eksporti 1 elektitan dosieron",
+      "exportSelectedFiles_other": "Eksporti {{count}} elektitajn dosierojn",
+      "exportActionsShare": "Kunhavigi",
+      "exportActionsSave": "Konservi",
+      "exportActionsExport": "Eksporti",
+      "exportActionsStash": "Stoki",
+      "exportActionsLogStash": "Sendi al Ham2K File Stash",
+      "exportQSOs": "Eksporti QSO-ojn",
+      "pendingToDoItems_zero": "Neniuj pendaj taskoj",
+      "pendingToDoItems_one": "1 pendanta tasko",
+      "pendingToDoItems_other": "{{count}} pendantaj taskoj",
+      "importQSOs": "Importi QSO-ojn",
+      "addQSOsFromADIFFile": "Aldoni QSO-ojn el ADIF-dosiero",
+      "ham2kLoFiSync": "Ham2K Malalta Fideliga Sinhronizado",
+      "operation": "Operacio",
+      "exportSettings": "Eksporta Agordoj",
+      "useCompactFileNames": "Uzu kompaktajn dosiernomojn",
+      "wavelogExport": "Unda Protokolo Eksporto",
+      "exportQSOsToWavelogDescription": "Sendu ĉiujn QSO-ojn por ĉi tiu operacio al Unda Protokolo",
+      "wavelogDialog": {
+        "title": "Eksporti QSO-ojn al Unda Protokolo",
+        "status": "Eksporti ĉiujn QSO-ojn por ĉi tiu operacio al Unda Protokolo.",
+        "exporting": "Eksportado al Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "Forigi operacion?",
+        "description": "Ĉu vi certas, ke vi volas forigi ĉi tiun operacion?"
+      },
+      "errorSavingExport": "Ne povis konservi dosieron",
+      "logStashDialogTitle": "Ham2K File Stash",
+      "logStashDialogIntro": "PoLo alŝutos viajn dosierojn al la Ham2K-serviloj kaj vi povos elŝuti ilin el ajna retumilo.",
+      "logStashDialogTiers": "Senpagaj kontoj povas teni nur unu kaŝejon samtempe. Abonantoj povas teni tiom, kiom ili volas.",
+      "logStashDialogSubscribe": "Aboni",
+      "exportUpsellTitle": "Ĉi tiu operacio ankaŭ estis konservita al nia Nuba Sinkroniga Servo",
+      "exportUpsellBody": "Ĉi tiu sekurkopio estas senpaga, sed se vi abonas, vi povas sinkronigi ĝin tra pluraj aparatoj kaj aliri ĝin je plena rapideco.",
+      "exportUpsellSupport": "Kaj pli grave, via abono subtenas niajn klopodojn ĉi tie ĉe Ham2K.",
+      "exportUpsellSubscribe": "Aboni",
+      "exportUpsellNotNow": "Ne Nun",
+      "exportOptionsInfoLabel": "Pri la eksportaj opcioj",
+      "exportOptionsInfoTitle": "Eksportaj Opcioj",
+      "exportOptionsInfoStash-md": "**Stash** alŝutas viajn dosierojn al la File Stash de Ham2K, kaj vi povas elŝuti ilin poste de iu ajn retumilo ĉe **[stash.ham2k.net](https://stash.ham2k.net)**. Utila surloke, kiam ne ekzistas alia facila maniero preni dosieron de via telefono.",
+      "exportOptionsInfoShare-md": "**Kunhavigi** transdonas viajn dosierojn al alia aplikaĵo en via aparato — retpoŝto, mesaĝado, nuba stokado aŭ alia protokolprogramo.",
+      "exportOptionsInfoExport-md": "**Eksporti** transdonas viajn dosierojn al alia aplikaĵo en via aparato — retpoŝto, mesaĝado, nuba stokado aŭ alia protokolprogramo.",
+      "exportOptionsInfoSave-md": "**Konservi** skribas viajn dosierojn rekte en dosierujon en via aparato, sen iri tra alia aplikaĵo.",
+      "exportOptionsInfoSelection-md": "Ĉi tiuj agoj aplikiĝas al ĉiuj dosieroj, kiujn vi markis sube. Vi ankaŭ povas tuŝi iun unuopan dosieron por kunhavigi nur tiun.",
+      "freeTierRecentUploadTitle": "Lastatempa alŝuto estos anstataŭigita",
+      "freeTierRecentUploadMessage": "Vi sendis \"{{name}}\" antaŭ malpli ol 6 horoj kaj ĝi ankoraŭ ne estis elŝutita. Sendi nun anstataŭigos ĝin. Ĉu vi volas anstataŭe atendi?",
+      "freeTierRecentUploadConfirm": "Sendi ĉiukaze",
+      "errorSendingToLogStash": "Ne eblis sendi al Ham2K File Stash",
+      "sentToLogStash": "Sendita al Ham2K File Stash",
+      "sentToLogStashRetrieve-md": "Vi povas rehavi {{filesLabel}} vizitante **[stash.ham2k.net](https://stash.ham2k.net)** per iu ajn retumilo.",
+      "sentToLogStashEmailOffer": "Aŭ por via oportuno, ni povas sendi al vi retpoŝton kun rekta ligilo.",
+      "retrieveSingularFile": "ĉi tiun dosieron",
+      "retrievePluralFiles": "ĉi tiujn dosierojn",
+      "emailMeALink": "Retpoŝti al mi ligilon",
+      "linkEmailed": "Ni retpoŝtis al vi elŝutan ligilon.",
+      "errorEmailingLink": "Ne eblis sendi la retmesaĝon"
+    },
+    "callInfo": {
+      "title": "Vokilo Informo",
+      "messages": {
+        "duplicate": "Duobligi",
+        "invalidBand": "Nevalida Band",
+        "ourGrid": "Mankas nia loko",
+        "theirGrid": "Mankas ilia krado",
+        "shortGrid": "Krado tro mallonga",
+        "newBand": "Nova Band",
+        "newMode": "Nova Reĝimo",
+        "newRef": "Nova Referenco",
+        "newMult": "Nova Mult",
+        "newDay": "Nova Tago",
+        "newGrid": "Nova krado",
+        "newLocation": "Nova loko",
+        "maybeDupe": "Duoblo?",
+        "partialDupe": "Duoblo",
+        "potaActivation-newDay": "Nova POTA Tago",
+        "potaActivation-newRef": "Nova Parko",
+        "sotaActivation-newDay": "Nova SOTA Tago",
+        "sotaActivation-newRef": "Nova Suprenkreveto",
+        "sotaActivation-duplicate": "SOTA Duoblo!",
+        "wwffActivation-duplicate": "WWFF Duoblo!",
+        "wwbotaActivation-newDay": "Nova WWBOTA Tago",
+        "wwbotaActivation-newRef": "Nova Bunkro",
+        "motaActivation-newRef": "Nova Muelejo"
+      },
+      "history": {
+        "last7days": "{{count}} en lastaj 7 tagoj",
+        "today": "{{count}} hodiaŭ",
+        "yesterday": "{{count}} hieraŭ",
+        "qsos_zero": "0 QSOs",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSOs"
+      },
+      "thisOpCount_zero": "0 QSOs en ĉi tiu operacio",
+      "thisOpCount_one": "1 QSO en ĉi tiu operacio",
+      "thisOpCount_other": "{{count}} QSOs en ĉi tiu operacio",
+      "otherOpsCount_zero": "0 QSOs en aliaj operacioj",
+      "otherOpsCount_one": "1 QSO en aliaj operacioj",
+      "otherOpsCount_other": "{{count}} QSOs en aliaj operacioj",
+      "andMoreCount_zero": "… kaj {{count}} pli",
+      "andMoreCount_one": "… kaj {{count}} pli",
+      "andMoreCount_other": "… kaj {{count}} pli",
+      "showImage": "Montru Bildon",
+      "notes": "Notoj",
+      "potentialCall": "Potenca alvoko: {{call}}",
+      "withCall": "kun {{call}}"
+    },
+    "spots": {
+      "title": "Loko"
+    },
+    "editQSO": {
+      "title": "Redakti QSO",
+      "sections": {
+        "qso": "QSO Detaloj",
+        "their": "Ilia Informo",
+        "our": "Nia Informo",
+        "more": "Pli"
+      },
+      "fields": {
+        "time": "Tempo",
+        "date": "Dato",
+        "freq": "Frekvenco",
+        "mode": "Reĝimo",
+        "band": "Band",
+        "power": "Potenco",
+        "call": "Stacio Voko",
+        "sent": "RST",
+        "exchange": "Ekschango",
+        "name": "Nomo",
+        "city": "Urbo",
+        "state": "Ŝtato/Provincio",
+        "county": "Distrikto",
+        "entity": "Ento",
+        "cqZone": "CQ Zono",
+        "ituZone": "ITU Zono",
+        "arrlSection": "ARRL Sekcio",
+        "grid": "Grido",
+        "latitude": "Latitudo",
+        "longitude": "Longitudo",
+        "notes": "Notoj"
+      }
+    },
+    "opInfo": {
+      "title": "Operacia Informo"
+    },
+    "settings": {
+      "title": "Agordoj",
+      "sections": {
+        "settings": "Agordoj",
+        "accounts": "Kontoj",
+        "about": "Pri Ham2K",
+        "help": "Ĉu Vi Bezonas Helpon?"
+      },
+      "operatorCallsign": {
+        "title": "Operatora Vokilo",
+        "noCall": "Neniu voko",
+        "dialogTitle": "Operatora Vokilo",
+        "pleaseEnterCallsign": "Bonvolu eniri vokilon!",
+        "callsignLabel": "Operatoro's Vokilo"
+      },
+      "generalSettings": {
+        "title": "Ĝeneralaj Agordoj",
+        "description": "Malluma reĝimo, nombraj vicoj, unuoj, kaj pli"
+      },
+      "loggingSettings": {
+        "title": "Registrante Agordojn",
+        "description": "Agordi la registradan sperton"
+      },
+      "dataSettings": {
+        "title": "Datumaj Agordoj",
+        "description": "Datumaj dosieroj, vokilo notoj, kaj pli"
+      },
+      "syncSettings": {
+        "title": "Sinkronigaj Agordoj",
+        "description": "Nuba sinkronigado kaj rezervo"
+      },
+      "accountsSettings": {
+        "title": "Konteoj & Servoj",
+        "description": "QRZ.com kaj aliaj servoj"
+      },
+      "appFeatures": {
+        "title": "App Trajtoj",
+        "description": "Administrebleco de trajtoj kiel POTA, SOTA, ktp."
+      },
+      "developerSettings": {
+        "title": "Evoluigantaj Agordoj",
+        "description": "Ĉi tie estas drakoj"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} estas Subtenanto de Ham2K",
+        "couldBeASupporter": "{{callsign}} povus esti Subtenanto de Ham2K"
+      },
+      "versionSettings": {
+        "description": "Vidu lastajn ŝanĝojn"
+      },
+      "creditsSettings": {
+        "title": "Kreditoj",
+        "description": "Sebastián Delmont KI2D & Teamo PoLo"
+      },
+      "noticesSettings": {
+        "title": "Lastaj Avizoj",
+        "description": "Mesaĝoj, kiujn vi povus maltrafi?"
+      },
+      "readTheFineManual": {
+        "title": "Legu la Fajnan Manlibron",
+        "description": "Foliumi la priskribon por PoLo"
+      },
+      "ham2KForums": {
+        "title": "Ham2K Forumoj",
+        "description": "Trovu helpon, donu reagojn, diskutado ideoj..."
+      },
+      "ham2KChat": {
+        "title": "Ham2K Babilejo",
+        "description": "La discord servilo por nia interreta komunumo"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Filmetoj kaj Retsendadoj"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "Ĉar vi ne povas havi tro multajn fotojn..."
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Sekvu nin por novaĵoj kaj ĝisdatigoj"
+      },
+      "contactUs": {
+        "title": "Kontakturbo kun Ni",
+        "description": "help@ham2k.com\n   (sed provu la Forumojn aŭ Babilejon unue!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Ĝeneralaj Agordoj",
+      "theme": {
+        "title": "Temo",
+        "descriptionDark": "Ĉiam en Malluma Moduso",
+        "descriptionLight": "Ĉiam en Luma Moduso",
+        "descriptionDevice": "Sama kiel aparato-temo",
+        "dialogTitle": "Temo"
+      },
+      "fontScale": {
+        "title": "Tipara Skalo",
+        "descriptionXS": "La plej malgranda",
+        "descriptionSM": "Pli malgranda",
+        "descriptionMD": "Normala",
+        "descriptionLG": "Pli granda",
+        "descriptionXL": "La plej granda",
+        "dialogTitle": "Tipara Skalo",
+        "dialogDescription": "Ĉi tiuj grandecoj estas ankaŭ influata de aparato-agordoj, kiel Ekramo kaj Alirebleco."
+      },
+      "language": {
+        "title": "Lingvo: {{lang}}",
+        "description": "Ŝanĝi la lingvon de la apliko",
+        "dialogTitle": "Lingvo",
+        "dialogDescription": "Ŝanĝi la lingvon",
+        "deviceDefault": "Uzu aparato-agordojn ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Aparato-Agordoj) ne estas nuntempe subtenata."
+      },
+      "showNumbersRow": {
+        "title": "Montru nombrovicon",
+        "descriptionOn": "Montrante rapidajn butonojn por ciferoj",
+        "descriptionOff": "Ne montrante la ciferan vicon"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Periodo en nombrovico",
+        "descriptionOn": "Inkluzivante klavojn por punkto kaj oblikva streko",
+        "descriptionOff": "Montrante nur la ciferojn"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Komao en nombrovico",
+        "descriptionOn": "Inkluzivante klavon por komo",
+        "descriptionOff": "Neniu komoa klavo"
+      },
+      "vibrateNumbersRow": {
+        "title": "Uzu vibron en nombrovico",
+        "descriptionOn": "Vibrante dum premado de ciferoj",
+        "descriptionOff": "Ne vibrante dum premado de ciferoj"
+      },
+      "useMetricUnits": {
+        "title": "Uzu metrikajn unuojn",
+        "descriptionOn": "Uzante mejlojn por distancoj",
+        "descriptionOff": "Uzante kilometrojn por distancoj"
+      },
+      "keepDeviceAwake": {
+        "title": "Tenadu aparaton vekita",
+        "descriptionOn": "Tenante la ekranon maldorma",
+        "descriptionOff": "Lasante la ekranon ŝlosiĝi kiel kutime"
+      },
+      "useSplitViews": {
+        "title": "Uzas Dividitajn Vidojn",
+        "descriptionOn": "Uzante dividitajn vidojn kiam la ekrano estas sufiĉe granda",
+        "descriptionOff": "Ne uzante dividitajn vidojn"
+      },
+      "useGrid8": {
+        "title": "Alta precizeca loko",
+        "descriptionOn": "Uzante 8-ciferajn kradojn",
+        "descriptionOff": "Uzante 6-ciferajn kradojn"
+      },
+      "smartKeyboard": {
+        "title": "Inteligenta Klavara Trajtoj",
+        "descriptionOn": "Uzante funkciojn de inteligenta klavaro",
+        "descriptionOff": "Uzante pli simplajn klavarojn, por kongruo kun iuj aparatoj"
+      },
+      "exportSettings": {
+        "title": "Eksportaj Agordoj",
+        "description": "Personigi dosiernomojn kaj aliajn agordojn"
+      },
+      "privacy": {
+        "title": "Privateco"
+      },
+      "shareAppUsageData": {
+        "title": "Kunhavigado de apliko-uzo datumoj",
+        "descriptionOn": "Kunhavigante datumojn pri uzado, kraŝoj kaj rendimento por helpi nin plibonigi la apon",
+        "descriptionOff": "Konservante datumojn pri uzado de la apo privataj.\nLa teamo Ham2K ne povos detekti kraŝojn aŭ aliajn problemojn."
+      },
+      "shareOperationData": {
+        "title": "Kundividi funkciadajn datumojn",
+        "descriptionOn": "Kunhavigante kelkajn operaciajn datumojn publike kaj kun aliaj uzantoj",
+        "descriptionOff": "Konservante operaciajn datumojn privataj"
+      },
+      "privacyPolicy": {
+        "title": "Privateca Politiko",
+        "description": "Legu nian Privatecan Politikon"
+      },
+      "termsOfService": {
+        "title": "Servokondiĉoj",
+        "description": "Legu niajn Servokondiĉojn"
+      }
+    },
+    "loggingSettings": {
+      "title": "Agordoj pri Ensalutado",
+      "leftieMode": {
+        "title": "Maldekstra Moduso",
+        "descriptionOn": "Uzante la maldekstramanan aranĝon",
+        "descriptionOff": "Uzante la dekstramanan aranĝon"
+      },
+      "countryFlags": {
+        "title": "Landaj Flagoj",
+        "descriptionNone": "Ne montrante flagojn",
+        "descriptionAll": "Montrante flagojn por ĉiuj kontaktoj",
+        "descriptionDefault": "Montrante flagojn nur por DX-kontaktoj"
+      },
+      "showBearing": {
+        "title": "Montri Direkto-Angulon",
+        "descriptionOn": "Montrante laŭtaksan azimuton al stacio",
+        "descriptionOff": "Ne montrante azimutajn informojn"
+      },
+      "showReverseBearing": {
+        "title": "Montri ankaŭ inversan azimuton",
+        "descriptionOn": "Montrante ankaŭ azimuton de la stacio, kiel \"45° / 225°\"",
+        "descriptionOff": "Montrante nur azimuton al la stacio"
+      },
+      "switchSignalReportOrder": {
+        "title": "Ŝanĝi aŭskult-raporton sinsekvo",
+        "descriptionOn": "Sendita unue, Ricevita due",
+        "descriptionOff": "Ricevita unue, Sendita due"
+      },
+      "jumpAfterRST": {
+        "title": "Salti al sekva kampo post RST-ente",
+        "descriptionOn": "Saltante al la sekva kampo post RST",
+        "descriptionOff": "Ne saltante aŭtomate"
+      },
+      "suggestDefaultOperator": {
+        "title": "Sugesti defaŭltan operaciiston",
+        "descriptionOn": "Uzante {{operatorCall}} kiel operatoron en operacioj, kie la stacia voksigno estas malsama",
+        "descriptionOff": "Ne sugestante defaŭltan operatoron, sendepende de la uzata stacia voksigno"
+      },
+      "suggestTemplates": {
+        "title": "Uzu ŝablonojn de operacio",
+        "descriptionOn": "Sugestante ŝablonojn por novaj operacioj",
+        "descriptionOff": "Ne sugestante ŝablonojn"
+      },
+      "bandsModes": {
+        "title": "Bendoj kaj Modoj",
+        "description": "{{bendoj}} • {{modoj}}"
+      },
+      "extensions": {
+        "title": "Etendoj"
+      }
+    },
+    "featuresSettings": {
+      "title": "Aplikaĵaj Trajtoj",
+      "activatingExtension": "Aktivigante etendon, ĉi tio povas daŭri momenton…",
+      "fewerOf": "Malpli da {{category}}…",
+      "moreOf": "Pli da {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Datumagordoj",
+      "offlineDataTitle": "Malfrekvencaj Datumoj",
+      "extensionsTitle": "Etendoj",
+      "logDataTitle": "Registro-Datenoj",
+      "importHistoryFromADIF": "Importi Historion el ADIF",
+      "importHistoryFromADIFDescription": "Uzita por eksterliniaj serĉoj kaj QSO-statistikoj",
+      "clearADIFHistory": "Forigi ADIF-historion",
+      "clearADIFHistoryDescription": "Forigi importitajn registrojn el ADIF",
+      "updatedRelative": "Ĝisdatigita {{dato}}",
+      "fetching-md": "### Prenante **{{titolo}}**…",
+      "progress-md": "### Prenante **{{titolo}}**\n\n{{progreso}}",
+      "updated-md": "Ĝisdatigita je {{dato}}",
+      "version-md": "Versio: {{versio}}",
+      "confirmClearHistory": {
+        "title": "Ĉu vi certas?",
+        "description": "Ĉi tio forigos ĉiujn historiajn registrojn antaŭe importitajn el ADIF-dosieroj.",
+        "recordsNotDeleted": "Rezultoj el operacioj ne estos forigitaj"
+      },
+      "importingHistoricalADIF": "Importante ADIF-dosierojn… Bonvolu pacienci!",
+      "errorImportingHistoricalADIF": "Eraro importante historiajn ADIF",
+      "errorDeletingHistoricalRecords": "Eraro forigante historiajn fiskregistrojn",
+      "recordsCount_zero": "Neniuj registroj",
+      "recordsCount_one": "1 registro",
+      "recordsCount_other": "{{fmtCount}} registroj"
+    },
+    "accountsSettings": {
+      "title": "Kontoj & Servoj",
+      "description": "QRZ.com kaj aliaj servoj",
+      "accountsSection": "Aŭtentigiloj",
+      "servicesSection": "Servoj",
+      "accountsQRZ": {
+        "title": "QRZ (por voksigna serĉo)",
+        "description": "Ensaluto: {{login}}",
+        "noAccount": "Neniu konto",
+        "errorEmail": "Ne uzu vian retpoŝton por ensaluto.",
+        "dialogTitle": "QRZ.com Konto",
+        "pleaseEnterDetails": "Bonvolu enigi la detalojn por via QRZ.com konto:",
+        "loginLabel": "Ensaluto (via voksigno)",
+        "loginPlaceholder": "via ensaluto",
+        "passwordLabel": "Pasvorto",
+        "passwordPlaceholder": "via pasvorto",
+        "checkCredentials": "Kontrolu Aŭtentigilojn"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Ondologaj Agordoj",
+      "description": "Agordu Wavelog API-konekton",
+      "noStationsFoundOrInvalidResponse": "Neniuj stacioj trovitaj aŭ nevalida respondo",
+      "errorFetchingStations": "Eraro prenante staciojn: {{mesaĝo}}",
+      "fetchStations": "Preni Staciojn",
+      "selectStation": "Elekti Stacion",
+      "selectedStation": "Elektita stacio: {{station}}"
+    },
+    "syncSettings": {
+      "title": "Sinkronigaj Agordoj",
+      "description": "Ham2K LoFi proponas fidindan sankronigan servon inter ĉiuj viaj aparatoj kaj provizas subtenon por via operaciadaj datumoj en la nubo.",
+      "activePlan": "Aktivaj Plano: {{plan}}",
+      "noActivePlan": "Neniu Aktiva Plano",
+      "syncService": "Sinkroniga Servo",
+      "syncService.enabled": "Ebligita",
+      "syncService.disabled": "Malebligita",
+      "syncServiceDialog": {
+        "title": "Ham2K Taglibro Sinsekvo Servilo",
+        "custom": "Propra"
+      },
+      "syncLinkingDialog": {
+        "title": "Ham2K Protokola Arkiva Sinkronigo Servo",
+        "enterCode": "Enmetu la kodon montritan sur la alia aparato por ligi ĝin kun ĉi tiu konto.",
+        "linkExpired": "La peto estas eksvalidiĝinta. Bonvolu reprovi.",
+        "areYouSure-md": "Ĉu vi certas ke vi volas ligi \"**{{device}}**\" kun ĉi tiu konto?",
+        "requestNotFound": "Peto ne trovita. Bonvolu reprovi.",
+        "buttonCancel": "Ne, nuligi",
+        "buttonProcees": "Jes, ligi ĝin!"
+      },
+      "deviceNotLinked": "Aparato ne ligita! ({{id}})",
+      "anonymousAccount": "Senkontoj Konto (#{{id}})",
+      "enableSyncToLinkDevice": "Ebligi sinkronigon por ligi ĉi tiun aparaton.",
+      "pendingChallenges": "Konektaj Petoj",
+      "pendingChallengesDescription": "Estas atendaj petoj por konekti aliajn aparatojn kun ĉi tiu konto.",
+      "checkEmailInboxForConfirmation": "(kontrolu vian retpoŝto-enirkeston por konfirmo)",
+      "accountNumber": "Konto #{{id}}",
+      "pendingEmailConfirmation": "(pendanta retpoŝtaj konfirmoj)",
+      "accountPendingConfirmation": "(atendanta konfirmon)",
+      "tapToConfigure": "Klaku por agordi",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (Evoluo)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (Oficiala)",
+        "custom": "Propra ({{servilo}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Ĉi tiu aparato estis laste sinkronigita kun malsama konto (#{{id}}).\n\nPor daŭrigi sinkronigadon, vi devas elekti inter la sekvaj ebloj:",
+        "option1withEmail-md": "Opcio #1: Anstataŭigi datumojn en ĉi tiu aparato kun tiuj el la **{{email}}** konto en la servilo.",
+        "option1noEmail-md": "Opcio #1: Anstataŭigi datumojn sur ĉi tiu aparato per tiuj el la nova konto en la servilo.",
+        "option1button": "Faru kun #1: anstataŭigi kun servilaj datumoj",
+        "option2withEmail-md": "Opcio #2: Kombini datumojn en ĉi tiu aparato kun tiuj el la **{{email}}** konto en la servilo.",
+        "option2noEmail-md": "Opcio #2: Kombini datumojn sur ĉi tiu aparato kun tiuj el la nova konto en la servilo.",
+        "option2button": "Faru kun #2: kunfandu datumojn",
+        "option3-md": "Opcio #3: Ligi reen kun la antaŭa konto, **{{email}}**.",
+        "option3button": "Faru kun #3: antaŭa konto",
+        "buttonCancel": "Ne, Nuligi",
+        "buttonProcees": "Jes, mi prenos la riskon! Anstataŭigi Ĉion!"
+      },
+      "combineDataAlert": {
+        "title": "Kunfandi Lokajn Datumojn?",
+        "text": "Ĉu vi estas certa, ke vi volas kombini ĉi tiujn operaciojn kaj QSOs kun la nova konto?\n\nĈi tio kunfandos QSOs sur ĉi tiu aparato kun kio jam estas en la Sinkroniga Servo por la nova konto, kaj povas hazarde rezultigi miksadon de nepligrandaj registroj!\n\nĈi tiu operacio ne povas esti malfarpita.",
+        "buttonCancel": "Ne, Nuligi",
+        "buttonText": "Jes, mi prenos la riskon! Kombinu ilin!",
+        "buttonProcees": "Jes, mi prenos la riskon! Kunmeti ilin!"
+      },
+      "replaceDataAlert": {
+        "title": "Anstataŭigi Lokajn Datumojn?",
+        "text": "Ĉu vi estas certa, ke vi volas anstataŭigi ĉiujn datumojn en ĉi tiu aparato per la operacioj kaj QSOs por la nova konto el la Sinkroniga Servo?\n\nLa aplikaĵo rekomencos.\n\nSe vi havas nesinkronigitajn datumojn, ILI ESTOS PERDITAJ.",
+        "buttonCancel": "Ne, Nuligi",
+        "buttonProcees": "Jes, mi prenos la riskon! Anstataŭigi Ĉion!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Eraro Rekunligi al Antaŭa Konto",
+        "text": "Estis eraro dum rekunligado al la antaŭa konto.\n\n{{eraro}}\n\nBonvolu reprovi poste.",
+        "buttonCancel": "Bone"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi Konto",
+        "changeEmailText": "Ŝanĝu la reakiran retpoŝton por ĉi tiu konto:",
+        "setEmailText": "Agordu retpoŝton por via konto. Ĝi povas esti uzata por identigi ĝin kaj faciligi ĝin retrovi poste.",
+        "emailAddressLabel": "Retpoŝta Adreso",
+        "linkWithOtherButton": "Uzi alian konton",
+        "linkAccountText": "Konektu kun ekzistanta konto:",
+        "pendingEmailTextPre": "Retpoŝto estis sendita al",
+        "pendingEmailTextPost": "Bonvolu serĉi ĝin kaj sekvi la instrukciojn.",
+        "confirmLink-md": "Malfermu la aplikaĵon en aparato jam ligita kun **{{email}}** kaj konfirmu ĉi tiun peton enigante la jenan kodon:",
+        "confirmLinkPost-md": "Se vi ne havas aliron al alia aparato ligita al ĉi tiu konto, vi povas:",
+        "accountNotFound": "Konto ne trovita.",
+        "connectViaEmailButton": "Konekti per retpoŝto",
+        "linkViaQRAccountText": "Skani ĉi tiun QR-kodon de aparato kun ekzistanta Ham2K LoFi Konto",
+        "linkViaQRButton": "Konekti per QR-kodo",
+        "confirmViaEmailButton": "Konfirmu per retpoŝto",
+        "changeAccountButton": "Ŝanĝu Konton",
+        "resendButton": "Re-send retpoŝton",
+        "revertButton": "Ŝanĝu Retpoŝton",
+        "syncFirstButton": "Reiru kaj unue kompletigu sinkronigon",
+        "continueAnywayButton": "Mi scias, kion mi faras! Daŭrigu Ĉiuokaze",
+        "potentialForDataLoss": "Ebleco por perdo de datumoj!!!",
+        "potentialForDataLossDescription": "Vi ne sinkronigis ĉiujn datumojn en ĉi tiu aparato.\n\nSe vi ligas ĉi tiun aparaton al nova konto, oni demandos vin, ĉu vi volas anstataŭigi ĝiajn datumojn per tiuj de la nova konto.\n\nSe tiel estas, vi eble ne povos restarigi ajnan ekzistantan aktivecon, kiu ankoraŭ ne estas sinkronigita.\n\nNi sugestas al vi unue kompletigi la sinkronigon de ĉi tiu aparato!"
+      },
+      "syncServiceDescription-md": "La baza servo estas senpaga, sed ĝi estas limigita al du aparatoj aŭ aplikaĵoj je reduktitaj rapidoj por eviti troŝarĝi la servilojn.\n\nLa plena servo postulas pagitan abonon kaj inkluzivas ĉiujn viajn operaciojn sinkronigitajn inter ajna racia nombro da aparatoj aŭ aplikaĵoj je plena rapido.\n\n",
+      "thisDevice": "Ĉi Tiu Aparato",
+      "notAuthenticated": "Ne aŭtentikigita",
+      "lofiServer": "LoFi Servilo",
+      "otherDevices": "Aliaj Aparatoj",
+      "devSettings": "Evoluo-Agordoj",
+      "resetSyncStatus": "Resetigi Sinkronigan Statuson",
+      "noDataStored": "Neniu datumoj konservitaj",
+      "syncCountDescription": {
+        "operations": "Operacioj: {{sinkronigita}} sinkronigita, {{pendanta}} en atendo",
+        "qsos": "QSOs: {{sinkronigita}} sinkronigita, {{pendanta}} en atendo"
+      },
+      "cloudCountDescription": {
+        "operations": "Operacioj: {{suma}} totale",
+        "qsos": "QSOs: {{suma}} stokita"
+      }
+    },
+    "versionSettings": {
+      "title": "Versi-informoj",
+      "recentChanges": "Lastaj Ŝanĝoj",
+      "coverPhoto": "Kovra Foto: {{subskribo}}",
+      "changes-md": "## {{versio}}\n\n{{ŝanĝoj}}",
+      "checkingForPatches": "Kontrolante por flikaĵoj…",
+      "newMajorReleaseAvailable": "Nova grava eldono disponebla",
+      "patchAvailable": "{{trako}} korekto disponebla",
+      "checkForUpdates": "Kontroli por {{trako}} ĝisdatigoj",
+      "checkForUpdatesGeneric": "Kontroli por ĝisdatigoj",
+      "updateAvailable": "Ĝisdatigo disponebla",
+      "downloading": "Elŝutante…",
+      "downloadingProgress": "Elŝutante {{progreso}}%",
+      "installing": "Instali…",
+      "errorDownloadingUpdate": "Eraro elŝutante ĝisdatigon",
+      "errorCheckingForUpdates": "Eraro kontrolante por ĝisdatigoj",
+      "noUpdatesAvailable": "Neniuj ĝisdatigoj disponeblaj",
+      "versionDescription": "{{versio}} - Baza Konstruo {{konstruaĵo}}"
+    },
+    "creditsSettings": {
+      "title": "Kreditoj",
+      "createdBy": "Kreita de {{signo}}",
+      "openSource": "Ham2K PoLo estas Open Source",
+      "checkOutCode": "Kontrolu la kodon kaj kontribuu sur GitHub!",
+      "teamPoLo": "Teamo PoLo",
+      "creator": "Kreinto & Ĉefa Programisto",
+      "developer": "Programisto",
+      "leadSupport": "Ĉefa Subteno kaj Dokumentado",
+      "moreCodeAndDocsContributors": "Pli da kontribuantoj...",
+      "contributorCode": "Kodo-Kontribuanto: {{kontribuoj}}",
+      "contributorDocumentation": "Dokumentado",
+      "translations": "Tradukoj",
+      "translationsService": "Tradukaj iloj de CrowdIn",
+      "translationsServiceDescription": "Iloj por administri la tradukprocezon afable donacitaj de CrowdIn"
+    },
+    "devModeSettings": {
+      "title": "Agordoj por Programistoj",
+      "wipeDatabase": {
+        "title": "Fordoni Bazon de Datumoj?",
+        "description": "Ĉu vi certas, ke vi volas forigi ĉiujn Operaciojn, QSOs kaj aliajn datumojn?",
+        "noCancel": "Ne, Nuligi",
+        "yesWipeIt": "Jes, Fordoni ĝin!"
+      },
+      "import": {
+        "title": "Importi",
+        "importQSONFile": "Importi QSON-dosieron"
+      },
+      "experiments": {
+        "title": "Eksperimentoj",
+        "enableWavelogExperiments": "Ebligi Ondregistraĵajn Eksperimentojn"
+      },
+      "manageDatabase": {
+        "title": "Administri Bazon de Datumoj",
+        "exportDatabase": "Eksporti Bazon de Datumoj",
+        "exportDatabaseDescription": "Eksporti la nunan kodosieraron",
+        "replaceDatabase": "Anstataŭigi Bazon de Datumoj",
+        "replaceDatabaseDescription": "Importi novan bazan dosieron kaj anstataŭigi ĉiujn datumojn",
+        "wipeDatabase": "Fordoni Bazon de Datumoj",
+        "wipeDatabaseDescription": "Forigi ĉiujn datumojn el la bazo de datumoj."
+      },
+      "internationalization": {
+        "title": "Internaciigo",
+        "crowdInPersonalTokenLabel": "CrowdIn Personan Aliro Ĵetono",
+        "crowdInPersonalTokenPlaceholder": "Ricevu unu de CrowdIn's konto-agordoj paĝo",
+        "refreshCrowdInTranslations": {
+          "title": "Rafreŝu Tradukojn...",
+          "starting": "Bonvolu atendi dum ni refreŝigas la tradukojn…",
+          "progress": "{{nuna}} / {{totala}}: {{lingvaĝo}} - {{dosiero}}",
+          "completed": "Refreŝigo kompletigita!",
+          "errorTitle": "Eraro refreŝigante tradukojn",
+          "error": "Eraro refreŝigante CrowdIn-tradukojn: {{eraro}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Elŝuti Altnivelajn Agordojn",
+        "locationLabel": "Loko",
+        "locationPlaceholder": "https://example.com/dir/agordoj.yml"
+      },
+      "systemInformation": {
+        "title": "Sistemaj Informoj",
+        "shareWithDevelopmentTeam": "Kunhavigi kun la Evolua Teamo"
+      },
+      "updatePatches": {
+        "title": "Ĝisdatigu Pacigojn",
+        "selectTrackForPatches": "Elekti Trakon por Pacigoj",
+        "selectTrackForPatchesDescription": "Elekti la trakon por pacigoj",
+        "checkingForUpdates": "Kontrolante por ĝisdatigoj…",
+        "checkForUpdates": "Kontroli por {{trako}} ĝisdatigoj",
+        "updateAvailable": "Ĝisdatigo disponebla",
+        "updateAvailableForTrack": "{{trako}} ĝisdatigo disponebla",
+        "downloading": "Elŝutante…",
+        "downloadingProgress": "Elŝutante {{progreso}}%",
+        "installing": "Instali…",
+        "errorDownloadingUpdate": "Eraro elŝutante ĝisdatigon",
+        "errorCheckingForUpdates": "Eraro kontrolante por ĝisdatigoj",
+        "noUpdatesAvailable": "Neniuj ĝisdatigoj disponeblaj"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Bendoj kaj Modoj",
+      "bands": {
+        "title": "Bendoj",
+        "showCommonBands": "Montri komunajn bendojn",
+        "showAllBands": "Montri ĉiujn bendojn"
+      },
+      "modes": {
+        "title": "Reĝimoj",
+        "showMoreModes": "Montri pli da reĝimoj",
+        "showEvenMoreModes": "Montri eĉ pli da reĝimoj",
+        "showFewerModes": "Montri malpli da reĝimoj"
+      }
+    },
+    "exportSettings": {
+      "title": "Eksporti Agordojn",
+      "exportTypes": "Eksporti Tipojn",
+      "customTemplates": "Propraj ŝablonoj",
+      "defaultTemplates": "Defaŭltaj ŝablonoj",
+      "customTemplatesDescription": "Uzante proprajn ŝablonojn por ĉi tiu eksporto",
+      "defaultTemplatesDescription": "Uzante la defaŭltajn ŝablonojn",
+      "includePrivateData": "Inkluzivi privatajn datumojn",
+      "ignoreLookupData": "Ignori serĉajn datumojn",
+      "fileNameTemplate": "Dosiernoma ŝablono",
+      "titleTemplate": "Titola ŝablono",
+      "adifNotes": "ADIF QSO Notoj",
+      "adifComments": "ADIF QSO Komentoj",
+      "adifQslMessage": "ADIF QSL Mesaĝo",
+      "templateHelpTitle": "Ŝablona Helpo",
+      "includePrivateDataDescription": "Inkluzivante nomojn, notojn, adresojn ktp.",
+      "excludePrivateDataDescription": "Ekskluzivante nomojn, notojn, adresojn ktp.",
+      "ignoreLookupDataDescription": "Ignorante datumojn de serĉservoj kiel QRZ.com",
+      "useLookupDataDescription": "Inkluzivante datumojn de serĉservoj kiel QRZ.com",
+      "templateHelp-md": "Iuj specimenaj ŝablonaj elementoj…\n\n### Eksporto de Log\nAtributoj por la log, kiu estas eksportita\n`{{log.station}}` → `{{call}}` Stacio por ĉi tiu eksporto\n`{{log.ref}}` → `XX-1234` Referenco por ĉi tiu eksporto\n`{{log.refName}}` → `Ekzemplo Nacia Parko` Referencnomo por ĉi tiu eksporto\n`{{log.refShortName}}` → `Ekzemplo NP` Mallongiga referencnomo por ĉi tiu eksporto\n`{{log.handlerType}}` → `pota` Prizorgantan tipo por ĉi tiu eksporto\n`{{log.handlerName}}` → `Parkoj Sur La Aero` Prizorgantan nomon por ĉi tiu eksporto\n`{{log.handlerShortName}}` → `POTA` Mallongiga prizorganta nomo por ĉi tiu eksporto\n\n### Alvoko Operacioj\n`{{op.station}}` → `{{call}}` Unua stacio por la operacio\n`{{op.operator}}` → `{{call}}` Operaciisto por la operacio\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Ĉiuj stacioj por la operacio\n`{{op.otherStations}}` → `{{otherCalls}}` Aliaj stacioj por la operacio\n\n### Dato de Operacio\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Aliaj Operaciaj Detaloj\n`{{op.title}}` → `ĉe XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mia Speciala Operacio`\n`{{op.userNotes}}` → `Iris frue en la mateno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Kradobre por ĉi tiu operacio\n\n### Informoj de QSO\n`{{qso.notes}}` → `Terura aŭdio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` La signala raporto ili sendis\n`{{qso.our.sent}}` → `55` La signala raporto ni sendis\n`{{qso.their.grid}}` → `FF99` La krado ili raportis\n`{{qso.refs}}` → Listo de ĉiuj referencoj por la QSO (inkluzivas ambaŭ Operaciajn referencojn kaj nur QSO-referencojn)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "Defaŭltoj",
+        "description": "Bazaj agordoj por ĉiuj eksportoj",
+        "fileNameNormal": "Dosiernomo por Referencaj Agadoj (Normala)",
+        "fileNameCompact": "Dosiernomo por Referencaj Agadoj (Kompakta)",
+        "titleReferenceActivities": "Titolo por Referencaj Agadoj",
+        "fileNameOtherActivitiesNormal": "Dosiernomo por Aliaj Agadoj (Normala)",
+        "fileNameOtherActivitiesCompact": "Dosiernomo por Aliaj Agadoj (Kompakta)",
+        "titleOtherActivities": "Titolo por Aliaj Agadoj",
+        "adifNotes": "ADIF QSO Notoj",
+        "adifComments": "ADIF QSO Komentoj",
+        "adifQSLMessage": "ADIF QSL Mesaĝo"
+      }
+    },
+    "noticesSettings": {
+      "title": "Lastatempaj Avizoj",
+      "undated": "Sennoma",
+      "noRecentNotices": "Neniuj lastatempaj avizoj"
+    },
+    "extensionSettings": {
+      "title": "Etendo"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Paneldisigilo",
+      "qsosTab": "QSOj",
+      "qsosTab-a11y": "QSOj Tabulo",
+      "infoTab": "Informo",
+      "infoTab-a11y": "Informo Tabulo",
+      "operationInfo-a11y": "Operacia Informo",
+      "spotsTab": "Makuloj",
+      "spotsTab-a11y": "Makuloj Tabulo",
+      "mapTab": "Mapo",
+      "mapTab-a11y": "Mapo Tabulo",
+      "settingsTab": "Operacio",
+      "settingsCompactTab": "Oper.",
+      "settingsTab-a11y": "Finaŭtka Agorda Tabulo",
+      "menu": {
+        "loggingSettings": "Protokolaj Agordoj",
+        "rstFields": "RST Kampoj",
+        "stateField": "Ŝtata Kampo",
+        "gridField": "Retkampa Kampo",
+        "showDeletedQSOs": "Montru Forigitajn QSOjn",
+        "numbersRow": "Numera Vico",
+        "actions": "Agoj",
+        "lookupAllQSOs": "Rigardi ĉiujn QSOjn",
+        "confirmSpots": "Konfirmu Makulojn"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Neniuj QSOj",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSOj",
+      "qsosCompactTabCount_zero": "Neniuj Kv.",
+      "qsosCompactTabCount_one": "1 Kv.",
+      "qsosCompactTabCount_other": "{{fmtCount}} Kv.",
+      "noQSOsYet": "Neniuj QSOj ankoraŭ!",
+      "currentlySetTo": "Nun agordita al",
+      "missingInfoError": {
+        "message": "ERARO: Bonvolu enigi **{{eraro}}** por valida operacio",
+        "errors": {
+          "band": "bendo",
+          "mode": "reĝimo",
+          "callsign": "alvoksigno"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Dividi",
+        "erase-a11y": "Forigi",
+        "delete-a11y": "Forviŝi",
+        "addQSO-a11y": "Aldoni QSO",
+        "saveQSO-a11y": "Konservi QSO"
+      },
+      "deletedQSO": "Forigita QSO",
+      "qsoWillBeDeleted": "QSO forigos!",
+      "noQSOsBy-md": "Neniuj QSO-oj de {{callsign}} ankoraŭ… Ni iru en la aeron!",
+      "noQSOsYet-md": "Neniuj QSO-oj ankoraŭ… Ni iru en la aeron!",
+      "qsoCount_zero": "Neniuj QSOj",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOj",
+      "qsosInTime": "{{kalkuloteksto}} en {{tempoteksto}}",
+      "last10QSOs": "{{ritmo}} Q/h por lastaj 10",
+      "last100QSOs": "{{ritmo}} Q/h por lastaj 100",
+      "timeSinceLast": "{{tempo}} ekde lasta",
+      "moreLabel": "Pli",
+      "theirCallLabel": "I-ia Alvoksigno",
+      "ourSentLabel": "Sendita",
+      "theirSentLabel": "Ricevita",
+      "stateLabel": "Ŝtato",
+      "gridLabel": "Reto",
+      "timeLabel": "Tempo",
+      "dateLabel": "Dato",
+      "timeControls-a11y": "Tempo-Kontroloj",
+      "powerLabel": "Potenco",
+      "powerControls-a11y": "Potenca Kontroloj",
+      "modeLabel": "Reĝimo",
+      "bandLabel": "Band",
+      "frequencyLabel": "Frekvenco",
+      "bandMissing": "Band???",
+      "modeMissing": "Reĝimo???",
+      "modeOutOfBand": "Ekster bendo",
+      "radioControls-a11y": "Radio-Kontroloj {{parts}}",
+      "notesLabel": "Notoj",
+      "notesLabel-a11y": "Notoj",
+      "activeControlsLabel": "Aktivaj Kontroloj",
+      "activeControlsLabel-a11y": "Aktivaj Kontroloj",
+      "selectToRemoveActiveControls": "elektu por forigi ilin",
+      "selectToRemoveActiveControls-a11y": "elektu por forigi ilin",
+      "moreControlsLabel": "Pli da Kontroloj",
+      "moreControlsLabel-a11y": "Pli da Kontroloj",
+      "selectToAddMoreControls": "elektu por aldoni ilin",
+      "selectToAddMoreControls-a11y": "elektu por aldoni ilin",
+      "showSecondaryControlSettings-a11y": "Montru Duonarigajn Agordojn",
+      "hideMostSecondaryControls-a11y": "Kaŝu plejparton de duonarigaj kontroloj",
+      "showAllSecondaryControls-a11y": "Montru ĉiujn duonarigajn kontrolojn",
+      "spotting": {
+        "selfSpottingAt": "Mem-blovante je {{freq}}",
+        "stopAutoRespotting": "Ĉesu aŭtomatan respondo",
+        "setFrequencyFirst": "Unue elektu frekvencon por marki.",
+        "reSpotEvery": "Re-blovu ĉiun {{minutes}} min",
+        "reSpotAt": "Re-blovu je {{freq}}",
+        "selfSpottedAt": "Mem-blovanta je {{time}}",
+        "spotAt": "Blovu {{call}} je {{freq}}",
+        "tooLateToSpot": "Tro malfrue por marki {{call}}",
+        "nothingToSpot": "Nenion markoti",
+        "selfSpottingLabel": "Mem-blovado",
+        "selfSpottingControls-a11y": "Kontroloj de Mem-blovado",
+        "spottingLabel": "Blovado",
+        "spottingControls-a11y": "Kontroloj de Blovado",
+        "autoRespottingLabel": "Aŭtomata kunblovado",
+        "autoRespottingControls-a11y": "Kontroloj de Aŭtomata kunblovado",
+        "commentsLabel": "Komento"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Neniuj linioj?\nVi devas unue agordi vian lokon.\n\nFrapeti ĉi tie por fari ĝin.",
+      "manyNoLocation": "Multaj el ĉi tiuj QSOj ne havas precizan lokon.\n\nVi eble bezonas pagitan QRZ.com konton por loklookupoj."
+    },
+    "opSpotsTab": {
+      "noSpots": "Neniuj Makuloj",
+      "spotsCount_zero": "Neniuj Makuloj",
+      "spotsCount_one": "1 Makulo",
+      "spotsCount_other": "{{fmtCount}} Makuloj",
+      "showingSpots": "Montrante {{nombro}} el {{totalo}}",
+      "loadingSpots": "Ŝarĝado de Punktoj…",
+      "sections": {
+        "specialSpots": "Specialaj Makuloj",
+        "newMultipliers": "Novaj Multobligiloj",
+        "callsOfNote": "Rimarkindaj Alvokoj",
+        "mostRecentSpots": "Plej lastatempaj makuloj"
+      },
+      "allBands": "Ĉiuj Bendoj",
+      "auto": "Aŭto",
+      "allModes": "Ĉiuj reĝimoj",
+      "filters": "Filtriloj",
+      "filtersBand": "Bendo",
+      "filtersAllBands": "Ĉiuj Bendoj",
+      "filtersBandAutomatic": "Aŭtomata (Nuntempe {{bendo}})",
+      "filtersMode": "Reĝimo",
+      "filtersAllModes": "Ĉiuj Reĝimoj",
+      "filtersModeAutomatic": "Aŭtomata (Nuntempe {{reĝimo}})",
+      "filtersMaximumAge": "Maksimuma Aĝo",
+      "filtersAnyAge": "Ajna aĝo",
+      "filtersAge10Minutes": "10 minutoj",
+      "filtersAge20Minutes": "20 minutoj",
+      "filtersAge30Minutes": "30 minutoj",
+      "filtersAge45Minutes": "45 minutoj",
+      "filtersAge60Minutes": "60 minutoj",
+      "filtersSorting": "Ordigado",
+      "filtersSortByTime": "Laŭ makula tempo",
+      "filtersSortByFrequency": "Laŭ frekvenco",
+      "filtersGroupSpecialSpots": "Grupi Specialajn Makulojn Unue",
+      "filtersGroupCallsWithNotes": "Grupi Alvokojn kun Notoj",
+      "filtersSpotSources": "Makulaj Fontoj",
+      "filtersFilterByContinent": "Filtrilo de Kontinento",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Telefono",
+        "DIGITAL": "Cifereca",
+        "DATA": "Cifereca",
+        "phoneOrCW": "Telefono aŭ CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Nevalida Alvoksigno {{alvoksigno}}",
+      "invalidCallsigns": "Nevalidaj Alvoksignoj {{alvoksignoj}}",
+      "stationCallAndOperator": "{{stacio}} (operaciata de {{operaciisto}})",
+      "noStationCallsignDefined": "NENIU STACIA ALVOKSIGNO DIFINITA",
+      "showMoreTemplates": "Montri Pli Multajn Ŝablonojn",
+      "templatesAvailable_zero": "Neniuj ŝablonoj disponeblaj",
+      "templatesAvailable_one": "1 ŝablono disponebla",
+      "templatesAvailable_other": "{{nombro}} ŝablonoj disponeblaj",
+      "stationAndOperatorTitle": "Stacio & Operaciisto",
+      "locationTitle": "Loko",
+      "gridDescription-md": "Grido `{{grido}}`",
+      "stateDescription-md": "Ŝtato: `{{state}}`",
+      "countyDescription-md": "Distrikto: `{{county}}`",
+      "locationDescriptionNone-md": "Neniu loko starigita",
+      "operationDetailsTitle": "Operacia Detaloj",
+      "operationDetailsDescription": "Aldoni notojn por ĉi tiu operacio",
+      "addTitleOrNotesForOperation": "Aldonu titolon aŭ notojn por ĉi tiu operacio",
+      "activitiesTitle": "Aktivaĵoj",
+      "addActivityTitle": "Aldoni Aktivaĵon",
+      "addActivityDescription": "POTA, SOTA, Kampotago kaj pli!",
+      "addActivityDescription-noFeatures": "Unue ebligu kelkajn agadaĵojn en la ĉefa agorda ekrano",
+      "operationDataTitle": "Operaciaj Datumoj",
+      "manageOperationLogsTitle": "Administri Operaciajn Protokolojn",
+      "manageOperationLogsDescription": "Eksporti, importi kaj administri datumojn",
+      "useAsTemplateTitle": "Uzi kiel ŝablono",
+      "useAsTemplateDescription": "Komenci novan operacion kun similaj agordoj",
+      "dangerZoneTitle": "La Danĝera Zono",
+      "undeleteOperationTitle": "Restarigi Operacion",
+      "deleteOperationTitle": "Forigi Operacion"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Operaciaj Stats",
+      "operationTotalsTitle-md": "Totalaj Operacioj:",
+      "qsosInTime_zero": "Neniuj QSOs",
+      "qsosInTime_one": "1 QSO en {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSOs en {{time}}",
+      "qsoCount_zero": "Neniuj QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "timeSinceLast": "{{time}} ekde lasta QSO",
+      "last10QSOs": "{{rate}} Q/h por lastaj 10",
+      "last100QSOs": "{{rate}} Q/h por lastaj 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Eraro dum importado de QSON",
+      "invalidName": "Nevalida Nomo",
+      "invalidNameDescription": "La dosiernomo devas finiĝi per .qson aŭ .json",
+      "unknownError": "Nekonata eraro"
+    },
+    "importADIF": {
+      "error": "Eraro dum importado de ADIF en Operacion",
+      "historicalImportError": "Eraro dum importado de Historia ADIF",
+      "unknownError": "Nekonata eraro"
+    }
+  }
+}

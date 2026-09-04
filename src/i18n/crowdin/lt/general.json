@@ -1,0 +1,366 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Anglų",
+        "ar": "Arabų - العربية",
+        "ast": "Astūrų - Asturianu",
+        "bn": "Bengalų - বাংলা",
+        "ca": "Katalonų - Català",
+        "cs": "Čekų - Čeština",
+        "cy": "Velsiečių - Cymraeg",
+        "da": "Danų - Dansk",
+        "de": "Vokiečių - Deutsch",
+        "en-PL": "Kiaulės lotynų kalba ",
+        "en-PT": "Piratų",
+        "eo": "Esperanto - Esperanto",
+        "es": "Ispanų - Español",
+        "et": "Estų - Eesti",
+        "eu": "Baskų - Euskara",
+        "fi": "Suomių - Suomi",
+        "fr": "Prancūzų - Français",
+        "ga": "Airų - Gaeilge",
+        "gl": "Galegų - Galego",
+        "hi": "Hindų - हिंदी",
+        "id": "Indoneziečių - Bahasa Indonesia",
+        "it": "Italų - Italiano",
+        "ja": "Japonų - 日本語",
+        "ko": "Korėjiečių - 한국어",
+        "lt": "Lietuvių",
+        "lv": "Latvių - Latvijas",
+        "ms": "Malajų - Bahasa Melayu",
+        "nb": "Norvegų Bukmolas - Norsk bokmål",
+        "nl": "Olandų - Nederlands",
+        "nn": "Norvegų Nynorskas - Nynorsk",
+        "pl": "Lenkų - Polski",
+        "pt-BR": "Portugalų (Brazilija) - Português (Brasil)",
+        "pt-PT": "Portugalų (Portugalija) - Português (Portugal)",
+        "pt": "Portugalų - Português",
+        "ro": "Rumunų - Română",
+        "ru": "Rusų - Русский",
+        "sk": "Slovakų - Slovenčina",
+        "sv": "Švedų - Svenska",
+        "th": "Tajų - ภาษาไทย",
+        "tl": "Tagalogų - Wikang Filipino",
+        "tlh": "Klingonų - ᏣᎳᎩ",
+        "tr": "Turkų - Türkçe",
+        "uk": "Ukrainiečių - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnamiečių - Tiếng Việt",
+        "zh": "Kinų - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "QSO",
+      "QSOs-a11y": "Q sos",
+      "Operation": "Operacija",
+      "generalOperation": "Bendras veikimas"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " ir "
+      },
+      "time": {
+        "tomorrow": "Rytoj",
+        "today": "Šiandien",
+        "yesterday": "Vakar",
+        "ago": "{{time}} prieš",
+        "fromNow": "{{time}} nuo dabar",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}min",
+        "shortMinutesAndSeconds": "{{m}}min {{s}}s",
+        "shortHours": "{{h}}val",
+        "shortHoursAndMinutes": "{{h}}val {{m}}min",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}val",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Sausis",
+        "2": "Vasaris",
+        "3": "Kovas",
+        "4": "Balandis",
+        "5": "Gegužė",
+        "6": "Birželis",
+        "7": "Liepa",
+        "8": "Rugpjūtis",
+        "9": "Rugsėjis",
+        "10": "Spalis",
+        "11": "Lapkritis",
+        "12": "Gruodis"
+      },
+      "monthAbbr": {
+        "1": "Sau",
+        "2": "Vas",
+        "3": "Kov",
+        "4": "Bal",
+        "5": "Geg",
+        "6": "Bir",
+        "7": "Lie",
+        "8": "Rgp",
+        "9": "Rgs",
+        "10": "Spa",
+        "11": "Lap",
+        "12": "Gru"
+      },
+      "weekday": {
+        "1": "Pirmadienis",
+        "2": "Antradienis",
+        "3": "Trečiadienis",
+        "4": "Ketvirtadienis",
+        "5": "Penktadienis",
+        "6": "Šeštadienis",
+        "7": "Sekmadienis"
+      },
+      "weekdayAbbr": {
+        "1": "Pir",
+        "2": "Ant",
+        "3": "Tre",
+        "4": "Ket",
+        "5": "Pen",
+        "6": "Šeš",
+        "7": "Sek"
+      },
+      "ordinalDay": {
+        "1": "1-as",
+        "2": "2-as",
+        "3": "3-ias",
+        "4": "4-as",
+        "5": "5-as",
+        "6": "6-as",
+        "7": "7-as",
+        "8": "8-as",
+        "9": "9-as",
+        "10": "10-as",
+        "11": "11-as",
+        "12": "12-as",
+        "13": "13-as",
+        "14": "14-as",
+        "15": "15-as",
+        "16": "16-as",
+        "17": "17-as",
+        "18": "18-as",
+        "19": "19-as",
+        "20": "20-as",
+        "21": "21-as",
+        "22": "22-as",
+        "23": "23-ias",
+        "24": "24-as",
+        "25": "25-as",
+        "26": "26-as",
+        "27": "27-as",
+        "28": "28-as",
+        "29": "29-as",
+        "30": "30-as",
+        "31": "31-as"
+      },
+      "distance": {
+        "away": "{{distance}} atstumu"
+      }
+    },
+    "buttons": {
+      "cancel": "Atšaukti",
+      "ok": "Gerai",
+      "close": "Uždaryti",
+      "login": "Prisijungti",
+      "logout": "Atsijungti",
+      "delete": "Ištrinti",
+      "refresh": "Atnaujinti",
+      "done": "Atlikta",
+      "accept": "Priimti",
+      "accept-a11y": "Priimti Pakeitimus",
+      "revert": "Atšaukti",
+      "revert-a11y": "Atšaukti Pakeitimus",
+      "apply": "Pritaikyti",
+      "connect": "Prisijungti",
+      "save": "Išsaugoti",
+      "export": "Eksportuoti"
+    },
+    "errors": {
+      "generic": "Kažkas nepavyko. Bandykite dar kartą vėliau.",
+      "genericShort": "Kažkas nepavyko."
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "versija {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Tikrinami atnaujinimai...",
+        "stable": "Tikrinami pastovūs atnaujinimai...",
+        "unstable": "Tikrinami nestabilūs atnaujinimai...",
+        "bleedingEdge": "Tikrinami naujausi atnaujinimai..."
+      },
+      "tracksPlural": {
+        "stable": "Stabilus",
+        "unstable": "Nestabilus",
+        "bleedingEdge": "Naujoviškas",
+        "Production": "Stabilus",
+        "Staging": "Nestabilus",
+        "Development": "Naujoviškas"
+      },
+      "trackSingular": {
+        "stable": "Stabilus",
+        "unstable": "Nestabilus",
+        "bleedingEdge": "Naujoviškas",
+        "Production": "Stabilus",
+        "Staging": "Nestabilus",
+        "Development": "Naujoviškas"
+      },
+      "versionIsAvailable-md": "Pakeitimas į {{versionName}} yra pasiekiamas.",
+      "updateNow": "Atnaujinti Dabar",
+      "newVersionAvailable-md": "Pasiekiama nauja PoLo versija!"
+    },
+    "dataFiles": {
+      "loading": "{{name}} kraunama",
+      "downloading": "{{name}} atsisiunčiama",
+      "dataHasToBeDownloaded-md": "Duomenys **{{name}}** turi būti atsisiunčiami.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Duomenys **{{name}}** ilgą laiką nebuvo atnaujinti.",
+      "downloadNow": "Atsisiųsti Dabar",
+      "refreshNow": "Atnaujinti Dabar"
+    },
+    "notices": {
+      "action": {
+        "ok": "Gerai!",
+        "__comment__": "Pakeiskite konkrečius pranešimo veiksmus čia"
+      },
+      "title": {
+        "__comment__": "Pakeiskite konkrečius pranešimo pavadinimus čia"
+      },
+      "text": {
+        "__comment__": "Pakeiskite konkrečius pranešimo tekstus čia"
+      },
+      "dialogTitle": {
+        "__comment__": "Pakeiskite konkrečių dialogo langų pavadinimus čia"
+      },
+      "dialogText": {
+        "__comment__": "Pakeiskite konkrečių dialogo langų tekstus čia"
+      },
+      "dataFiles": {
+        "fetching": "Gaunama {{title}}...",
+        "progress": "Gaunama {{title}}\n\n{{progress}}",
+        "done": "Baigta gauti {{title}}",
+        "error": "Klaida gaunant {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Tekstas",
+        "csv": "Kableliais atskirtos reikšmės",
+        "tsv": "Tabuliacija atskirtos reikšmės",
+        "other": "Duomenys"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Pagrindinės Funkcijos",
+        "locationBased": "Vietos pagrindu veiklos",
+        "contestsAndFieldOps": "Konkursai ir Lauko operacijos",
+        "lookup": "Duomenų paieška ir aptikimas",
+        "devmode": "Kūrėjo režimas",
+        "other": "Kitos funkcijos"
+      }
+    },
+    "continents": {
+      "AF": "Afrika",
+      "AS": "Azija",
+      "EU": "Europa",
+      "NA": "Šiaurės Amerika",
+      "SA": "Pietų Amerika",
+      "OC": "Okeanija"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Vienos pusės juosta",
+        "USB": "USB",
+        "USB-a11y": "Viršutinė pusės juosta",
+        "LSB": "LSB",
+        "LSB-a11y": "Apatinė pusės juosta",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Kitas",
+        "other-a11y": "Kita moda"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metrų",
+        "80m-a11y": "80 Metrų",
+        "60m-a11y": "60 Metrų",
+        "40m-a11y": "40 Metrų",
+        "30m-a11y": "30 Metrų",
+        "20m-a11y": "20 Metrų",
+        "17m-a11y": "17 Metrų",
+        "15m-a11y": "15 Metrų",
+        "12m-a11y": "12 Metrų",
+        "11m-a11y": "11 Metrų",
+        "10m-a11y": "10 Metrų",
+        "6m-a11y": "6 Metrų",
+        "2m-a11y": "2 Metrų",
+        "70cm-a11y": "70 Centimetrų",
+        "23cm-a11y": "23 Centimetrų",
+        "13cm-a11y": "13 Centimetrų",
+        "9cm-a11y": "9 Centimetrų",
+        "6cm-a11y": "6 Centimetrų",
+        "3cm-a11y": "3 Centimetrų",
+        "1-25cm-a11y": "1,25 Centimetro",
+        "6mm-a11y": "6 Milimetrų",
+        "4mm-a11y": "4 Milimetrų",
+        "2-5mm-a11y": "2,5 Milimetro",
+        "2mm-a11y": "2 Milimetrų",
+        "1mm-a11y": "1 Milimetras",
+        "submm-a11y": "Povandeninis milimetras",
+        "other": "Kitas",
+        "other-a11y": "Kita juosta"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

@@ -118,7 +118,7 @@
       "errorSavingExport": "Kon bestand niet opslaan",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLo uploadt je bestanden naar de Ham2K-servers en je kunt ze vanuit elke browser downloaden.",
-      "logStashDialogTiers": "Gratis accounts kunnen slechts één bestand tegelijk versturen. Abonnees kunnen er zoveel versturen als ze willen.",
+      "logStashDialogTiers": "Gratis accounts kunnen maar één stash tegelijk bewaren. Abonnees kunnen er zoveel bewaren als ze willen.",
       "logStashDialogSubscribe": "Abonneren",
       "exportUpsellTitle": "Deze operatie is ook opgeslagen in onze Cloud Sync Service",
       "exportUpsellBody": "Deze back-up is gratis, maar als je je abonneert, kun je deze synchroniseren op meerdere apparaten en er op volle snelheid toegang toe krijgen.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**Exporteren** geeft je bestanden door aan een andere app op je apparaat — e-mail, berichten, cloudopslag of een ander logprogramma.",
       "exportOptionsInfoSave-md": "**Opslaan** schrijft je bestanden rechtstreeks naar een map op je apparaat, zonder via een andere app te gaan.",
       "exportOptionsInfoSelection-md": "Deze acties worden toegepast op alle bestanden die je hieronder hebt aangevinkt. Je kunt ook op één afzonderlijk bestand tikken om alleen dat bestand te delen.",
-      "freeTierOneFileTitle": "Gratis accounts kunnen slechts één bestand tegelijk versturen",
-      "freeTierOneFileMessage": "Wil je alleen \"{{fileName}}\" versturen?",
-      "freeTierOneFileConfirm": "Verstuur {{fileName}}",
       "freeTierRecentUploadTitle": "Recente upload wordt vervangen",
-      "freeTierRecentUploadMessage": "Je hebt \"{{fileName}}\" minder dan 6 uur geleden geüpload en het is nog niet gedownload. Als je dit bestand verstuurt, wordt het vervangen. Wil je in plaats daarvan wachten?",
+      "freeTierRecentUploadMessage": "Je hebt \"{{name}}\" minder dan 6 uur geleden verzonden en het is nog niet gedownload. Als je het nu verzendt, wordt het vervangen. Wil je liever wachten?",
       "freeTierRecentUploadConfirm": "Toch versturen",
       "errorSendingToLogStash": "Kon niet versturen naar Ham2K File Stash",
       "sentToLogStash": "Verstuurd naar Ham2K File Stash",
@@ -154,6 +151,8 @@
         "duplicate": "Dupe",
         "invalidBand": "Ongeldige Band",
         "ourGrid": "Onze locatie ontbreekt",
+        "theirGrid": "Hun grid ontbreekt",
+        "shortGrid": "Grid te kort",
         "newBand": "Nieuwe Band",
         "newMode": "Nieuwe Modus",
         "newRef": "Nieuwe Referentie",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Toon cijferrij",
-        "descriptionOn": "Snelle knoppen voor cijfers",
-        "descriptionOff": "Toon geen cijferrij"
+        "descriptionOn": "Snelle knoppen voor cijfers tonen",
+        "descriptionOff": "De cijferrij wordt niet getoond"
       },
       "showExtraInNumbersRow": {
         "title": "Punt in cijferrij",
-        "descriptionOn": "Inclusief punt (en schuine streep)",
-        "descriptionOff": "Toon alleen de cijfers"
+        "descriptionOn": "Inclusief punt- en schuine-streepknoppen",
+        "descriptionOff": "Alleen de cijfers tonen"
       },
       "showCommaInNumbersRow": {
         "title": "Komma in cijferrij",
-        "descriptionOn": "Inclusief een komma toets",
+        "descriptionOn": "Inclusief een kommaknop",
         "descriptionOff": "Geen komma toets"
       },
       "vibrateNumbersRow": {
         "title": "Gebruik vibratie in cijferrij",
-        "descriptionOn": "Trillen bij drukken op nummers",
-        "descriptionOff": "Trilt niet bij drukken op nummers"
+        "descriptionOn": "Trillen bij het indrukken van cijfers",
+        "descriptionOff": "Niet trillen bij het indrukken van cijfers"
       },
       "useMetricUnits": {
         "title": "Gebruik metrische eenheden",
-        "descriptionOn": "Gebruik mijlen voor afstanden",
-        "descriptionOff": "Gebruik kilometers voor afstanden"
+        "descriptionOn": "Mijlen gebruiken voor afstanden",
+        "descriptionOff": "Kilometers gebruiken voor afstanden"
       },
       "keepDeviceAwake": {
         "title": "Houd apparaat actief",
-        "descriptionOn": "Voorkom dat apparaat het scherm vergrendelt",
-        "descriptionOff": "Sta schermvergrendeling toe"
+        "descriptionOn": "Het scherm wakker houden",
+        "descriptionOff": "Het scherm zoals gewoonlijk laten vergrendelen"
       },
       "useSplitViews": {
         "title": "Gebruik gesplitste Weergaven",
-        "descriptionOn": "Gebruik gesplitste weergaven wanneer het scherm groot genoeg is",
-        "descriptionOff": "Gebruik geen gesplitste scherm weergaven"
+        "descriptionOn": "Gesplitste weergaven gebruiken wanneer het scherm groot genoeg is",
+        "descriptionOff": "Geen gesplitste weergaven gebruiken"
       },
       "useGrid8": {
         "title": "Hoge precisie locatie",
-        "descriptionOn": "Gebruik 8-cijferige grid",
-        "descriptionOff": "Gebruik 6-cijferige grid"
+        "descriptionOn": "8-cijferige grids gebruiken",
+        "descriptionOff": "6-cijferige grids gebruiken"
       },
       "smartKeyboard": {
         "title": "Slimme Keyboard Functies",
-        "descriptionOn": "Slimme keyboardfuncties inschakelen",
-        "descriptionOff": "Gebruik eenvoudigere toetsenborden voor compatibiliteitsredenen met sommige apparaten"
+        "descriptionOn": "Slimme toetsenbordfuncties gebruiken",
+        "descriptionOff": "Eenvoudigere toetsenborden gebruiken, voor compatibiliteit met sommige apparaten"
       },
       "exportSettings": {
         "title": "Exporteer Instellingen",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Deel app gegevens",
-        "descriptionOn": "Help ons de app te verbeteren door gebruiks-, crash- en prestatiegegevens te delen",
-        "descriptionOff": "Houd gebruiksgegevens van de app privé. Het Ham2K-team kan crashes of andere problemen niet detecteren."
+        "descriptionOn": "Gebruiks-, crash- en prestatiegegevens delen om ons te helpen de app te verbeteren",
+        "descriptionOff": "Appgebruiksgegevens privé houden.\nHet Ham2K-team kan crashes of andere problemen niet detecteren."
       },
       "shareOperationData": {
         "title": "Deel activatie gegevens",
-        "descriptionOn": "Deel bepaalde activatie gegevens openbaar en met andere gebruikers.",
-        "descriptionOff": "Houd activatie gegevens privé"
+        "descriptionOn": "Bepaalde activatiegegevens openbaar en met andere gebruikers delen",
+        "descriptionOff": "Activatiegegevens privé houden"
       },
       "privacyPolicy": {
         "title": "Privacybeleid",
@@ -423,19 +422,24 @@
       "title": "Loginstellingen",
       "leftieMode": {
         "title": "Linkshandige gebruiker mode",
-        "descriptionOn": "Gebruik lay-out voor linkshandige gebruikers",
-        "descriptionOff": "Gebruik lay-out voor rechtshandige gebruikers"
+        "descriptionOn": "De linkshandige indeling gebruiken",
+        "descriptionOff": "De rechtshandige indeling gebruiken"
       },
       "countryFlags": {
         "title": "Vlaggen van landen",
-        "descriptionNone": "Toon geen vlaggen",
-        "descriptionAll": "Toon vlaggen voor alle QSO's",
-        "descriptionDefault": "Toon alleen voor DX-QSO's"
+        "descriptionNone": "Geen vlaggen tonen",
+        "descriptionAll": "Vlaggen tonen voor alle QSO's",
+        "descriptionDefault": "Alleen vlaggen tonen voor DX-QSO's"
       },
       "showBearing": {
         "title": "Toon Azimuth",
-        "descriptionOn": "Toon geschatte Azimuth naar station",
-        "descriptionOff": "Geen Azimuth tonen"
+        "descriptionOn": "Geschatte peiling naar station tonen",
+        "descriptionOff": "Geen peilingsinformatie tonen"
+      },
+      "showReverseBearing": {
+        "title": "Ook tegenpeiling tonen",
+        "descriptionOn": "Peiling vanaf het station ook tonen, zoals \"45° / 225°\"",
+        "descriptionOff": "Alleen peiling naar station tonen"
       },
       "switchSignalReportOrder": {
         "title": "Wijzig volgorde signaalrapport",
@@ -444,17 +448,17 @@
       },
       "jumpAfterRST": {
         "title": "Ga naar volgende veld bij RST-invoer",
-        "descriptionOn": "Ga verder RST is ingevoerd",
-        "descriptionOff": "Niet automatisch verder gaan"
+        "descriptionOn": "Na RST naar het volgende veld springen",
+        "descriptionOff": "Niet automatisch springen"
       },
       "suggestDefaultOperator": {
         "title": "Stel standaard operator voor",
-        "descriptionOn": "Stel {{operatorCall}} in als operator bij activaties waar station roepnaam anders is",
-        "descriptionOff": "Stel geen standaardoperator voor, ongeacht de gebruikte station roepnaam"
+        "descriptionOn": "{{operatorCall}} als operator gebruiken bij activaties waar de stationroepnaam anders is",
+        "descriptionOff": "Geen standaardoperator voorstellen, ongeacht de gebruikte stationroepnaam"
       },
       "suggestTemplates": {
         "title": "Gebruik operationele sjablonen",
-        "descriptionOn": "Stel sjablonen voor nieuwe activaties voor",
+        "descriptionOn": "Sjablonen voorstellen voor nieuwe activaties",
         "descriptionOff": "Geen sjablonen voorstellen"
       },
       "bandsModes": {
@@ -750,8 +754,8 @@
       "exportTypes": "Export Types",
       "customTemplates": "Aangepaste sjablonen",
       "defaultTemplates": "Standaard sjablonen",
-      "customTemplatesDescription": "Gebruik aangepaste sjablonen voor de export",
-      "defaultTemplatesDescription": "Gebruik standaard sjablonen voor de export",
+      "customTemplatesDescription": "Aangepaste sjablonen gebruiken voor deze export",
+      "defaultTemplatesDescription": "De standaardsjablonen gebruiken",
       "includePrivateData": "Privégegevens opnemen",
       "ignoreLookupData": "Opzoekgegevens negeren",
       "fileNameTemplate": "Bestandsnaam sjabloon",
@@ -760,8 +764,10 @@
       "adifComments": "ADIF QSO Opmerkingen",
       "adifQslMessage": "ADIF QSL Bericht",
       "templateHelpTitle": "Sjabloon Hulp",
-      "includePrivateDataDescription": "Namen, notities, adressen, etc.",
+      "includePrivateDataDescription": "Inclusief namen, notities, adressen, enz.",
+      "excludePrivateDataDescription": "Exclusief namen, notities, adressen, enz.",
       "ignoreLookupDataDescription": "Gegevens van opzoekdiensten zoals QRZ.com negeren",
+      "useLookupDataDescription": "Gegevens van opzoekdiensten zoals QRZ.com opnemen",
       "templateHelp-md": "Enkele voorbeeldsjabloonelementen…\n\n### Log-export\nAttributen voor het logboek dat wordt geëxporteerd\n`{{log.station}}` → `{{call}}` Station voor deze export\n`{{log.ref}}` → `XX-1234` Referentie voor deze export\n`{{log.refName}}` → `Voorbeeld Nationaal Park` Referentienaam voor deze export\n`{{log.refShortName}}` → `Voorbeeld NP` Korte referentienaam voor deze export\n`{{log.handlerType}}` → `pota`type voor deze export\n`{{log.handlerName}}` → `Parks On The Air` Naam voor deze export\n`{{log.handlerShortName}}` → `POTA` Korte naam voor deze export\n\n### Operatieoproepnamen\n`{{op.station}}` → `{{call}}` Eerste station voor de activatie\n`{{op.operator}}` → `{{call}}` Operator voor de activatie\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stations voor de activatie\n`{{op.otherStations}}` → `{{otherCalls}}` Andere stations voor de activatie\n\n### Operatiedatum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andere operatiedetails\n`{{op.title}}` → `bij XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Mijn Speciale activatie`\n`{{op.userNotes}}` → `Gingen vroeg in de ochtend…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid voor deze activatie\n\n### QSO-informatie\n`{{qso.notes}}` → `Vreselijke audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Het signaalrapport dat ze hebben gestuurd\n`{{qso.our.sent}}` → `55` Het signaalrapport dat ik heb gestuurd\n`{{qso.their.grid}}` → `FF99` De Grid die zij hebben gerapporteerd\n`{{qso.refs}}` → Een lijst van alle referenties voor de QSO's (inclusief zowel activatie referenties als QSO-only referenties)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "\nStandaarden",
@@ -862,6 +868,7 @@
       "frequencyLabel": "Frequentie",
       "bandMissing": "Band???",
       "modeMissing": "Modus???",
+      "modeOutOfBand": "Buiten band",
       "radioControls-a11y": "Radio bedieningselementen {{parts}}",
       "notesLabel": "Notities",
       "notesLabel-a11y": "Notities",

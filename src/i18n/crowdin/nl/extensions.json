@@ -188,6 +188,8 @@
       "startConfirm": "Activatie gestart!",
       "break": "Een pauze toevoegen?",
       "breakConfirm": "Een pauze toegevoegd!",
+      "roverqth": "Een pauze toevoegen en een nieuwe locatie instellen?",
+      "roverqthConfirm": "Pauze toegevoegd, stel nu je nieuwe locatie in",
       "stop": "De activatie stoppen?",
       "stopConfirm": "Activatie gestopt!"
     },

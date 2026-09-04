@@ -1,0 +1,366 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Angla - English",
+        "ar": "Araba - العربية",
+        "ast": "Astura - Asturianu",
+        "bn": "Bengala - বাংলা",
+        "ca": "Kataluna - Català",
+        "cs": "Ĉeĥa - Čeština",
+        "cy": "Kimra - Cymraeg",
+        "da": "Dana - Dansk",
+        "de": "Germana - Deutsch",
+        "en-PL": "Porka Latino",
+        "en-PT": "Pirato",
+        "eo": "Esperanto",
+        "es": "Hispana - Español",
+        "et": "Estona - Eesti",
+        "eu": "Eŭska - Euskara",
+        "fi": "Finna - Suomi",
+        "fr": "Franca - Français",
+        "ga": "Irlanda - Gaeilge",
+        "gl": "Galega - Galego",
+        "hi": "Hinda - हिंदी",
+        "id": "Indonezia - Bahasa Indonesia",
+        "it": "Itala - Italiano",
+        "ja": "Japana - 日本語",
+        "ko": "Korea - 한국어",
+        "lt": "Litova - Lietuvių",
+        "lv": "Latva - Latvijas",
+        "ms": "Malaja - Bahasa Melayu",
+        "nb": "Norvega (Bukmola) - Norsk bokmål",
+        "nl": "Nederlanda - Nederlands",
+        "nn": "Norvega (Ninorska) - Nynorsk",
+        "pl": "Pola - Polski",
+        "pt-BR": "Portugala (Brazilo) - Português (Brasil)",
+        "pt-PT": "Portugala (Portugalio) - Português (Portugal)",
+        "pt": "Portugala - Português",
+        "ro": "Rumana - Română",
+        "ru": "Rusa - Русский",
+        "sk": "Slovaka - Slovenčina",
+        "sv": "Sveda - Svenska",
+        "th": "Taja - ภาษาไทย",
+        "tl": "Tagaloga - Wikang Filipino",
+        "tlh": "Klingona - tlhIngan",
+        "tr": "Turka - Türkçe",
+        "uk": "Ukraina - Українська",
+        "ur": "Urdua - اردو",
+        "vi": "Vjetnama - Tiếng Việt",
+        "zh": "Ĉina - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q soj",
+      "Operation": "Operacio",
+      "generalOperation": "Ĝenerala Operacio"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " kaj "
+      },
+      "time": {
+        "tomorrow": "Morgaŭ",
+        "today": "Hodiaŭ",
+        "yesterday": "Hieraŭ",
+        "ago": "{{time}} antaŭ",
+        "fromNow": "{{time}} de nun",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}h",
+        "shortHoursAndMinutes": "{{h}}h {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}h",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Januaro",
+        "2": "Februaro",
+        "3": "Marto",
+        "4": "Aprilo",
+        "5": "Majo",
+        "6": "Junio",
+        "7": "Julio",
+        "8": "Aŭgusto",
+        "9": "Septembro",
+        "10": "Oktobro",
+        "11": "Novembro",
+        "12": "Decembro"
+      },
+      "monthAbbr": {
+        "1": "Jan",
+        "2": "Feb",
+        "3": "Mar",
+        "4": "Apr",
+        "5": "Maj",
+        "6": "Jun",
+        "7": "Jul",
+        "8": "Aŭg",
+        "9": "Sep",
+        "10": "Okt",
+        "11": "Nov",
+        "12": "Dec"
+      },
+      "weekday": {
+        "1": "Lundo",
+        "2": "Mardo",
+        "3": "Merkredo",
+        "4": "Ĵaŭdo",
+        "5": "Vendredo",
+        "6": "Sabato",
+        "7": "Dimanĉo"
+      },
+      "weekdayAbbr": {
+        "1": "Lun",
+        "2": "Mar",
+        "3": "Mer",
+        "4": "Ĵaŭ",
+        "5": "Ven",
+        "6": "Sab",
+        "7": "Dim"
+      },
+      "ordinalDay": {
+        "1": "1-a",
+        "2": "2-a",
+        "3": "3-a",
+        "4": "4-a",
+        "5": "5-a",
+        "6": "6-a",
+        "7": "7-a",
+        "8": "8-a",
+        "9": "9-a",
+        "10": "10-a",
+        "11": "11-a",
+        "12": "12-a",
+        "13": "13-a",
+        "14": "14-a",
+        "15": "15-a",
+        "16": "16-a",
+        "17": "17-a",
+        "18": "18-a",
+        "19": "19-a",
+        "20": "20-a",
+        "21": "21-a",
+        "22": "22-a",
+        "23": "23-a",
+        "24": "24-a",
+        "25": "25-a",
+        "26": "26-a",
+        "27": "27-a",
+        "28": "28-a",
+        "29": "29-a",
+        "30": "30-a",
+        "31": "31-a"
+      },
+      "distance": {
+        "away": "{{distance}} for"
+      }
+    },
+    "buttons": {
+      "cancel": "Nuligu",
+      "ok": "Bone",
+      "close": "Fermu",
+      "login": "Ensalutu",
+      "logout": "Elsalutu",
+      "delete": "Forigu",
+      "refresh": "Ĝisdatigu",
+      "done": "Kompletigita",
+      "accept": "Akceptu",
+      "accept-a11y": "Akceptu ŝanĝojn",
+      "revert": "Repreni",
+      "revert-a11y": "Malfaru ŝanĝojn",
+      "apply": "Apliki",
+      "connect": "Konekti",
+      "save": "Konservu",
+      "export": "Eksportu"
+    },
+    "errors": {
+      "generic": "Io fuŝiĝis. Bonvolu reprovi poste.",
+      "genericShort": "Io fuŝiĝis."
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "fliko {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Kontrolante por ĝisdatigoj…",
+        "stable": "Kontrolante por stabilaj ĝisdatigoj…",
+        "unstable": "Kontrolante por nestabilaj ĝisdatigoj…",
+        "bleedingEdge": "Kontrolanta por neprovitaj ĝisdatigoj…"
+      },
+      "tracksPlural": {
+        "stable": "Stabila",
+        "unstable": "Nestabila",
+        "bleedingEdge": "Neprovita",
+        "Production": "Stabila",
+        "Staging": "Nestabila",
+        "Development": "Neprovita"
+      },
+      "trackSingular": {
+        "stable": "Stabila",
+        "unstable": "Nestabila",
+        "bleedingEdge": "Neprovita",
+        "Production": "Stabila",
+        "Staging": "Nestabila",
+        "Development": "Neprovita"
+      },
+      "versionIsAvailable-md": "Ĝisdatigo al {{versionName}} estas disponebla.",
+      "updateNow": "Ĝisdatigu nun",
+      "newVersionAvailable-md": "Nova versio de PoLo estas disponebla!"
+    },
+    "dataFiles": {
+      "loading": "Ŝargante {{name}}",
+      "downloading": "Elŝutante {{name}}",
+      "dataHasToBeDownloaded-md": "Datumo por **{{name}}** devas esti elŝutita.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Datumo por **{{name}}** ne estis ĝisdatigita dum kelka tempo.",
+      "downloadNow": "Elŝutu nun",
+      "refreshNow": "Ĝisdatigu nun"
+    },
+    "notices": {
+      "action": {
+        "ok": "Bone!",
+        "__comment__": "Superregu specifajn avizajn agojn ĉi tie"
+      },
+      "title": {
+        "__comment__": "Superregu specifajn avizajn titolojn ĉi tie"
+      },
+      "text": {
+        "__comment__": "Superregu specifajn avizajn tekstojn ĉi tie"
+      },
+      "dialogTitle": {
+        "__comment__": "Superregu specifajn dialogajn titolojn ĉi tie"
+      },
+      "dialogText": {
+        "__comment__": "Superregu specifajn dialogajn tekstojn ĉi tie"
+      },
+      "dataFiles": {
+        "fetching": "Alportante {{title}}…",
+        "progress": "Alportante {{title}}\n\n{{progress}}",
+        "done": "Finita alportante {{title}}",
+        "error": "Eraro dum alportante {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Teksto",
+        "csv": "Perkome Disigitaj Valoroj",
+        "tsv": "Pertabe Disigitaj Valoroj",
+        "other": "Datumo"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Bazaj trajtoj",
+        "locationBased": "Pozicie bazitaj aktivecoj",
+        "contestsAndFieldOps": "Konkursoj kaj kampaj operacioj",
+        "lookup": "Datumoj Sercxo & Identigo",
+        "devmode": "Programista reĝimo",
+        "other": "Aliaj trajtoj"
+      }
+    },
+    "continents": {
+      "AF": "Afriko",
+      "AS": "Azio",
+      "EU": "Eŭropo",
+      "NA": "Nord-Ameriko",
+      "SA": "Sud-Ameriko",
+      "OC": "Oceanio"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Ununura Flankbendo",
+        "USB": "USB",
+        "USB-a11y": "Supra Flankbendo",
+        "LSB": "LSB",
+        "LSB-a11y": "Malsupra Flankbendo",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Riti",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Alia",
+        "other-a11y": "Alia Reĝimo"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Metroj",
+        "80m-a11y": "80 Metroj",
+        "60m-a11y": "60 Metroj",
+        "40m-a11y": "40 Metroj",
+        "30m-a11y": "30 Metroj",
+        "20m-a11y": "20 Metroj",
+        "17m-a11y": "17 Metroj",
+        "15m-a11y": "15 Metroj",
+        "12m-a11y": "12 Metroj",
+        "11m-a11y": "11 Metroj",
+        "10m-a11y": "10 Metroj",
+        "6m-a11y": "6 Metroj",
+        "2m-a11y": "2 Metroj",
+        "70cm-a11y": "70 Centimetroj",
+        "23cm-a11y": "23 Centimetroj",
+        "13cm-a11y": "13 Centimetroj",
+        "9cm-a11y": "9 Centimetroj",
+        "6cm-a11y": "6 Centimetroj",
+        "3cm-a11y": "3 Centimetroj",
+        "1-25cm-a11y": "1,25 Centimetroj",
+        "6mm-a11y": "6 Milimetroj",
+        "4mm-a11y": "4 Milimetroj",
+        "2-5mm-a11y": "2,5 Milimetroj",
+        "2mm-a11y": "2 Milimetroj",
+        "1mm-a11y": "1 Milimetro",
+        "submm-a11y": "Submilimetro",
+        "other": "Alia",
+        "other-a11y": "Alia Bendo"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "Sen voksigno"
+    }
+  }
+}

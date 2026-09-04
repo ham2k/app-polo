@@ -118,7 +118,7 @@
       "errorSavingExport": "Não foi possível salvar o arquivo",
       "logStashDialogTitle": "Armazenamento de arquivos do Ham2K",
       "logStashDialogIntro": "PoLo enviará seus arquivos para os servidores do Ham2K e você poderá baixá-los em qualquer navegador.",
-      "logStashDialogTiers": "Contas gratuitas só podem enviar um arquivo por vez. Assinantes podem enviar quantos quiserem.",
+      "logStashDialogTiers": "Contas gratuitas só podem manter um stash por vez. Assinantes podem manter quantos quiserem.",
       "logStashDialogSubscribe": "Assine",
       "exportUpsellTitle": "Esta operação também foi salva em nosso Serviço de Sincronização em Nuvem",
       "exportUpsellBody": "Este backup é gratuito, mas se você se inscrever, poderá sincronizá-lo em vários dispositivos e acessá-lo em velocidade máxima.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**Exportar** entrega seus arquivos a outro app no seu dispositivo — e-mail, mensagens, armazenamento em nuvem ou outro programa de registro.",
       "exportOptionsInfoSave-md": "**Salvar** grava seus arquivos diretamente em uma pasta no seu dispositivo, sem passar por outro app.",
       "exportOptionsInfoSelection-md": "Estas ações se aplicam a todos os arquivos que você selecionou abaixo. Você também pode tocar em qualquer arquivo individual para compartilhar apenas aquele.",
-      "freeTierOneFileTitle": "Contas gratuitas só podem enviar um arquivo por vez",
-      "freeTierOneFileMessage": "Deseja enviar apenas \"{{fileName}}\"?",
-      "freeTierOneFileConfirm": "Enviar {{fileName}}",
       "freeTierRecentUploadTitle": "O upload recente será substituído",
-      "freeTierRecentUploadMessage": "Você enviou \"{{fileName}}\" há menos de 6 horas e ele ainda não foi baixado. O envio deste novo arquivo irá substituí-lo. Prefere aguardar?",
+      "freeTierRecentUploadMessage": "Você enviou \"{{name}}\" há menos de 6 horas e ele ainda não foi baixado. Enviar agora irá substituí-lo. Prefere aguardar?",
       "freeTierRecentUploadConfirm": "Enviar mesmo assim",
       "errorSendingToLogStash": "Não foi possível enviar para o armazenamento do Ham2K",
       "sentToLogStash": "Enviar para o armazenamento do Ham2K",
@@ -154,6 +151,8 @@
         "duplicate": "Duplicar",
         "invalidBand": "Banda Inválida",
         "ourGrid": "Faltando nossa localização",
+        "theirGrid": "Falta o grid deles",
+        "shortGrid": "Grid muito curto",
         "newBand": "Nova Banda",
         "newMode": "Novo Modo",
         "newRef": "Nova Referência",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Mostrar linha de números",
-        "descriptionOn": "Botões rápidos para números",
-        "descriptionOff": "Não mostrar linha de números"
+        "descriptionOn": "Mostrando botões rápidos para números",
+        "descriptionOff": "Não mostrando a linha de números"
       },
       "showExtraInNumbersRow": {
         "title": "Ponto na linha de números",
-        "descriptionOn": "Incluir ponto (e barra)",
-        "descriptionOff": "Apenas mostrar os números"
+        "descriptionOn": "Incluindo teclas de ponto e barra",
+        "descriptionOff": "Mostrando apenas os números"
       },
       "showCommaInNumbersRow": {
         "title": "Vírgula na linha de números",
-        "descriptionOn": "Incluir um botão de vírgula",
+        "descriptionOn": "Incluindo uma tecla de vírgula",
         "descriptionOff": "Nenhum botão de vírgula"
       },
       "vibrateNumbersRow": {
         "title": "Usar vibração na linha de números",
-        "descriptionOn": "Vibrar ao pressionar números",
-        "descriptionOff": "Não vibrar ao pressionar números"
+        "descriptionOn": "Vibrando ao pressionar números",
+        "descriptionOff": "Não vibrando ao pressionar números"
       },
       "useMetricUnits": {
         "title": "Usar Unidades Métricas",
-        "descriptionOn": "Usar Milhas para distâncias",
-        "descriptionOff": "Usar Quilômetros para distâncias"
+        "descriptionOn": "Usando milhas para distâncias",
+        "descriptionOff": "Usando quilômetros para distâncias"
       },
       "keepDeviceAwake": {
         "title": "Manter dispositivo ativo",
-        "descriptionOn": "Impedir que o dispositivo bloqueie a tela",
-        "descriptionOff": "Permitir bloqueio regular da tela"
+        "descriptionOn": "Mantendo a tela ativa",
+        "descriptionOff": "Permitindo que a tela bloqueie normalmente"
       },
       "useSplitViews": {
         "title": "Usar Visualizações Divididas",
-        "descriptionOn": "Usar Visualizações Divididas quando a tela for grande o suficiente",
-        "descriptionOff": "Não usar visualizações divididas"
+        "descriptionOn": "Usando visualizações divididas quando a tela for grande o suficiente",
+        "descriptionOff": "Não usando visualizações divididas"
       },
       "useGrid8": {
         "title": "Localização de alta precisão",
-        "descriptionOn": "Usar grids de 8 dígitos",
-        "descriptionOff": "Usar grids de 6 dígitos"
+        "descriptionOn": "Usando grids de 8 dígitos",
+        "descriptionOff": "Usando grids de 6 dígitos"
       },
       "smartKeyboard": {
         "title": "Recursos do Teclado Inteligente",
-        "descriptionOn": "Ativar recursos do teclado inteligente",
-        "descriptionOff": "Usar teclados mais simples por razões de compatibilidade com alguns dispositivos"
+        "descriptionOn": "Usando recursos do teclado inteligente",
+        "descriptionOff": "Usando teclados mais simples, para compatibilidade com alguns dispositivos"
       },
       "exportSettings": {
         "title": "Configurações de Exportação",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Compartilhar dados de uso do app",
-        "descriptionOn": "Ajude-nos a melhorar o aplicativo compartilhando dados de uso, falhas e desempenho",
-        "descriptionOff": "Mantenha os dados de uso do aplicativo privados.\nA equipe do Ham2K não poderá detectar falhas ou outros problemas."
+        "descriptionOn": "Compartilhando dados de uso, falhas e desempenho para nos ajudar a melhorar o aplicativo",
+        "descriptionOff": "Mantendo privados os dados de uso do aplicativo.\nA equipe do Ham2K não poderá detectar falhas ou outros problemas."
       },
       "shareOperationData": {
         "title": "Compartilhar dados de operação",
-        "descriptionOn": "Compartilhe alguns dados de operação publicamente e com outros usuários",
-        "descriptionOff": "Mantenha os dados de operação privados"
+        "descriptionOn": "Compartilhando alguns dados de operação publicamente e com outros usuários",
+        "descriptionOff": "Mantendo os dados de operação privados"
       },
       "privacyPolicy": {
         "title": "Política de Privacidade",
@@ -423,19 +422,24 @@
       "title": "Configurações de Registro",
       "leftieMode": {
         "title": "Modo Canhoto",
-        "descriptionOn": "Usar layout para usuários canhotos",
-        "descriptionOff": "Usar layout para usuários destros"
+        "descriptionOn": "Usando o layout para canhotos",
+        "descriptionOff": "Usando o layout para destros"
       },
       "countryFlags": {
         "title": "Bandeiras de Países",
-        "descriptionNone": "Não mostrar bandeiras",
-        "descriptionAll": "Mostrar bandeiras para todos os contatos",
-        "descriptionDefault": "Mostrar apenas para contatos DX"
+        "descriptionNone": "Não mostrando nenhuma bandeira",
+        "descriptionAll": "Mostrando bandeiras para todos os contatos",
+        "descriptionDefault": "Mostrando bandeiras apenas para contatos DX"
       },
       "showBearing": {
         "title": "Mostrar Azimute",
-        "descriptionOn": "Mostrar azimute estimado para a estação",
-        "descriptionOff": "Não mostrar informações de azimute"
+        "descriptionOn": "Mostrando azimute estimado para a estação",
+        "descriptionOff": "Não mostrando informações de azimute"
+      },
+      "showReverseBearing": {
+        "title": "Mostrar também azimute reverso",
+        "descriptionOn": "Mostrando também o azimute a partir da estação, como \"45° / 225°\"",
+        "descriptionOff": "Mostrando apenas o azimute para a estação"
       },
       "switchSignalReportOrder": {
         "title": "Inverter ordem do reporte de sinal",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "Pular para o próximo campo ao inserir RST",
-        "descriptionOn": "Pular após inserir RST",
-        "descriptionOff": "Não pular automaticamente"
+        "descriptionOn": "Avançando para o próximo campo após o RST",
+        "descriptionOff": "Não avançando automaticamente"
       },
       "suggestDefaultOperator": {
         "title": "Sugerir operador padrão",
-        "descriptionOn": "Defina {{operatorCall}} como operador em operações onde o indicativo da estação é diferente",
-        "descriptionOff": "Não sugira operador padrão independentemente do indicativo da estação usada"
+        "descriptionOn": "Usando {{operatorCall}} como operador em operações em que o indicativo da estação é diferente",
+        "descriptionOff": "Não sugerindo um operador padrão, independentemente do indicativo da estação usado"
       },
       "suggestTemplates": {
         "title": "Usar modelos de operação",
-        "descriptionOn": "Sugerir modelos para novas operações",
-        "descriptionOff": "Não sugerir modelos"
+        "descriptionOn": "Sugerindo modelos para novas operações",
+        "descriptionOff": "Não sugerindo modelos"
       },
       "bandsModes": {
         "title": "Bandas e Modos",
@@ -750,8 +754,8 @@
       "exportTypes": "Tipos de Exportação",
       "customTemplates": "Modelos personalizados",
       "defaultTemplates": "Modelos padrão",
-      "customTemplatesDescription": "Usar modelos personalizados para a exportação",
-      "defaultTemplatesDescription": "Usar modelos padrão para a exportação",
+      "customTemplatesDescription": "Usando modelos personalizados para esta exportação",
+      "defaultTemplatesDescription": "Usando os modelos padrão",
       "includePrivateData": "Incluir dados privados",
       "ignoreLookupData": "Ignorar dados de consulta",
       "fileNameTemplate": "Modelo de nome de arquivo",
@@ -760,8 +764,10 @@
       "adifComments": "Comentários QSO ADIF",
       "adifQslMessage": "Mensagem QSL ADIF",
       "templateHelpTitle": "Ajuda para Modelo",
-      "includePrivateDataDescription": "Nomes, notas, endereços, etc.",
-      "ignoreLookupDataDescription": "Ignorar dados de serviços de consulta como QRZ.com",
+      "includePrivateDataDescription": "Incluindo nomes, notas, endereços, etc.",
+      "excludePrivateDataDescription": "Excluindo nomes, notas, endereços, etc.",
+      "ignoreLookupDataDescription": "Ignorando dados de serviços de consulta como QRZ.com",
+      "useLookupDataDescription": "Incluindo dados de serviços de consulta como QRZ.com",
       "templateHelp-md": "Alguns elementos de modelo de amostra…\n\n### Exportação de Logs\nAtributos para o log está sendo exportado\n`{{log.station}}` → `{{call}}` Estação para esta exportação\n`{{log.ref}}` → `XX-1234` Referência para esta exportação\n`{{log.refName}}` → `Exemplo de Parque Nacional` Nome da referência para esta exportação\n`{{log.refShortName}}` → `Exemplo NP` Nome curto da referência para esta exportação\n`{{log.handlerType}}` → `pota` Tipo de manipulador para esta exportação\n`{{log.handlerName}}` → `Parks On The Air` Nome do manipulador para esta exportação\n`{{log.handlerShortName}}` → `POTA` Nome curto do manipulador para esta exportação\n\n### Chamadas de Operação\n`{{op.station}}` → `{{call}}` Primeira estação para a operação\n`{{op.operator}}` → `{{call}}` Operador para a operação\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Todas as estações para a operação\n`{{op.otherStations}}` → `{{otherCalls}}` Outras estações para a operação\n\n### Data da Operação\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Outros Detalhes da Operação\n`{{op.title}}` → `em XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Minha Operação Especial`\n`{{op.userNotes}}` → `Cheguei cedo na manhã…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Grid para esta operação\n\n### Informação QSO\n`{{qso.notes}}` → `Áudio Terrível!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Reporte de sinal enviado por eles\n`{{qso.our.sent}}` → `55` Reporte de sinal que enviamos\n`{{qso.their.grid}}` → `FF99` O grid que eles reportaram\n`{{qso.refs}}` → Uma lista de todos as referências para o QSO (inclui tanto as referências de Operação quanto as referências apenas do QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Padrões",
@@ -862,6 +868,7 @@
       "frequencyLabel": "Frequência",
       "bandMissing": "Banda???",
       "modeMissing": "Modo???",
+      "modeOutOfBand": "Fora da faixa",
       "radioControls-a11y": "Controles de Rádio {{parts}}",
       "notesLabel": "Notas",
       "notesLabel-a11y": "Notas",

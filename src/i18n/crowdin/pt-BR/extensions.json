@@ -188,6 +188,8 @@
       "startConfirm": "Operação iniciada!",
       "break": "Adicionar um intervalo?",
       "breakConfirm": "Intervalo de operação adicionado!",
+      "roverqth": "Adicionar uma pausa e definir uma nova localização?",
+      "roverqthConfirm": "Pausa adicionada; agora defina sua nova localização",
       "stop": "Parar a operação?",
       "stopConfirm": "Operação parada!"
     },

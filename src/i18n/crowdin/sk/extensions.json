@@ -188,6 +188,8 @@
       "startConfirm": "Prevádzka začala!",
       "break": "Pridať si pauzu?",
       "breakConfirm": "Prestávka v prevádzke pridaná!",
+      "roverqth": "Pridať prestávku a nastaviť novú lokalitu?",
+      "roverqthConfirm": "Prestávka pridaná, teraz nastavte svoju novú lokalitu",
       "stop": "Ukončiť prevádzku?",
       "stopConfirm": "Prevádzka ukončená!"
     },

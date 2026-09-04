@@ -1,0 +1,996 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Немає діапазонів",
+      "bandsCount_one": "1 діапазон",
+      "bandsCount_other": "{{count}} діапазони",
+      "modesCount_zero": "Немає режимів",
+      "modesCount_one": "1 режим",
+      "modesCount_other": "{{count}} режими",
+      "total": "Всього {{count}}"
+    },
+    "bca": {
+      "name": "BCA: Замки та фортеці Бельгії",
+      "shortName": "BCA",
+      "exportName": "Активація BCA",
+      "activityOptions": {
+        "title_zero": "Жоден замок не вибрано для активації",
+        "title_one": "Активується 1 замок",
+        "title_other": "Активується {{count}} замки",
+        "noCastlesFound": "Замків не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} відповідності",
+        "matchingCastles_zero": "Відповідних замків немає",
+        "matchingCastles_one": "Знайдено 1 відповідний замок",
+        "matchingCastles_other": "{{count}} відповідних замків",
+        "searchForCastles": "Пошукайте замки для активації!",
+        "noCastlesNearby": "Поблизу немає замків",
+        "nearbyCastles": "Замки поблизу",
+        "searchPlaceholder": "Ім'я або посилання…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Не провело замків",
+        "huntedRefsCount_one": "1 замок проведено",
+        "huntedRefsCount_other": "{{fmtCount}} замки проведено",
+        "activatorQSOsCount_zero": "Нема активних QSO",
+        "activatorQSOsCount_one": "1 активне QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активних QSO",
+        "huntedQSOsCount_zero": "Не маючи передавачів",
+        "huntedQSOsCount_one": "1 передавач",
+        "huntedQSOsCount_other": "{{fmtCount}} передавачів",
+        "operationTotals": "Операційні підсумки",
+        "referencesActivatedCount_zero": "Не активовано замків",
+        "referencesActivatedCount_one": "1 замок активовано",
+        "referencesActivatedCount_other": "{{fmtCount}} замки активовано",
+        "referencesMissedCount_zero": "Не завершено замків",
+        "referencesMissedCount_one": "1 незавершений замок",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених замки",
+        "referencesHuntedCount_zero": "Не переслідується замків",
+        "referencesHuntedCount_one": "1 замок у переслідуванні",
+        "referencesHuntedCount_other": "{{fmtCount}} замки у переслідуванні"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній BCA"
+      }
+    },
+    "blha": {
+      "name": "BLHA: Маяки та маякові кораблі Бельгії",
+      "shortName": "BLHA",
+      "exportName": "Активація BLHA",
+      "activityOptions": {
+        "title_zero": "Жоден маяк не вибрано для активації",
+        "title_one": "Активується 1 маяк",
+        "title_other": "Активується {{count}} маяки",
+        "noLighthousesFound": "Маяків не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} відповідностей",
+        "matchingLighthouses_zero": "Відповідних маяків немає",
+        "matchingLighthouses_one": "Знайдено 1 відповідний маяк",
+        "matchingLighthouses_other": "{{count}} відповідні маяки",
+        "searchForLighthouses": "Пошукайте маяки для активації!",
+        "noLighthousesNearby": "Поблизу немає маяків",
+        "nearbyLighthouses": "Маяки поблизу",
+        "searchPlaceholder": "Ім'я або посилання…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Не провело маяків",
+        "huntedRefsCount_one": "1 маяк у переслідуванні",
+        "huntedRefsCount_other": "{{fmtCount}} маяки в переслідуванні",
+        "activatorQSOsCount_zero": "Нема активаторних QSO",
+        "activatorQSOsCount_one": "1 активаторне QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторних QSO",
+        "huntedQSOsCount_zero": "Не переслідується QSO",
+        "huntedQSOsCount_one": "1 знайдене QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} знайдених QSO",
+        "operationTotals": "Операційні підсумки",
+        "referencesActivatedCount_zero": "Не активовано маяків",
+        "referencesActivatedCount_one": "1 маяк активовано",
+        "referencesActivatedCount_other": "{{fmtCount}} маяки активовано",
+        "referencesMissedCount_zero": "Не завершено маяків",
+        "referencesMissedCount_one": "1 незавершений маяк",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених маяки",
+        "referencesHuntedCount_zero": "Не переслідується маяків",
+        "referencesHuntedCount_one": "1 маяк у переслідуванні",
+        "referencesHuntedCount_other": "{{fmtCount}} маяки у переслідуванні"
+      }
+    },
+    "call-history": {
+      "name": "Історія дзвінків",
+      "description": "Завантажте історичний ADIF та використовуйте для автономного пошуку"
+    },
+    "call-notes": {
+      "name": "Нотатки позивних",
+      "description": "Зберігайте примітки позивних у файлі та використовуйте для офлайн-пошуку",
+      "description-md_zero": "Жодні нотатки не завантажено.",
+      "description-md_one": "{{fmtCount}} {{type}} завантажено.",
+      "description-md_other": "{{fmtCount}} {{type}} завантажено.",
+      "builtIn": "Вбудовані нотатки",
+      "userDefined": "Користувацькі нотатки",
+      "failedToLoad": "Не вдалося завантажити!",
+      "notesFile": "Файл нотаток позивних",
+      "nameLabel": "Назва",
+      "namePlaceholder": "Назва вашого файлу нотаток позивних",
+      "locationLabel": "Місцезнаходження",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Вбудований",
+      "customTitle": "Індивідуальний",
+      "addFile": "Додати новий файл",
+      "aboutTitle": "Про нотатки позивних",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K's Помітні хами"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Зразок, хто є хто і хто не є в світі радіо"
+      },
+      "help-md": "Нотатки позивних збережено у простих текстових файлах, по одному дзвінку на рядок з наступною інформацією, що ви хочете показати на екрані реєстрації. Ви можете використовувати вбудовані файли або додати свої.\n\nНадайте пряме посилання на простий текстовий файл або «посилання на спільний доступ» зі служби, наприклад:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nРядки цього файлу повинні виглядати так і можуть підтримувати базове форматування Markdown:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nЯкщо запис починається з емодзі, його буде використано замість зірочки за замовчуванням.\n\nЗаписи можна використовувати для «розширення позивних», якщо ви спочатку наберете `..` або `//` у полі позивних, наприклад, `//DAN` у наведеному вище прикладі."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Немає провінцій Канади",
+      "provincesCount_one": "1 провінція Канади",
+      "provincesCount_other": "{{count}} провінції Канади"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Налаштування",
+        "year": "Рік",
+        "testMode-md": "Оскільки подія цього року ще не почалася, ви можете перевірити свою діяльність з QSO протягом останніх семи днів.",
+        "note-md": "ПРИМІТКА: PoLo підрахує ваші результати, використовуючи всі QSO в часових рамках, включно з будь-якими іншими операціями, які є на цьому пристрої.",
+        "info-md": "Спеціальний захід 13 колоній проходить щороку з 9:00 східного часу 1 липня до півночі 7 липня."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Отримання поточної погоди...",
+      "errorFetchingWeather": "Помилка при отримуванні погоди",
+      "fetchingSolarWeather": "Отримання сонячної погоди...",
+      "errorFetchingSolarWeather": "Помилка при отримуванні сонячної погоди",
+      "addNote": "Додати примітку: ‘{{note}}’...",
+      "addNotePrompt": "Додати примітку? продовжуйте вводити...",
+      "addNoteConfirm": "Примітку додано!",
+      "addTodo": "Додати завдання: ‘{{note}}’...",
+      "addTodoPrompt": "Додати завдання? продовжуйте вводити...",
+      "addTodoConfirm": "Завдання додано!",
+      "sendChat": "Надіслати чат: ‘{{note}}’...",
+      "sendChatPrompt": "Надіслати чат? продовжуйте вводити...",
+      "sendChatConfirm": "Чат надіслано!"
+    },
+    "commands-debug": {
+      "syncall": "Видалити всі операції та скинути синхронізований статус?",
+      "syncallConfirm": "Видалення даних та повторна синхронізація...",
+      "syncup": "Повторно відправити локальні дані для синхронізації?",
+      "syncupConfirm": "Повторне надсилання...",
+      "wipedb": "Видалити всю базу даних (зберегти налаштування)?",
+      "wipedbConfirm": "Видалення бази даних...",
+      "factory": "Видалити всі дані та налаштування?",
+      "factoryConfirm": "Фабричне скидання триває...",
+      "switchLanguage": "Переключити мову на `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Мова `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Перемикається на `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Активувати режим розробника?",
+      "activateConfirm": "Режим розробника активовано!",
+      "deactivate": "Деактивувати режим розробника?",
+      "deactivateConfirm": "Режим розробника деактивовано!",
+      "on": "Режим розробника: ВКЛ!!!",
+      "off": "Режим розробника: ВИКЛ"
+    },
+    "commands-misc": {
+      "rtfm": "Прочитати ",
+      "rtfmConfirm": "Відкриття ",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Не можна самостійно розміщувати без частоти",
+        "selfSpotWithComments": "Самостійно розмістити з ‘{{comments}}’?",
+        "selfSpotPrompt": "Самостійно розмістити?",
+        "selfSpottingWithComments": "Самостійно розміщення на {{freq}} з ‘{{comments}}’",
+        "selfSpotting": "Самостійно розміщення на {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Розпочати операцію?",
+      "startConfirm": "Операцію розпочато!",
+      "break": "Додати перерву?",
+      "breakConfirm": "Додано операційну перерву!",
+      "roverqth": "Додати перерву та встановити нове місцезнаходження?",
+      "roverqthConfirm": "Перерву додано, тепер встановіть ваше нове місцезнаходження",
+      "stop": "Зупинити операцію?",
+      "stopConfirm": "Операцію зупинено!"
+    },
+    "commands-operator": {
+      "change": "Змінити оператора на {{operator}}?",
+      "changeConfirm": "Оператор встановлений на {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Змінити діапазон на {{band}}?",
+      "bandConfirm": "Діапазон встановлено на {{band}}",
+      "frequency": "Змінити частоту на {{freq}} МГц?",
+      "frequencyConfirm": "Частота встановлена на {{freq}} МГц",
+      "frequencyAndMode": "Змінити частоту на {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Частота встановлена на {{freq}} MHz ({{mode}})",
+      "power": "Змінити потужність на {{power}}W?",
+      "powerConfirm": "Потужність встановлена на {{power}}W",
+      "mode": "Змінити режим на {{mode}}?",
+      "modeConfirm": "Режим встановлено на {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Встановлення {{name}}?",
+      "setChange": "Змінити {{label}} на {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} встановлено на {{value}}",
+      "setNotChanged": "Не змінено"
+    },
+    "commands-time": {
+      "setTime": "Встановити час на {{time}}?",
+      "setDate": "Встановити дату на {{date}}?",
+      "timeSet": "Час встановлено на {{time}}",
+      "dateSet": "Дата встановлена на {{date}}",
+      "changeTimeByHours": "Змінити час на {{delta}} годин?",
+      "changeTimeByMinutes": "Змінити час на {{delta}} хвилин?",
+      "changeTimeBySeconds": "Змінити час на {{delta}} секунд?",
+      "changeTimeByDays": "Змінити час на {{delta}} днів?",
+      "changeTimeByWeeks": "Змінити час на {{delta}} тижнів?",
+      "changeTimeToNow": "Змінити час на зараз?",
+      "changeTimeToToday": "Змінити час на сьогодні?",
+      "changeTimeToYesterday": "Змінити час на вчора?",
+      "timeSetToNow": "Час встановлено на зараз",
+      "timeSetToToday": "Час встановлено на сьогодні",
+      "timeSetToYesterday": "Час встановлено на вчора"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Жодних посилань не вибрано для активації",
+        "title_one": "Активується 1 посилання",
+        "title_other": "Активується {{count}} посилань",
+        "addMoreReferences": "Додати більше посилань",
+        "addReference": "Додати посилання",
+        "activityLabel": "Активність - MY_SIG в ADIF (необов'язково)",
+        "activityPlaceholder": "наприклад COTA…",
+        "referenceLabel": "Посилання - MY_SIG_INFO у ADIF",
+        "referencePlaceholder": "наприклад XY-1234…",
+        "nameLabel": "Назва (необов'язково)",
+        "namePlaceholder": "наприклад XYZ Замок…",
+        "addButton": "Додати {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній Ref"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Замініть назви файлів даних тут",
+        "pota-all-parks": "POTA: Усі парки",
+        "sota-all-summits": "SOTA: Усі вершини"
+      },
+      "loading": {
+        "progress": "Завантажено `{{processedLines}}` посилань.\n\n{{percent}}% • залишилось {{secondsLeft}} секунд.",
+        "downloadingRawData": "Завантаження сирих даних…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Немає сутностей DXCC",
+      "entitiesCount_one": "1 сутність DXCC",
+      "entitiesCount_other": "{{count}} сутності DXCC"
+    },
+    "eca": {
+      "name": "ECA: Нагороди за замки Англії",
+      "shortName": "ECA",
+      "exportName": "Активація ECA",
+      "activityOptions": {
+        "title_zero": "Жоден замок не вибрано для активації",
+        "title_one": "Активується 1 замок",
+        "title_other": "Активується {{count}} замки",
+        "noCastlesFound": "Замків не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} відповідностей",
+        "matchingCastles_zero": "Відповідних замків немає",
+        "matchingCastles_one": "Знайдено 1 відповідний замок",
+        "matchingCastles_other": "{{count}} відповідних замків",
+        "searchForCastles": "Пошукайте замки для активації!",
+        "noCastlesNearby": "Поблизу немає замків",
+        "nearbyCastles": "Замки поблизу",
+        "searchPlaceholder": "Ім'я або посилання…"
+      }
+    },
+    "ela": {
+      "name": "ELA: Нагороди за маяки Англії",
+      "shortName": "ELA",
+      "exportName": "Активація ELA",
+      "activityOptions": {
+        "title_zero": "Жоден маяк не вибрано для активації",
+        "title_one": "Активується 1 маяк",
+        "title_other": "Активується {{count}} маяки",
+        "noLighthousesFound": "Маяків не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} відповідностей",
+        "matchingLighthouses_zero": "Відповідних маяків немає",
+        "matchingLighthouses_one": "Знайдено 1 відповідний маяк",
+        "matchingLighthouses_other": "{{count}} відповідні маяки",
+        "searchForLighthouses": "Пошукайте маяки для активації!",
+        "noLighthousesNearby": "Поблизу немає маяків",
+        "nearbyLighthouses": "Маяки поблизу",
+        "searchPlaceholder": "Ім'я або посилання…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Інформація обміну",
+        "classLabel": "Клас",
+        "locationLabel": "Місцезнаходження",
+        "additionalInformation": "Додаткова інформація",
+        "highestTransmitterPowerLabel": "Найвища потужність передавача",
+        "highestTransmitterPowerPlaceholder": "100Вт",
+        "qrpOption": "QRP: 5Вт або менше",
+        "qroOption": "QRO: 100Вт або менше",
+        "moreThan100WOption": "Більше ніж 100Вт",
+        "powerSourceLabel": "Джерело живлення",
+        "powerSourcePlaceholder": "Виберіть джерело живлення",
+        "batteriesOption": "Батареї, Сонце, Вітрові",
+        "commercialPowerOption": "Комерційна електрика, Генератор",
+        "bonusesTitle": "Бонусні бали: заявлено {{count}}, {{points}} б.",
+        "bonusesDescription": "Не забудьте також зазначити ці бонусні бали під час подання свого журналу!",
+        "bonusTitle": "{{title}} ({{points}} б.)",
+        "information-md": "Клас для ARRL Field Day — це, наприклад, `2A`:\n\n - `1`, `2`, `3`... для кількості передавачів.\n - `A` для групи (3 і більше) портативної станції\n - `B` для одного або двох чоловік портативної станції\n - `C` для мобільної станції\n - `D` для домашньої станції\n - `E` для домашньої станції на аварійному живленні\n - `F` для Центру аварійних операцій\n\nЛокація — це ARRL Division, RAC Division, `MX` для Мексики або `DX` для будь-якого іншого місця.\n\nБільше інформації у **[офіційних правилах](https://www.arrl.org/field-day-rules)**."
+      },
+      "bonusName": {
+        "transmitters": "Передавачі",
+        "emergencyPower": "100% аварійне живлення",
+        "mediaPublicity": "Висвітлення у ЗМІ",
+        "publicLocation": "Громадське місце",
+        "informationTable": "Інформаційний стенд для громадськості",
+        "messageToSM": "Повідомлення для ARRL SM/SEC",
+        "ntsMessages": "Обробка повідомлень",
+        "ntsMessagesCount": "Кількість оброблених повідомлень",
+        "satelliteQSO": "Супутникове QSO",
+        "alternatePowerQSOs": "QSO з альтернативним живленням",
+        "w1awMessage": "Повідомлення W1AW Field Day",
+        "electedOfficialVisit": "Візит обраного посадовця",
+        "agencyOfficialVisit": "Візит посадовця обслуговуваної агенції",
+        "educationalActivity": "Освітній захід",
+        "youthElement": "Участь молоді",
+        "safetyOfficer": "Офіцер з безпеки",
+        "siteResponsibilities": "Вимоги щодо місця проведення",
+        "socialMedia": "Соціальні мережі",
+        "gotaQSOs": "QSO станції GOTA",
+        "gotaQSOsCount": "Кількість QSO GOTA",
+        "gotaCoach": "Тренер GOTA",
+        "webSubmission": "Подання через веб"
+      },
+      "bonusDescription": {
+        "transmitters": "100 балів за кожен передавач (макс. 20), не враховуючи GOTA або VHF.",
+        "emergencyPower": "100 балів за кожен передавач (макс. 20), якщо всі контакти використовують аварійне живлення.",
+        "mediaPublicity": "Отримайте висвітлення в місцевих ЗМІ. Додайте копію до своєї заявки.",
+        "publicLocation": "Розмістіть операцію в громадському місці, наприклад у парку, школі або торговому центрі (лише класи A, B або F).",
+        "informationTable": "Організуйте інформаційний стенд для громадськості на місці проведення Field Day (лише класи A, B або F).",
+        "messageToSM": "Створіть офіційне повідомлення для менеджера секції ARRL або координатора з надзвичайних ситуацій секції.",
+        "ntsMessages": "10 балів за кожне повідомлення NTS або ICS-213 (макс. 10), оброблене протягом операційного періоду.",
+        "satelliteQSO": "Проведіть щонайменше одне QSO через аматорський радіосупутник (лише класи A, B або F).",
+        "alternatePowerQSOs": "Проведіть щонайменше одне QSO з використанням альтернативної генерації енергії, наприклад сонячної, вітрової або водної (лише класи A, B, E або F).",
+        "w1awMessage": "Точно прийміть спеціальний бюлетень Field Day, переданий W1AW або K6KPH.",
+        "electedOfficialVisit": "Прийміть візит запрошеного обраного державного посадовця.",
+        "agencyOfficialVisit": "Прийміть візит запрошеного посадовця обслуговуваної агенції.",
+        "educationalActivity": "Проведіть офіційний освітній захід із письмовим планом уроку.",
+        "youthElement": "Залучіть молодих учасників до операції.",
+        "safetyOfficer": "Майте призначеного офіцера з безпеки на місці (лише клас A).",
+        "siteResponsibilities": "Виконайте вимоги щодо відповідальності за місце проведення (класи B, C, D, E та F).",
+        "socialMedia": "Просувайте свою операцію Field Day у соціальних мережах.",
+        "gotaQSOs": "5 балів за кожне QSO, проведене на станції GOTA.",
+        "gotaCoach": "Є тренер GOTA для допомоги в роботі станції GOTA.",
+        "webSubmission": "Подайте свою заявку за допомогою вебзастосунку на field-day.arrl.org."
+      }
+    },
+    "gma": {
+      "name": "GMA: Глобальна діяльність у горах",
+      "shortName": "GMA",
+      "exportName": "Активація GMA",
+      "activityOptions": {
+        "title_zero": "Жодної вершини не вибрано для активації",
+        "title_one": "Активується 1 вершина",
+        "title_other": "Активується {{count}} вершини",
+        "noSummitsFound": "Вершин не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} відповідностей",
+        "matchingSummits_zero": "Відповідних вершин немає",
+        "matchingSummits_one": "Знайдено 1 відповідну вершину",
+        "matchingSummits_other": "{{count}} відповідні вершини",
+        "searchForSummits": "Пошукайте вершини для активації!",
+        "noSummitsNearby": "Поблизу немає вершин",
+        "nearbySummits": "Вершини поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownSummit": "Невідома вершина"
+      }
+    },
+    "ham2k-lookup": {
+      "name": "Служба пошуку Ham2K",
+      "description": "Безкоштовна служба, але охоплює лише позивні США, Канади та Німеччини"
+    },
+    "hamqth": {
+      "name": "Запити позивних HamQTH.com",
+      "description": "Потрібен безкоштовний акаунт для запитів"
+    },
+    "llota": {
+      "name": "LLOTA: Озера та лагуни в ефірі",
+      "shortName": "LLOTA",
+      "exportName": "Активація LLOTA",
+      "activityOptions": {
+        "title_zero": "Для активації не вибрано жодного озера",
+        "title_one": "Активація 1 озера",
+        "title_other": "Активація {{count}} озер",
+        "noLakesFound": "Озера не знайдені",
+        "nearestMatches": "Найближчі {{limit}} із {{count}} збігів",
+        "matchingRefs_zero": "Відповідні озера відсутні",
+        "matchingRefs_one": "1 відповідне озеро",
+        "matchingRefs_other": "{{count}} відповідних озер",
+        "searchForRefs": "Знайдіть озера для активації!",
+        "noRefsNearby": "Немає озер поблизу",
+        "nearbyRefs": "Озера поблизу",
+        "searchPlaceholder": "Назва або посилання…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "L2L відсутні",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L",
+        "huntedRefsCount_zero": "Озера не полюються",
+        "huntedRefsCount_one": "1 озеро полюється",
+        "huntedRefsCount_other": "{{fmtCount}} озер полюються",
+        "activatorQSOsCount_zero": "QSOs активатора відсутні",
+        "activatorQSOsCount_one": "1 QSO активатора",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs активатора",
+        "ref2refQSOsCount_zero": "QSOs L2L відсутні",
+        "ref2refQSOsCount_one": "1 QSO L2L",
+        "ref2refQSOsCount_other": "{{fmtCount}} QSOs L2L",
+        "huntedQSOsCount_zero": "QSOs не знайдені",
+        "huntedQSOsCount_one": "1 знайдений QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} знайдених QSOs",
+        "operationTotals": "Підсумки операцій",
+        "referencesActivatedCount_zero": "Активація озер відсутня",
+        "referencesActivatedCount_one": "1 озеро активовано",
+        "referencesActivatedCount_other": "{{fmtCount}} озер активовано",
+        "referencesMissedCount_zero": "Немає незавершених озер",
+        "referencesMissedCount_one": "1 незавершене озеро",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених озер",
+        "referencesHuntedCount_zero": "Озера не полюються",
+        "referencesHuntedCount_one": "1 озеро полюється",
+        "referencesHuntedCount_other": "{{fmtCount}} озер полюються"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Помилка відправки LLOTA spot",
+        "serverResponse": "Сервер відповів з помилкою {{status}}: {{body}}"
+      },
+      "exampleRefName": "Приклад озера",
+      "unknownRefName": "Невідоме озеро",
+      "noRefsNearby": "Озера поблизу відсутні!"
+    },
+    "mota": {
+      "name": "MOTA: Млини в ефірі",
+      "shortName": "MOTA",
+      "exportName": "Активація MOTA",
+      "activityOptions": {
+        "title_zero": "Жоден млин не вибрано для активації",
+        "title_one": "Активується 1 млин",
+        "title_other": "Активується {{count}} млини",
+        "noMillsFound": "Млинів не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} відповідностей",
+        "matchingMills_zero": "Відповідних млинів немає",
+        "matchingMills_one": "Знайдено 1 відповідний млин",
+        "matchingMills_other": "{{count}} відповідні млини",
+        "searchForMills": "Пошукайте млини для активації!",
+        "noMillsNearby": "Поблизу немає млинів",
+        "nearbyMills": "Млини поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownMill": "Невідомий млин"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній Mill"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ПаркнПікс Виявлення",
+      "description": "Використовується переважно у VK і ZL",
+      "shortName": "ПнП",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL виявлення)",
+        "dialogTitle": "Акаунт ParksnPeaks",
+        "description": "Акаунт: {{username}}",
+        "noAccount": "Немає акаунта",
+        "pleaseEnterDetails": "Будь ласка, введіть дані вашого акаунту ParksnPeaks:"
+      },
+      "usernameLabel": "Ім'я користувача (не позивний)",
+      "usernamePlaceholder": "ім'я користувача вашого акаунту",
+      "apiKeyLabel": "API ключ (не пароль)",
+      "apiKeyPlaceholder": "ваш API ключ"
+    },
+    "pga": {
+      "name": "Польська нагорода гмін",
+      "shortName": "PGA",
+      "exportName": "Активація PGA",
+      "activityOptions": {
+        "title_zero": "Жодну гміну не вибрано для активації",
+        "title_one": "Активується 1 гміна",
+        "title_other": "Активується {{count}} гміни",
+        "noGminasFound": "Гмін не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} відповідностей",
+        "matchingGminas_zero": "Відповідних гмін немає",
+        "matchingGminas_one": "Знайдено 1 відповідну гміну",
+        "matchingGminas_other": "{{count}} відповідні гміни",
+        "searchForGminas": "Пошукайте гміни для активації!",
+        "noGminasNearby": "Поблизу немає гмін",
+        "nearbyGminas": "Гміни поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownGmina": "Невідома гміна"
+      }
+    },
+    "pota": {
+      "name": "POTA: Парки на повітрі",
+      "shortName": "POTA",
+      "exportName": "Активація POTA",
+      "activityOptions": {
+        "title_zero": "Жодного парку не вибрано для активації",
+        "title_one": "Активується 1 парк",
+        "title_other": "Активується {{count}} парків",
+        "noParksFound": "Парки не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} збігів",
+        "matchingParks_zero": "Немає відповідних парків",
+        "matchingParks_one": "1 відповідний парк",
+        "matchingParks_other": "{{count}} відповідних парків",
+        "searchForParks": "Шукайте парки, щоб активувати!",
+        "noParksNearby": "Немає парків поблизу",
+        "nearbyParks": "Парки поблизу",
+        "searchPlaceholder": "Ім'я або посилання…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Немає P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Не полюється парків",
+        "huntedRefsCount_one": "1 парк у полюванні",
+        "huntedRefsCount_other": "{{fmtCount}} парків у полюванні",
+        "activatorQSOsCount_zero": "Нема активаторних QSO",
+        "activatorQSOsCount_one": "1 активаторне QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторних QSO",
+        "ref2refQSOsCount_zero": "Нема P2P QSO",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO",
+        "huntedQSOsCount_zero": "Не полюється на QSO",
+        "huntedQSOsCount_one": "1 QSO у полюванні",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO у полюванні",
+        "operationTotals": "Операційні підсумки",
+        "referencesActivatedCount_zero": "Не активовано парків",
+        "referencesActivatedCount_one": "1 парк активовано",
+        "referencesActivatedCount_other": "{{fmtCount}} парків активовано",
+        "referencesMissedCount_zero": "Не завершено парків",
+        "referencesMissedCount_one": "1 незавершений парк",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених парки",
+        "referencesHuntedCount_zero": "Не полюється парків",
+        "referencesHuntedCount_one": "1 парк у полюванні",
+        "referencesHuntedCount_other": "{{fmtCount}} парків у полюванні"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній POTA"
+      },
+      "postSpotAPI": {
+        "error": "Помилка публікації POTA місця",
+        "serverResponse": "Сервер відповів з помилкою {{status}}: {{body}}"
+      },
+      "exampleRefName": "Приклад Національного Парку",
+      "unknownRefName": "Невідомий Парк",
+      "noRefsNearby": "Немає парків поруч!"
+    },
+    "qrz": {
+      "name": "Запити позивних QRZ.com",
+      "description": "Потрібен безкоштовний акаунт для імен, а платний акаунт для місцеположень"
+    },
+    "sats": {
+      "name": "Операції з супутниками"
+    },
+    "siota": {
+      "name": "SiOTA: Силосні башти в ефірі",
+      "shortName": "SIOTA",
+      "exportName": "Активація SIOTA",
+      "account": {
+        "title": "ParksnPeaks (виявлення SiOTA)",
+        "dialogTitle": "Обліковий запис ParksnPeaks",
+        "description": "Акаунт: {{username}}",
+        "noAccount": "Немає облікового запису",
+        "pleaseEnterDetails": "Введіть дані для вашого облікового запису ParksnPeaks:",
+        "usernameLabel": "Ім'я користувача (не позивний)",
+        "usernamePlaceholder": "ім'я користувача вашого облікового запису",
+        "apiKeyLabel": "Ключ API (не пароль)",
+        "apiKeyPlaceholder": "ваш API ключ"
+      },
+      "activityOptions": {
+        "title_zero": "Немає силосів, обраних для активації",
+        "title_one": "Активація 1 силосу",
+        "title_other": "Активація {{count}} силосів",
+        "noSilosFound": "Силоси не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} збігів",
+        "matchingSilos_zero": "Немає відповідних силосів",
+        "matchingSilos_one": "1 відповідний силос",
+        "matchingSilos_other": "{{count}} відповідних силосів",
+        "searchForSilos": "Шукайте силоси, щоб активувати!",
+        "noSilosNearby": "Немає силосів поблизу",
+        "nearbySilos": "Силоси поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownSilo": "Невідомий силос"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній Силос"
+      },
+      "postSpotAPI": {
+        "error": "Помилка публікації SiOTA місця",
+        "serverResponse": "Сервер відповів з помилкою {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "name": "SOTA: Вершини в ефірі",
+      "account": {
+        "title": "SOTA (для само-споттінгу SOTAWatch)",
+        "dialogTitle": "Обліковий запис SOTA",
+        "description": "Акаунт: {{callsign}}",
+        "noAccount": "Немає облікового запису",
+        "error": "Помилка отримання даних облікового запису",
+        "connect": "Під'єднайте свій аккаунт SOTA"
+      },
+      "notLoggedInAlertTitle": "Попередження",
+      "notLoggedInAlertText": "Не увійшли в SOTAWatch для самостійного розміщення. Будь ласка, зайдіть у налаштування PoLo",
+      "activityOptions": {
+        "title_zero": "Немає вершин, обраних для активації",
+        "title_one": "Активація 1 вершини",
+        "title_other": "Активація {{count}} вершин",
+        "noSummitsFound": "Вершини не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} збігів",
+        "matchingSummits_zero": "Немає відповідних вершин",
+        "matchingSummits_one": "1 відповідна вершина",
+        "matchingSummits_other": "{{count}} відповідних вершин",
+        "searchForSummits": "Шукайте вершини, щоб активувати!",
+        "noSummitsNearby": "Немає вершин поблизу",
+        "nearbySummits": "Вершини поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownSummit": "Невідома вершина"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Немає S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Не полюється на вершини",
+        "huntedRefsCount_one": "1 вершина у полюванні",
+        "huntedRefsCount_other": "{{fmtCount}} вершини у полюванні",
+        "activatorQSOsCount_zero": "Нема активаторних QSO",
+        "activatorQSOsCount_one": "1 активаторне QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторних QSO",
+        "ref2refQSOsCount_zero": "Нема S2S QSO",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSO",
+        "huntedQSOsCount_zero": "Не полюється на QSO",
+        "huntedQSOsCount_one": "1 QSO у полюванні",
+        "huntedQSOsCount_other": "{{fmtCount}} QSO у полюванні",
+        "operationTotals": "Операційні підсумки",
+        "referencesActivatedCount_zero": "Не активовано вершин",
+        "referencesActivatedCount_one": "1 вершина активовано",
+        "referencesActivatedCount_other": "{{fmtCount}} вершини активовано",
+        "referencesMissedCount_zero": "Не завершено вершин",
+        "referencesMissedCount_one": "1 незавершена вершина",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених вершини",
+        "referencesHuntedCount_zero": "Не полюється на вершини",
+        "referencesHuntedCount_one": "1 вершина у полюванні",
+        "referencesHuntedCount_other": "{{fmtCount}} вершини у полюванні"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Помилка публікації SOTA місця",
+        "serverResponse": "Сервер відповів зі статусом {{status}} {{message}}",
+        "sotaAccountLoggedOut": "Обліковий запис SOTA вилогінено. Будь ласка, увійдіть знову в налаштуваннях PoLo"
+      },
+      "exampleRefName": "Приклад Вершини",
+      "unknownRefName": "Невідома Вершина",
+      "noRefsNearby": "Немає вершин поруч!"
+    },
+    "tota": {
+      "name": "TOTA: Вежі в ефірі",
+      "activityOptions": {
+        "title_zero": "Не вибрано веж для активації",
+        "title_one": "Активація 1 вежі",
+        "title_other": "Активація {{count}} веж",
+        "noTowersFound": "Вежі не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} співпадінь",
+        "matchingTowers_zero": "Немає відповідних веж",
+        "matchingTowers_one": "1 відповідна вежа",
+        "matchingTowers_other": "{{count}} відповідних веж",
+        "searchForTowers": "Шукайте вежі для активації!",
+        "noTowersNearby": "Немає веж поруч",
+        "nearbyTowers": "Найближчі вежі",
+        "searchPlaceholder": "Назва або посилання...",
+        "unknownTower": "Невідома вежа"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Немає R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Жодної вежі не знайдено",
+        "huntedRefsCount_one": "1 вежу знайдено",
+        "huntedRefsCount_other": "{{fmtCount}} веж знайдено",
+        "activatorQSOsCount_zero": "Немає активатора QSOs",
+        "activatorQSOsCount_one": "1 активатор QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активатор QSOs",
+        "ref2refQSOsCount_zero": "Немає R2R QSOs",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "Не знайдено QSOs для пошуку",
+        "huntedQSOsCount_one": "1 пошук QSOs",
+        "huntedQSOsCount_other": "{{fmtCount}} пошуків QSOs",
+        "operationTotals": "Загальні показники операцій",
+        "referencesActivatedCount_zero": "Немає активованих веж",
+        "referencesActivatedCount_one": "1 активована вежа",
+        "referencesActivatedCount_other": "{{fmtCount}} активованих веж",
+        "referencesMissedCount_zero": "Жодної незавершеної вежі",
+        "referencesMissedCount_one": "1 незавершена вежа",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених веж",
+        "referencesHuntedCount_zero": "Жодної вежі не знайдено",
+        "referencesHuntedCount_one": "1 вежу знайдено",
+        "referencesHuntedCount_other": "{{fmtCount}} веж знайдено"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхня Вежа"
+      },
+      "exampleRefName": "Приклад Вежі",
+      "unknownRefName": "Невідома Вежа",
+      "noRefsNearby": "Немає веж поруч!",
+      "postSpotAPI": {
+        "error": "Помилка при відправці TOTA спот",
+        "serverResponse": "Сервер відповів зі статусом {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Немає штатів США",
+      "statesCount_one": "1 штат США",
+      "statesCount_other": "{{count}} штати США"
+    },
+    "wab": {
+      "name": "Виконано Все Британія/Ірландія",
+      "description": "Додати квадрат WAB/WAI до операції",
+      "workedAllBritainSquare": "Виконано квадрат всій Британії",
+      "workedAllIrelandSquare": "Виконано квадрат всій Ірландії",
+      "enterSquare": "Введіть квадрат",
+      "placeholderBritain": "наприклад, SU14",
+      "placeholderIreland": "наприклад, N93",
+      "currentSquare": "Поточний квадрат:",
+      "noSquareSet": "Квадрат не встановлено"
+    },
+    "wca": {
+      "name": "WCA: Нагороди за замки світу",
+      "shortName": "СЗЗ",
+      "exportName": "Активація СЗЗ",
+      "activityOptions": {
+        "title_zero": "Не вибрано замків для активації",
+        "title_one": "Активація 1 замок",
+        "title_other": "Активація {{count}} замків",
+        "noCastlesFound": "Замки не знайдено",
+        "nearestMatches": "Найближчі {{limit}} із {{count}} відповідників",
+        "matchingCastles_zero": "Відповідних замків не знайдено",
+        "matchingCastles_one": "1 відповідний замок",
+        "matchingCastles_other": "{{count}} відповідних замків",
+        "searchForCastles": "Знайдіть деякі замки для активації!",
+        "noCastlesNearby": "Поруч замків немає",
+        "nearbyCastles": "Замки поруч",
+        "searchPlaceholder": "Ім'я або посилання…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Замків не вистежено",
+        "huntedRefsCount_one": "1 замок вистежено",
+        "huntedRefsCount_other": "{{fmtCount}} замків вистежено",
+        "activatorQSOsCount_zero": "Немає QSOs активатора",
+        "activatorQSOsCount_one": "1 QSO активатора",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs активатора",
+        "huntedQSOsCount_zero": "Немає QSOs вистеження",
+        "huntedQSOsCount_one": "1 QSO вистеження",
+        "huntedQSOsCount_other": "{{fmtCount}} QSOs вистеження",
+        "operationTotals": "Підсумки Операцій",
+        "referencesActivatedCount_zero": "Замки не активовано",
+        "referencesActivatedCount_one": "1 замок активовано",
+        "referencesActivatedCount_other": "{{fmtCount}} замків активовано",
+        "referencesMissedCount_zero": "Немає незавершених замків",
+        "referencesMissedCount_one": "1 незавершений замок",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених замків",
+        "referencesHuntedCount_zero": "Замків не вистежено",
+        "referencesHuntedCount_one": "1 замок вистежено",
+        "referencesHuntedCount_other": "{{fmtCount}} замків вистежено"
+      },
+      "exampleRefName": "Приклад Замку",
+      "unknownRefName": "Невідомий Замок",
+      "noRefsNearby": "Замків поруч немає!"
+    },
+    "wfd": {
+      "name": "Зимовий день на полі (Winter Field Day)",
+      "shortName": "WFD",
+      "exportName": "Активація WFD",
+      "activityOptions": {
+        "exchangeInformation": "Обмін інформацією",
+        "classLabel": "Клас",
+        "locationLabel": "Місцезнаходження",
+        "objectives_zero": "Мета не досягнута",
+        "objectives_one": "1 мета досягнута, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} мети досягнуто, OM ×{{multiplier}}",
+        "objectivesTitle": "Мети: {{count}} досягнуто, OM ×{{multiplier}}",
+        "objectivesDescription": "Не забувайте також повідомляти про ці цілі при поданні свого журналу!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Альтернативна енергія",
+        "awayFromHome": "Працюйте поза домом",
+        "fmSatelliteContact": "Контакт за допомогою супутника на УКХ (FM Satellite Contact)",
+        "ssbSatelliteContact": "Контакт за допомогою супутника з SSB або CW (SSB or CW Satellite Contact)",
+        "winlinkEmails": "Електронна пошта Winlink (Winlink Emails)",
+        "specialBulletin": "Спеціальний бюлетень (Special Bulletin)",
+        "sixBands": "Шість діапазонів (Six Bands)",
+        "twelveBands": "Дванадцять діапазонів (Twelve Bands)",
+        "multipleModes": "Різноманітні моди (Multiple Modes)",
+        "qrpOperation": "Операція QRP (QRP Operation)",
+        "sixContinuousHours": "Шість безперервних годин (Six Continuous Hours)"
+      },
+      "objectiveDescription": {
+        "altPower": "Використовуйте 100% альтернативну енергію, таку як батареї, сонячні панелі, вітер і т. д.",
+        "awayFromHome": "Розташуйте свою польову станцію на відстані не менше півмилі від дому.",
+        "fmSatelliteContact": "Зробіть принаймні один контакт на УКХ супутнику під час операційного періоду.",
+        "ssbSatelliteContact": "Здійсніть принаймні один контакт за допомогою SSB або CW.",
+        "winlinkEmails": "Надіслати та отримати щонайменше одне електронне повідомлення за допомогою Winlink через RF.",
+        "specialBulletin": "Точно скопіюйте повідомлення спеціального бюлетеня WFD та надішліть копію разом із журналом.",
+        "sixBands": "Виконайте принаймні три контакти на кожному з мінімум шести різних діапазонів.",
+        "twelveBands": "Виконайте принаймні три контакти на кожному з мінімум дванадцяти різних діапазонів.",
+        "multipleModes": "Використовуйте різноманітні моди під час операційного періоду.",
+        "qrpOperation": "Працюйте на рівнях потужності QRP (10Вт або менше на телефоні, 5Вт або менше на CW або цифрових)",
+        "sixContinuousHours": "Працюйте принаймні шість безперервних годин під час операційного періоду."
+      },
+      "information-md": "Клас для Winter Field Day — це, наприклад, `2M`:\n\n - `1`, `2`, `3`... для кількості передавачів.\n - `H` для домашньої станції\n - `I` для приміщення\n - `O` для відкритої місцевості\n - `M` для мобільної або стаціонарної мобільної станції\n\nЛокація — це ARRL Division, RAC Division, `MX` для Мексики або `DX` для будь-якого іншого місця.\n\nБільше інформації у **[офіційних правилах](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Всесвітня нагорода Бункерів (World Wide Bunker Awards)",
+      "shortName": "WWBOTA",
+      "exportName": "Активація WWBOTA",
+      "activityOptions": {
+        "title_zero": "Немає бункерів, обраних для активації",
+        "title_one": "Активація 1 бункера",
+        "title_other": "Активація {{count}} бункерів",
+        "noBunkersFound": "Бункери не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} збігів",
+        "matchingBunkers_zero": "Немає відповідних бункерів",
+        "matchingBunkers_one": "1 відповідний бункер",
+        "matchingBunkers_other": "{{count}} відповідних бункерів",
+        "searchForBunkers": "Шукайте бункери, щоб активувати!",
+        "noBunkersNearby": "Немає бункерів поблизу",
+        "nearbyBunkers": "Бункери поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownBunker": "Невідомий бункер"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їхній Бункер"
+      },
+      "postSpotAPI": {
+        "error": "Помилка публікації WWBOTA місця",
+        "serverResponse": "Сервер відповів зі статусом {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Світова флора й фауна (World Wide Flora & Fauna)",
+      "shortName": "WWFF",
+      "exportName": "Активація WWFF",
+      "activityOptions": {
+        "title_zero": "Немає парків, обраних для активації",
+        "title_one": "Активація 1 парку",
+        "title_other": "Активація {{count}} парків",
+        "noParksFound": "Парки не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} збігів",
+        "matchingParks_zero": "Немає відповідних парків",
+        "matchingParks_one": "1 відповідний парк",
+        "matchingParks_other": "{{count}} відповідних парків",
+        "searchForParks": "Шукайте парки, щоб активувати!",
+        "noParksNearby": "Немає парків поблизу",
+        "nearbyParks": "Парки поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownPark": "Невідомий парк"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Немає P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Не полюється на парки",
+        "huntedRefsCount_one": "1 парк у полюванні",
+        "huntedRefsCount_other": "{{fmtCount}} парки у полюванні",
+        "activatorQSOsCount_zero": "Нема активаторних QSO",
+        "activatorQSOsCount_one": "1 активаторне QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторних QSO",
+        "ref2refQSOsCount_zero": "Немає P2P QSO",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO",
+        "huntedQSOsCount_zero": "Немає відловлених QSO",
+        "huntedQSOsCount_one": "1 відловлене QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} відловлених QSO",
+        "operationTotals": "Підсумки операцій",
+        "referencesActivatedCount_zero": "Не активовано жодного парку",
+        "referencesActivatedCount_one": "1 активований парк",
+        "referencesActivatedCount_other": "{{fmtCount}} активованих парків",
+        "referencesMissedCount_zero": "Жоден парк не завершено",
+        "referencesMissedCount_one": "1 незавершений парк",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених парків",
+        "referencesHuntedCount_zero": "Жоден парк не відловлено",
+        "referencesHuntedCount_one": "1 відловлений парк",
+        "referencesHuntedCount_other": "{{fmtCount}} відловлених парків"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їх WWFF"
+      },
+      "exampleRefName": "Приклад парку",
+      "unknownRefName": "Невідомий парк",
+      "noRefsNearby": "Немає парків поруч!",
+      "postSpotAPI": {
+        "error": "Помилка публікації WWFF місця",
+        "serverResponse": "Сервер відповів зі статусом {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "name": "ZLOTA: ZL в ефірі",
+      "account": {
+        "title": "ZLOTA: Виявлення ZLOTA (ZLOTA spotting)",
+        "dialogTitle": "Обліковий запис ZLOTA",
+        "description": "Акаунт: {{callsign}}",
+        "noAccount": "Немає облікового запису",
+        "pleaseEnterDetails": "Введіть дані для вашого облікового запису ZLOTA:",
+        "callsignLabel": "Позивний",
+        "callsignPlaceholder": "ваш позивний облікового запису",
+        "pinLabel": "PIN код (не пароль)",
+        "pinPlaceholder": "ваш PIN"
+      },
+      "activityOptions": {
+        "title_zero": "Немає посилань, обраних для активації",
+        "title_one": "Активація 1 посилання",
+        "title_other": "Активація {{count}} посилань",
+        "noReferencesFound": "Посилань не знайдено",
+        "nearestMatches": "Найближчі {{limit}} з {{count}} збігів",
+        "matchingReferences_zero": "Немає відповідних посилань",
+        "matchingReferences_one": "1 відповідне посилання",
+        "matchingReferences_other": "{{count}} відповідних посилань",
+        "searchForReferences": "Шукайте посилання, щоб активувати!",
+        "noReferencesNearby": "Немає посилань поблизу",
+        "nearbyReferences": "Посилання поблизу",
+        "searchPlaceholder": "Ім'я або посилання…",
+        "unknownReference": "Невідоме посилання"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Їх Посилання"
+      },
+      "postSpotAPI": {
+        "error": "Помилка публікації ZLOTA місця",
+        "serverResponse": "Сервер відповів зі статусом {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "Немає дублікатів",
+        "dupesCount_one": "1 дублікат",
+        "dupesCount_other": "{{fmtCount}} дублікатів",
+        "ref2refCount_zero": "Немає Ref2Ref",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Ref",
+        "huntedRefsCount_zero": "Жодних відловлених посилань",
+        "huntedRefsCount_one": "1 відловлене посилання",
+        "huntedRefsCount_other": "{{fmtCount}} відловлених посилань",
+        "activatorQSOsCount_zero": "Немає активаторських QSO",
+        "activatorQSOsCount_one": "1 активаторське QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторських QSO",
+        "ref2refQSOsCount_zero": "Немає Ref2Ref QSO",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSO",
+        "huntedQSOsCount_zero": "Немає відловлених QSO",
+        "huntedQSOsCount_one": "1 відловлене QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} відловлених QSO",
+        "operationTotals": "Оперативні підсумки",
+        "referencesActivatedCount_zero": "Жодне посилання не активовано",
+        "referencesActivatedCount_one": "1 активоване посилання",
+        "referencesActivatedCount_other": "{{fmtCount}} активованих посилань",
+        "referencesMissedCount_zero": "Жодне незавершене посилання",
+        "referencesMissedCount_one": "1 незавершене посилання",
+        "referencesMissedCount_other": "{{fmtCount}} незавершених посилань",
+        "referencesHuntedCount_zero": "Жодних відловлених посилань",
+        "referencesHuntedCount_one": "1 відловлене посилання",
+        "referencesHuntedCount_other": "{{fmtCount}} відловлених посилань"
+      }
+    }
+  }
+}

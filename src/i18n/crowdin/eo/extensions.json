@@ -1,0 +1,996 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Neniu Grupo",
+      "bandsCount_one": "1 Grupo",
+      "bandsCount_other": "{{count}} Grupoj",
+      "modesCount_zero": "Neniu Modaĵo",
+      "modesCount_one": "1 Modaĵo",
+      "modesCount_other": "{{count}} Modaĵoj",
+      "total": "Entute {{count}}"
+    },
+    "bca": {
+      "name": "BCA: Belga Kasteloj & Fortikaĵoj",
+      "shortName": "BKA",
+      "exportName": "BKA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj kasteloj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 kastelon",
+        "title_other": "Aktivigante {{count}} kastelojn",
+        "noCastlesFound": "Neniuj kasteloj trovitaj",
+        "nearestMatches": "Plej proksimaj {{limit}} el {{count}} kongruoj",
+        "matchingCastles_zero": "Neniuj kongruaj kasteloj",
+        "matchingCastles_one": "1 kongrua kastelo",
+        "matchingCastles_other": "{{count}} kongruaj kasteloj",
+        "searchForCastles": "Serĉu kelkajn kastelojn por aktivigi!",
+        "noCastlesNearby": "Neniuj kasteloj apudaj",
+        "nearbyCastles": "Apudaj kasteloj",
+        "searchPlaceholder": "Nomo aŭ referenco…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Neniuj kasteloj ĉasitaj",
+        "huntedRefsCount_one": "1 kastelo ĉasita",
+        "huntedRefsCount_other": "{{fmtCount}} kasteloj ĉasitaj",
+        "activatorQSOsCount_zero": "Neniuj aktivigaj QSOj",
+        "activatorQSOsCount_one": "1 aktiviga QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivigaj QSOj",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSOj",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSOj",
+        "operationTotals": "Operaciaj Sumoj",
+        "referencesActivatedCount_zero": "Neniuj kasteloj aktivigitaj",
+        "referencesActivatedCount_one": "1 kastelo aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} kasteloj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj kasteloj",
+        "referencesMissedCount_one": "1 nekompleta kastelo",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj kasteloj",
+        "referencesHuntedCount_zero": "Neniuj kasteloj ĉasitaj",
+        "referencesHuntedCount_one": "1 kastelo ĉasita",
+        "referencesHuntedCount_other": "{{fmtCount}} kasteloj ĉasitaj"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia BCA"
+      }
+    },
+    "blha": {
+      "name": "BLHA: Belga Lumturoj kaj Lumŝipoj",
+      "shortName": "BLHA",
+      "exportName": "BLHA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj lumturoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 lumturon",
+        "title_other": "Aktivigante {{count}} lumturojn",
+        "noLighthousesFound": "Neniuj lumturoj trovitaj",
+        "nearestMatches": "Plej proksimaj {{limit}} el {{count}} kongruoj",
+        "matchingLighthouses_zero": "Neniuj kongruaj lumturoj",
+        "matchingLighthouses_one": "1 kongrua lumturo",
+        "matchingLighthouses_other": "{{count}} kongruaj lumturoj",
+        "searchForLighthouses": "Serĉu kelkajn lumturojn por aktivigi!",
+        "noLighthousesNearby": "Neniuj lumturoj apudaj",
+        "nearbyLighthouses": "Apudaj lumturoj",
+        "searchPlaceholder": "Nomo aŭ referenco…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Neniuj lumturoj ĉasitaj",
+        "huntedRefsCount_one": "1 lumturo ĉasita",
+        "huntedRefsCount_other": "{{fmtCount}} lumturoj ĉasitaj",
+        "activatorQSOsCount_zero": "Neniuj aktivigaj QSOj",
+        "activatorQSOsCount_one": "1 aktiviga QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivigaj QSOj",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSOj",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSOj",
+        "operationTotals": "Operaciaj Sumoj",
+        "referencesActivatedCount_zero": "Neniuj lumturoj aktivigitaj",
+        "referencesActivatedCount_one": "1 lumturo aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} lumturoj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj lumturoj",
+        "referencesMissedCount_one": "1 nekompleta lumturo",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj lumturoj",
+        "referencesHuntedCount_zero": "Neniuj lumturoj ĉasitaj",
+        "referencesHuntedCount_one": "1 lumturo ĉasita",
+        "referencesHuntedCount_other": "{{fmtCount}} lumturoj ĉasitaj"
+      }
+    },
+    "call-history": {
+      "name": "Vokhistorio",
+      "description": "Alŝutu la historiajn ADIF kaj uzu por senretaj serĉadoj"
+    },
+    "call-notes": {
+      "name": "Alvokka Notot",
+      "description": "Konservu alvok-signonotojn en dosiero kaj uzu por senretaj esploroj",
+      "description-md_zero": "Neniuj notoj ŝarĝitaj.",
+      "description-md_one": "{{fmtCount}} {{type}} ŝarĝitaj.",
+      "description-md_other": "{{fmtCount}} {{type}} ŝarĝitaj.",
+      "builtIn": "Enkonstruitaj notoj",
+      "userDefined": "Uzantaj notoj",
+      "failedToLoad": "Malsukcesis ŝarĝi!",
+      "notesFile": "Alvokka Nototeksiero",
+      "nameLabel": "Nomo",
+      "namePlaceholder": "Nomo por via Alvokka Nototeksiero",
+      "locationLabel": "Loko",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Enkonstruita",
+      "customTitle": "Propra",
+      "addFile": "Aldonu novan dosieron",
+      "aboutTitle": "Pri Alvokka Notot",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K's Hams de Noto"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Vere inda ekzemplo de kiu estas kiu kaj kiu ne estas en la mondo de radio"
+      },
+      "help-md": "Alvokka notot estas konservitaj sur simplaj teksdosieroj, unu alvoko por linio sekvante ĝin per informoj, kiujn vi volas montri en la registri ekranon. Vi povas uzi la enkonstruitajn dosierojn aŭ aldoni la viajn.\n\nProvizu rektan ligilon al simpla teksdosiero, aŭ \"kundividan ligilon\" de servo kiel:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nLinioj en tiu dosiero devas aspekti tiel kaj povas subteni bazan markadon:\n\n```nK2HRC 🎉 Ham2K Radiklub!!!\nKE8PZN 👑 James POTA Reĝo\nWD4DAN Dan POTA _Reĝeco_\nDAN WD4DAN,WD4JMM\n```\n\nSe la eniro komenciĝas per emoji, ĝi estos uzita anstataŭ la defaŭlta ⭐.\n\nEniroj povas esti uzataj por \"alvokkodo ekspansio\" se vi unue tajpas `..` aŭ ` //` en la alvokkodo kampo, kiel `//DAN` en la ekzemplo supre."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Neniu Kanada Regiono",
+      "provincesCount_one": "1 Kanada Regiono",
+      "provincesCount_other": "{{count}} Kanadiaj Regionoj"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Agordoj",
+        "year": "Jaro",
+        "testMode-md": "Ĉar la evento por ĉi tiu jaro ankoraŭ ne komenciĝis, vi povas testi vian operacion kun QSOs el la lastaj sep tagoj.",
+        "note-md": "Noto: PoLo raportos viajn rezultojn uzante ĉiujn QSOs en la data gamo, inkluzive iujn ajn aliajn operaciojn ĉeestantajn sur ĉi tiu aparato.",
+        "info-md": "La 13 Kolonioj Speciala Evento kuras ĉiun jaron de la 1-a de julio je 9a horo ET ĝis noktomezo ET je la 7a de julio."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Retrovante nuntempan veteron…",
+      "errorFetchingWeather": "Problemo pri retrovo de vetero",
+      "fetchingSolarWeather": "Retrovante sun-veteron…",
+      "errorFetchingSolarWeather": "Problemo pri retrovo de sun-vetero",
+      "addNote": "Aldoni noton: ‘{{note}}’…",
+      "addNotePrompt": "Aldoni noton? daŭrigu tajpante…",
+      "addNoteConfirm": "Noto aldonita!",
+      "addTodo": "Aldoni taskon: ‘{{note}}’…",
+      "addTodoPrompt": "Aldoni taskon? daŭrigu tajpante…",
+      "addTodoConfirm": "Tasko aldonita!",
+      "sendChat": "Sendi babilon: ‘{{note}}’…",
+      "sendChatPrompt": "Sendi babilon? daŭrigu tajpante…",
+      "sendChatConfirm": "Babilita!"
+    },
+    "commands-debug": {
+      "syncall": "Forigi ĉiujn operaciojn kaj reseti sinkronigitan staton?",
+      "syncallConfirm": "Forigante datumojn kaj resinkronigante ĉiujn…",
+      "syncup": "Resendi lokajn datumojn al sinkroniga servo?",
+      "syncupConfirm": "Resendante…",
+      "wipedb": "Forigi tutan datumbazon (sed konservi agordojn)?",
+      "wipedbConfirm": "Forigante Datumbazon…",
+      "factory": "Forigi ĉiujn datumojn kaj agordojn?",
+      "factoryConfirm": "Fabrika Restaro en progreso…",
+      "switchLanguage": "Ŝanĝi lingvon al `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Lingvo `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Ŝanĝante al `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Aktivigi programistreĝimon?",
+      "activateConfirm": "Programistreĝimo aktivigita!",
+      "deactivate": "Malaktivigi programistreĝimon?",
+      "deactivateConfirm": "Programistreĝimo malaktivigita!",
+      "on": "Programistreĝimo: EN!!!",
+      "off": "Programistreĝimo: EL"
+    },
+    "commands-misc": {
+      "rtfm": "Legi la detalan manlibron?",
+      "rtfmConfirm": "Malfermante la detalan manlibron",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Ne povas mem-fari ĉeesto sen frekvenco",
+        "selfSpotWithComments": "Mem-fari ĉeeston kun ‘{{comments}}’?",
+        "selfSpotPrompt": "Mem-fari ĉeeston?",
+        "selfSpottingWithComments": "Mem-faranta ĉeeston ĉe {{freq}} kun ‘{{comments}}’",
+        "selfSpotting": "Mem-faranta ĉeeston ĉe {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Komenci la operacion?",
+      "startConfirm": "Operacio komencita!",
+      "break": "Aldoni paŭzon?",
+      "breakConfirm": "Aldonita operacia paŭzo!",
+      "roverqth": "Ĉu aldoni paŭzon kaj agordi novan lokon?",
+      "roverqthConfirm": "Paŭzo aldonita; nun agordu vian novan lokon",
+      "stop": "Ĉesi la operacion?",
+      "stopConfirm": "Operacio ĉesigita!"
+    },
+    "commands-operator": {
+      "change": "Ŝanĝi operaciiston al {{operator}}?",
+      "changeConfirm": "Operaciisto agordita al {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Ŝanĝi bandon al {{band}}?",
+      "bandConfirm": "Bando agordita al {{band}}",
+      "frequency": "Ŝanĝi frekvencon al {{freq}} MHz?",
+      "frequencyConfirm": "Frekvenco agordita al {{freq}} MHz",
+      "frequencyAndMode": "Ŝanĝi frekvencon al {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Frekvenco agordita al {{freq}} MHz ({{mode}})",
+      "power": "Ŝanĝi povon al {{power}} W?",
+      "powerConfirm": "Povo agordita al {{power}} W",
+      "mode": "Ŝanĝi reĝimon al {{mode}}?",
+      "modeConfirm": "Reĝimo agordita al {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Agordante {{name}}?",
+      "setChange": "Ŝanĝi {{label}} al {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} agordita al {{value}}",
+      "setNotChanged": "Ne ŝanĝita"
+    },
+    "commands-time": {
+      "setTime": "Agordi tempon al {{time}}?",
+      "setDate": "Agordi daton al {{date}}?",
+      "timeSet": "Tempo agordita al {{time}}",
+      "dateSet": "Dato agordita al {{date}}",
+      "changeTimeByHours": "Ŝanĝi tempon per {{delta}} horoj?",
+      "changeTimeByMinutes": "Ŝanĝi tempon per {{delta}} minutoj?",
+      "changeTimeBySeconds": "Ŝanĝi tempon per {{delta}} sekundoj?",
+      "changeTimeByDays": "Ŝanĝi tempon per {{delta}} tagoj?",
+      "changeTimeByWeeks": "Ŝanĝi tempon per {{delta}} semajnoj?",
+      "changeTimeToNow": "Ŝanĝi tempon al nun?",
+      "changeTimeToToday": "Ŝanĝi tempon al hodiaŭ?",
+      "changeTimeToYesterday": "Ŝanĝi tempon al hieraŭ?",
+      "timeSetToNow": "Tempo agordita al nun",
+      "timeSetToToday": "Tempo agordita al hodiaŭ",
+      "timeSetToYesterday": "Tempo agordita al hieraŭ"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Neniuj referencoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 referencon",
+        "title_other": "Aktivigante {{count}} referencojn",
+        "addMoreReferences": "Aldonu pli da referencoj",
+        "addReference": "Aldonu referencon",
+        "activityLabel": "Aktiveco - MY_SIG en ADIF (Opcie)",
+        "activityPlaceholder": "ekz. COTA...",
+        "referenceLabel": "Referenco - MY_SIG_INFO en ADIF",
+        "referencePlaceholder": "ekz. XY-1234…",
+        "nameLabel": "Nomo (Opcie)",
+        "namePlaceholder": "ekz. XYZ Kastelo…",
+        "addButton": "Aldonu {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia Ref"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Superskribu specifajn datumtitolojn ĉi tie",
+        "pota-all-parks": "POTA: Ĉiuj Parkoj",
+        "sota-all-summits": "SOTA: Ĉiuj Pintoj"
+      },
+      "loading": {
+        "progress": "Ŝargitaj `{{processedLines}}` referencoj.\n\n`{{percent}}` • {{secondsLeft}} sekundoj restantaj.",
+        "downloadingRawData": "Elŝutante krudan datumon…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Neniu DXCC Ento",
+      "entitiesCount_one": "1 DXCC Ento",
+      "entitiesCount_other": "{{count}} DXCC Entoj"
+    },
+    "eca": {
+      "name": "ECA: Angle Kasteloj Premioj",
+      "shortName": "EKA",
+      "exportName": "EKA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj kasteloj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 kastelon",
+        "title_other": "Aktivigante {{count}} kastelojn",
+        "noCastlesFound": "Neniuj kasteloj trovitaj",
+        "nearestMatches": "Plej proksimaj {{limit}} el {{count}} kongruoj",
+        "matchingCastles_zero": "Neniuj kongruaj kasteloj",
+        "matchingCastles_one": "1 kongrua kastelo",
+        "matchingCastles_other": "{{count}} kongruaj kasteloj",
+        "searchForCastles": "Serĉu kelkajn kastelojn por aktivigi!",
+        "noCastlesNearby": "Neniuj kasteloj apudaj",
+        "nearbyCastles": "Apudaj kasteloj",
+        "searchPlaceholder": "Nomo aŭ referenco…"
+      }
+    },
+    "ela": {
+      "name": "ELA: Angle Lumturo Premioj",
+      "shortName": "ELA",
+      "exportName": "ELA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj lumturoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 lumturon",
+        "title_other": "Aktivigante {{count}} lumturojn",
+        "noLighthousesFound": "Neniuj lumturoj trovitaj",
+        "nearestMatches": "Plej proksimaj {{limit}} el {{count}} kongruoj",
+        "matchingLighthouses_zero": "Neniuj kongruaj lumturoj",
+        "matchingLighthouses_one": "1 kongrua lumturo",
+        "matchingLighthouses_other": "{{count}} kongruaj lumturoj",
+        "searchForLighthouses": "Serĉu kelkajn lumturojn por aktivigi!",
+        "noLighthousesNearby": "Neniuj lumturoj apudaj",
+        "nearbyLighthouses": "Apudaj lumturoj",
+        "searchPlaceholder": "Nomo aŭ referenco…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Ŝanĝa Informado",
+        "classLabel": "Klaso",
+        "locationLabel": "Loko",
+        "additionalInformation": "Aldona Informo",
+        "highestTransmitterPowerLabel": "Plej Alta Dissendila Potenco",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W aŭ malpli",
+        "qroOption": "QRO: 100W aŭ malpli",
+        "moreThan100WOption": "Pli ol 100W",
+        "powerSourceLabel": "Potenca Fonto",
+        "powerSourcePlaceholder": "Elektu potencon fonton",
+        "batteriesOption": "Baterioj, Sola, Vento",
+        "commercialPowerOption": "Komerci Potencon, Generatoro",
+        "bonusesTitle": "Bonusaj poentoj: {{count}} postulitaj, {{points}} poentoj",
+        "bonusesDescription": "Memoru ankaŭ raporti ĉi tiujn bonusajn poentojn kiam vi sendos vian protokolon!",
+        "bonusTitle": "{{title}} ({{points}} poentoj)",
+        "information-md": "Klaso por ARRL Kampo-tago estas, ekzemple `2A`:\n\n  - `1`, `2`, `3`… por la nombro de elsendiloj.\n  - `A` por Grupo (3 aŭ pli) Portebla Stacio\n  - `B` por Unu aŭ du-persona Portebla Stacio\n  - `C` por Poŝtelefono Stacio\n  - `D` por Hejma Stacio\n  - `E` por Hejma Stacio sur Kriz-Ŝparvojo\n  - `F` por Krizo-Operacia Centro\n\nLoko estas la ARRL Sekcio, RAC Sekcio, `MX` por Meksiko, aŭ `DX` por ie ajn alie.\n\nPli da informoj en la **[oficialaj reguloj](https://www.arrl.org/field-day-rules)**."
+      },
+      "bonusName": {
+        "transmitters": "Dissendiloj",
+        "emergencyPower": "100% kriz-elektro",
+        "mediaPublicity": "Amaskomunikila publikeco",
+        "publicLocation": "Publika loko",
+        "informationTable": "Publika informa tablo",
+        "messageToSM": "Mesaĝo al ARRL SM/SEC",
+        "ntsMessages": "Mesaĝotraktado",
+        "ntsMessagesCount": "Nombro de traktitaj mesaĝoj",
+        "satelliteQSO": "Satelita QSO",
+        "alternatePowerQSOs": "QSO-oj per alternativa elektro",
+        "w1awMessage": "W1AW Field Day-mesaĝo",
+        "electedOfficialVisit": "Vizito de elektita oficialulo",
+        "agencyOfficialVisit": "Vizito de oficialulo de servata agentejo",
+        "educationalActivity": "Eduka agado",
+        "youthElement": "Junulara elemento",
+        "safetyOfficer": "Sekureca oficisto",
+        "siteResponsibilities": "Respondecoj pri la loko",
+        "socialMedia": "Sociaj retoj",
+        "gotaQSOs": "QSO-oj de GOTA-stacio",
+        "gotaQSOsCount": "Nombro de GOTA-QSO-oj",
+        "gotaCoach": "GOTA-trejnisto",
+        "webSubmission": "Reta sendo"
+      },
+      "bonusDescription": {
+        "transmitters": "100 poentoj por dissendilo (maks. 20), ne kalkulante GOTA aŭ VHF.",
+        "emergencyPower": "100 poentoj por dissendilo (maks. 20) se ĉiuj kontaktoj uzas kriz-elektron.",
+        "mediaPublicity": "Akiru publikecon de lokaj amaskomunikiloj. Sendu kopion kun via aliĝo.",
+        "publicLocation": "Lokigu la operacion en publika loko kiel parko, lernejo aŭ komerca centro (nur Klaso A, B aŭ F).",
+        "informationTable": "Funkciigu publikan informan tablon ĉe la Field Day-loko (nur Klaso A, B aŭ F).",
+        "messageToSM": "Verku formalan mesaĝon al via ARRL Sekcia Administranto aŭ Sekcia Kriz-Kunordiganto.",
+        "ntsMessages": "10 poentoj por ĉiu NTS- aŭ ICS-213-mesaĝo (maks. 10) traktita dum la operacia periodo.",
+        "satelliteQSO": "Kompletigu almenaŭ unu QSO per amatora radiosatelito (nur Klaso A, B aŭ F).",
+        "alternatePowerQSOs": "Kompletigu almenaŭ unu QSO uzante alternativan elektroproduktadon, kiel sunan, ventan aŭ akvan (nur Klaso A, B, E aŭ F).",
+        "w1awMessage": "Precize kopiu la specialan Field Day-bultenon elsenditan de W1AW aŭ K6KPH.",
+        "electedOfficialVisit": "Gastigu viziton de invitita elektita registara oficialulo.",
+        "agencyOfficialVisit": "Gastigu viziton de invitita oficialulo de servata agentejo.",
+        "educationalActivity": "Faru formalan edukan agadon kun skribita lecionplano.",
+        "youthElement": "Inkluzivu junajn partoprenantojn en la operacio.",
+        "safetyOfficer": "Havu nomumitan Sekurecan Oficiston surloke (nur Klaso A).",
+        "siteResponsibilities": "Plenumu postulojn pri respondeco de la loko (Klasoj B, C, D, E kaj F).",
+        "socialMedia": "Reklamu vian Field Day-operacion en sociaj retoj.",
+        "gotaQSOs": "5 poentoj por ĉiu QSO kompletigita ĉe la GOTA-stacio.",
+        "gotaCoach": "Estas GOTA-trejnisto por helpi pri la funkciado de la GOTA-stacio.",
+        "webSubmission": "Sendu vian aliĝon uzante la retan aplikaĵon ĉe field-day.arrl.org."
+      }
+    },
+    "gma": {
+      "name": "GMA: Tutmonda Monta Agado",
+      "shortName": "GMA",
+      "exportName": "GMA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj pintoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 supron",
+        "title_other": "Aktivigante {{count}} supron",
+        "noSummitsFound": "Neniuj pintoj trovitaj",
+        "nearestMatches": "Plej proksimaj {{limit}} el {{count}} kongruoj",
+        "matchingSummits_zero": "Neniuj kongruaj pintoj",
+        "matchingSummits_one": "1 kongrua pinto",
+        "matchingSummits_other": "{{count}} kongruaj pintoj",
+        "searchForSummits": "Serĉu kelkajn pintojn por aktivigi!",
+        "noSummitsNearby": "Neniuj pintoj apudaj",
+        "nearbySummits": "Apudaj pintoj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownSummit": "Nekonata pinto"
+      }
+    },
+    "ham2k-lookup": {
+      "name": "Ham2K Serĉservo",
+      "description": "Senpaga servo, sed kovranta nur usonajn, kanadajn kaj germanajn voksignojn"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Alvoksignesploradoj",
+      "description": "Bezonas senpagan konton por esploradoj"
+    },
+    "llota": {
+      "name": "LLOTA: Lagoj kaj Lagunoj En La Aero",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniu lago elektita por aktivigo",
+        "title_one": "Aktivigante 1 lagon",
+        "title_other": "Aktivigante {{count}} lagojn",
+        "noLakesFound": "Neniuj lagoj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingRefs_zero": "Neniuj kongruaj lagoj",
+        "matchingRefs_one": "1 kongrua lago",
+        "matchingRefs_other": "{{count}} kongruaj lagoj",
+        "searchForRefs": "Serĉi kelkajn lagojn por aktivigi!",
+        "noRefsNearby": "Neniuj lagoj proksime",
+        "nearbyRefs": "Proksimaj lagoj",
+        "searchPlaceholder": "Nomo aŭ referenco…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Neniuj L2L",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ls",
+        "huntedRefsCount_zero": "Neniuj lagoj ĉasitaj",
+        "huntedRefsCount_one": "1 lago ĉasita",
+        "huntedRefsCount_other": "{{fmtCount}} lagoj ĉasitaj",
+        "activatorQSOsCount_zero": "Neniuj aktivigaj QSOs",
+        "activatorQSOsCount_one": "1 aktiviga QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivigaj QSOs",
+        "ref2refQSOsCount_zero": "Neniuj L2L QSOs",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSOs",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSOs",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSOs",
+        "operationTotals": "Totala Operacio",
+        "referencesActivatedCount_zero": "Neniuj lagoj aktivigitaj",
+        "referencesActivatedCount_one": "1 lago aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} lagoj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj lagoj",
+        "referencesMissedCount_one": "1 nekompleta lago",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj lagoj",
+        "referencesHuntedCount_zero": "Neniuj lagoj ĉasitaj",
+        "referencesHuntedCount_one": "1 lago ĉasita",
+        "referencesHuntedCount_other": "{{fmtCount}} lagoj ĉasitaj"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Eraro afiŝante LLOTA lokon",
+        "serverResponse": "Servilo respondis kun eraro {{status}}: {{body}}"
+      },
+      "exampleRefName": "Ekzempla Lago",
+      "unknownRefName": "Nekonata Lago",
+      "noRefsNearby": "Neniuj lagoj proksime!"
+    },
+    "mota": {
+      "name": "MOTA: Muelejoj en la Aero",
+      "shortName": "MOTA",
+      "exportName": "MOTA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj muelejoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 muelejon",
+        "title_other": "Aktivigante {{count}} muelejojn",
+        "noMillsFound": "Neniuj muelejoj trovitaj",
+        "nearestMatches": "Plej proksimaj {{limit}} el {{count}} kongruoj",
+        "matchingMills_zero": "Neniuj kongruaj muelejoj",
+        "matchingMills_one": "1 kongrua muelejo",
+        "matchingMills_other": "{{count}} kongruaj muelejoj",
+        "searchForMills": "Serĉu kelkajn muelejojn por aktivigi!",
+        "noMillsNearby": "Neniuj muelejoj apudaj",
+        "nearbyMills": "Apudaj muelejoj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownMill": "Nekonata muelejo"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia Muelejo"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Vidaado",
+      "description": "Uzata plejparte en VK kaj ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL vidaado)",
+        "dialogTitle": "ParksnPeaks Konto",
+        "description": "Konto: {{username}}",
+        "noAccount": "Neniu konto",
+        "pleaseEnterDetails": "Bonvolu enigi la detalojn por via ParksnPeaks konto:"
+      },
+      "usernameLabel": "Salutnomo (ne voksigno)",
+      "usernamePlaceholder": "via konto salutnomo",
+      "apiKeyLabel": "API Ŝlosilo (ne pasvorto)",
+      "apiKeyPlaceholder": "via API Ŝlosilo"
+    },
+    "pga": {
+      "name": "Pola Gmina Premio",
+      "shortName": "PGA",
+      "exportName": "PGA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj gminoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 gminon",
+        "title_other": "Aktivigante {{count}} gminojn",
+        "noGminasFound": "Neniuj gminoj trovitaj",
+        "nearestMatches": "Plej proksimaj {{limit}} el {{count}} kongruoj",
+        "matchingGminas_zero": "Neniuj kongruaj gminoj",
+        "matchingGminas_one": "1 kongrua gmino",
+        "matchingGminas_other": "{{count}} kongruaj gminoj",
+        "searchForGminas": "Serĉu kelkajn gminojn por aktivigi!",
+        "noGminasNearby": "Neniuj gminoj apudaj",
+        "nearbyGminas": "Apudaj gminoj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownGmina": "Nekonata gmino"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parkoj en la Aero",
+      "shortName": "POTA",
+      "exportName": "POTA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj parkoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 parkon",
+        "title_other": "Aktivigante {{count}} parkojn",
+        "noParksFound": "Neniuj parkoj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingParks_zero": "Neniuj kongruaj parkoj",
+        "matchingParks_one": "1 kongrua parko",
+        "matchingParks_other": "{{count}} kongruaj parkoj",
+        "searchForParks": "Serĉu iujn parkojn por aktivigi!",
+        "noParksNearby": "Neniuj parkoj proksime",
+        "nearbyParks": "Proksimaj parkoj",
+        "searchPlaceholder": "Nomo aŭ referenco…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Neniuj P2P-oj",
+        "ref2refCount_one": "1 P2P-o",
+        "ref2refCount_other": "{{fmtCount}} P2P-oj",
+        "huntedRefsCount_zero": "Neniuj parkegoĉasitaj",
+        "huntedRefsCount_one": "1 parkegkaŭto",
+        "huntedRefsCount_other": "{{fmtCount}} parkegkaŭtoj",
+        "activatorQSOsCount_zero": "Neniuj aktivigaj QSOj",
+        "activatorQSOsCount_one": "1 aktiviga QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivigaj QSOj",
+        "ref2refQSOsCount_zero": "Neniuj P2P QSOj",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOj",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSOj",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSOj",
+        "operationTotals": "Operaciaj Sumoj",
+        "referencesActivatedCount_zero": "Neniuj parkegkaŭtotaj",
+        "referencesActivatedCount_one": "1 parkegkaŭtono",
+        "referencesActivatedCount_other": "{{fmtCount}} parkegkaŭtonoj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj parkegkau\toj",
+        "referencesMissedCount_one": "1 nekompleta parkegkaŭto",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj parkegkaŭtoj",
+        "referencesHuntedCount_zero": "Neniuj parkegkaŭtoj ĉasitaj",
+        "referencesHuntedCount_one": "1 parkegkaŭto ĉasita",
+        "referencesHuntedCount_other": "{{fmtCount}} parkegkaŭtoj ĉasitaj"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia POTA"
+      },
+      "postSpotAPI": {
+        "error": "Eraro dum alŝutado de POTA punkto",
+        "serverResponse": "Servilo respondis kun eraro {{status}}: {{body}}"
+      },
+      "exampleRefName": "Ekzempla Nacia Parko",
+      "unknownRefName": "Nekonata Parko",
+      "noRefsNearby": "Neniuj parkegkaŭto proksime!"
+    },
+    "qrz": {
+      "name": "QRZ.com Alvoksignesploradoj",
+      "description": "Bezonas senpagan konton por nomoj, kaj pagatan konton por lokoj"
+    },
+    "sats": {
+      "name": "Satelitaj Operacioj"
+    },
+    "siota": {
+      "name": "SiOTA: Siloj en la Aero",
+      "shortName": "SIOTA",
+      "exportName": "SIOTA Aktivigo",
+      "account": {
+        "title": "ParksnPeaks (SiOTA lokigo)",
+        "dialogTitle": "ParksnPeaks Konto",
+        "description": "Konto: {{username}}",
+        "noAccount": "Neniu konto",
+        "pleaseEnterDetails": "Bonvolu enigi la detalojn por via ParksnPeaks konto:",
+        "usernameLabel": "Uzantnomo (ne vokosigno)",
+        "usernamePlaceholder": "via konta uzantnomo",
+        "apiKeyLabel": "API Ŝlosilo (ne pasvorto)",
+        "apiKeyPlaceholder": "via API Ŝlosilo"
+      },
+      "activityOptions": {
+        "title_zero": "Neniuj siloj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 silon",
+        "title_other": "Aktivigante {{count}} silojn",
+        "noSilosFound": "Neniuj siloj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingSilos_zero": "Neniuj kongruaj siloj",
+        "matchingSilos_one": "1 kongrua silo",
+        "matchingSilos_other": "{{count}} kongruaj siloj",
+        "searchForSilos": "Serĉu iujn silojn por aktivigi!",
+        "noSilosNearby": "Neniuj siloj proksime",
+        "nearbySilos": "Proksimaj siloj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownSilo": "Nekonata silo"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia Siloo"
+      },
+      "postSpotAPI": {
+        "error": "Eraro dum alŝutado de SiOTA punkto",
+        "serverResponse": "Servilo respondis kun eraro {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "name": "SOTA: Pintoj en la Aero",
+      "account": {
+        "title": "SOTA (por SOTAWatch mem-lokigo)",
+        "dialogTitle": "SOTA Konto",
+        "description": "Konto: {{callsign}}",
+        "noAccount": "Neniu konto",
+        "error": "Eraro dum venigo de kontaj detaloj",
+        "connect": "Konekti vian SOTA konton"
+      },
+      "notLoggedInAlertTitle": "Averto",
+      "notLoggedInAlertText": "Ne enlogita al SOTAWatch por mem-aŭskultado. Bonvolu iri al PoLo-agordoj",
+      "activityOptions": {
+        "title_zero": "Neniuj pintoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 pinton",
+        "title_other": "Aktivigante {{count}} pintojn",
+        "noSummitsFound": "Neniuj pintoj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingSummits_zero": "Neniuj kongruaj pintoj",
+        "matchingSummits_one": "1 kongrua pinto",
+        "matchingSummits_other": "{{count}} kongruaj pintoj",
+        "searchForSummits": "Serĉu iujn pintojn por aktivigi!",
+        "noSummitsNearby": "Neniuj pintoj proksime",
+        "nearbySummits": "Proksimaj pintoj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownSummit": "Nekonata pinto"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Neniu S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Neniuj sumitoj ĉasitaj",
+        "huntedRefsCount_one": "1 sumito ĉasita",
+        "huntedRefsCount_other": "{{fmtCount}} sumitoj ĉasitaj",
+        "activatorQSOsCount_zero": "Neniuj aktivigaj QSOj",
+        "activatorQSOsCount_one": "1 aktiviga QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivigaj QSOj",
+        "ref2refQSOsCount_zero": "Neniuj S2S QSOj",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSOj",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSOj",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSOj",
+        "operationTotals": "Operaciaj Sumoj",
+        "referencesActivatedCount_zero": "Neniuj sumitoj aktivigitaj",
+        "referencesActivatedCount_one": "1 sumito aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} sumitoj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj sumitoj",
+        "referencesMissedCount_one": "1 nekompleta sumito",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj sumitoj",
+        "referencesHuntedCount_zero": "Neniuj sumitoj ĉasitaj",
+        "referencesHuntedCount_one": "1 sumito ĉasita",
+        "referencesHuntedCount_other": "{{fmtCount}} sumitoj ĉasitaj"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Eraro dum alŝutado de SOTA punkto",
+        "serverResponse": "Servilo respondis kun statuso {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA-konto elsalutis. Bonvolu ensaluti denove en PoLo-agordoj"
+      },
+      "exampleRefName": "Ekzempla Sumito",
+      "unknownRefName": "Nekonata Sumito",
+      "noRefsNearby": "Neniuj sumitoj proksime!"
+    },
+    "tota": {
+      "name": "TOTA: Turoj en la Aero",
+      "activityOptions": {
+        "title_zero": "Neniu turo elektita por aktivigo",
+        "title_one": "Aktivigante 1 turon",
+        "title_other": "Aktivigante {{count}} turojn",
+        "noTowersFound": "Neniu turo trovita",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingTowers_zero": "Neniuj kongruaj turoj",
+        "matchingTowers_one": "1 kongrua turo",
+        "matchingTowers_other": "{{count}} kongruaj turoj",
+        "searchForTowers": "Serĉu kelkajn turojn por aktivigi!",
+        "noTowersNearby": "Neniuj turoj proksime",
+        "nearbyTowers": "Proksimaj turoj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownTower": "Nekonata turo"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Neniu R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Neniuj ĉasitaj turoj",
+        "huntedRefsCount_one": "1 turo ĉasita",
+        "huntedRefsCount_other": "{{fmtCount}} turoj ĉasitaj",
+        "activatorQSOsCount_zero": "Neniuj aktivantaj QSOs",
+        "activatorQSOsCount_one": "1 aktivanta QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivantaj QSOs",
+        "ref2refQSOsCount_zero": "Neniuj R2R QSOs",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSOs",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSOs",
+        "operationTotals": "Operaciaj Sums",
+        "referencesActivatedCount_zero": "Neniuj turoj aktivigitaj",
+        "referencesActivatedCount_one": "1 turo aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} turoj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj turoj",
+        "referencesMissedCount_one": "1 nekompleta turo",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj turoj",
+        "referencesHuntedCount_zero": "Neniuj ĉasitaj turoj",
+        "referencesHuntedCount_one": "1 turo ĉasita",
+        "referencesHuntedCount_other": "{{fmtCount}} turoj ĉasitaj"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ili Turo"
+      },
+      "exampleRefName": "Ekzempla Turo",
+      "unknownRefName": "Nekonata Turo",
+      "noRefsNearby": "Neniuj turoj proksime!",
+      "postSpotAPI": {
+        "error": "Eraro pri afiŝado de TOTA spoto",
+        "serverResponse": "Servilo respondis kun statuso {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Neniu US Ŝtato",
+      "statesCount_one": "1 US Ŝtato",
+      "statesCount_other": "{{count}} US Ŝtatoj"
+    },
+    "wab": {
+      "name": "Funkciita Ĉiuj Britio/Irlando",
+      "description": "Aldonu WAB/WAI Kvadraton al operacio",
+      "workedAllBritainSquare": "Funkciita Ĉiuj Britia Kvadrato",
+      "workedAllIrelandSquare": "Funkciita Ĉiuj Irlanda Kvadrato",
+      "enterSquare": "Eniru Kvadraton",
+      "placeholderBritain": "ekz. SU14",
+      "placeholderIreland": "ekz. N93",
+      "currentSquare": "Aktuala Kvadrato:",
+      "noSquareSet": "Neniu kvadrato agordita"
+    },
+    "wca": {
+      "name": "WCA: Mondaj Kasteloj Premioj",
+      "shortName": "MKP",
+      "exportName": "MKP Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniu kastelo elektita por aktivigo",
+        "title_one": "Aktivigante 1 kastelon",
+        "title_other": "Aktivigante {{count}} kastelojn",
+        "noCastlesFound": "Neniuj kasteloj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingCastles_zero": "Neniuj kongruaj kasteloj",
+        "matchingCastles_one": "1 kongrua kastelo",
+        "matchingCastles_other": "{{count}} kongruaj kasteloj",
+        "searchForCastles": "Serĉu kelkajn kastelojn por aktivigi!",
+        "noCastlesNearby": "Neniuj kasteloj proksime",
+        "nearbyCastles": "Proksimaj kasteloj",
+        "searchPlaceholder": "Nomo aŭ referenco…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Neniuj kasteloj ĉasitaj",
+        "huntedRefsCount_one": "1 kastelo ĉasita",
+        "huntedRefsCount_other": "{{fmtCount}} kasteloj ĉasitaj",
+        "activatorQSOsCount_zero": "Neniuj aktivaj QSOs",
+        "activatorQSOsCount_one": "1 aktiva QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivaj QSOs",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSOs",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSOs",
+        "operationTotals": "Operaciaj Totaloj",
+        "referencesActivatedCount_zero": "Neniuj kasteloj aktivigitaj",
+        "referencesActivatedCount_one": "1 kastelo aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} kasteloj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj kasteloj",
+        "referencesMissedCount_one": "1 nekompleta kastelo",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj kasteloj",
+        "referencesHuntedCount_zero": "Neniuj kasteloj ĉasitaj",
+        "referencesHuntedCount_one": "1 kastelo ĉasita",
+        "referencesHuntedCount_other": "{{fmtCount}} kasteloj ĉasitaj"
+      },
+      "exampleRefName": "Ekzempla Kastelo",
+      "unknownRefName": "Nekonata Kastelo",
+      "noRefsNearby": "Neniuj kasteloj proksime!"
+    },
+    "wfd": {
+      "name": "Vintra Kampotago",
+      "shortName": "WFD",
+      "exportName": "WFD Aktivigo",
+      "activityOptions": {
+        "exchangeInformation": "Informokupredo",
+        "classLabel": "Klaso",
+        "locationLabel": "Loko",
+        "objectives_zero": "Neniuj celoj atingitaj",
+        "objectives_one": "1 celo atingita, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} celoj atingitaj, OM ×{{multiplier}}",
+        "objectivesTitle": "Celoj: {{count}} atingitaj, OM ×{{multiplier}}",
+        "objectivesDescription": "Memoru ankaŭ raporti ĉi tiujn celojn kiam vi sendas vian protokolon!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Alternativa Potenco",
+        "awayFromHome": "Operacii For de Hejmo",
+        "fmSatelliteContact": "FM Satelita Kontakto",
+        "ssbSatelliteContact": "SSB aŭ CW Satelita Kontakto",
+        "winlinkEmails": "Winlink Retmesaĝoj",
+        "specialBulletin": "Speciala Bulteno",
+        "sixBands": "Ses Grupoj",
+        "twelveBands": "Dekdu Grupoj",
+        "multipleModes": "Multoblaj Reĝimoj",
+        "qrpOperation": "QRP Operacio",
+        "sixContinuousHours": "Ses Kontinua Horoj"
+      },
+      "objectiveDescription": {
+        "altPower": "Operaciu 100% per alterna potenco, kiel ekzemple baterioj, suno, vento, ktp.",
+        "awayFromHome": "Starigu vian kampejan stacion almenaŭ ½ mejlo for de hejmo.",
+        "fmSatelliteContact": "Faru almenaŭ 1 FM satelitan kontakton dum la operacia periodo.",
+        "ssbSatelliteContact": "Faru almenaŭ unu kontakton uzante SSB aŭ CW.",
+        "winlinkEmails": "Sendu KAJ ricevu almenaŭ unu retmesaĝon uzante Winlink super RF.",
+        "specialBulletin": "Precize kopi la mesaĝon de la speciala bulteno de WFD kaj sendu vian kopion kun via protokola sendo.",
+        "sixBands": "Faru almenaŭ tri kontaktojn sur ĉiu el almenaŭ ses diversaj grupoj.",
+        "twelveBands": "Faru almenaŭ tri kontaktojn sur ĉiu el almenaŭ dekdu diversaj grupoj.",
+        "multipleModes": "Uzu multoblajn reĝimojn dum la operacia periodo.",
+        "qrpOperation": "Operaciu sur QRP povoniveloj (10W aŭ malpli sur Telefono, 5W aŭ malpli sur CW aŭ Cifereca).",
+        "sixContinuousHours": "Operaciu dum almenaŭ ses kontinuaj horoj dum la operacia periodo."
+      },
+      "information-md": "Klaso por Vinterkampo-tago estas, ekzemple `2M`:\n\n  - `1`, `2`, `3`… por la nombro de elsendiloj.\n  - `H` por Hejma Stacio\n  - `I` por Endoma\n  - `O` por Subeĉiela\n  - `M` por Poŝtelefono aŭ Poŝtelefono Stacia\n\nLoko estas la ARRL Sekcio, RAC Sekcio, `MX` por Meksiko, aŭ `DX` por ie ajn alia loko.\n\nPli da informoj en la **[oficialaj reguloj](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Mondaj Bunkro-Premioj",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj bunkroj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 bunkron",
+        "title_other": "Aktivigante {{count}} bunkrojn",
+        "noBunkersFound": "Neniuj bunkroj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingBunkers_zero": "Neniuj kongruaj bunkroj",
+        "matchingBunkers_one": "1 kongrua bunkro",
+        "matchingBunkers_other": "{{count}} kongruaj bunkroj",
+        "searchForBunkers": "Serĉu iujn bunkrojn por aktivigi!",
+        "noBunkersNearby": "Neniuj bunkroj proksime",
+        "nearbyBunkers": "Proksimaj bunkroj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownBunker": "Nekonata bunkro"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia Bunkro"
+      },
+      "postSpotAPI": {
+        "error": "Eraro dum alŝutado de WWBOTA punkto",
+        "serverResponse": "Servilo respondis kun statuso {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Mondaj Flora kaj Faŭno",
+      "shortName": "WWFF",
+      "exportName": "WWFF Aktivigo",
+      "activityOptions": {
+        "title_zero": "Neniuj parkoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 parkon",
+        "title_other": "Aktivigante {{count}} parkojn",
+        "noParksFound": "Neniuj parkoj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingParks_zero": "Neniuj kongruaj parkoj",
+        "matchingParks_one": "1 kongrua parko",
+        "matchingParks_other": "{{count}} kongruaj parkoj",
+        "searchForParks": "Serĉu iujn parkojn por aktivigi!",
+        "noParksNearby": "Neniuj parkoj proksime",
+        "nearbyParks": "Proksimaj parkoj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownPark": "Nekonata parko"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Neniuj P2P-oj",
+        "ref2refCount_one": "1 P2P-o",
+        "ref2refCount_other": "{{fmtCount}} P2P-oj",
+        "huntedRefsCount_zero": "Neniuj parkegkaŭtoj ĉasitaj",
+        "huntedRefsCount_one": "1 parkegkaŭto ĉasita",
+        "huntedRefsCount_other": "{{fmtCount}} parkegkaŭtoj ĉasitaj",
+        "activatorQSOsCount_zero": "Neniuj aktivigaj QSOj",
+        "activatorQSOsCount_one": "1 aktiviga QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivigaj QSOj",
+        "ref2refQSOsCount_zero": "Neniu P2P QSO-j",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSO-j",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSO-j",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSO-j",
+        "operationTotals": "Operaciaj Sumoj",
+        "referencesActivatedCount_zero": "Neniu parko aktivigita",
+        "referencesActivatedCount_one": "1 parko aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} parkoj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj parkoj",
+        "referencesMissedCount_one": "1 nekompleta parko",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj parkoj",
+        "referencesHuntedCount_zero": "Neniuj ĉasitaj parkoj",
+        "referencesHuntedCount_one": "1 ĉasita parko",
+        "referencesHuntedCount_other": "{{fmtCount}} ĉasitaj parkoj"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia WWFF"
+      },
+      "exampleRefName": "Ekzempla Parko",
+      "unknownRefName": "Nekonata Parko",
+      "noRefsNearby": "Neniuj parkoj proksime!",
+      "postSpotAPI": {
+        "error": "Eraro dum alŝutado de WWFF punkto",
+        "serverResponse": "Servilo respondis kun statuso {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "name": "ZLOTA: ZL en la Aero",
+      "account": {
+        "title": "ZLOTA (ZLOTA lokigo)",
+        "dialogTitle": "ZLOTA Konto",
+        "description": "Konto: {{callsign}}",
+        "noAccount": "Neniu konto",
+        "pleaseEnterDetails": "Bonvolu enigi la detalojn por via ZLOTA konto:",
+        "callsignLabel": "Vokosigno",
+        "callsignPlaceholder": "via konta vokosigno",
+        "pinLabel": "PIN (ne pasvorto)",
+        "pinPlaceholder": "via PIN"
+      },
+      "activityOptions": {
+        "title_zero": "Neniuj referencoj elektitaj por aktivigo",
+        "title_one": "Aktivigante 1 referencon",
+        "title_other": "Aktivigante {{count}} referencojn",
+        "noReferencesFound": "Neniuj referencoj trovitaj",
+        "nearestMatches": "Plej proksima {{limit}} el {{count}} kongruoj",
+        "matchingReferences_zero": "Neniuj kongruaj referencoj",
+        "matchingReferences_one": "1 kongrua referenco",
+        "matchingReferences_other": "{{count}} kongruaj referencoj",
+        "searchForReferences": "Serĉu iujn referencojn por aktivigi!",
+        "noReferencesNearby": "Neniuj referencoj proksime",
+        "nearbyReferences": "Proksimaj referencoj",
+        "searchPlaceholder": "Nomo aŭ referenco…",
+        "unknownReference": "Nekonata referenco"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Ilia Referenco"
+      },
+      "postSpotAPI": {
+        "error": "Eraro dum alŝutado de ZLOTA punkto",
+        "serverResponse": "Servilo respondis kun statuso {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "Neniu dublikato",
+        "dupesCount_one": "1 duoblaĵo",
+        "dupesCount_other": "{{fmtCount}} dupoj",
+        "ref2refCount_zero": "Neniu Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Neniuj ĉasitaj ref",
+        "huntedRefsCount_one": "1 ĉasita ref",
+        "huntedRefsCount_other": "{{fmtCount}} ĉasitaj ref",
+        "activatorQSOsCount_zero": "Neniuj aktivigaj QSO-j",
+        "activatorQSOsCount_one": "1 aktiviga QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivigaj QSO-j",
+        "ref2refQSOsCount_zero": "Neniuj Ref2Ref QSO-j",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSO-j",
+        "huntedQSOsCount_zero": "Neniuj ĉasitaj QSO-j",
+        "huntedQSOsCount_one": "1 ĉasita QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} ĉasitaj QSO-j",
+        "operationTotals": "Operaciaj Sumoj",
+        "referencesActivatedCount_zero": "Neniuj referencoj aktivigitaj",
+        "referencesActivatedCount_one": "1 referenco aktivigita",
+        "referencesActivatedCount_other": "{{fmtCount}} referencoj aktivigitaj",
+        "referencesMissedCount_zero": "Neniuj nekompletaj referencoj",
+        "referencesMissedCount_one": "1 nekompleta referenco",
+        "referencesMissedCount_other": "{{fmtCount}} nekompletaj referencoj",
+        "referencesHuntedCount_zero": "Neniuj ĉasitaj referencoj",
+        "referencesHuntedCount_one": "1 ĉasita referenco",
+        "referencesHuntedCount_other": "{{fmtCount}} ĉasitaj referencoj"
+      }
+    }
+  }
+}

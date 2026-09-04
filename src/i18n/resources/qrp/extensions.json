@@ -10,7 +10,7 @@
       "total": "total {{count}}"
     },
     "bca": {
-      "name": "belgium castles & fortresses",
+      "name": "bca: belgium castles & fortresses",
       "shortName": "bca",
       "exportName": "bca activation",
       "activityOptions": {
@@ -53,7 +53,7 @@
       }
     },
     "blha": {
-      "name": "belgian lighthouses and lightships",
+      "name": "blha: belgian lighthouses and lightships",
       "shortName": "blha",
       "exportName": "blha activation",
       "activityOptions": {
@@ -92,8 +92,13 @@
         "referencesHuntedCount_other": "{{fmtCount}} lighthouses hunted"
       }
     },
+    "call-history": {
+      "name": "call history",
+      "description": "upload historic adif and use for offline lookups"
+    },
     "call-notes": {
       "name": "callsign notes",
+      "description": "store callsign notes in a file and use for offline lookups",
       "description-md_zero": "no notes loaded.",
       "description-md_one": "{{fmtCount}} {{type}} loaded.",
       "description-md_other": "{{fmtCount}} {{type}} loaded.",
@@ -264,7 +269,7 @@
       "entitiesCount_other": "{{count}} dxcc entities"
     },
     "eca": {
-      "name": "english castles awards",
+      "name": "eca: english castles awards",
       "shortName": "eca",
       "exportName": "eca activation",
       "activityOptions": {
@@ -283,7 +288,7 @@
       }
     },
     "ela": {
-      "name": "english lighthouse awards",
+      "name": "ela: english lighthouse awards",
       "shortName": "ela",
       "exportName": "ela activation",
       "activityOptions": {
@@ -316,11 +321,60 @@
         "powerSourcePlaceholder": "select a power source",
         "batteriesOption": "batteries, solar, wind",
         "commercialPowerOption": "commercial power, generator",
+        "bonusesTitle": "bonus points: {{count}} claimed, {{points}} pts",
+        "bonusesDescription": "remember to also report these bonus points when submitting your log!",
+        "bonusTitle": "{{title}} ({{points}} pts)",
         "information-md": "class for arrl field day is, for example `2a`:\n\n  - `1`, `2`, `3`… for the number of transmitters.\n  - `a` for group (3 or more) portable station\n  - `b` for one or two person portable station\n  - `c` for mobile station\n  - `d` for home station\n  - `e` for home station on emergency power\n  - `f` for emergency operation center\n\nlocation is the arrl section, rac section, `mx` for mexico, or `dx` for anywhere else.\n\nmore info in the **[official rules](https://www.arrl.org/field-day-rules)**."
+      },
+      "bonusName": {
+        "transmitters": "transmitters",
+        "emergencyPower": "100% emergency power",
+        "mediaPublicity": "media publicity",
+        "publicLocation": "public location",
+        "informationTable": "public information table",
+        "messageToSM": "message to arrl sm/sec",
+        "ntsMessages": "message handling",
+        "ntsMessagesCount": "number of messages handled",
+        "satelliteQSO": "satellite qso",
+        "alternatePowerQSOs": "alternate power qsos",
+        "w1awMessage": "w1aw field day message",
+        "electedOfficialVisit": "elected official visit",
+        "agencyOfficialVisit": "served agency official visit",
+        "educationalActivity": "educational activity",
+        "youthElement": "youth element",
+        "safetyOfficer": "safety officer",
+        "siteResponsibilities": "site responsibilities",
+        "socialMedia": "social media",
+        "gotaQSOs": "gota station qsos",
+        "gotaQSOsCount": "number of gota qsos",
+        "gotaCoach": "gota coach",
+        "webSubmission": "web submission"
+      },
+      "bonusDescription": {
+        "transmitters": "100 points per transmitter (max 20), not counting gota or vhf.",
+        "emergencyPower": "100 points per transmitter (max 20) if all contacts use emergency power.",
+        "mediaPublicity": "obtain publicity from local media. submit a copy with your entry.",
+        "publicLocation": "locate the operation in a public place such as a park, school, or shopping center (class a, b or f only).",
+        "informationTable": "operate a public information table at the field day site (class a, b or f only).",
+        "messageToSM": "originate a formal message to your arrl section manager or section emergency coordinator.",
+        "ntsMessages": "10 points per nts or ics-213 messages (max 10) handled during the operating period.",
+        "satelliteQSO": "complete at least one qso via an amateur radio satellite (class a, b or f only).",
+        "alternatePowerQSOs": "complete at least one qso using alternate power generation, such as solar, wind or water (class a, b, e or f only).",
+        "w1awMessage": "accurately copy the special field day bulletin transmitted by w1aw or k6kph.",
+        "electedOfficialVisit": "host a visit from an invited elected government official.",
+        "agencyOfficialVisit": "host a visit from an invited served agency official.",
+        "educationalActivity": "conduct a formal educational activity with a written lesson plan.",
+        "youthElement": "include youth participants in the operation.",
+        "safetyOfficer": "have a designated safety officer on site (class a only).",
+        "siteResponsibilities": "complete site responsibility requirements (classes b, c, d, e, and f).",
+        "socialMedia": "promote your field day operation on social media.",
+        "gotaQSOs": "5 points for each qso completed at the gota station.",
+        "gotaCoach": "there is a gota coach to assist with the operation of the gota station.",
+        "webSubmission": "submit your entry using the web app at field-day.arrl.org."
       }
     },
     "gma": {
-      "name": "global mountain activity",
+      "name": "gma: global mountain activity",
       "shortName": "gma",
       "exportName": "gma activation",
       "activityOptions": {
@@ -338,6 +392,14 @@
         "searchPlaceholder": "name or reference…",
         "unknownSummit": "unknown summit"
       }
+    },
+    "ham2k-lookup": {
+      "name": "ham2k lookup service",
+      "description": "free service, but only covering us, canada and germany calls"
+    },
+    "hamqth": {
+      "name": "hamqth.com callsign lookups",
+      "description": "requires free account for lookups"
     },
     "llota": {
       "name": "llota: lakes and lagoons on the air",
@@ -396,7 +458,7 @@
       "noRefsNearby": "no lakes nearby!"
     },
     "mota": {
-      "name": "mills on the air",
+      "name": "mota: mills on the air",
       "shortName": "mota",
       "exportName": "mota activation",
       "activityOptions": {
@@ -510,8 +572,15 @@
       "unknownRefName": "unknown park",
       "noRefsNearby": "no parks nearby!"
     },
+    "qrz": {
+      "name": "qrz.com callsign lookups",
+      "description": "requires free account for names, and paid account for locations"
+    },
+    "sats": {
+      "name": "satellite operations"
+    },
     "siota": {
-      "name": "silos on the air",
+      "name": "siota: silos on the air",
       "shortName": "siota",
       "exportName": "siota activation",
       "account": {
@@ -549,6 +618,7 @@
       }
     },
     "sota": {
+      "name": "sota: summits on the air",
       "account": {
         "title": "sota (for sotawatch self-spotting)",
         "dialogTitle": "sota account",
@@ -614,6 +684,7 @@
       "noRefsNearby": "no summits nearby!"
     },
     "tota": {
+      "name": "tota: towers on the air",
       "activityOptions": {
         "title_zero": "no towers selected for activation",
         "title_one": "activating 1 tower",
@@ -684,7 +755,7 @@
       "noSquareSet": "no square set"
     },
     "wca": {
-      "name": "world castles awards",
+      "name": "wca: world castles awards",
       "shortName": "wca",
       "exportName": "wca activation",
       "activityOptions": {
@@ -854,6 +925,7 @@
       }
     },
     "zlota": {
+      "name": "zlota: zl on the air",
       "account": {
         "title": "zlota (zlota spotting)",
         "dialogTitle": "zlota account",

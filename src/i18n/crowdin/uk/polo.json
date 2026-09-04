@@ -1,0 +1,1012 @@
+{
+  "screens": {
+    "start": {
+      "credits": "створено KI2D та друзями",
+      "Loading Extensions": "Завантаження розширень",
+      "Development Build": "Портативний логер Розробницька Збірка",
+      "messages": {
+        "Reticulating splines": "Розтягнення сплайнів",
+        "Tuning the antenna": "Налаштування антени",
+        "Checking the tubes": "Перевірка трубок",
+        "Warming up the tubes": "Підігрів трубок",
+        "Unfolding the map": "Розгортання карти",
+        "Charging the flux capacitor": "Зарядка флюкс-конденсатора",
+        "Purging the dilithium chamber": "Очищення дилітієвої камери",
+        "Activating the turbo encabulator": "Активація турбо-енкапулятора",
+        "Engaging the warp drive": "Активація варпмотора"
+      }
+    },
+    "home": {
+      "title": "Портативний регістратор",
+      "newOperation": "Нова операція",
+      "newOperation-a11y": "Нова операція",
+      "operationList-a11y": "Список операцій",
+      "noOperations": "Операцій немає!",
+      "settings-a11y": "Налаштування",
+      "quickCallLookupPlaceholder": "Швидкий пошук викликів…",
+      "spots-a11y": "Споти"
+    },
+    "operation": {
+      "title": "Операція"
+    },
+    "operationDetails": {
+      "title": "Деталі операції",
+      "operationTitle": "Назва",
+      "newOperation": "Нова операція",
+      "operationNotes": "Примітки",
+      "anythingYouWantToWriteAboutThisOperation": "Будь-що ви хочете записати про цю операцію"
+    },
+    "operationStationInfo": {
+      "title": "Інформація про станцію та оператора",
+      "invalidCallsign": "Неприпустимий позивний: {{callsign}}",
+      "invalidCallsigns": "Неприпустимі позивні: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` використовується до цього часу.\n{{newStation}} буде використовуватися для нових QSO.",
+      "noStationUsed-md": "Ніякий виклик не використаний до цього часу.\n{{newStation}} буде використовуватися для нових QSO.",
+      "updateStation-md_zero": "Оновити `{{newStation}}` на нулі існуючих QSO",
+      "updateStation-md_one": "Оновити `{{newStation}}` на одному існуючому QSO",
+      "updateStation-md_other": "Оновити `{{newStation}}` на {{count}} існуючих QSO",
+      "multipleStationsUsed-md": "Ця операція вже має QSO з використанням кількох позивних станції: `{{stations}}`.\n\n`{{newStation}}` буде використовуватись лише для нових QSO.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` використовувалося до цього часу.\n{{newOperator}} буде використовуватися для нових QSO.",
+      "noOperatorUsed-md": "Ніякий виклик не використовувався до цього часу.\n{{newOperator}} буде використовуватися для нових QSO.",
+      "updateOperator-md": "Оновити `{{newOperator}}` як оператора для всіх QSO",
+      "multipleOperatorsUsed-md": "Ця операція вже має QSO з використанням кількох позивних операторів: `{{operators}}`.\n\n`{{newOperator}}` буде використовуватися лише для нових QSO.",
+      "whatIsTheCallsignUsedOnTheAir": "Який позивний використовується в ефірі?",
+      "stationCallsign": "Позивний станції",
+      "whoIsOperatingTheStation": "Хто управляє станцією? (необов’язково)",
+      "operatorCallsign": "Позивний оператора",
+      "multiStationOperation": "Багатостанційна операція?",
+      "multiStationOperationYes": "Так, ми є одними з багатьох!",
+      "multiStationOperationNo": "Ні, просто звичайна станція",
+      "identifierForThisStation": "Ідентифікатор для цієї станції (тільки цифри)"
+    },
+    "operationLocation": {
+      "title": "Місцезнаходження операції",
+      "selectedLocation": "Обране місцезнаходження",
+      "maidenheadGridSquareLocator": "Локатор мережевачів Maidenhead",
+      "suggestedLocations": "Рекомендовані місцезнаходження",
+      "deviceGps": "Пристрій GPS",
+      "locating": "Локалізація…",
+      "gpsError": "Помилка GPS",
+      "noGps": "БЕЗ GPS",
+      "stateOrProvince": "Штат або Провінція (не обов'язково)",
+      "county": "Округ (не обов'язково)"
+    },
+    "operationAddActivity": {
+      "title": "Додати активність",
+      "cantFindActivity": "Не можете знайти потрібну активність?",
+      "thereAreMoreOptions": "Більше опцій в Налаштуваннях > Функції додатка"
+    },
+    "operationActivityOptions": {
+      "title": "Опції активності",
+      "removeActivity": "Видалити {{activity}} з цієї операції",
+      "activityHasNoOptions": "Ця активність не має параметрів.",
+      "activityNotEnabled": "Активність \"{{name}}\" не ввімкнено.",
+      "lookInSettings": "Шукайте це в Налаштуваннях > Функції застосунку"
+    },
+    "operationData": {
+      "title": "Дані операції",
+      "selectFromTheExportOptionsBelow": "Виберіть з наведених нижче варіантів експорту",
+      "exportSelectedFiles_zero": "Експортувати 0 вибраних файлів",
+      "exportSelectedFiles_one": "Експортувати 1 вибраний файл",
+      "exportSelectedFiles_other": "Експортувати {{count}} вибраних файлів",
+      "exportActionsShare": "Поділитися",
+      "exportActionsSave": "Зберегти",
+      "exportActionsExport": "Експортувати",
+      "exportActionsStash": "Сховище",
+      "exportActionsLogStash": "Надіслати до Ham2K File Stash",
+      "exportQSOs": "Експортувати QSO",
+      "pendingToDoItems_zero": "Немає незавершених елементів",
+      "pendingToDoItems_one": "1 незавершений елемент",
+      "pendingToDoItems_other": "{{count}} незавершених елементів",
+      "importQSOs": "Імпорт QSO",
+      "addQSOsFromADIFFile": "Додати QSO з файлу ADIF",
+      "ham2kLoFiSync": "Ham2K LoFi Синхронізація",
+      "operation": "Операція",
+      "exportSettings": "Експорт Налаштувань",
+      "useCompactFileNames": "Використовувати компактні імена файлів",
+      "wavelogExport": "Експорт Wavelog",
+      "exportQSOsToWavelogDescription": "Надіслати всі QSO для цієї операції до Wavelog",
+      "wavelogDialog": {
+        "title": "Експортувати QSO до Wavelog",
+        "status": "Експортувати всі QSO для цієї операції до Wavelog.",
+        "exporting": "Експорт у Wavelog..."
+      },
+      "deleteOperationDialog": {
+        "title": "Видалити операцію?",
+        "description": "Ви впевнені, що хочете видалити цю операцію?"
+      },
+      "errorSavingExport": "Не вдалося зберегти файл",
+      "logStashDialogTitle": "Ham2K File Stash",
+      "logStashDialogIntro": "PoLo завантажить ваші файли на сервери Ham2K, і ви зможете завантажити їх із будь-якого браузера.",
+      "logStashDialogTiers": "Безкоштовні облікові записи можуть зберігати лише одне сховище за раз. Передплатники можуть зберігати стільки, скільки захочуть.",
+      "logStashDialogSubscribe": "Оформити передплату",
+      "exportUpsellTitle": "Цю операцію також збережено в нашій хмарній службі синхронізації",
+      "exportUpsellBody": "Ця резервна копія безкоштовна, але якщо ви оформите підписку, ви зможете синхронізувати її між кількома пристроями та отримувати до неї доступ на повній швидкості.",
+      "exportUpsellSupport": "А що важливіше, ваша підписка підтримує наші зусилля тут, у Ham2K.",
+      "exportUpsellSubscribe": "Оформити підписку",
+      "exportUpsellNotNow": "Не зараз",
+      "exportOptionsInfoLabel": "Про параметри експорту",
+      "exportOptionsInfoTitle": "Параметри експорту",
+      "exportOptionsInfoStash-md": "**Stash** завантажує ваші файли до Ham2K File Stash, і ви зможете пізніше завантажити їх із будь-якого браузера на **[stash.ham2k.net](https://stash.ham2k.net)**. Корисно в польових умовах, коли немає іншого простого способу перенести файл із телефона.",
+      "exportOptionsInfoShare-md": "**Поділитися** передає ваші файли іншій програмі на вашому пристрої — електронній пошті, месенджеру, хмарному сховищу або іншій програмі для ведення журналу.",
+      "exportOptionsInfoExport-md": "**Експортувати** передає ваші файли іншій програмі на вашому пристрої — електронній пошті, месенджеру, хмарному сховищу або іншій програмі для ведення журналу.",
+      "exportOptionsInfoSave-md": "**Зберегти** записує ваші файли безпосередньо в папку на вашому пристрої, не передаючи їх через іншу програму.",
+      "exportOptionsInfoSelection-md": "Ці дії застосовуються до всіх файлів, позначених нижче. Ви також можете торкнутися будь-якого окремого файла, щоб поділитися лише ним.",
+      "freeTierRecentUploadTitle": "Недавнє завантаження буде замінено",
+      "freeTierRecentUploadMessage": "Ви надіслали \"{{name}}\" менше ніж 6 годин тому, і його ще не завантажили. Якщо надіслати зараз, його буде замінено. Хочете натомість зачекати?",
+      "freeTierRecentUploadConfirm": "Усе одно надіслати",
+      "errorSendingToLogStash": "Не вдалося надіслати до Ham2K File Stash",
+      "sentToLogStash": "Надіслано до Ham2K File Stash",
+      "sentToLogStashRetrieve-md": "Ви можете отримати {{filesLabel}}, відкривши **[stash.ham2k.net](https://stash.ham2k.net)** у будь-якому браузері.",
+      "sentToLogStashEmailOffer": "Або, для вашої зручності, ми можемо надіслати вам електронний лист із прямим посиланням.",
+      "retrieveSingularFile": "цей файл",
+      "retrievePluralFiles": "ці файли",
+      "emailMeALink": "Надішліть мені посилання електронною поштою",
+      "linkEmailed": "Ми надіслали вам посилання для завантаження електронною поштою.",
+      "errorEmailingLink": "Не вдалося надіслати електронний лист"
+    },
+    "callInfo": {
+      "title": "Інформація про позивний",
+      "messages": {
+        "duplicate": "Дубльований",
+        "invalidBand": "Неправильний діапазон",
+        "ourGrid": "Відсутнє наше місцезнаходження",
+        "theirGrid": "Немає їхнього локатора",
+        "shortGrid": "Локатор закороткий",
+        "newBand": "Новий діапазон",
+        "newMode": "Новий режим",
+        "newRef": "Нове посилання",
+        "newMult": "Нова множина",
+        "newDay": "Новий день",
+        "newGrid": "Новий локатор",
+        "newLocation": "Нове місцезнаходження",
+        "maybeDupe": "Дубльований?",
+        "partialDupe": "Дубльований",
+        "potaActivation-newDay": "Новий день POTA",
+        "potaActivation-newRef": "Новий парк",
+        "sotaActivation-newDay": "Новий день SOTA",
+        "sotaActivation-newRef": "Новий пік",
+        "sotaActivation-duplicate": "Дубльований SOTA!",
+        "wwffActivation-duplicate": "Дубльований WWFF!",
+        "wwbotaActivation-newDay": "Новий день WWBOTA",
+        "wwbotaActivation-newRef": "Новий бункер",
+        "motaActivation-newRef": "Нове місце"
+      },
+      "history": {
+        "last7days": "{{count}} за останні 7 днів",
+        "today": "{{count}} сьогодні",
+        "yesterday": "{{count}} вчора",
+        "qsos_zero": "0 QSO",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSO"
+      },
+      "thisOpCount_zero": "0 QSO у цій операції",
+      "thisOpCount_one": "1 QSO у цій операції",
+      "thisOpCount_other": "{{count}} QSO у цій операції",
+      "otherOpsCount_zero": "0 QSO в інших операціях",
+      "otherOpsCount_one": "1 QSO в інших операціях",
+      "otherOpsCount_other": "{{count}} QSO в інших операціях",
+      "andMoreCount_zero": "… і {{count}} більше",
+      "andMoreCount_one": "… і {{count}} більше",
+      "andMoreCount_other": "… і {{count}} більше",
+      "showImage": "Показати зображення",
+      "notes": "Записи",
+      "potentialCall": "Можливий виклик: {{call}}",
+      "withCall": "з {{call}}"
+    },
+    "spots": {
+      "title": "Споти"
+    },
+    "editQSO": {
+      "title": "Редагувати QSO",
+      "sections": {
+        "qso": "Деталі QSO",
+        "their": "Їх інформація",
+        "our": "Наша інформація",
+        "more": "Більше"
+      },
+      "fields": {
+        "time": "Час",
+        "date": "Дата",
+        "freq": "Частота",
+        "mode": "Режим",
+        "band": "Діапазон",
+        "power": "Потужність",
+        "call": "Станційний виклик",
+        "sent": "RST",
+        "exchange": "Обмін",
+        "name": "Ім'я",
+        "city": "Місто",
+        "state": "Штат/провінція",
+        "county": "Округ",
+        "entity": "Сутність",
+        "cqZone": "CQ Зона",
+        "ituZone": "ITU Зона",
+        "arrlSection": "Секція ARRL",
+        "grid": "Сітка",
+        "latitude": "Широта",
+        "longitude": "Довгота",
+        "notes": "Записи"
+      }
+    },
+    "opInfo": {
+      "title": "Інформація про операцію"
+    },
+    "settings": {
+      "title": "Налаштування",
+      "sections": {
+        "settings": "Налаштування",
+        "accounts": "Облікові записи",
+        "about": "Про Ham2K",
+        "help": "Потрібна допомога?"
+      },
+      "operatorCallsign": {
+        "title": "Позивний оператора",
+        "noCall": "Немає виклику",
+        "dialogTitle": "Позивний оператора",
+        "pleaseEnterCallsign": "Будь ласка, введіть позивний!",
+        "callsignLabel": "Позивний оператора"
+      },
+      "generalSettings": {
+        "title": "Загальні налаштування",
+        "description": "Темний режим, рядок чисел, одиниці, та інше"
+      },
+      "loggingSettings": {
+        "title": "Налаштування ведення журналу",
+        "description": "Налаштуйте ведення журналу"
+      },
+      "dataSettings": {
+        "title": "Налаштування даних",
+        "description": "Файли даних, примітки до позивних та інше"
+      },
+      "syncSettings": {
+        "title": "Налаштування синхронізації",
+        "description": "Хмарна синхронізація та резервне копіювання"
+      },
+      "accountsSettings": {
+        "title": "Облікові записи та служби",
+        "description": "QRZ.com та інші сервіси"
+      },
+      "appFeatures": {
+        "title": "Функції додатку",
+        "description": "Керуйте функціями, такими як POTA, SOTA тощо"
+      },
+      "developerSettings": {
+        "title": "Налаштування розробника",
+        "description": "Тут є дракони"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} є Підтримувачем Ham2K",
+        "couldBeASupporter": "{{callsign}} міг би бути Підтримувачем Ham2K"
+      },
+      "versionSettings": {
+        "description": "Дивіться останні зміни"
+      },
+      "creditsSettings": {
+        "title": "Заслуги",
+        "description": "Себастьян Делмонт KI2D & Команда PoLo"
+      },
+      "noticesSettings": {
+        "title": "Нещодавні оголошення",
+        "description": "Повідомлення, які ви могли пропустити?"
+      },
+      "readTheFineManual": {
+        "title": "Прочитайте Дрібний Посібник",
+        "description": "Перегляньте документацію для PoLo"
+      },
+      "ham2KForums": {
+        "title": "Форуми Ham2K",
+        "description": "Знайдіть допомогу, дайте відгук, обговоріть ідеї…"
+      },
+      "ham2KChat": {
+        "title": "Чат Ham2K",
+        "description": "Дискорд-сервер для нашої онлайн-спільноти"
+      },
+      "ham2KYouTube": {
+        "title": "YouTube Ham2K",
+        "description": "Відео та трансляції наживо"
+      },
+      "ham2KInstagram": {
+        "title": "Instagram Ham2K",
+        "description": "Бо надто багато фото ніколи не буває…"
+      },
+      "ham2KBlueSky": {
+        "title": "BlueSky Ham2K",
+        "description": "Слідкуйте за нами для новин та оновлень"
+      },
+      "contactUs": {
+        "title": "Зв’язатися з нами",
+        "description": "help@ham2k.com\n   (але спробуйте спершу Форум або Чат!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Загальні налаштування",
+      "theme": {
+        "title": "Тема",
+        "descriptionDark": "Завжди в темному режимі",
+        "descriptionLight": "Завжди в світлому режимі",
+        "descriptionDevice": "Як тема пристрою",
+        "dialogTitle": "Тема"
+      },
+      "fontScale": {
+        "title": "Масштаб шрифту",
+        "descriptionXS": "Найменший",
+        "descriptionSM": "Менший",
+        "descriptionMD": "Нормальний",
+        "descriptionLG": "Більший",
+        "descriptionXL": "Найбільший",
+        "dialogTitle": "Масштаб шрифту",
+        "dialogDescription": "Ці розміри також залежать від налаштувань пристрою, таких як Дисплей та Доступність."
+      },
+      "language": {
+        "title": "Мова: {{lang}}",
+        "description": "Змінити мову додатку",
+        "dialogTitle": "Мова",
+        "dialogDescription": "Змінити мову",
+        "deviceDefault": "Використовувати налаштування пристрою ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Налаштування пристрою) наразі непідтримується."
+      },
+      "showNumbersRow": {
+        "title": "Показати рядок чисел",
+        "descriptionOn": "Показуються швидкі кнопки для цифр",
+        "descriptionOff": "Рядок цифр не показується"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Період у рядку чисел",
+        "descriptionOn": "Додаються клавіші крапки та скісної риски",
+        "descriptionOff": "Показуються лише цифри"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Кома у рядку чисел",
+        "descriptionOn": "Додається клавіша коми",
+        "descriptionOff": "Без клавіші коми"
+      },
+      "vibrateNumbersRow": {
+        "title": "Використовувати вібрацію у рядку чисел",
+        "descriptionOn": "Вібрація під час натискання цифр",
+        "descriptionOff": "Без вібрації під час натискання цифр"
+      },
+      "useMetricUnits": {
+        "title": "Використовувати метричні одиниці",
+        "descriptionOn": "Для відстаней використовуються милі",
+        "descriptionOff": "Для відстаней використовуються кілометри"
+      },
+      "keepDeviceAwake": {
+        "title": "Тримати пристрій у ввімкненому стані",
+        "descriptionOn": "Екран не вимикається",
+        "descriptionOff": "Екран блокується як зазвичай"
+      },
+      "useSplitViews": {
+        "title": "Використовувати Розділені Види",
+        "descriptionOn": "Розділені подання використовуються, коли екран достатньо великий",
+        "descriptionOff": "Розділені подання не використовуються"
+      },
+      "useGrid8": {
+        "title": "Точне розташування",
+        "descriptionOn": "Використовуються 8-значні локатори",
+        "descriptionOff": "Використовуються 6-значні локатори"
+      },
+      "smartKeyboard": {
+        "title": "Розумні можливості клавіатури",
+        "descriptionOn": "Використовуються функції розумної клавіатури",
+        "descriptionOff": "Використовуються простіші клавіатури для сумісності з деякими пристроями"
+      },
+      "exportSettings": {
+        "title": "Налаштування експорту",
+        "description": "Налаштувати імена файлів та інші параметри"
+      },
+      "privacy": {
+        "title": "Конфіденційність"
+      },
+      "shareAppUsageData": {
+        "title": "Поділитися даними використання додатка",
+        "descriptionOn": "Надсилаються дані про використання, збої та продуктивність, щоб допомогти нам покращити застосунок",
+        "descriptionOff": "Дані про використання застосунку залишаються приватними.\nКоманда Ham2K не зможе виявляти збої або інші проблеми."
+      },
+      "shareOperationData": {
+        "title": "Поділитися даними операцій",
+        "descriptionOn": "Деякі дані операції поширюються публічно та серед інших користувачів",
+        "descriptionOff": "Дані операції залишаються приватними"
+      },
+      "privacyPolicy": {
+        "title": "Політика конфіденційності",
+        "description": "Прочитайте нашу Політику конфіденційності"
+      },
+      "termsOfService": {
+        "title": "Умови користування",
+        "description": "Прочитайте наші Умови користування"
+      }
+    },
+    "loggingSettings": {
+      "title": "Налаштування журналу",
+      "leftieMode": {
+        "title": "Режим для лівші",
+        "descriptionOn": "Використовується розкладка для лівші",
+        "descriptionOff": "Використовується розкладка для правші"
+      },
+      "countryFlags": {
+        "title": "Країни прапорів",
+        "descriptionNone": "Прапори не показуються",
+        "descriptionAll": "Показуються прапори для всіх контактів",
+        "descriptionDefault": "Показуються прапори лише для DX-контактів"
+      },
+      "showBearing": {
+        "title": "Показати напрямок",
+        "descriptionOn": "Показується приблизний азимут до станції",
+        "descriptionOff": "Інформація про азимут не показується"
+      },
+      "showReverseBearing": {
+        "title": "Також показувати зворотний азимут",
+        "descriptionOn": "Показується також азимут від станції, як-от \"45° / 225°\"",
+        "descriptionOff": "Показується лише азимут до станції"
+      },
+      "switchSignalReportOrder": {
+        "title": "Перемикання порядку звіту сигналу",
+        "descriptionOn": "Відправлено перше, отримано друге",
+        "descriptionOff": "Отримано перше, відправлено друге"
+      },
+      "jumpAfterRST": {
+        "title": "Перейдіть до наступного поля на введення RST",
+        "descriptionOn": "Перехід до наступного поля після RST",
+        "descriptionOff": "Без автоматичного переходу"
+      },
+      "suggestDefaultOperator": {
+        "title": "Запропонувати оператора за замовчуванням",
+        "descriptionOn": "{{operatorCall}} використовується як оператор в операціях, де позивний станції інший",
+        "descriptionOff": "Оператор за замовчуванням не пропонується, незалежно від використаного позивного станції"
+      },
+      "suggestTemplates": {
+        "title": "Використовуйте шаблони операцій",
+        "descriptionOn": "Пропонуються шаблони для нових операцій",
+        "descriptionOff": "Шаблони не пропонуються"
+      },
+      "bandsModes": {
+        "title": "Діапазони та режими",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Розширення"
+      }
+    },
+    "featuresSettings": {
+      "title": "Функції програми",
+      "activatingExtension": "Активація розширення, це може зайняти кілька хвилин...",
+      "fewerOf": "Менше {{category}}...",
+      "moreOf": "Більше {{category}}..."
+    },
+    "dataSettings": {
+      "title": "Налаштування даних",
+      "offlineDataTitle": "Офлайн дані",
+      "extensionsTitle": "Розширення",
+      "logDataTitle": "Дані журналу",
+      "importHistoryFromADIF": "Імпорт історії з ADIF",
+      "importHistoryFromADIFDescription": "Використовується для офлайн-перевірок та статистики QSO",
+      "clearADIFHistory": "Очистити історію ADIF",
+      "clearADIFHistoryDescription": "Видалити імпортовані записи ADIF",
+      "updatedRelative": "Оновлено {{date}}",
+      "fetching-md": "### Отримання **{{title}}**…",
+      "progress-md": "### Отримання **{{title}}**\n\n{{progress}}",
+      "updated-md": "Оновлено на {{date}}",
+      "version-md": "Версія: {{version}}",
+      "confirmClearHistory": {
+        "title": "Ви впевнені?",
+        "description": "Це видалить усі історичні записи, раніше імпортовані з файлів ADIF",
+        "recordsNotDeleted": "Записи з операцій не будуть видалені"
+      },
+      "importingHistoricalADIF": "Імпорт записів ADIF... Будь ласка, терпіть!",
+      "errorImportingHistoricalADIF": "Помилка імпорту історичних ADIF",
+      "errorDeletingHistoricalRecords": "Помилка видалення історичних записів",
+      "recordsCount_zero": "Жодних записів",
+      "recordsCount_one": "1 запис",
+      "recordsCount_other": "{{fmtCount}} записів"
+    },
+    "accountsSettings": {
+      "title": "Акаунти та послуги",
+      "description": "QRZ.com та інші послуги",
+      "accountsSection": "Облікові дані",
+      "servicesSection": "Послуги",
+      "accountsQRZ": {
+        "title": "QRZ (для запитів позивних)",
+        "description": "Логін: {{login}}",
+        "noAccount": "Немає акаунту",
+        "errorEmail": "Не використовуйте свою електронну пошту для входу.",
+        "dialogTitle": "Акаунт на QRZ.com",
+        "pleaseEnterDetails": "Будь ласка, введіть деталі для вашого акаунту на QRZ.com:",
+        "loginLabel": "Логін (ваш позивний)",
+        "loginPlaceholder": "ваш логін",
+        "passwordLabel": "Пароль",
+        "passwordPlaceholder": "ваш пароль",
+        "checkCredentials": "Перевірити облікові дані"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Налаштування Wavelog",
+      "description": "Налаштувати з'єднання з API Wavelog",
+      "noStationsFoundOrInvalidResponse": "Не знайдено станцій або некоректна відповідь",
+      "errorFetchingStations": "Помилка завантаження станцій: {{message}}",
+      "fetchStations": "Завантажити станції",
+      "selectStation": "Вибрати станцію",
+      "selectedStation": "Вибрана станція: {{station}}"
+    },
+    "syncSettings": {
+      "title": "Налаштування синхронізації",
+      "description": "Ham2K LoFi пропонує надійну службу синхронізації між усіма вашими пристроями та забезпечує резервне копіювання ваших даних операцій у хмарі.",
+      "activePlan": "Активний план: {{plan}}",
+      "noActivePlan": "Немає активного плану",
+      "syncService": "Служба синхронізації",
+      "syncService.enabled": "Активовано",
+      "syncService.disabled": "Вимкнено",
+      "syncServiceDialog": {
+        "title": "Служба синхронізації файлів журналу Ham2K",
+        "custom": "Власний"
+      },
+      "syncLinkingDialog": {
+        "title": "Служба синхронізації файлів журналу Ham2K",
+        "enterCode": "Введіть код, показаний на іншому пристрої, щоб підключити його до цього облікового запису.",
+        "linkExpired": "Запит закінчився. Будь ласка спробуйте ще раз.",
+        "areYouSure-md": "Ви впевнені, що хочете підключити \"**{{device}}**\" до цього облікового запису?",
+        "requestNotFound": "Запит не знайдено. Будь ласка спробуйте ще раз.",
+        "buttonCancel": "Ні, скасувати",
+        "buttonProcees": "Так, підключити!"
+      },
+      "deviceNotLinked": "Пристрій не підключено! ({{id}})",
+      "anonymousAccount": "Анонімний обліковий запис (#{{id}})",
+      "enableSyncToLinkDevice": "Увімкніть синхронізацію для підключення цього пристрою",
+      "pendingChallenges": "Запити на підключення",
+      "pendingChallengesDescription": "Є запити на підключення інших пристроїв до цього облікового запису.",
+      "checkEmailInboxForConfirmation": "(перевірте свою електронну пошту для підтвердження)",
+      "accountNumber": "Рахунок #{{id}}",
+      "pendingEmailConfirmation": "(очікує підтвердження електронною поштою)",
+      "accountPendingConfirmation": "(очікує підтвердження)",
+      "tapToConfigure": "Натисніть, щоб налаштувати",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (розробка)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (офіційний)",
+        "custom": "Користувацький ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Цей пристрій було востаннє синхронізовано з іншим обліковим записом (#{{id}}).\n\nЩоб продовжити синхронізацію, вам слід обрати одну з наступних опцій:",
+        "option1withEmail-md": "Варіант #1: Замінити дані на цьому пристрої на дані з аккаунта **{{email}}** на сервері.",
+        "option1noEmail-md": "Опція #1: замінити дані на цьому пристрої з даними з нового облікового запису на сервері.",
+        "option1button": "Вибрати варіант #1: замінити даними сервера",
+        "option2withEmail-md": "Варіант #2: Об'єднати дані на цьому пристрої з даними з аккаунта **{{email}}** на сервері.",
+        "option2noEmail-md": "Опція #2: об'єднати дані на цьому пристрої з даними з нового облікового запису на сервері.",
+        "option2button": "Вибрати варіант #2: об'єднати дані",
+        "option3-md": "Варіант #3: Відновити підключення до попереднього аккаунту, **{{email}}**.",
+        "option3button": "Вибрати варіант #3: попередній обліковий запис",
+        "buttonCancel": "Ні, скасувати",
+        "buttonProcees": "Так, я ризикну! Замінити все!"
+      },
+      "combineDataAlert": {
+        "title": "Об'єднати локальні дані?",
+        "text": "Ви впевнені, що хочете об'єднати ці операції та QSO з новим обліковим записом?\n\nЦе об'єднає QSO на цьому пристрої з тим, що вже є в службі синхронізації для нового облікового запису, і може випадково призвести до змішування неприлеглих журналів!\n\nЦю операцію не можна відмінити.",
+        "buttonCancel": "Ні, скасувати",
+        "buttonText": "Так, я ризикну! Об’єднати їх!",
+        "buttonProcees": "Так, я ризикну! Об'єднати їх!"
+      },
+      "replaceDataAlert": {
+        "title": "Замінити локальні дані?",
+        "text": "Ви впевнені, що хочете замінити всі дані на цьому пристрої операціями та QSO для нового облікового запису з служби синхронізації?\n\nПрограма перезавантажиться.\n\nЯкщо у вас є несклоновані дані, вони будуть втрачені.",
+        "buttonCancel": "Ні, скасувати",
+        "buttonProcees": "Так, я ризикну! Замінити все!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Помилка підключення до попереднього облікового запису",
+        "text": "Виникла помилка при підключенні до попереднього облікового запису.\n\n{{error}}\n\nБудь ласка, спробуйте знову пізніше.",
+        "buttonCancel": "ОК"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi Акаунт",
+        "changeEmailText": "Змініть електронну пошту для відновлення цього облікового запису:",
+        "setEmailText": "Встановіть електронну пошту для вашого облікового запису. Це можна використовувати для ідентифікації та полегшення відновлення пізніше.",
+        "emailAddressLabel": "Електронна адреса",
+        "linkWithOtherButton": "Використати інший обліковий запис",
+        "linkAccountText": "Підключитися до існуючого облікового запису:",
+        "pendingEmailTextPre": "Електронний лист надіслано на",
+        "pendingEmailTextPost": "Будь ласка, знайдіть його та дотримуйтесь інструкцій.",
+        "confirmLink-md": "Відкрийте програму на пристрої, вже зв’язаному з **{{email}}**, та підтвердьте цей запит, ввівши наступний код:",
+        "confirmLinkPost-md": "Якщо ви не маєте доступу до іншого пристрою, зв’язаного з цим обліковим записом, ви можете:",
+        "accountNotFound": "Обліковий запис не знайдено.",
+        "connectViaEmailButton": "Підключитися через email",
+        "linkViaQRAccountText": "Скануйте цей QR-код з пристрою, що має існуючий обліковий запис Ham2K LoFi",
+        "linkViaQRButton": "Підключитися через QR-код",
+        "confirmViaEmailButton": "Підтвердити через електронну пошту",
+        "changeAccountButton": "Змінити обліковий запис",
+        "resendButton": "Відправити електронний лист знову",
+        "revertButton": "Змінити електронну пошту",
+        "syncFirstButton": "Спочатку поверніться та завершіть синхронізацію",
+        "continueAnywayButton": "Я знаю, що роблю! Продовжити все одно",
+        "potentialForDataLoss": "Можлива втрата даних!!!",
+        "potentialForDataLossDescription": "Ви не синхронізували всі дані на цьому пристрої.\\n\\nЯкщо ви прив'язуєте цей пристрій до нового облікового запису, вас запитають, чи хочете ви замінити його дані на дані з цього нового облікового запису.\\n\\nУ цьому випадку, можливо, ви не зможете відновити існуючу активність, яка ще не була синхронізована.\\n\\nРекомендуємо вам спочатку завершити синхронізацію цього пристрою!"
+      },
+      "syncServiceDescription-md": "Базова послуга безплатна, але обмежена двома пристроями або застосунками зі зниженою швидкістю, щоб уникнути перевантаження серверів.\n\nПовна послуга потребує платної передплати та включає синхронізацію всіх ваших операцій між будь-якою розумною кількістю пристроїв або застосунків на повній швидкості.\n\n",
+      "thisDevice": "Цей пристрій",
+      "notAuthenticated": "Не авторизовано",
+      "lofiServer": "LoFi сервер",
+      "otherDevices": "Інші пристрої",
+      "devSettings": "Налаштування розробки",
+      "resetSyncStatus": "Скинути статус синхронізації",
+      "noDataStored": "Жоден даних не зберігся",
+      "syncCountDescription": {
+        "operations": "Операції: {{synced}} синхронізовано, {{pending}} у черзі",
+        "qsos": "QSO: {{synced}} синхронізовано, {{pending}} у черзі"
+      },
+      "cloudCountDescription": {
+        "operations": "Операції: {{total}} всього",
+        "qsos": "QSO: {{total}} зберігано"
+      }
+    },
+    "versionSettings": {
+      "title": "Інформація про версію",
+      "recentChanges": "Останні зміни",
+      "coverPhoto": "Фото на обкладинці: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Перевірка на патчі...",
+      "newMajorReleaseAvailable": "Нова основна версія доступна",
+      "patchAvailable": "{{track}} виправлення доступні",
+      "checkForUpdates": "Перевірка оновлення {{track}}",
+      "checkForUpdatesGeneric": "Перевірка оновлень",
+      "updateAvailable": "Оновлення доступне",
+      "downloading": "Завантаження...",
+      "downloadingProgress": "Завантаження {{progress}}%",
+      "installing": "Установка...",
+      "errorDownloadingUpdate": "Помилка завантаження оновлення",
+      "errorCheckingForUpdates": "Помилка перевірки оновлень",
+      "noUpdatesAvailable": "Оновлення відсутні",
+      "versionDescription": "{{version}} - Базова збірка {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Кредити",
+      "createdBy": "Створено {{callsign}}",
+      "openSource": "Ham2K PoLo є відкритим джерелом",
+      "checkOutCode": "Перегляньте код та зробіть внесок на GitHub!",
+      "teamPoLo": "Команда PoLo",
+      "creator": "Творець і провідний розробник",
+      "developer": "Розробник",
+      "leadSupport": "Керівник з підтримки та документації",
+      "moreCodeAndDocsContributors": "Більше учасників…",
+      "contributorCode": "Участь у коді: {{contributions}}",
+      "contributorDocumentation": "Документація",
+      "translations": "Переклади",
+      "translationsService": "Інструменти перекладу від CrowdIn",
+      "translationsServiceDescription": "Інструменти для керування процесом перекладу щедро надані CrowdIn"
+    },
+    "devModeSettings": {
+      "title": "Налаштування розробника",
+      "wipeDatabase": {
+        "title": "Видалити базу даних?",
+        "description": "Ви впевнені, що бажаєте видалити всі операції, QSO та інші дані?",
+        "noCancel": "Ні, скасувати",
+        "yesWipeIt": "Так, видалити!"
+      },
+      "import": {
+        "title": "Імпорт",
+        "importQSONFile": "Імпортувати файл QSON"
+      },
+      "experiments": {
+        "title": "Експерименти",
+        "enableWavelogExperiments": "Увімкнути експерименти Wavelog"
+      },
+      "manageDatabase": {
+        "title": "Управління базою даних",
+        "exportDatabase": "Експорт бази даних",
+        "exportDatabaseDescription": "Експортувати поточний файл бази даних",
+        "replaceDatabase": "Замінити базу даних",
+        "replaceDatabaseDescription": "Імпортувати новий файл бази даних та замінити всі дані",
+        "wipeDatabase": "Очистити базу даних",
+        "wipeDatabaseDescription": "Видалити всі дані з бази даних."
+      },
+      "internationalization": {
+        "title": "Інтернаціоналізація",
+        "crowdInPersonalTokenLabel": "Персональний токен доступу CrowdIn",
+        "crowdInPersonalTokenPlaceholder": "Отримайте один зі сторінки налаштувань облікового запису CrowdIn",
+        "refreshCrowdInTranslations": {
+          "title": "Оновлення перекладів...",
+          "starting": "Будь ласка, зачекайте, поки ми оновимо переклади...",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Скидання завершено!",
+          "errorTitle": "Помилка оновлення перекладів",
+          "error": "Помилка оновлення перекладів CrowdIn: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Завантажити розширені налаштування",
+        "locationLabel": "Розташування",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Системна інформація",
+        "shareWithDevelopmentTeam": "Поділитися з командою розробки"
+      },
+      "updatePatches": {
+        "title": "Оновити виправлення",
+        "selectTrackForPatches": "Виберіть трек для виправлення",
+        "selectTrackForPatchesDescription": "Виберіть трек для виправлення",
+        "checkingForUpdates": "Перевірка оновлень...",
+        "checkForUpdates": "Перевірка оновлення {{track}}",
+        "updateAvailable": "Доступне оновлення",
+        "updateAvailableForTrack": "{{track}} оновлення доступне",
+        "downloading": "Завантаження...",
+        "downloadingProgress": "Завантаження {{progress}}%",
+        "installing": "Установка...",
+        "errorDownloadingUpdate": "Помилка завантаження оновлення",
+        "errorCheckingForUpdates": "Помилка перевірки оновлень",
+        "noUpdatesAvailable": "Оновлення відсутні"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Групи та режими",
+      "bands": {
+        "title": "Групи",
+        "showCommonBands": "Показати звичайні групи",
+        "showAllBands": "Показати всі групи"
+      },
+      "modes": {
+        "title": "Режими",
+        "showMoreModes": "Показати більше режимів",
+        "showEvenMoreModes": "Показати ще більше режимів",
+        "showFewerModes": "Показати менше режимів"
+      }
+    },
+    "exportSettings": {
+      "title": "Експорт налаштувань",
+      "exportTypes": "Типи експорту",
+      "customTemplates": "Користувацькі шаблони",
+      "defaultTemplates": "Шаблони за замовчуванням",
+      "customTemplatesDescription": "Для цього експорту використовуються власні шаблони",
+      "defaultTemplatesDescription": "Використовуються стандартні шаблони",
+      "includePrivateData": "Включити приватні дані",
+      "ignoreLookupData": "Ігнорувати дані пошуку",
+      "fileNameTemplate": "Шаблон імені файлу",
+      "titleTemplate": "Шаблон назви",
+      "adifNotes": "Нотатки ADIF QSO",
+      "adifComments": "Коментарі до ADIF QSO",
+      "adifQslMessage": "Повідомлення ADIF QSL",
+      "templateHelpTitle": "Допомога у шаблонах",
+      "includePrivateDataDescription": "Включно з іменами, нотатками, адресами тощо.",
+      "excludePrivateDataDescription": "Без імен, нотаток, адрес тощо.",
+      "ignoreLookupDataDescription": "Дані зі служб пошуку, як-от QRZ.com, ігноруються",
+      "useLookupDataDescription": "Включаються дані зі служб пошуку, як-от QRZ.com",
+      "templateHelp-md": "Деякі зразки елементів шаблону…\n\n### Експорт журналу\nАтрибути для експорту журналу\n`{{log.station}}` → `{{call}}` Станція для цього експорту\n`{{log.ref}}` → `XX-1234` Посилання для цього експорту\n`{{log.refName}}` → `Приклад національного парку` Назва посилання для цього експорту\n`{{log.refShortName}}` → `Приклад НП` Коротке посилання для цього експорту\n`{{log.handlerType}}` → `pota` Тип обробника для цього експорту\n`{{log.handlerName}}` → `Парк у повітрі` Ім'я обробника для цього експорту\n`{{log.handlerShortName}}` → `POTA` Коротка назва обробника для цього експорту\n\n### Викличні позивні операцій\n`{{op.station}}` → `{{call}}` Перша станція для операції\n`{{op.operator}}` → `{{call}}` Оператор для операції\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Всі станції для операції\n`{{op.otherStations}}` → `{{otherCalls}}` Інші станції для операції\n\n### Дата операції\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Інші деталі операції\n`{{op.title}}` → `у XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Моя Спеціальна Операція`\n`{{op.userNotes}}` → `Прибули рано вранці…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Грід для цієї операції\n\n### Інформація про QSO\n`{{qso.notes}}` → `Жахливий звук!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Звіт про сигнал, який вони відправили\n`{{qso.our.sent}}` → `55` Звіт про сигнал, який ми відправили\n`{{qso.their.grid}}` → `FF99` Грід, який вони повідомили\n`{{qso.refs}}` → Список усіх посилань для QSO (включає як операційні посилання, так і QSO-тільки посилання)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "Типово",
+        "description": "Базові налаштування для всіх експортів",
+        "fileNameNormal": "Ім'я файлу для діяльності з посиланням (Стандартно)",
+        "fileNameCompact": "Ім'я файлу для діяльності з посиланням (Компактно)",
+        "titleReferenceActivities": "Назва для діяльності з посиланням",
+        "fileNameOtherActivitiesNormal": "Ім'я файлу для інших видів діяльності (Стандартно)",
+        "fileNameOtherActivitiesCompact": "Ім'я файлу для інших видів діяльності (Компактно)",
+        "titleOtherActivities": "Назва для інших видів діяльності",
+        "adifNotes": "Нотатки ADIF QSO",
+        "adifComments": "Коментарі до ADIF QSO",
+        "adifQSLMessage": "Повідомлення ADIF QSL"
+      }
+    },
+    "noticesSettings": {
+      "title": "Останні сповіщення",
+      "undated": "Без дати",
+      "noRecentNotices": "Немає останніх сповіщень"
+    },
+    "extensionSettings": {
+      "title": "Розширення"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Роздільник панелі",
+      "qsosTab": "QSO",
+      "qsosTab-a11y": "QSO Таб",
+      "infoTab": "Інформація",
+      "infoTab-a11y": "Інформаційний Таб",
+      "operationInfo-a11y": "Інформація про операцію",
+      "spotsTab": "Споти",
+      "spotsTab-a11y": "Таб спотів",
+      "mapTab": "Карта",
+      "mapTab-a11y": "Таб карта",
+      "settingsTab": "Операція",
+      "settingsCompactTab": "Опер.",
+      "settingsTab-a11y": "Таб налаштувань операції",
+      "menu": {
+        "loggingSettings": "Налаштування журналювання",
+        "rstFields": "Поля RST",
+        "stateField": "Поле Штату",
+        "gridField": "Поле сітки",
+        "showDeletedQSOs": "Показати видалені QSO",
+        "numbersRow": "Рядок чисел",
+        "actions": "Дії",
+        "lookupAllQSOs": "Переглянути всі QSO",
+        "confirmSpots": "Підтвердити споти"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Немає QSO",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSO",
+      "qsosCompactTabCount_zero": "Немає Q",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Q",
+      "noQSOsYet": "Ще немає QSO!",
+      "currentlySetTo": "Зараз налаштовано",
+      "missingInfoError": {
+        "message": "ПОМИЛКА: Введіть **{{errors}}** для коректної операції",
+        "errors": {
+          "band": "діапазон",
+          "mode": "режим",
+          "callsign": "викличний знак"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Скасувати",
+        "erase-a11y": "Стерти",
+        "delete-a11y": "Видалити",
+        "addQSO-a11y": "Додати QSO",
+        "saveQSO-a11y": "Зберегти QSO"
+      },
+      "deletedQSO": "Видалений QSO",
+      "qsoWillBeDeleted": "QSO буде видалено!",
+      "noQSOsBy-md": "Ще немає QSO від {{callsign}}… Давайте в ефір!",
+      "noQSOsYet-md": "Ще немає QSO… Давайте в ефір!",
+      "qsoCount_zero": "Немає QSO",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO",
+      "qsosInTime": "{{countText}} за {{timeText}}",
+      "last10QSOs": "{{rate}} Q/год за останні 10",
+      "last100QSOs": "{{rate}} Q/год за останні 100",
+      "timeSinceLast": "{{time}} з моменту останнього",
+      "moreLabel": "Більше",
+      "theirCallLabel": "Їх викличний знак",
+      "ourSentLabel": "Надіслано",
+      "theirSentLabel": "Отримано",
+      "stateLabel": "Штат",
+      "gridLabel": "Сітка",
+      "timeLabel": "Час",
+      "dateLabel": "Дата",
+      "timeControls-a11y": "Контроль часу",
+      "powerLabel": "Потужність",
+      "powerControls-a11y": "Контроль потужності",
+      "modeLabel": "Режим",
+      "bandLabel": "Діапазон",
+      "frequencyLabel": "Частота",
+      "bandMissing": "Діапазон???",
+      "modeMissing": "Режим???",
+      "modeOutOfBand": "Поза діапазоном",
+      "radioControls-a11y": "Радіоконтроли {{parts}}",
+      "notesLabel": "Записи",
+      "notesLabel-a11y": "Записи",
+      "activeControlsLabel": "Активні контролі",
+      "activeControlsLabel-a11y": "Активні контролі",
+      "selectToRemoveActiveControls": "виберіть, щоб видалити їх",
+      "selectToRemoveActiveControls-a11y": "виберіть, щоб видалити їх",
+      "moreControlsLabel": "Більше контролів",
+      "moreControlsLabel-a11y": "Більше контролів",
+      "selectToAddMoreControls": "виберіть, щоб додати їх",
+      "selectToAddMoreControls-a11y": "виберіть, щоб додати їх",
+      "showSecondaryControlSettings-a11y": "Показати налаштування вторинних контролів",
+      "hideMostSecondaryControls-a11y": "Сховати більшість вторинних контролів",
+      "showAllSecondaryControls-a11y": "Показати всі вторинні контролі",
+      "spotting": {
+        "selfSpottingAt": "Само-спотинг на {{freq}}",
+        "stopAutoRespotting": "Зупинити авто-ре-спотинг",
+        "setFrequencyFirst": "Спочатку встановіть частоту для спотингу.",
+        "reSpotEvery": "Ре-спот кожні {{minutes}} хвилин",
+        "reSpotAt": "Ре-спот на {{freq}}",
+        "selfSpottedAt": "Само-спотінг на {{time}}",
+        "spotAt": "Спот {{call}} на {{freq}}",
+        "tooLateToSpot": "Занадто пізно для спота {{call}}",
+        "nothingToSpot": "Нічого для спота",
+        "selfSpottingLabel": "Само-спотинг",
+        "selfSpottingControls-a11y": "Контроль само-спотинга",
+        "spottingLabel": "Спотинг",
+        "spottingControls-a11y": "Контроль спотинга",
+        "autoRespottingLabel": "Авто-ре-спотинг",
+        "autoRespottingControls-a11y": "Контроль авто-ре-спотинга",
+        "commentsLabel": "Коментарі"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Немає ліній?\nСпочатку потрібно встановити своє місцезнаходження.\n\nНатисніть тут, щоб це зробити.",
+      "manyNoLocation": "Багато з цих QSO не мають точного місця розташування.\n\nВам може знадобитися платний обліковий запис QRZ.com для пошуку місцезнаходжень."
+    },
+    "opSpotsTab": {
+      "noSpots": "Немає спотів",
+      "spotsCount_zero": "Немає спотів",
+      "spotsCount_one": "1 Спот",
+      "spotsCount_other": "{{fmtCount}} Споти",
+      "showingSpots": "Показано {{count}} з {{total}}",
+      "loadingSpots": "Завантаження спотів...",
+      "sections": {
+        "specialSpots": "Спеціальні споти",
+        "newMultipliers": "Нові множники",
+        "callsOfNote": "Виклики, які відзначено",
+        "mostRecentSpots": "Останні споти"
+      },
+      "allBands": "Всі діапазони",
+      "auto": "Авто",
+      "allModes": "Всі режими",
+      "filters": "Фільтри",
+      "filtersBand": "Діапазон",
+      "filtersAllBands": "Всі діапазони",
+      "filtersBandAutomatic": "Автоматично (Зараз {{band}})",
+      "filtersMode": "Режим",
+      "filtersAllModes": "Всі режими",
+      "filtersModeAutomatic": "Автоматично (Зараз {{mode}})",
+      "filtersMaximumAge": "Максимальний вік",
+      "filtersAnyAge": "Будь-який вік",
+      "filtersAge10Minutes": "10 хвилин",
+      "filtersAge20Minutes": "20 хвилин",
+      "filtersAge30Minutes": "30 хвилин",
+      "filtersAge45Minutes": "45 хвилин",
+      "filtersAge60Minutes": "60 хвилин",
+      "filtersSorting": "Сортування",
+      "filtersSortByTime": "За часом споту",
+      "filtersSortByFrequency": "За частотою",
+      "filtersGroupSpecialSpots": "Групувати спеціальні споти першими",
+      "filtersGroupCallsWithNotes": "Групувати виклики з нотатками",
+      "filtersSpotSources": "Джерела спотів",
+      "filtersFilterByContinent": "Фільтрувати за континентом",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Телефон",
+        "DIGITAL": "Цифровий",
+        "DATA": "Цифровий",
+        "phoneOrCW": "Телефон або CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Некоректний викличний знак {{callsign}}",
+      "invalidCallsigns": "Некоректні викличні знаки {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (обслуговується {{operator}})",
+      "noStationCallsignDefined": "НЕ ВИЗНАЧЕНО ВИКЛИЧНИЙ ЗНАК СТАНЦІЇ",
+      "showMoreTemplates": "Показати більше шаблонів",
+      "templatesAvailable_zero": "Немає доступних шаблонів",
+      "templatesAvailable_one": "1 доступний шаблон",
+      "templatesAvailable_other": "{{count}} доступних шаблонів",
+      "stationAndOperatorTitle": "Станція і оператор",
+      "locationTitle": "Місцезнаходження",
+      "gridDescription-md": "Сітка `{{grid}}`",
+      "stateDescription-md": "Штат: `{{state}}`",
+      "countyDescription-md": "Округ: `{{county}}`",
+      "locationDescriptionNone-md": "Не задано місце розташування",
+      "operationDetailsTitle": "Деталі операції",
+      "operationDetailsDescription": "Додайте примітки для цієї операції",
+      "addTitleOrNotesForOperation": "Додайте заголовок або примітки для цієї операції",
+      "activitiesTitle": "Дії",
+      "addActivityTitle": "Додати активність",
+      "addActivityDescription": "POTA, SOTA, День на природі та інше!",
+      "addActivityDescription-noFeatures": "Спочатку ввімкніть деякі функції активності на головному екрані налаштувань",
+      "operationDataTitle": "Дані операції",
+      "manageOperationLogsTitle": "Керування журналами операцій",
+      "manageOperationLogsDescription": "Експорт, імпорт та керування даними",
+      "useAsTemplateTitle": "Використовувати як шаблон",
+      "useAsTemplateDescription": "Розпочати нову операцію з подібними налаштуваннями",
+      "dangerZoneTitle": "Зона небезпеки",
+      "undeleteOperationTitle": "Відновити операцію",
+      "deleteOperationTitle": "Видалити операцію"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Статистика операцій",
+      "operationTotalsTitle-md": "Підсумки операції:",
+      "qsosInTime_zero": "Немає QSO",
+      "qsosInTime_one": "1 QSO за {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSO за {{time}}",
+      "qsoCount_zero": "Немає QSO",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSO",
+      "timeSinceLast": "{{time}} з моменту останнього QSO",
+      "last10QSOs": "{{rate}} Q/h за останні 10",
+      "last100QSOs": "{{rate}} Q/h за останні 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Помилка імпорту QSON",
+      "invalidName": "Недійсне ім'я",
+      "invalidNameDescription": "Ім'я файлу повинно закінчуватися на .qson або .json",
+      "unknownError": "Невідома помилка"
+    },
+    "importADIF": {
+      "error": "Помилка імпорту ADIF в операцію",
+      "historicalImportError": "Помилка імпорту історичного ADIF",
+      "unknownError": "Невідома помилка"
+    }
+  }
+}

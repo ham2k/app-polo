@@ -1,0 +1,996 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Ingen Bånd",
+      "bandsCount_one": "1 Bånd",
+      "bandsCount_other": "{{count}} Bånd",
+      "modesCount_zero": "Ingen Tilstande",
+      "modesCount_one": "1 Tilstand",
+      "modesCount_other": "{{count}} Tilstande",
+      "total": "I alt {{count}}"
+    },
+    "bca": {
+      "name": "BCA: Belgiske borge og fæstninger",
+      "shortName": "BCA",
+      "exportName": "BCA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen borge valgt til aktivering",
+        "title_one": "Aktiverer 1 borg",
+        "title_other": "Aktiverer {{count}} borge",
+        "noCastlesFound": "Ingen borge fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingCastles_zero": "Ingen matchende borge",
+        "matchingCastles_one": "1 matchende borg",
+        "matchingCastles_other": "{{count}} matchende borge",
+        "searchForCastles": "Søg efter nogle borge at aktivere!",
+        "noCastlesNearby": "Ingen borge i nærheden",
+        "nearbyCastles": "Borge i nærheden",
+        "searchPlaceholder": "Navn eller reference…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Ingen slotte jaget",
+        "huntedRefsCount_one": "1 slot jaget",
+        "huntedRefsCount_other": "{{fmtCount}} slotte jaget",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOs",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOs",
+        "huntedQSOsCount_zero": "Ingen jaget QAOs",
+        "huntedQSOsCount_one": "1 jaget QAO",
+        "huntedQSOsCount_other": "{{fmtCount}} jaget QAOs",
+        "operationTotals": "Drift totaler",
+        "referencesActivatedCount_zero": "Ingen slotte aktiveret",
+        "referencesActivatedCount_one": "1 slot aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} slotte aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige slotte",
+        "referencesMissedCount_one": "1 ufuldstændigt slot",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige slotte",
+        "referencesHuntedCount_zero": "Ingen slotte jaget",
+        "referencesHuntedCount_one": "1 slot jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} slotte jaget"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres BCA"
+      }
+    },
+    "blha": {
+      "name": "BLHA: Belgiske fyrtårne og fyrskibe",
+      "shortName": "BLHA",
+      "exportName": "BLHA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen fyrtårne valgt til aktivering",
+        "title_one": "Aktiverer 1 fyrtårn",
+        "title_other": "Aktiverer {{count}} fyrtårne",
+        "noLighthousesFound": "Ingen fyrtårne fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingLighthouses_zero": "Ingen matchende fyrtårne",
+        "matchingLighthouses_one": "1 matchende fyrtårn",
+        "matchingLighthouses_other": "{{count}} matchende fyrtårne",
+        "searchForLighthouses": "Søg efter nogle fyrtårne at aktivere!",
+        "noLighthousesNearby": "Ingen fyrtårne i nærheden",
+        "nearbyLighthouses": "Fyrtårne i nærheden",
+        "searchPlaceholder": "Navn eller reference…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Ingen fyrtårne jaget",
+        "huntedRefsCount_one": "1 fyrtårn jaget",
+        "huntedRefsCount_other": "{{fmtCount}} fyrtårne jaget",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOs",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOs",
+        "huntedQSOsCount_zero": "Ingen jaget QAOs",
+        "huntedQSOsCount_one": "1 jaget QAO",
+        "huntedQSOsCount_other": "{{fmtCount}} jaget QAOs",
+        "operationTotals": "Drift totaler",
+        "referencesActivatedCount_zero": "Ingen fyrtårne aktiveret",
+        "referencesActivatedCount_one": "1 fyrtårn aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} fyrtårne aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige fyrtårne",
+        "referencesMissedCount_one": "1 ufuldstændigt fyrtårn",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige fyrtårne",
+        "referencesHuntedCount_zero": "Ingen fyrtårne jaget",
+        "referencesHuntedCount_one": "1 fyrtårn jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} fyrtårne jaget"
+      }
+    },
+    "call-history": {
+      "name": "Opkaldshistorik",
+      "description": "Upload historisk ADIF og brug til offline opslag"
+    },
+    "call-notes": {
+      "name": "Kaldetegn Noter",
+      "description": "Gem kalde tegn noter i en fil og brug til offline opslag",
+      "description-md_zero": "Ingen noter indlæst.",
+      "description-md_one": "{{fmtCount}} {{type}} indlæst.",
+      "description-md_other": "{{fmtCount}} {{type}} indlæst.",
+      "builtIn": "Indbyggede noter",
+      "userDefined": "Brugernoter",
+      "failedToLoad": "Kunne ikke indlæse!",
+      "notesFile": "Kaldetegn Noter Fil",
+      "nameLabel": "Navn",
+      "namePlaceholder": "Navn til dit Kaldetegn Noter Fil",
+      "locationLabel": "Placering",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Indbygget",
+      "customTitle": "Brugerdefineret",
+      "addFile": "Tilføj en ny fil",
+      "aboutTitle": "Om Kaldetegn Noter",
+      "names": {
+        "ham2k-hams-of-note": "Ham2K's Hams af Note"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Et sandt eksempel på hvem der er hvem, og hvem der ikke er i radioverdenen"
+      },
+      "help-md": "Kaldetegnsnoter gemmes på simple tekstfiler, ét kald pr. linje efterfulgt af oplysninger, du ønsker vist på loggskærmen. Du kan bruge de indbyggede filer eller tilføje dine egne.\n\nGiv et direkte link til en ren tekstfil, eller et \"dellink\" fra en tjeneste som:\n* [Google Docs](https: //docs.google.com/)\n* [Google Drive](https: //drive.google.com/)\n* [GitHub Gists](https: //gist.github.com/)\n* [Dropbox](https: //www.dropbox.com/)\n* [Apple iCloud Drive](https: //www.icloud.com/)\n\nLinjer i den fil skal se sådan ud og kan understøtte grundlæggende markdown-formattering:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 James POTA King\nWD4DAN Dan POTA _Royalty_\nDAN WD4DAN,WD4JMM\n```\n\nHvis posten starter med en emoji, vil den blive brugt i stedet for standarden ⭐.\n\nIndlæggelser kan bruges til \"kaldetegneudvidelse\", hvis du først skriver `..` eller ` //` i kaldetegnsfeltet, såsom `//DAN` i eksemplet ovenfor."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Ingen Canadiske Provinser",
+      "provincesCount_one": "1 Canadisk Provins",
+      "provincesCount_other": "{{count}} Canadiske Provinser"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Indstillinger",
+        "year": "År",
+        "testMode-md": "Da begivenheden for dette år endnu ikke er startet, kan du teste din drift med QSOs fra de sidste syv dage.",
+        "note-md": "BEMÆRK: PoLo vil rapportere dine resultater ved hjælp af alle QSOs i datointervallet, inklusive enhver anden drift til stede på denne enhed.",
+        "info-md": "Den 13 Kolonier Special Event løber hvert år fra 9am ET 1. juli til midnat ET 7. juli."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Henter aktuelt vejr…",
+      "errorFetchingWeather": "Fejl ved hentning af vejr",
+      "fetchingSolarWeather": "Henter solvejr…",
+      "errorFetchingSolarWeather": "Fejl ved hentning af solvejr",
+      "addNote": "Tilføj note: ‘{{note}}’…",
+      "addNotePrompt": "Tilføj en note? fortsæt med at skrive…",
+      "addNoteConfirm": "Note tilføjet!",
+      "addTodo": "Tilføj to-do: ‘{{note}}’…",
+      "addTodoPrompt": "Tilføj en to-do-post? fortsæt med at skrive…",
+      "addTodoConfirm": "To-do tilføjet!",
+      "sendChat": "Send chat: ‘{{note}}’…",
+      "sendChatPrompt": "Send en chat? fortsæt med at skrive…",
+      "sendChatConfirm": "Chat sendt!"
+    },
+    "commands-debug": {
+      "syncall": "Slet alle operationer og nulstil synkroniseret status?",
+      "syncallConfirm": "Sletter data og gensynkroniserer alle…",
+      "syncup": "Genudsend lokal data til synkroniseringstjeneste?",
+      "syncupConfirm": "Genudsender…",
+      "wipedb": "Slet hele databasen (men behold indstillinger)?",
+      "wipedbConfirm": "Sletter database…",
+      "factory": "Slet alle data og indstillinger?",
+      "factoryConfirm": "Fabriksnulstilling i gang…",
+      "switchLanguage": "Skift sprog til `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Sprog `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Skifter til `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Aktiver udviklertilstand?",
+      "activateConfirm": "Udviklertilstand aktiveret!",
+      "deactivate": "Deaktiver udviklertilstand?",
+      "deactivateConfirm": "Udviklertilstand deaktiveret!",
+      "on": "Udviklertilstand: ON!!!",
+      "off": "Udviklertilstand: OFF"
+    },
+    "commands-misc": {
+      "rtfm": "Læs den grundige manual?",
+      "rtfmConfirm": "Åbner den grundige manual",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Kan ikke selvspotte uden frekvens",
+        "selfSpotWithComments": "Selvspot med ‘{{comments}}’?",
+        "selfSpotPrompt": "Selvspot?",
+        "selfSpottingWithComments": "Selvspotter ved {{freq}} med ‘{{comments}}’",
+        "selfSpotting": "Selvspotter ved {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Start operationen?",
+      "startConfirm": "Operation startet!",
+      "break": "Tilføj en pause?",
+      "breakConfirm": "Driftpause tilføjet!",
+      "roverqth": "Tilføj en pause og angiv en ny placering?",
+      "roverqthConfirm": "Pause tilføjet, angiv nu din nye placering",
+      "stop": "Stop operationen?",
+      "stopConfirm": "Operation stoppet!"
+    },
+    "commands-operator": {
+      "change": "Skift operatør til {{operator}}?",
+      "changeConfirm": "Operatør sat til {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Skift bånd til {{band}}?",
+      "bandConfirm": "Bånd sat til {{band}}",
+      "frequency": "Ændre frekvens til {{freq}} MHz?",
+      "frequencyConfirm": "Frekvens sat til {{freq}} MHz",
+      "frequencyAndMode": "Skift frekvens til {{freq}} MHz ({{mode}})?",
+      "frequencyAndModeConfirm": "Frekvens sat til {{freq}} MHz ({{mode}})",
+      "power": "Skift styrke til {{power}}W?",
+      "powerConfirm": "Styrke sat til {{power}}W",
+      "mode": "Skift tilstand til {{mode}}?",
+      "modeConfirm": "Tilstand sat til {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Indstiller {{name}}?",
+      "setChange": "Skift {{label}} til {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} sat til {{value}}",
+      "setNotChanged": "Ikke ændret"
+    },
+    "commands-time": {
+      "setTime": "Indstil tid til {{time}}?",
+      "setDate": "Indstil datoen til {{date}}?",
+      "timeSet": "Tid sat til {{time}}",
+      "dateSet": "Dato sat til {{date}}",
+      "changeTimeByHours": "Ændr tid med {{delta}} timer?",
+      "changeTimeByMinutes": "Ændr tid med {{delta}} minutter?",
+      "changeTimeBySeconds": "Ændr tid med {{delta}} sekunder?",
+      "changeTimeByDays": "Ændr tid med {{delta}} dage?",
+      "changeTimeByWeeks": "Ændr tid med {{delta}} uger?",
+      "changeTimeToNow": "Ændr tid til nu?",
+      "changeTimeToToday": "Ændr tid til i dag?",
+      "changeTimeToYesterday": "Ændr tid til i går?",
+      "timeSetToNow": "Tid sat til nu",
+      "timeSetToToday": "Tid sat til i dag",
+      "timeSetToYesterday": "Tid sat til i går"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Ingen referencer valgt til aktivering",
+        "title_one": "Aktiverer 1 reference",
+        "title_other": "Aktiverer {{count}} referencer",
+        "addMoreReferences": "Tilføj flere referencer",
+        "addReference": "Tilføj en reference",
+        "activityLabel": "Aktivitet - MY_SIG i ADIF (Valgfrit)",
+        "activityPlaceholder": "f.eks. COTA…",
+        "referenceLabel": "Reference - MY_SIG_INFO i ADIF",
+        "referencePlaceholder": "f.eks. XY-1234…",
+        "nameLabel": "Navn (Valgfrit)",
+        "namePlaceholder": "f.eks. XYZ Borg…",
+        "addButton": "Tilføj {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres Reference"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Overstyr specifikke dataliste titler her",
+        "pota-all-parks": "POTA: Alle Parker",
+        "sota-all-summits": "SOTA: Alle Tinde"
+      },
+      "loading": {
+        "progress": "Indlæste `{{processedLines}}` referencer.\n\n`{{percent}}` • {{secondsLeft}} sekunder tilbage.",
+        "downloadingRawData": "Downloader rå data…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Ingen DXCC Enheder",
+      "entitiesCount_one": "1 DXCC Enhed",
+      "entitiesCount_other": "{{count}} DXCC Enheder"
+    },
+    "eca": {
+      "name": "ECA: Engelske slot-priser",
+      "shortName": "ECA",
+      "exportName": "ECA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen borge valgt til aktivering",
+        "title_one": "Aktiverer 1 borg",
+        "title_other": "Aktiverer {{count}} borge",
+        "noCastlesFound": "Ingen borge fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingCastles_zero": "Ingen matchende borge",
+        "matchingCastles_one": "1 matchende borg",
+        "matchingCastles_other": "{{count}} matchende borge",
+        "searchForCastles": "Søg efter nogle borge at aktivere!",
+        "noCastlesNearby": "Ingen borge i nærheden",
+        "nearbyCastles": "Borge i nærheden",
+        "searchPlaceholder": "Navn eller reference…"
+      }
+    },
+    "ela": {
+      "name": "ELA: Engelske fyrtårnspriser",
+      "shortName": "ELA",
+      "exportName": "ELA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen fyrtårne valgt til aktivering",
+        "title_one": "Aktiverer 1 fyrtårn",
+        "title_other": "Aktiverer {{count}} fyrtårne",
+        "noLighthousesFound": "Ingen fyrtårne fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingLighthouses_zero": "Ingen matchende fyrtårne",
+        "matchingLighthouses_one": "1 matchende fyrtårn",
+        "matchingLighthouses_other": "{{count}} matchende fyrtårne",
+        "searchForLighthouses": "Søg efter nogle fyrtårne at aktivere!",
+        "noLighthousesNearby": "Ingen fyrtårne i nærheden",
+        "nearbyLighthouses": "Fyrtårne i nærheden",
+        "searchPlaceholder": "Navn eller reference…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Byt Sessionsinformation",
+        "classLabel": "Klasse",
+        "locationLabel": "Placering",
+        "additionalInformation": "Yderligere Information",
+        "highestTransmitterPowerLabel": "Højeste Sendereffekt",
+        "highestTransmitterPowerPlaceholder": "100W",
+        "qrpOption": "QRP: 5W eller mindre",
+        "qroOption": "QRO: 100W eller mindre",
+        "moreThan100WOption": "Mere end 100W",
+        "powerSourceLabel": "Strømkilde",
+        "powerSourcePlaceholder": "Vælg en strømkilde",
+        "batteriesOption": "Batterier, Sol, Vind",
+        "commercialPowerOption": "Kommerciel Strøm, Generator",
+        "bonusesTitle": "Bonuspoint: {{count}} krævet, {{points}} point",
+        "bonusesDescription": "Husk også at rapportere disse bonuspoint, når du indsender din log!",
+        "bonusTitle": "{{title}} ({{points}} point)",
+        "information-md": "Klasse for ARRL Felt Dag er, for eksempel `2A`:\n\n  - `1`, `2`, `3`… for antallet af sendere.\n  - `A` for Gruppe (3 eller flere) Bærbar Station\n  - `B` for En eller to persons Bærbar Station\n  - `C` for Mobilstation\n  - `D` for Hjemmestation\n  - `E` for Hjemmestation på Nødstrøm\n  - `F` for Beredsskabscenter\n\nPlaceringen er ARRL-sektionen, RAC-sektionen, `MX` for Mexico, eller `DX` for andre steder.\n\nMere info i de **[officielle regler](https://www.arrl.org/field-day-rules)**."
+      },
+      "bonusName": {
+        "transmitters": "Sendere",
+        "emergencyPower": "100 % nødforsyning",
+        "mediaPublicity": "Medieomtale",
+        "publicLocation": "Offentligt sted",
+        "informationTable": "Offentligt informationsbord",
+        "messageToSM": "Besked til ARRL SM/SEC",
+        "ntsMessages": "Beskedhåndtering",
+        "ntsMessagesCount": "Antal håndterede beskeder",
+        "satelliteQSO": "Satellit-QSO",
+        "alternatePowerQSOs": "QSO'er med alternativ strømforsyning",
+        "w1awMessage": "W1AW Field Day-besked",
+        "electedOfficialVisit": "Besøg af folkevalgt embedsmand",
+        "agencyOfficialVisit": "Besøg af embedsmand fra betjent organisation",
+        "educationalActivity": "Uddannelsesaktivitet",
+        "youthElement": "Ungdomselement",
+        "safetyOfficer": "Sikkerhedsansvarlig",
+        "siteResponsibilities": "Ansvar for stedet",
+        "socialMedia": "Sociale medier",
+        "gotaQSOs": "GOTA-station-QSO'er",
+        "gotaQSOsCount": "Antal GOTA-QSO'er",
+        "gotaCoach": "GOTA-coach",
+        "webSubmission": "Webindsendelse"
+      },
+      "bonusDescription": {
+        "transmitters": "100 point pr. sender (maks. 20), GOTA eller VHF tælles ikke med.",
+        "emergencyPower": "100 point pr. sender (maks. 20), hvis alle kontakter bruger nødforsyning.",
+        "mediaPublicity": "Opnå omtale i lokale medier. Indsend en kopi sammen med dit bidrag.",
+        "publicLocation": "Placér operationen på et offentligt sted såsom en park, skole eller et indkøbscenter (kun klasse A, B eller F).",
+        "informationTable": "Betjen et offentligt informationsbord på Field Day-stedet (kun klasse A, B eller F).",
+        "messageToSM": "Opret en formel besked til din ARRL Section Manager eller Section Emergency Coordinator.",
+        "ntsMessages": "10 point pr. NTS- eller ICS-213-besked (maks. 10) håndteret i operationsperioden.",
+        "satelliteQSO": "Gennemfør mindst én QSO via en amatørradiosatellit (kun klasse A, B eller F).",
+        "alternatePowerQSOs": "Gennemfør mindst én QSO ved hjælp af alternativ elproduktion, såsom sol, vind eller vand (kun klasse A, B, E eller F).",
+        "w1awMessage": "Modtag den særlige Field Day-bulletin, der udsendes af W1AW eller K6KPH, korrekt.",
+        "electedOfficialVisit": "Vær vært for et besøg af en inviteret folkevalgt embedsmand.",
+        "agencyOfficialVisit": "Vær vært for et besøg af en inviteret embedsmand fra en betjent organisation.",
+        "educationalActivity": "Gennemfør en formel uddannelsesaktivitet med en skriftlig lektionsplan.",
+        "youthElement": "Inkludér unge deltagere i operationen.",
+        "safetyOfficer": "Hav en udpeget sikkerhedsansvarlig på stedet (kun klasse A).",
+        "siteResponsibilities": "Opfyld kravene til ansvar for stedet (klasse B, C, D, E og F).",
+        "socialMedia": "Promovér din Field Day-operation på sociale medier.",
+        "gotaQSOs": "5 point for hver QSO gennemført på GOTA-stationen.",
+        "gotaCoach": "Der er en GOTA-coach til at hjælpe med driften af GOTA-stationen.",
+        "webSubmission": "Indsend dit bidrag via webappen på field-day.arrl.org."
+      }
+    },
+    "gma": {
+      "name": "GMA: Global bjergaktivitet",
+      "shortName": "GMA",
+      "exportName": "GMA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen tinder valgt til aktivering",
+        "title_one": "Aktiverer 1 tinde",
+        "title_other": "Aktiverer {{count}} tinder",
+        "noSummitsFound": "Ingen tinder fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingSummits_zero": "Ingen matchende tinder",
+        "matchingSummits_one": "1 matchende tinde",
+        "matchingSummits_other": "{{count}} matchende tinder",
+        "searchForSummits": "Søg efter nogle tinder at aktivere!",
+        "noSummitsNearby": "Ingen tinder i nærheden",
+        "nearbySummits": "Tinder i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownSummit": "Ukendt tinde"
+      }
+    },
+    "ham2k-lookup": {
+      "name": "Ham2K-opslagstjeneste",
+      "description": "Gratis tjeneste, men dækker kun kaldesignaler fra USA, Canada og Tyskland"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Kaldesignal Opslag",
+      "description": "Kræver gratis konto for opslag"
+    },
+    "llota": {
+      "name": "LLOTA: Søer og Laguner på Luften",
+      "shortName": "LLOTA",
+      "exportName": "LLOTA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen søer valgt til aktivering",
+        "title_one": "Aktivering af 1 sø",
+        "title_other": "Aktivering af {{count}} søer",
+        "noLakesFound": "Ingen søer fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} fundne",
+        "matchingRefs_zero": "Ingen matchende søer",
+        "matchingRefs_one": "1 matchende sø",
+        "matchingRefs_other": "{{count}} matchende søer",
+        "searchForRefs": "Søg efter nogle søer at aktivere!",
+        "noRefsNearby": "Ingen søer i nærheden",
+        "nearbyRefs": "Nærliggende søer",
+        "searchPlaceholder": "Navn eller reference…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Ingen L2L'er",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2L'er",
+        "huntedRefsCount_zero": "Ingen søer jaget",
+        "huntedRefsCount_one": "1 sø jaget",
+        "huntedRefsCount_other": "{{fmtCount}} søer jaget",
+        "activatorQSOsCount_zero": "Ingen aktiverings-QSO'er",
+        "activatorQSOsCount_one": "1 aktiverings-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktiverings-QSO'er",
+        "ref2refQSOsCount_zero": "Ingen L2L-QSO'er",
+        "ref2refQSOsCount_one": "1 L2L-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L-QSO'er",
+        "huntedQSOsCount_zero": "Ingen jagede QSO'er",
+        "huntedQSOsCount_one": "1 jaget QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} jagede QSO'er",
+        "operationTotals": "Driftsoversigt",
+        "referencesActivatedCount_zero": "Ingen søer aktiveret",
+        "referencesActivatedCount_one": "1 sø aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} søer aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige søer",
+        "referencesMissedCount_one": "1 ufuldstændig sø",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige søer",
+        "referencesHuntedCount_zero": "Ingen søer jaget",
+        "referencesHuntedCount_one": "1 sø jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} søer jaget"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Fejl ved posting af LLOTA-spot",
+        "serverResponse": "Serveren svarede med fejl {{status}}: {{body}}"
+      },
+      "exampleRefName": "Eksempel Sø",
+      "unknownRefName": "Ukendt Sø",
+      "noRefsNearby": "Ingen søer i nærheden!"
+    },
+    "mota": {
+      "name": "MOTA: Møller i luften",
+      "shortName": "MOTA",
+      "exportName": "MOTA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen møller valgt til aktivering",
+        "title_one": "Aktiverer 1 mølle",
+        "title_other": "Aktiverer {{count}} møller",
+        "noMillsFound": "Ingen møller fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingMills_zero": "Ingen matchende møller",
+        "matchingMills_one": "1 matchende mølle",
+        "matchingMills_other": "{{count}} matchende møller",
+        "searchForMills": "Søg efter nogle møller at aktivere!",
+        "noMillsNearby": "Ingen møller i nærheden",
+        "nearbyMills": "Møller i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownMill": "Ukendt mølle"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres Mølle"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ParksnPeaks Opdagelse",
+      "description": "Bruges mest i VK og ZL",
+      "shortName": "PnP",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL sporing)",
+        "dialogTitle": "ParksnPeaks Konto",
+        "description": "Konto: {{username}}",
+        "noAccount": "Ingen konto",
+        "pleaseEnterDetails": "Indtast venligst oplysningerne for din ParksnPeaks-konto:"
+      },
+      "usernameLabel": "Brugernavn (ikke kaldesignal)",
+      "usernamePlaceholder": "dit konto brugernavn",
+      "apiKeyLabel": "API-nøgle (ikke adgangskode)",
+      "apiKeyPlaceholder": "din API-nøgle"
+    },
+    "pga": {
+      "name": "Polsk Gmina Udmerkelse",
+      "shortName": "PGA",
+      "exportName": "PGA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen gminas valgt til aktivering",
+        "title_one": "Aktiverer 1 gmina",
+        "title_other": "Aktiverer {{count}} gminas",
+        "noGminasFound": "Ingen gminas fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingGminas_zero": "Ingen matchende gminas",
+        "matchingGminas_one": "1 matchende gmina",
+        "matchingGminas_other": "{{count}} matchende gminas",
+        "searchForGminas": "Søg efter nogle gminas at aktivere!",
+        "noGminasNearby": "Ingen gminas i nærheden",
+        "nearbyGminas": "Gminas i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownGmina": "Ukendt gmina"
+      }
+    },
+    "pota": {
+      "name": "POTA: Parker i luften",
+      "shortName": "POTA",
+      "exportName": "POTA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen parker valgt til aktivering",
+        "title_one": "Aktiverer 1 park",
+        "title_other": "Aktiverer {{count}} parker",
+        "noParksFound": "Ingen parker fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingParks_zero": "Ingen matchende parker",
+        "matchingParks_one": "1 matchende park",
+        "matchingParks_other": "{{count}} matchende parker",
+        "searchForParks": "Søg efter nogle parker at aktivere!",
+        "noParksNearby": "Ingen parker i nærheden",
+        "nearbyParks": "Parker i nærheden",
+        "searchPlaceholder": "Navn eller reference…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Ingen P2P'er",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P'er",
+        "huntedRefsCount_zero": "Ingen parker jaget",
+        "huntedRefsCount_one": "1 park jaget",
+        "huntedRefsCount_other": "{{fmtCount}} parker jaget",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOs",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOs",
+        "ref2refQSOsCount_zero": "Ingen P2P-QSOs",
+        "ref2refQSOsCount_one": "1 P2P-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P-QSOs",
+        "huntedQSOsCount_zero": "Ingen jaget QAOs",
+        "huntedQSOsCount_one": "1 jaget QAO",
+        "huntedQSOsCount_other": "{{fmtCount}} jaget QAOs",
+        "operationTotals": "Drift totaler",
+        "referencesActivatedCount_zero": "Ingen parker aktiveret",
+        "referencesActivatedCount_one": "1 park aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} parker aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige parker",
+        "referencesMissedCount_one": "1 ufuldstændig park",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige parker",
+        "referencesHuntedCount_zero": "Ingen parker jaget",
+        "referencesHuntedCount_one": "1 park jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} parker jaget"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres POTA"
+      },
+      "postSpotAPI": {
+        "error": "Fejl ved indsendelse af POTA-spot",
+        "serverResponse": "Serveren svarede med fejl {{status}}: {{body}}"
+      },
+      "exampleRefName": "Eksempel på nationalpark",
+      "unknownRefName": "Ukendt park",
+      "noRefsNearby": "Ingen parker i nærheden!"
+    },
+    "qrz": {
+      "name": "QRZ.com Kaldesignal Opslag",
+      "description": "Kræver gratis konto for navne og betalt konto for lokationer"
+    },
+    "sats": {
+      "name": "Satellitoperationer"
+    },
+    "siota": {
+      "name": "SiOTA: Siloer i luften",
+      "shortName": "SIOTA",
+      "exportName": "SIOTA Aktivering",
+      "account": {
+        "title": "ParknPeaks (SiOTA spotning)",
+        "dialogTitle": "ParknPeaks Konto",
+        "description": "Konto: {{username}}",
+        "noAccount": "Ingen konto",
+        "pleaseEnterDetails": "Indtast venligst detaljerne for din ParknPeaks-konto:",
+        "usernameLabel": "Brugernavn (ikke kaldesignal)",
+        "usernamePlaceholder": "dit kontobrugernavn",
+        "apiKeyLabel": "API-nøgle (ikke adgangskode)",
+        "apiKeyPlaceholder": "din API-nøgle"
+      },
+      "activityOptions": {
+        "title_zero": "Ingen siloer valgt til aktivering",
+        "title_one": "Aktiverer 1 silo",
+        "title_other": "Aktiverer {{count}} siloer",
+        "noSilosFound": "Ingen siloer fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingSilos_zero": "Ingen matchende siloer",
+        "matchingSilos_one": "1 matchende silo",
+        "matchingSilos_other": "{{count}} matchende siloer",
+        "searchForSilos": "Søg efter nogle siloer at aktivere!",
+        "noSilosNearby": "Ingen siloer i nærheden",
+        "nearbySilos": "Siloer i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownSilo": "Ukendt silo"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres Silo"
+      },
+      "postSpotAPI": {
+        "error": "Fejl ved indsendelse af SiOTA-spot",
+        "serverResponse": "Serveren svarede med fejl {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "name": "SOTA: Toppe i luften",
+      "account": {
+        "title": "SOTA (til SOTAWatch selv-spotning)",
+        "dialogTitle": "SOTA Konto",
+        "description": "Konto: {{callsign}}",
+        "noAccount": "Ingen konto",
+        "error": "Fejl ved hentning af kontooplysninger",
+        "connect": "Kobl din SOTA-konto til"
+      },
+      "notLoggedInAlertTitle": "Advarsel",
+      "notLoggedInAlertText": "Ikke logget ind på SOTAWatch for selvspotning. Gå til PoLo-indstillinger",
+      "activityOptions": {
+        "title_zero": "Ingen summits valgt til aktivering",
+        "title_one": "Aktiverer 1 top",
+        "title_other": "Aktiverer {{count}} toppe",
+        "noSummitsFound": "Ingen toppe fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingSummits_zero": "Ingen matchende toppe",
+        "matchingSummits_one": "1 matchende top",
+        "matchingSummits_other": "{{count}} matchende toppe",
+        "searchForSummits": "Søg efter nogle toppe at aktivere!",
+        "noSummitsNearby": "Ingen toppe i nærheden",
+        "nearbySummits": "Toppe i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownSummit": "Ukendt top"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Ingen S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Ingen toppe jaget",
+        "huntedRefsCount_one": "1 top jaget",
+        "huntedRefsCount_other": "{{fmtCount}} toppe jaget",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOs",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOs",
+        "ref2refQSOsCount_zero": "Ingen S2S-QSOs",
+        "ref2refQSOsCount_one": "1 S2S-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S-QSOs",
+        "huntedQSOsCount_zero": "Ingen jaget QAOs",
+        "huntedQSOsCount_one": "1 jaget QAO",
+        "huntedQSOsCount_other": "{{fmtCount}} jaget QAOs",
+        "operationTotals": "Drift totaler",
+        "referencesActivatedCount_zero": "Ingen toppe aktiveret",
+        "referencesActivatedCount_one": "1 top aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} toppe aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige toppe",
+        "referencesMissedCount_one": "1 ufuldstændig top",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige toppe",
+        "referencesHuntedCount_zero": "Ingen toppe jaget",
+        "referencesHuntedCount_one": "1 top jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} toppe jaget"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Fejl ved indsendelse af SOTA-spot",
+        "serverResponse": "Serveren svarede med status {{status}} {{message}}",
+        "sotaAccountLoggedOut": "SOTA-konto logget ud. Log venligst ind igen i PoLo-indstillingerne"
+      },
+      "exampleRefName": "Eksempel på top",
+      "unknownRefName": "Ukendt top",
+      "noRefsNearby": "Ingen toppe i nærheden!"
+    },
+    "tota": {
+      "name": "TOTA: Tårne i luften",
+      "activityOptions": {
+        "title_zero": "Ingen tårne valgt til aktivering",
+        "title_one": "Aktivering af 1 tårn",
+        "title_other": "Aktivering af {{count}} tårne",
+        "noTowersFound": "Ingen tårne fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} matches",
+        "matchingTowers_zero": "Ingen matchende tårne",
+        "matchingTowers_one": "1 matchende tårn",
+        "matchingTowers_other": "{{count}} matchende tårne",
+        "searchForTowers": "Søg efter nogle tårne til aktivering!",
+        "noTowersNearby": "Ingen tårne i nærheden",
+        "nearbyTowers": "Tårne i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownTower": "Ukendt tårn"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Ingen R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Ingen tårne jagtet",
+        "huntedRefsCount_one": "1 tårn jagtet",
+        "huntedRefsCount_other": "{{fmtCount}} tårne jagtet",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOs",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOs",
+        "ref2refQSOsCount_zero": "Ingen R2R-QSOs",
+        "ref2refQSOsCount_one": "1 R2R-QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R-QSOs",
+        "huntedQSOsCount_zero": "Ingen jagede QSOs",
+        "huntedQSOsCount_one": "1 jaget QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} jagede QSOs",
+        "operationTotals": "Driftsoptællinger",
+        "referencesActivatedCount_zero": "Ingen tårne aktiveret",
+        "referencesActivatedCount_one": "1 tårn aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} tårne aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige tårne",
+        "referencesMissedCount_one": "1 ufuldstændigt tårn",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige tårne",
+        "referencesHuntedCount_zero": "Ingen tårne jagtet",
+        "referencesHuntedCount_one": "1 tårn jagtet",
+        "referencesHuntedCount_other": "{{fmtCount}} tårne jagtet"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres Tårn"
+      },
+      "exampleRefName": "Eksempel Tårn",
+      "unknownRefName": "Ukendt Tårn",
+      "noRefsNearby": "Ingen tårne i nærheden!",
+      "postSpotAPI": {
+        "error": "Fejl i TOTA-spotopslag",
+        "serverResponse": "Serveren svarede med status {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Ingen Amerikanske Stater",
+      "statesCount_one": "1 Amerikansk Stat",
+      "statesCount_other": "{{count}} Amerikanske Stater"
+    },
+    "wab": {
+      "name": "Bearbejdet Hele Storbritannien/Irland",
+      "description": "Tilføj WAB/WAI-firkant til operation",
+      "workedAllBritainSquare": "Bearbejdet Hele Storbritannien Firkant",
+      "workedAllIrelandSquare": "Bearbejdet Hele Irland Firkant",
+      "enterSquare": "Indtast Firkant",
+      "placeholderBritain": "f.eks. SU14",
+      "placeholderIreland": "f.eks. N93",
+      "currentSquare": "Nuværende Firkant:",
+      "noSquareSet": "Ingen firkant indstillet"
+    },
+    "wca": {
+      "name": "WCA: Verdensslotte-priser",
+      "shortName": "VSA",
+      "exportName": "VSA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen slotte valgt til aktivering",
+        "title_one": "Aktivering af 1 slot",
+        "title_other": "Aktivering af {{count}} slotte",
+        "noCastlesFound": "Ingen slotte fundet",
+        "nearestMatches": "Nærmeste {{limit}} ud af {{count}} kampe",
+        "matchingCastles_zero": "Ingen matchende slotte",
+        "matchingCastles_one": "1 matchende slot",
+        "matchingCastles_other": "{{count}} matchende slotte",
+        "searchForCastles": "Søg efter nogle slotte til aktivering!",
+        "noCastlesNearby": "Ingen slotte i nærheden",
+        "nearbyCastles": "Slotte i nærheden",
+        "searchPlaceholder": "Navn eller reference…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Ingen slotte jaget",
+        "huntedRefsCount_one": "1 slot jaget",
+        "huntedRefsCount_other": "{{fmtCount}} slotte jaget",
+        "activatorQSOsCount_zero": "Ingen aktivator QSOs",
+        "activatorQSOsCount_one": "1 aktivator QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator QSOs",
+        "huntedQSOsCount_zero": "Ingen jagede QSOs",
+        "huntedQSOsCount_one": "1 jaget QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} jagede QSOs",
+        "operationTotals": "Operation Totals",
+        "referencesActivatedCount_zero": "Ingen slotte aktiveret",
+        "referencesActivatedCount_one": "1 slot aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} slotte aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige slotte",
+        "referencesMissedCount_one": "1 ufuldstændigt slot",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige slotte",
+        "referencesHuntedCount_zero": "Ingen slotte jaget",
+        "referencesHuntedCount_one": "1 slot jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} slotte jaget"
+      },
+      "exampleRefName": "Eksempel Slot",
+      "unknownRefName": "Ukendt Slot",
+      "noRefsNearby": "Ingen slotte i nærheden!"
+    },
+    "wfd": {
+      "name": "Vinter Felt Dag",
+      "shortName": "WFD",
+      "exportName": "WFD Aktivering",
+      "activityOptions": {
+        "exchangeInformation": "Udveksle Information",
+        "classLabel": "Klasse",
+        "locationLabel": "Placering",
+        "objectives_zero": "Ingen mål opnået",
+        "objectives_one": "1 mål opnået, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} mål opnået, OM ×{{multiplier}}",
+        "objectivesTitle": "Mål: {{count}} opnået, OM ×{{multiplier}}",
+        "objectivesDescription": "Husk også at rapportere disse mål, når du indsender din log!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Alternativ Strøm",
+        "awayFromHome": "Operér Bortset Fra Hjemmet",
+        "fmSatelliteContact": "FM Satellit Kontakt",
+        "ssbSatelliteContact": "SSB eller CW Satellit Kontakt",
+        "winlinkEmails": "Winlink E-mails",
+        "specialBulletin": "Speciel Bulletin",
+        "sixBands": "Seks Bånd",
+        "twelveBands": "Tolv Bånd",
+        "multipleModes": "Flere Metoder",
+        "qrpOperation": "QRP Drift",
+        "sixContinuousHours": "Seks Sammenhængende Timer"
+      },
+      "objectiveDescription": {
+        "altPower": "Operér 100% på alternativ strøm, såsom batterier, sol, vind osv.",
+        "awayFromHome": "Opsæt din markstation mindst ½ mil væk fra hjemmet.",
+        "fmSatelliteContact": "Lav mindst 1 FM satellitkontakt i driftsperioden.",
+        "ssbSatelliteContact": "Foretag mindst en kontakt ved brug af SSB eller CW.",
+        "winlinkEmails": "Send OG modtag mindst én e-mail ved brug af Winlink via RF.",
+        "specialBulletin": "Kopier WFD Speciel Bulletin meddelelsen præcist og send din kopi med din log submission.",
+        "sixBands": "Lav mindst tre kontakter på mindst seks forskellige bånd.",
+        "twelveBands": "Lav mindst tre kontakter på mindst tolv forskellige bånd.",
+        "multipleModes": "Brug flere metoder under driftsperioden.",
+        "qrpOperation": "Operér på QRP effekt niveauer (10W eller mindre på Telefon, 5W eller mindre på CW eller Digital).",
+        "sixContinuousHours": "Operér i mindst seks sammenhængende timer i driftsperioden."
+      },
+      "information-md": "Klasse for Vinterfelt Dag er, for eksempel `2M`:\n\n  - `1`, `2`, `3`… for antallet af sendere.\n  - `H` for Hjemmestation\n  - `I` for Indendørs\n  - `O` for Udendørs\n  - `M` for Mobil eller Stationær\n\nPlaceringen er ARRL-sektionen, RAC-sektionen, `MX` for Mexico, eller `DX` for andre steder.\n\nMere info i de **[officielle regler](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Verdensomspændende Bunker Priser",
+      "shortName": "WWBOTA",
+      "exportName": "WWBOTA Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen bunkere valgt til aktivering",
+        "title_one": "Aktiverer 1 bunker",
+        "title_other": "Aktiverer {{count}} bunkere",
+        "noBunkersFound": "Ingen bunkere fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} match",
+        "matchingBunkers_zero": "Ingen matchende bunkere",
+        "matchingBunkers_one": "1 matchende bunker",
+        "matchingBunkers_other": "{{count}} matchende bunkere",
+        "searchForBunkers": "Søg efter nogle bunkere at aktivere!",
+        "noBunkersNearby": "Ingen bunkere i nærheden",
+        "nearbyBunkers": "Bunkere i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownBunker": "Ukendt bunker"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres Bunker"
+      },
+      "postSpotAPI": {
+        "error": "Fejl ved indsendelse af WWBOTA-spot",
+        "serverResponse": "Serveren svarede med status {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Verdensarv Flora og Fauna",
+      "shortName": "WWFF",
+      "exportName": "WWFF Aktivering",
+      "activityOptions": {
+        "title_zero": "Ingen parker valgt til aktivering",
+        "title_one": "Aktiverer 1 park",
+        "title_other": "Aktiverer {{count}} parker",
+        "noParksFound": "Ingen parker fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} match",
+        "matchingParks_zero": "Ingen matchende parker",
+        "matchingParks_one": "1 matchende park",
+        "matchingParks_other": "{{count}} matchende parker",
+        "searchForParks": "Søg efter nogle parker at aktivere!",
+        "noParksNearby": "Ingen parker i nærheden",
+        "nearbyParks": "Parker i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownPark": "Ukendt park"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Ingen P2P'er",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P'er",
+        "huntedRefsCount_zero": "Ingen parker jaget",
+        "huntedRefsCount_one": "1 park jaget",
+        "huntedRefsCount_other": "{{fmtCount}} parker jaget",
+        "activatorQSOsCount_zero": "Ingen aktivator-QSOs",
+        "activatorQSOsCount_one": "1 aktivator-QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivator-QSOs",
+        "ref2refQSOsCount_zero": "Ingen P2P-QAOs",
+        "ref2refQSOsCount_one": "1 P2P-QAO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P-QAOs",
+        "huntedQSOsCount_zero": "Ingen jaget QAOs",
+        "huntedQSOsCount_one": "1 jaget QAO",
+        "huntedQSOsCount_other": "{{fmtCount}} jaget QAOs",
+        "operationTotals": "Drift totaler",
+        "referencesActivatedCount_zero": "Ingen parker aktiveret",
+        "referencesActivatedCount_one": "1 park aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} parker aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige parker",
+        "referencesMissedCount_one": "1 ufuldstændig park",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige parker",
+        "referencesHuntedCount_zero": "Ingen parker jaget",
+        "referencesHuntedCount_one": "1 park jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} parker jaget"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres WWFF"
+      },
+      "exampleRefName": "Eksempelpark",
+      "unknownRefName": "Ukendt park",
+      "noRefsNearby": "Ingen parker i nærheden!",
+      "postSpotAPI": {
+        "error": "Fejl ved indsendelse af WWFF-spot",
+        "serverResponse": "Serveren svarede med status {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "name": "ZLOTA: ZL i luften",
+      "account": {
+        "title": "ZLOTA (ZLOTA spotting)",
+        "dialogTitle": "ZLOTA Konto",
+        "description": "Konto: {{callsign}}",
+        "noAccount": "Ingen konto",
+        "pleaseEnterDetails": "Indtast venligst detaljerne for din ZLOTA-konto:",
+        "callsignLabel": "Kaldesignal",
+        "callsignPlaceholder": "dit kontokaldesignal",
+        "pinLabel": "PIN (ikke adgangskode)",
+        "pinPlaceholder": "din PIN"
+      },
+      "activityOptions": {
+        "title_zero": "Ingen referencer valgt til aktivering",
+        "title_one": "Aktiverer 1 reference",
+        "title_other": "Aktiverer {{count}} referencer",
+        "noReferencesFound": "Ingen referencer fundet",
+        "nearestMatches": "Nærmeste {{limit}} af {{count}} match",
+        "matchingReferences_zero": "Ingen matchende referencer",
+        "matchingReferences_one": "1 matchende reference",
+        "matchingReferences_other": "{{count}} matchende referencer",
+        "searchForReferences": "Søg efter nogle referencer at aktivere!",
+        "noReferencesNearby": "Ingen referencer i nærheden",
+        "nearbyReferences": "Referencer i nærheden",
+        "searchPlaceholder": "Navn eller reference…",
+        "unknownReference": "Ukendt reference"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Deres reference"
+      },
+      "postSpotAPI": {
+        "error": "Fejl ved indsendelse af ZLOTA-spot",
+        "serverResponse": "Serveren svarede med status {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "Ingen dubletter",
+        "dupesCount_one": "1 duplikat",
+        "dupesCount_other": "{{fmtCount}} dubletter",
+        "ref2refCount_zero": "Ingen Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Ingen referencer jaget",
+        "huntedRefsCount_one": "1 reference jaget",
+        "huntedRefsCount_other": "{{fmtCount}} referencer jaget",
+        "activatorQSOsCount_zero": "Ingen aktivatør QSOs",
+        "activatorQSOsCount_one": "1 aktivatør QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} aktivatør QSOs",
+        "ref2refQSOsCount_zero": "Ingen Ref2Ref QSOs",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSOs",
+        "huntedQSOsCount_zero": "Ingen jaget QSOs",
+        "huntedQSOsCount_one": "1 jaget QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} jaget QSOs",
+        "operationTotals": "Driftstotaler",
+        "referencesActivatedCount_zero": "Ingen referencer aktiveret",
+        "referencesActivatedCount_one": "1 reference aktiveret",
+        "referencesActivatedCount_other": "{{fmtCount}} referencer aktiveret",
+        "referencesMissedCount_zero": "Ingen ufuldstændige referencer",
+        "referencesMissedCount_one": "1 ufuldstændig reference",
+        "referencesMissedCount_other": "{{fmtCount}} ufuldstændige referencer",
+        "referencesHuntedCount_zero": "Ingen referencer jaget",
+        "referencesHuntedCount_one": "1 reference jaget",
+        "referencesHuntedCount_other": "{{fmtCount}} referencer jaget"
+      }
+    }
+  }
+}

@@ -1,0 +1,1012 @@
+{
+  "screens": {
+    "start": {
+      "credits": "av KI2D och vännerna",
+      "Loading Extensions": "Laddar tillägg",
+      "Development Build": "Portabel Logger Utvecklingsversion",
+      "messages": {
+        "Reticulating splines": "Retikulerar splines",
+        "Tuning the antenna": "Justera antennen",
+        "Checking the tubes": "Kontrollerar rören",
+        "Warming up the tubes": "Värmer upp rören",
+        "Unfolding the map": "Viker ut kartan",
+        "Charging the flux capacitor": "Laddar upp fluxkondensatorn",
+        "Purging the dilithium chamber": "Rensar dilithiumkammer",
+        "Activating the turbo encabulator": "Aktiverar turboencabulatorn",
+        "Engaging the warp drive": "Aktiverar warpdriften"
+      }
+    },
+    "home": {
+      "title": "Bärbar Logger",
+      "newOperation": "Ny operation",
+      "newOperation-a11y": "Ny operation",
+      "operationList-a11y": "Operationslista",
+      "noOperations": "Inga operationer!",
+      "settings-a11y": "Inställningar",
+      "quickCallLookupPlaceholder": "Snabb uppringning…",
+      "spots-a11y": "Platser"
+    },
+    "operation": {
+      "title": "Operation"
+    },
+    "operationDetails": {
+      "title": "Operationsdetaljer",
+      "operationTitle": "Titel",
+      "newOperation": "Ny operation",
+      "operationNotes": "Anteckningar",
+      "anythingYouWantToWriteAboutThisOperation": "Vad vill du skriva om denna operation"
+    },
+    "operationStationInfo": {
+      "title": "Information om station och operatör",
+      "invalidCallsign": "Ogiltigt anropssignal: {{callsign}}",
+      "invalidCallsigns": "Ogiltiga anropssignaler: {{callsigns}}",
+      "singleStationUsed-md": "`{{oldStation}}` har använts hittills.\n{{newStation}}` kommer att användas för nya QSOs.",
+      "noStationUsed-md": "Ingen anrop har använts hittills.\n{{newStation}} kommer att användas för nya QSOs.",
+      "updateStation-md_zero": "Uppdatera `{{newStation}}` på noll befintliga QSOs",
+      "updateStation-md_one": "Uppdatera `{{newStation}}` på en befintlig QSO",
+      "updateStation-md_other": "Uppdatera `{{newStation}}` på {{count}} befintliga QSOs",
+      "multipleStationsUsed-md": "Denna aktivitet har redan QSOs med flera olika anropssignaler: `{{stations}}`.\n\n`{{newStation}}` kommer endast att användas för nya QSOs.",
+      "singleOperatorUsed-md": "`{{oldOperator}}` har använts hittills.\n{{newOperator}}` kommer att användas för nya QSOs.",
+      "noOperatorUsed-md": "Ingen anrop har använts hittills.\n{{newOperator}} kommer att användas för nya QSOs.",
+      "updateOperator-md": "Uppdatera `{{newOperator}}` som operatör för alla QSOs",
+      "multipleOperatorsUsed-md": "Denna aktivitet har redan QSOs med flera olika operatörsanropssignaler: `{{operators}}`.\n\n`{{newOperator}}` kommer endast att användas för nya QSOs.",
+      "whatIsTheCallsignUsedOnTheAir": "Vilken anropssignal används i luften?",
+      "stationCallsign": "Stationens anropssignal",
+      "whoIsOperatingTheStation": "Vem opererar stationen? (valfritt)",
+      "operatorCallsign": "Operatörens anropssignal",
+      "multiStationOperation": "Flerstationsoperation?",
+      "multiStationOperationYes": "Ja, vi är en av många!",
+      "multiStationOperationNo": "Nej, bara en vanlig station",
+      "identifierForThisStation": "Identifierare för denna station (endast siffror)"
+    },
+    "operationLocation": {
+      "title": "Operationsplats",
+      "selectedLocation": "Vald plats",
+      "maidenheadGridSquareLocator": "Maidenhead Grid Square Locator",
+      "suggestedLocations": "Föreslagna platser",
+      "deviceGps": "Enhetens GPS",
+      "locating": "Lokaliserar…",
+      "gpsError": "GPS Fel",
+      "noGps": "Ingen GPS",
+      "stateOrProvince": "Delstat eller provins (frivillig)",
+      "county": "Län (frivillig)"
+    },
+    "operationAddActivity": {
+      "title": "Lägg till aktivitet",
+      "cantFindActivity": "Kan du inte hitta aktiviteten du letar efter?",
+      "thereAreMoreOptions": "Det finns fler alternativ i Inställningar > Appfunktioner"
+    },
+    "operationActivityOptions": {
+      "title": "Aktivitetsalternativ",
+      "removeActivity": "Ta bort {{activity}} från denna operation",
+      "activityHasNoOptions": "Den här aktiviteten har inga alternativ.",
+      "activityNotEnabled": "Aktiviteten \"{{name}}\" är inte aktiverad.",
+      "lookInSettings": "Leta efter den under Inställningar > Appfunktioner"
+    },
+    "operationData": {
+      "title": "Operationsdata",
+      "selectFromTheExportOptionsBelow": "Välj från exportalternativen nedan",
+      "exportSelectedFiles_zero": "Exportera 0 valda filer",
+      "exportSelectedFiles_one": "Exportera 1 vald fil",
+      "exportSelectedFiles_other": "Exportera {{count}} valda filer",
+      "exportActionsShare": "Dela",
+      "exportActionsSave": "Spara",
+      "exportActionsExport": "Exportera",
+      "exportActionsStash": "Lägg i Stash",
+      "exportActionsLogStash": "Skicka till Ham2K File Stash",
+      "exportQSOs": "Exportera QSOs",
+      "pendingToDoItems_zero": "Inga väntande att-göra punkter",
+      "pendingToDoItems_one": "1 väntande att-göra punkt",
+      "pendingToDoItems_other": "{{count}} väntande att-göra punkter",
+      "importQSOs": "Importera QSOs",
+      "addQSOsFromADIFFile": "Lägg till QSOs från ADIF-fil",
+      "ham2kLoFiSync": "Ham2K LoFi Sync",
+      "operation": "Operation",
+      "exportSettings": "Exportinställningar",
+      "useCompactFileNames": "Använd kompakta filnamn",
+      "wavelogExport": "Wavelog Export",
+      "exportQSOsToWavelogDescription": "Skicka alla QSOs för denna operation till Wavelog",
+      "wavelogDialog": {
+        "title": "Exportera QSOs till Wavelog",
+        "status": "Exportera alla QSOs för denna operation till Wavelog.",
+        "exporting": "Exporterar till Wavelog…"
+      },
+      "deleteOperationDialog": {
+        "title": "Ta bort operation?",
+        "description": "Är du säker på att du vill ta bort den här operationen?"
+      },
+      "errorSavingExport": "Kunde inte spara filen",
+      "logStashDialogTitle": "Ham2K File Stash",
+      "logStashDialogIntro": "PoLo laddar upp dina filer till Ham2K-servrarna och du kan hämta dem från valfri webbläsare.",
+      "logStashDialogTiers": "Gratiskonton kan bara behålla en stash åt gången. Prenumeranter kan behålla så många de vill.",
+      "logStashDialogSubscribe": "Prenumerera",
+      "exportUpsellTitle": "Den här aktiviteten har också sparats i vår molnsynkroniseringstjänst",
+      "exportUpsellBody": "Den här säkerhetskopian är gratis, men om du prenumererar kan du synka den mellan flera enheter och komma åt den i full hastighet.",
+      "exportUpsellSupport": "Och ännu viktigare: din prenumeration stödjer vårt arbete här på Ham2K.",
+      "exportUpsellSubscribe": "Prenumerera",
+      "exportUpsellNotNow": "Inte nu",
+      "exportOptionsInfoLabel": "Om exportalternativen",
+      "exportOptionsInfoTitle": "Exportalternativ",
+      "exportOptionsInfoStash-md": "**Stash** laddar upp dina filer till Ham2K:s File Stash, och du kan hämta dem senare från valfri webbläsare på **[stash.ham2k.net](https://stash.ham2k.net)**. Praktiskt ute i fält när det inte finns något annat enkelt sätt att få en fil från din telefon.",
+      "exportOptionsInfoShare-md": "**Dela** skickar dina filer till en annan app på din enhet — e-post, meddelanden, molnlagring eller ett annat loggningsprogram.",
+      "exportOptionsInfoExport-md": "**Exportera** skickar dina filer till en annan app på din enhet — e-post, meddelanden, molnlagring eller ett annat loggningsprogram.",
+      "exportOptionsInfoSave-md": "**Spara** skriver dina filer direkt till en mapp på din enhet, utan att gå via en annan app.",
+      "exportOptionsInfoSelection-md": "Dessa gäller alla filer du har markerat nedan. Du kan också trycka på en enskild fil för att dela just den.",
+      "freeTierRecentUploadTitle": "Senaste uppladdningen kommer att ersättas",
+      "freeTierRecentUploadMessage": "Du skickade \"{{name}}\" för mindre än 6 timmar sedan och den har inte laddats ner ännu. Om du skickar nu ersätts den. Vill du vänta i stället?",
+      "freeTierRecentUploadConfirm": "Skicka ändå",
+      "errorSendingToLogStash": "Kunde inte skicka till Ham2K File Stash",
+      "sentToLogStash": "Skickat till Ham2K File Stash",
+      "sentToLogStashRetrieve-md": "Du kan hämta {{filesLabel}} genom att besöka **[stash.ham2k.net](https://stash.ham2k.net)** i valfri webbläsare.",
+      "sentToLogStashEmailOffer": "Eller, för enkelhets skull, kan vi skicka ett e-postmeddelande till dig med en direktlänk.",
+      "retrieveSingularFile": "den här filen",
+      "retrievePluralFiles": "de här filerna",
+      "emailMeALink": "Skicka en länk till mig via e-post",
+      "linkEmailed": "Vi har skickat en nedladdningslänk till dig via e-post.",
+      "errorEmailingLink": "Kunde inte skicka e-postmeddelandet"
+    },
+    "callInfo": {
+      "title": "Anropssignalinfo",
+      "messages": {
+        "duplicate": "Dubblett",
+        "invalidBand": "Ogiltigt band",
+        "ourGrid": "Vår position saknas",
+        "theirGrid": "Motstationens lokator saknas",
+        "shortGrid": "Lokatorn är för kort",
+        "newBand": "Nytt band",
+        "newMode": "Nytt läge",
+        "newRef": "Ny referens",
+        "newMult": "Ny Multipel",
+        "newDay": "Ny dag",
+        "newGrid": "Ny grid",
+        "newLocation": "Ny plats",
+        "maybeDupe": "Dubblett?",
+        "partialDupe": "Dubbel",
+        "potaActivation-newDay": "Ny POTA-dag",
+        "potaActivation-newRef": "Ny park",
+        "sotaActivation-newDay": "Ny SOTA-dag",
+        "sotaActivation-newRef": "Ny topp",
+        "sotaActivation-duplicate": "SOTA-dublett!",
+        "wwffActivation-duplicate": "WWFF-dublett!",
+        "wwbotaActivation-newDay": "Ny WWBOTA-dag",
+        "wwbotaActivation-newRef": "Ny bunker",
+        "motaActivation-newRef": "Ny kvarn"
+      },
+      "history": {
+        "last7days": "{{count}} senaste 7 dagarna",
+        "today": "{{count}} idag",
+        "yesterday": "{{count}} igår",
+        "qsos_zero": "0 QSOn",
+        "qsos_one": "1 QSO",
+        "qsos_other": "{{count}} QSOn"
+      },
+      "thisOpCount_zero": "0 QSOn i denna operation",
+      "thisOpCount_one": "1 QSO i denna operation",
+      "thisOpCount_other": "{{count}} QSOn i denna operation",
+      "otherOpsCount_zero": "0 QSOn i andra operationer",
+      "otherOpsCount_one": "1 QSO i andra operationer",
+      "otherOpsCount_other": "{{count}} QSOn i andra operationer",
+      "andMoreCount_zero": "… och {{count}} till",
+      "andMoreCount_one": "… och {{count}} till",
+      "andMoreCount_other": "… och {{count}} till",
+      "showImage": "Visa bild",
+      "notes": "Anteckningar",
+      "potentialCall": "Möjligt anrop: {{call}}",
+      "withCall": "med {{call}}"
+    },
+    "spots": {
+      "title": "Platser"
+    },
+    "editQSO": {
+      "title": "Redigera QSO",
+      "sections": {
+        "qso": "QSO-detaljer",
+        "their": "Deras info",
+        "our": "Vår info",
+        "more": "Mer"
+      },
+      "fields": {
+        "time": "Tid",
+        "date": "Datum",
+        "freq": "Frekvens",
+        "mode": "Läge",
+        "band": "Band",
+        "power": "Effekt",
+        "call": "Stationsanrop",
+        "sent": "RST",
+        "exchange": "Utbyte",
+        "name": "Namn",
+        "city": "Stad",
+        "state": "Delstat/Provins",
+        "county": "Län",
+        "entity": "Enhet",
+        "cqZone": "CQ-zon",
+        "ituZone": "ITU-zon",
+        "arrlSection": "ARRL-sektion",
+        "grid": "Rutnät",
+        "latitude": "Latitud",
+        "longitude": "Longitud",
+        "notes": "Anteckningar"
+      }
+    },
+    "opInfo": {
+      "title": "Operationsinfo"
+    },
+    "settings": {
+      "title": "Inställningar",
+      "sections": {
+        "settings": "Inställningar",
+        "accounts": "Konton",
+        "about": "Om Ham2K",
+        "help": "Behöver hjälp?"
+      },
+      "operatorCallsign": {
+        "title": "Operatörens anropssignal",
+        "noCall": "Ingen anrop",
+        "dialogTitle": "Operatörens anropssignal",
+        "pleaseEnterCallsign": "Ange en anropssignal!",
+        "callsignLabel": "Operatörens anropssignal"
+      },
+      "generalSettings": {
+        "title": "Allmänna inställningar",
+        "description": "Mörkt läge, sifferrad, enheter och mer"
+      },
+      "loggingSettings": {
+        "title": "Loggningsinställningar",
+        "description": "Anpassa loggningsupplevelsen"
+      },
+      "dataSettings": {
+        "title": "Datainställningar",
+        "description": "Datafiler, anropssignalanmärkningar och mer"
+      },
+      "syncSettings": {
+        "title": "Synkroniseringsinställningar",
+        "description": "Molnsynk och säkerhetskopiering"
+      },
+      "accountsSettings": {
+        "title": "Konton & Tjänster",
+        "description": "QRZ.com och andra tjänster"
+      },
+      "appFeatures": {
+        "title": "Appfunktioner",
+        "description": "Hantera funktioner som POTA, SOTA, etc"
+      },
+      "developerSettings": {
+        "title": "Utvecklarinställningar",
+        "description": "Här finns drakar"
+      },
+      "contribute": {
+        "isASupporter": "{{callsign}} är en supporter av Ham2K",
+        "couldBeASupporter": "{{callsign}} skulle kunna vara en supporter av Ham2K"
+      },
+      "versionSettings": {
+        "description": "Se senaste ändringar"
+      },
+      "creditsSettings": {
+        "title": "Krediter",
+        "description": "Sebastián Delmont KI2D & Team PoLo"
+      },
+      "noticesSettings": {
+        "title": "Senaste meddelandena",
+        "description": "Meddelanden du kan ha missat?"
+      },
+      "readTheFineManual": {
+        "title": "Läs Manualen Noga",
+        "description": "Bläddra i dokumentationen för PoLo"
+      },
+      "ham2KForums": {
+        "title": "Ham2K-forum",
+        "description": "Hitta hjälp, ge feedback, diskutera idéer…"
+      },
+      "ham2KChat": {
+        "title": "Ham2K-chatt",
+        "description": "Discord-servern för vårt onlinecommunity"
+      },
+      "ham2KYouTube": {
+        "title": "Ham2K YouTube",
+        "description": "Videor och live-strömmar"
+      },
+      "ham2KInstagram": {
+        "title": "Ham2K Instagram",
+        "description": "För att du inte kan ha för många bilder…"
+      },
+      "ham2KBlueSky": {
+        "title": "Ham2K BlueSky",
+        "description": "Följ oss för nyheter och uppdateringar"
+      },
+      "contactUs": {
+        "title": "Kontakta oss",
+        "description": "help@ham2k.com\n   (men prova forumet eller chatten först!)"
+      }
+    },
+    "generalSettings": {
+      "title": "Allmänna inställningar",
+      "theme": {
+        "title": "Tema",
+        "descriptionDark": "Alltid i mörkt läge",
+        "descriptionLight": "Alltid i ljust läge",
+        "descriptionDevice": "Samma som enhetens tema",
+        "dialogTitle": "Tema"
+      },
+      "fontScale": {
+        "title": "Textstorlek",
+        "descriptionXS": "Minst",
+        "descriptionSM": "Mindre",
+        "descriptionMD": "Normal",
+        "descriptionLG": "Större",
+        "descriptionXL": "Störst",
+        "dialogTitle": "Textstorlek",
+        "dialogDescription": "Dessa storlekar påverkas också av enhetsinställningar såsom visning och tillgänglighet."
+      },
+      "language": {
+        "title": "Språk: {{lang}}",
+        "description": "Ändra appens språk",
+        "dialogTitle": "Språk",
+        "dialogDescription": "Ändra språk",
+        "deviceDefault": "Använd enhetsinställningar ({{lang}})",
+        "optionText": "{{lang}}",
+        "notSupported": "{{lang}} (Enhetsinställningar) stöds för närvarande inte."
+      },
+      "showNumbersRow": {
+        "title": "Visa sifferrad",
+        "descriptionOn": "Visar snabbknappar för siffror",
+        "descriptionOff": "Visar inte nummerraden"
+      },
+      "showExtraInNumbersRow": {
+        "title": "Punkt i sifferrad",
+        "descriptionOn": "Inkluderar punkt- och snedstreckstangenter",
+        "descriptionOff": "Visar bara siffrorna"
+      },
+      "showCommaInNumbersRow": {
+        "title": "Komma i sifferrad",
+        "descriptionOn": "Inkluderar en kommatangent",
+        "descriptionOff": "Ingen kommanyckel"
+      },
+      "vibrateNumbersRow": {
+        "title": "Använd vibration i sifferrad",
+        "descriptionOn": "Vibrerar när du trycker på siffror",
+        "descriptionOff": "Vibrerar inte när du trycker på siffror"
+      },
+      "useMetricUnits": {
+        "title": "Använd metriska enheter",
+        "descriptionOn": "Använder miles för avstånd",
+        "descriptionOff": "Använder kilometer för avstånd"
+      },
+      "keepDeviceAwake": {
+        "title": "Håll enheten vaken",
+        "descriptionOn": "Håller skärmen vaken",
+        "descriptionOff": "Låter skärmen låsas som vanligt"
+      },
+      "useSplitViews": {
+        "title": "Använd delade vyer",
+        "descriptionOn": "Använder delade vyer när skärmen är tillräckligt stor",
+        "descriptionOff": "Använder inte delade vyer"
+      },
+      "useGrid8": {
+        "title": "Hög precision plats",
+        "descriptionOn": "Använder 8-teckens lokatorer",
+        "descriptionOff": "Använder 6-teckens lokatorer"
+      },
+      "smartKeyboard": {
+        "title": "Smart tangentbordsfunktioner",
+        "descriptionOn": "Använder smarta tangentbordsfunktioner",
+        "descriptionOff": "Använder enklare tangentbord, för kompatibilitet med vissa enheter"
+      },
+      "exportSettings": {
+        "title": "Exportinställningar",
+        "description": "Anpassa filnamn och andra inställningar"
+      },
+      "privacy": {
+        "title": "Sekretess"
+      },
+      "shareAppUsageData": {
+        "title": "Dela appens användardata",
+        "descriptionOn": "Delar användnings-, krasch- och prestandadata för att hjälpa oss förbättra appen",
+        "descriptionOff": "Håller appanvändningsdata privata.\nHam2K-teamet kommer inte att kunna upptäcka krascher eller andra problem."
+      },
+      "shareOperationData": {
+        "title": "Dela operationsdata",
+        "descriptionOn": "Delar vissa operationsdata offentligt och med andra användare",
+        "descriptionOff": "Håller operationsdata privata"
+      },
+      "privacyPolicy": {
+        "title": "Integritetspolicy",
+        "description": "Läs vår integritetspolicy"
+      },
+      "termsOfService": {
+        "title": "Användarvillkor",
+        "description": "Läs våra användarvillkor"
+      }
+    },
+    "loggingSettings": {
+      "title": "Logginställningar",
+      "leftieMode": {
+        "title": "Vänsterläge",
+        "descriptionOn": "Använder layout för vänsterhänta",
+        "descriptionOff": "Använder layout för högerhänta"
+      },
+      "countryFlags": {
+        "title": "Landsflagor",
+        "descriptionNone": "Visar inga flaggor",
+        "descriptionAll": "Visar flaggor för alla kontakter",
+        "descriptionDefault": "Visar bara flaggor för DX-kontakter"
+      },
+      "showBearing": {
+        "title": "Visa bäring",
+        "descriptionOn": "Visar uppskattad bäring till stationen",
+        "descriptionOff": "Visar inte bäringsinformation"
+      },
+      "showReverseBearing": {
+        "title": "Visa även omvänd bäring",
+        "descriptionOn": "Visar även bäring från stationen, som \"45° / 225°\"",
+        "descriptionOff": "Visar bara bäring till stationen"
+      },
+      "switchSignalReportOrder": {
+        "title": "Byt signalrapportorder",
+        "descriptionOn": "Skickad först, mottagen andra",
+        "descriptionOff": "Mottagen först, skickad andra"
+      },
+      "jumpAfterRST": {
+        "title": "Hoppa till nästa fält vid RST-inmatning",
+        "descriptionOn": "Hoppar till nästa fält efter RST",
+        "descriptionOff": "Hoppar inte automatiskt"
+      },
+      "suggestDefaultOperator": {
+        "title": "Föreslå standardoperatör",
+        "descriptionOn": "Använder {{operatorCall}} som operatör i operationer där stationens anropssignal är en annan",
+        "descriptionOff": "Föreslår ingen standardoperatör, oavsett vilken stationsanropssignal som används"
+      },
+      "suggestTemplates": {
+        "title": "Använd operationstemplates",
+        "descriptionOn": "Föreslår mallar för nya operationer",
+        "descriptionOff": "Föreslår inte mallar"
+      },
+      "bandsModes": {
+        "title": "Band & Läge",
+        "description": "{{bands}} • {{modes}}"
+      },
+      "extensions": {
+        "title": "Tillägg"
+      }
+    },
+    "featuresSettings": {
+      "title": "Appfunktioner",
+      "activatingExtension": "Aktiverar tillägg, detta kan ta en stund…",
+      "fewerOf": "Färre {{category}}…",
+      "moreOf": "Fler {{category}}…"
+    },
+    "dataSettings": {
+      "title": "Data inställningar",
+      "offlineDataTitle": "Offline Data",
+      "extensionsTitle": "Tillägg",
+      "logDataTitle": "Loggdata",
+      "importHistoryFromADIF": "Importera historik från ADIF",
+      "importHistoryFromADIFDescription": "Används för offline-sökningar och QSO-statistik",
+      "clearADIFHistory": "Rensa ADIF-historik",
+      "clearADIFHistoryDescription": "Ta bort ADIF-importerade poster",
+      "updatedRelative": "Uppdaterad {{date}}",
+      "fetching-md": "### Hämtar **{{title}}**…",
+      "progress-md": "### Hämtar **{{title}}**\n\n{{progress}}",
+      "updated-md": "Uppdaterad den {{date}}",
+      "version-md": "Version: {{version}}",
+      "confirmClearHistory": {
+        "title": "Är du säker?",
+        "description": "Detta kommer att ta bort alla tidigare importerade historikposter från ADIF-filer",
+        "recordsNotDeleted": "Poster från operationer kommer inte att raderas"
+      },
+      "importingHistoricalADIF": "Importerar ADIF-poster… Var god dröj!",
+      "errorImportingHistoricalADIF": "Fel vid import av historisk ADIF",
+      "errorDeletingHistoricalRecords": "Fel vid borttagning av historikposter",
+      "recordsCount_zero": "Inga poster",
+      "recordsCount_one": "1 post",
+      "recordsCount_other": "{{fmtCount}} poster"
+    },
+    "accountsSettings": {
+      "title": "Konton och tjänster",
+      "description": "QRZ.com och andra tjänster",
+      "accountsSection": "Inloggningsuppgifter",
+      "servicesSection": "Tjänster",
+      "accountsQRZ": {
+        "title": "QRZ (för anropssökningar)",
+        "description": "Inloggning: {{login}}",
+        "noAccount": "Inget konto",
+        "errorEmail": "Använd inte din e-post för inloggning.",
+        "dialogTitle": "QRZ.com-konto",
+        "pleaseEnterDetails": "Vänligen ange detaljerna för ditt QRZ.com-konto:",
+        "loginLabel": "Inloggning (din anropssignal)",
+        "loginPlaceholder": "din inloggning",
+        "passwordLabel": "Lösenord",
+        "passwordPlaceholder": "ditt lösenord",
+        "checkCredentials": "Kontrollera inloggningsuppgifter"
+      }
+    },
+    "wavelogSettings": {
+      "title": "Wavelog-inställningar",
+      "description": "Konfigurera Wavelog API-anslutning",
+      "noStationsFoundOrInvalidResponse": "Inga stationer hittades eller ogiltigt svar",
+      "errorFetchingStations": "Fel vid hämtning av stationer: {{message}}",
+      "fetchStations": "Hämta stationer",
+      "selectStation": "Välj station",
+      "selectedStation": "Vald station: {{station}}"
+    },
+    "syncSettings": {
+      "title": "Synkinställningar",
+      "description": "Ham2K LoFi erbjuder en pålitlig synkroniseringstjänst mellan alla dina enheter och ger en säkerhetskopia för dina driftdata i molnet.",
+      "activePlan": "Aktivt abonnemang: {{plan}}",
+      "noActivePlan": "Inget aktivt abonnemang",
+      "syncService": "Synkroniseringstjänst",
+      "syncService.enabled": "Aktiverad",
+      "syncService.disabled": "Inaktiverad",
+      "syncServiceDialog": {
+        "title": "Ham2K Loggfiler Sync-tjänst",
+        "custom": "Anpassad"
+      },
+      "syncLinkingDialog": {
+        "title": "Ham2K Loggfil Sync-tjänst",
+        "enterCode": "Ange koden som visas på den andra enheten för att länka den till detta konto.",
+        "linkExpired": "Förfrågan har gått ut. Försök igen.",
+        "areYouSure-md": "Är du säker på att du vill länka \"**{{device}}**\" med detta konto?",
+        "requestNotFound": "Begäran hittades inte. Försök igen.",
+        "buttonCancel": "Nej, avbryt",
+        "buttonProcees": "Ja, länka den!"
+      },
+      "deviceNotLinked": "Enhet inte länkad! ({{id}})",
+      "anonymousAccount": "Anonymt konto (#{{id}})",
+      "enableSyncToLinkDevice": "Aktivera synkronisering för att länka denna enhet",
+      "pendingChallenges": "Anslutningsförfrågningar",
+      "pendingChallengesDescription": "Det finns väntande förfrågningar om att ansluta andra enheter till detta konto.",
+      "checkEmailInboxForConfirmation": "(kontrollera din e-postinkorg för bekräftelse)",
+      "accountNumber": "Konto #{{id}}",
+      "pendingEmailConfirmation": "(väntar på e-postbekräftelse)",
+      "accountPendingConfirmation": "(väntar på bekräftelse)",
+      "tapToConfigure": "Tryck för att konfigurera",
+      "serverLabels": {
+        "https://dev.lofi.ham2k.net": "Ham2K LoFi (Utveckling)",
+        "https://lofi.ham2k.net": "Ham2K LoFi (Officiell)",
+        "custom": "Anpassad ({{server}})"
+      },
+      "askAboutMergingAccounts": {
+        "warning-md": "Denna enhet synkades senast med ett annat konto (#{{id}}).\n\nFör att fortsätta synkronisera måste du välja mellan följande alternativ:",
+        "option1withEmail-md": "Alternativ #1: Ersätt data på denna enhet med den från **{{email}}**-kontot på servern.",
+        "option1noEmail-md": "Alternativ #1: Byt data på denna enhet med data från det nya kontot på servern.",
+        "option1button": "Välj #1: ersätt med serverdata",
+        "option2withEmail-md": "Alternativ #2: Kombinera data på denna enhet med den från **{{email}}**-kontot på servern.",
+        "option2noEmail-md": "Alternativ #2: Kombinera data på denna enhet med data från det nya kontot på servern.",
+        "option2button": "Välj #2: kombinera data",
+        "option3-md": "Alternativ #3: Återanslut med det tidigare kontot, **{{email}}**.",
+        "option3button": "Välj #3: föregående konto",
+        "buttonCancel": "Nej, Avbryt",
+        "buttonProcees": "Ja, jag tar risken! Ersätt allt!"
+      },
+      "combineDataAlert": {
+        "title": "Kombinera lokal data?",
+        "text": "Är du säker på att du vill kombinera dessa operationer och QSOs med det nya kontot?\n\nDetta kommer att kombinera QSOs på denna enhet med det som redan finns i Sync-tjänsten för det nya kontot, och kan oavsiktligt resultera i blandning av orelaterade loggar!\n\nDenna operation kan inte ångras.",
+        "buttonCancel": "Nej, Avbryt",
+        "buttonText": "Ja, jag tar risken! Kombinera dem!",
+        "buttonProcees": "Ja, jag tar risken! Kombinera dem!"
+      },
+      "replaceDataAlert": {
+        "title": "Ersätt lokal data?",
+        "text": "Är du säker på att du vill ersätta all data på denna enhet med drift och QSOs för det nya kontot från Sync Service?\n\nAppen kommer att starta om.\n\nOm du har osynkroniserad data, KOMMER DEN ATT FÖRLORAS.",
+        "buttonCancel": "Nej, Avbryt",
+        "buttonProcees": "Ja, jag tar risken! Ersätt allt!"
+      },
+      "linkBackErrorAlert": {
+        "title": "Fel vid länken tillbaka till tidigare konto",
+        "text": "Ett fel inträffade vid länken tillbaka till tidigare konto.\n\n{{error}}\n\nFörsök igen senare.",
+        "buttonCancel": "OK"
+      },
+      "syncAccountDialog": {
+        "title": "Ham2K LoFi-konto",
+        "changeEmailText": "Ändra återställnings-e-post för detta konto:",
+        "setEmailText": "Ange en e-postadress för ditt konto. Det kan användas för att identifiera det och göra det lättare att återställa senare.",
+        "emailAddressLabel": "E-postadress",
+        "linkWithOtherButton": "Använd ett annat konto",
+        "linkAccountText": "Anslut med ett befintligt konto:",
+        "pendingEmailTextPre": "Ett e-postmeddelande har skickats till",
+        "pendingEmailTextPost": "Vänligen leta efter det och följ instruktionerna.",
+        "confirmLink-md": "Öppna appen på en enhet som redan är länkad med **{{email}}** och bekräfta denna begäran genom att ange följande kod:",
+        "confirmLinkPost-md": "Om du inte har tillgång till en annan enhet som är länkad till detta konto, kan du:",
+        "accountNotFound": "Konto hittades inte.",
+        "connectViaEmailButton": "Anslut via e-post",
+        "linkViaQRAccountText": "Skanna denna QR-kod från en enhet med ett befintligt Ham2K LoFi-konto",
+        "linkViaQRButton": "Anslut via QR-kod",
+        "confirmViaEmailButton": "Bekräfta via e-post",
+        "changeAccountButton": "Byt Konto",
+        "resendButton": "Skicka e-post igen",
+        "revertButton": "Byt E-post",
+        "syncFirstButton": "Gå tillbaka och slutför synkning först",
+        "continueAnywayButton": "Jag vet vad jag gör! Fortsätt ändå",
+        "potentialForDataLoss": "Risk för dataförlust!!!",
+        "potentialForDataLossDescription": "Du har inte synkat all data på denna enhet.\n\nOm du länkar denna enhet till ett nytt konto kommer du bli tillfrågad om du vill ersätta dess data med de från det nya kontot.\n\nOm så är fallet kanske du inte kan återställa någon befintlig aktivitet som ännu inte har synkats.\n\nVi föreslår att du slutför synkningen på denna enhet först!"
+      },
+      "syncServiceDescription-md": "Bastjänsten är gratis, men är begränsad till två enheter eller appar med reducerad hastighet för att undvika överbelastning av servrarna.\n\nFullständig tjänst kräver en betald prenumeration och inkluderar synkronisering av alla dina operationer mellan ett rimligt antal enheter eller appar med full hastighet.\n\n",
+      "thisDevice": "Denna enhet",
+      "notAuthenticated": "Inte autentiserad",
+      "lofiServer": "LoFi Server",
+      "otherDevices": "Andra Enheter",
+      "devSettings": "Utvecklarinställningar",
+      "resetSyncStatus": "Återställ synkstatus",
+      "noDataStored": "Ingen data lagrad",
+      "syncCountDescription": {
+        "operations": "Operationer: {{synced}} synkade, {{pending}} väntar",
+        "qsos": "QSO: {{synced}} synkade, {{pending}} väntar"
+      },
+      "cloudCountDescription": {
+        "operations": "Operationer: {{total}} totalt",
+        "qsos": "QSO: {{total}} lagrade"
+      }
+    },
+    "versionSettings": {
+      "title": "Versionsinformation",
+      "recentChanges": "Senaste ändringar",
+      "coverPhoto": "Omslagsfoto: {{caption}}",
+      "changes-md": "## {{version}}\n\n{{changes}}",
+      "checkingForPatches": "Söker efter patchar…",
+      "newMajorReleaseAvailable": "Ny större release tillgänglig",
+      "patchAvailable": "{{track}} patch tillgänglig",
+      "checkForUpdates": "Kontrollera efter {{track}} uppdateringar",
+      "checkForUpdatesGeneric": "Kontrollera efter uppdateringar",
+      "updateAvailable": "Uppdatering tillgänglig",
+      "downloading": "Hämtar…",
+      "downloadingProgress": "Laddar ner {{progress}}%",
+      "installing": "Installerar…",
+      "errorDownloadingUpdate": "Fel vid nedladdning av uppdatering",
+      "errorCheckingForUpdates": "Fel vid uppdateringskontroll",
+      "noUpdatesAvailable": "Inga uppdateringar tillgängliga",
+      "versionDescription": "{{version}} - Basbyggnad {{build}}"
+    },
+    "creditsSettings": {
+      "title": "Tack",
+      "createdBy": "Skapad av {{callsign}}",
+      "openSource": "Ham2K PoLo är Öppen Källkod",
+      "checkOutCode": "Kolla in koden och bidra på GitHub!",
+      "teamPoLo": "Team PoLo",
+      "creator": "Skapare & Huvudutvecklare",
+      "developer": "Utvecklare",
+      "leadSupport": "Ledande support & dokumentation",
+      "moreCodeAndDocsContributors": "Fler medarbetare…",
+      "contributorCode": "Kodbidrag: {{contributions}}",
+      "contributorDocumentation": "Dokumentation",
+      "translations": "Översättningar",
+      "translationsService": "Översättningsverktyg av CrowdIn",
+      "translationsServiceDescription": "Verktyg för att hantera översättningsprocessen generöst donerade av CrowdIn"
+    },
+    "devModeSettings": {
+      "title": "Utvecklarinställningar",
+      "wipeDatabase": {
+        "title": "Rensa databas?",
+        "description": "Är du säker på att du vill radera alla operationer, QSOs och andra data?",
+        "noCancel": "Nej, avbryt",
+        "yesWipeIt": "Ja, Rensa!"
+      },
+      "import": {
+        "title": "Importera",
+        "importQSONFile": "Importera QSON-fil"
+      },
+      "experiments": {
+        "title": "Experiment",
+        "enableWavelogExperiments": "Aktivera Wavelog-experiment"
+      },
+      "manageDatabase": {
+        "title": "Hantera Databas",
+        "exportDatabase": "Exportera Databas",
+        "exportDatabaseDescription": "Exportera den nuvarande databasfilen",
+        "replaceDatabase": "Ersätt Databas",
+        "replaceDatabaseDescription": "Importera en ny databasfil och ersätt all data",
+        "wipeDatabase": "Rensa Databas",
+        "wipeDatabaseDescription": "Ta bort all data från databasen."
+      },
+      "internationalization": {
+        "title": "Internationalisering",
+        "crowdInPersonalTokenLabel": "CrowdIn personligt åtkomsttoken",
+        "crowdInPersonalTokenPlaceholder": "Få en från CrowdIns kontoinställningar",
+        "refreshCrowdInTranslations": {
+          "title": "Uppdaterar översättningar…",
+          "starting": "Vänligen vänta medan vi uppdaterar översättningarna…",
+          "progress": "{{current}} / {{total}}: {{language}} - {{file}}",
+          "completed": "Uppdatering avslutad!",
+          "errorTitle": "Fel vid uppdatering av översättningar",
+          "error": "Fel vid uppdatering av CrowdIn-översättningar: {{error}}"
+        }
+      },
+      "downloadAdvancedSettings": {
+        "title": "Hämta avancerade inställningar",
+        "locationLabel": "Plats",
+        "locationPlaceholder": "https://example.com/dir/settings.yml"
+      },
+      "systemInformation": {
+        "title": "Systeminformation",
+        "shareWithDevelopmentTeam": "Dela med utvecklingsteamet"
+      },
+      "updatePatches": {
+        "title": "Uppdatera patchar",
+        "selectTrackForPatches": "Välj spår för patchar",
+        "selectTrackForPatchesDescription": "Välj spår för patchar",
+        "checkingForUpdates": "Söker efter uppdateringar…",
+        "checkForUpdates": "Kontrollera efter {{track}} uppdateringar",
+        "updateAvailable": "Uppdatering tillgänglig",
+        "updateAvailableForTrack": "{{track}} uppdatering tillgänglig",
+        "downloading": "Hämtar…",
+        "downloadingProgress": "Laddar ner {{progress}}%",
+        "installing": "Installerar…",
+        "errorDownloadingUpdate": "Fel vid nedladdning av uppdatering",
+        "errorCheckingForUpdates": "Fel vid kontroll för uppdateringar",
+        "noUpdatesAvailable": "Inga uppdateringar tillgängliga"
+      }
+    },
+    "bandModeSettings": {
+      "title": "Band & Läge",
+      "bands": {
+        "title": "Band",
+        "showCommonBands": "Visa vanliga band",
+        "showAllBands": "Visa alla band"
+      },
+      "modes": {
+        "title": "Lägen",
+        "showMoreModes": "Visa fler lägen",
+        "showEvenMoreModes": "Visa ännu fler lägen",
+        "showFewerModes": "Visa färre lägen"
+      }
+    },
+    "exportSettings": {
+      "title": "Exportera inställningar",
+      "exportTypes": "Exporttyper",
+      "customTemplates": "Anpassade mallar",
+      "defaultTemplates": "Standardmallar",
+      "customTemplatesDescription": "Använder anpassade mallar för denna export",
+      "defaultTemplatesDescription": "Använder standardmallarna",
+      "includePrivateData": "Inkludera privata data",
+      "ignoreLookupData": "Ignorera uppslagsdata",
+      "fileNameTemplate": "Filnamnsmall",
+      "titleTemplate": "Titelmall",
+      "adifNotes": "ADIF QSO-anteckningar",
+      "adifComments": "ADIF QSO-kommentarer",
+      "adifQslMessage": "ADIF QSL-meddelande",
+      "templateHelpTitle": "Mallhjälp",
+      "includePrivateDataDescription": "Inkluderar namn, anteckningar, adresser osv.",
+      "excludePrivateDataDescription": "Exkluderar namn, anteckningar, adresser osv.",
+      "ignoreLookupDataDescription": "Ignorerar data från uppslagstjänster som QRZ.com",
+      "useLookupDataDescription": "Inkluderar data från uppslagstjänster som QRZ.com",
+      "templateHelp-md": "Några exempel på mall-element…\n\n### Loggexport\nAttribut för den logg som exporteras\n`{{log.station}}` → `{{call}}` Station för denna export\n`{{log.ref}}` → `XX-1234` Referens för denna export\n`{{log.refName}}` → `Exempel Nationalpark` Referensnamn för denna export\n`{{log.refShortName}}` → `Exempel NP` Förkortat referensnamn för denna export\n`{{log.handlerType}}` → `pota` Hanteringstyp för denna export\n`{{log.handlerName}}` → `Parker På Luft` Hanteringsnamn för denna export\n`{{log.handlerShortName}}` → `POTA` Förkortat hanteringsnamn för denna export\n\n### Driftanrop\n`{{op.station}}` → `{{call}}` Första station för driften\n`{{op.operator}}` → `{{call}}` Operatör för driften\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alla stationer för driften\n`{{op.otherStations}}` → `{{otherCalls}}` Andra stationer för driften\n\n### Drift Datum\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Övriga Driftsdetaljer\n`{{op.title}}` → `vid XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Min Speciella Drift`\n`{{op.userNotes}}` → `Gick tidigt på morgonen…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Rutnät för denna drift\n\n### QSO Information\n`{{qso.notes}}` → `Hemskt ljud!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Signalrapporten de skickade\n`{{qso.our.sent}}` → `55` Signalrapporten vi skickade\n`{{qso.their.grid}}` → `FF99` Rutnätet de rapporterade\n`{{qso.refs}}` → En lista över alla referenser för QSO:t (inkluderar både driftreferenser och endast QSO-referenser)\n`{{first8 qso.uuid}}` → `123e4567`\n",
+      "default": {
+        "name": "Standardinställningar",
+        "description": "Grundinställningar för alla exporter",
+        "fileNameNormal": "Filnamn för referensaktiviteter (Normal)",
+        "fileNameCompact": "Filnamn för referensaktiviteter (Kompakt)",
+        "titleReferenceActivities": "Titel för referensaktiviteter",
+        "fileNameOtherActivitiesNormal": "Filnamn för andra aktiviteter (Normal)",
+        "fileNameOtherActivitiesCompact": "Filnamn för andra aktiviteter (Kompakt)",
+        "titleOtherActivities": "Titel för andra aktiviteter",
+        "adifNotes": "ADIF QSO-anteckningar",
+        "adifComments": "ADIF QSO-kommentarer",
+        "adifQSLMessage": "ADIF QSL-meddelande"
+      }
+    },
+    "noticesSettings": {
+      "title": "Senaste meddelanden",
+      "undated": "Odaterat",
+      "noRecentNotices": "Inga senaste meddelanden"
+    },
+    "extensionSettings": {
+      "title": "Tillägg"
+    },
+    "operationScreen": {
+      "paneSeparator-a11y": "Panelavskiljare",
+      "qsosTab": "QSOs",
+      "qsosTab-a11y": "QSO-flik",
+      "infoTab": "Info",
+      "infoTab-a11y": "Informationsflik",
+      "operationInfo-a11y": "Driftinformation",
+      "spotsTab": "Spots",
+      "spotsTab-a11y": "Spotsflik",
+      "mapTab": "Karta",
+      "mapTab-a11y": "Kartflik",
+      "settingsTab": "Drift",
+      "settingsCompactTab": "Drift.",
+      "settingsTab-a11y": "Flik med driftinställningar",
+      "menu": {
+        "loggingSettings": "Logginställningar",
+        "rstFields": "RST-fält",
+        "stateField": "Statusfält",
+        "gridField": "Rutnätsfält",
+        "showDeletedQSOs": "Visa borttagna QSOs",
+        "numbersRow": "Nummer rad",
+        "actions": "Åtgärder",
+        "lookupAllQSOs": "Slå upp alla QSOs",
+        "confirmSpots": "Bekräfta spots"
+      }
+    },
+    "opLoggingTab": {
+      "qsosTabCount_zero": "Inga QSOs",
+      "qsosTabCount_one": "1 QSO",
+      "qsosTabCount_other": "{{fmtCount}} QSOs",
+      "qsosCompactTabCount_zero": "Inga Qs",
+      "qsosCompactTabCount_one": "1 Q",
+      "qsosCompactTabCount_other": "{{fmtCount}} Qs",
+      "noQSOsYet": "Inga QSOs ännu!",
+      "currentlySetTo": "För närvarande inställd på",
+      "missingInfoError": {
+        "message": "FEL: Vänligen ange **{{errors}}** för en giltig åtgärd",
+        "errors": {
+          "band": "band",
+          "mode": "trafiksätt",
+          "callsign": "anropssignal"
+        }
+      },
+      "actions": {
+        "undo-a11y": "Ångra",
+        "erase-a11y": "Radera",
+        "delete-a11y": "Ta bort",
+        "addQSO-a11y": "Lägg till QSO",
+        "saveQSO-a11y": "Spara QSO"
+      },
+      "deletedQSO": "Raderat QSO",
+      "qsoWillBeDeleted": "QSO kommer att raderas!",
+      "noQSOsBy-md": "Inga QSOs av {{callsign}} ännu… Låt oss börja sända!",
+      "noQSOsYet-md": "Inga QSOs ännu… Låt oss börja sända!",
+      "qsoCount_zero": "Inga QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "qsosInTime": "{{countText}} på {{timeText}}",
+      "last10QSOs": "{{rate}} Q/h under de senaste 10",
+      "last100QSOs": "{{rate}} Q/h under de senaste 100",
+      "timeSinceLast": "{{time}} sedan senaste",
+      "moreLabel": "Mer",
+      "theirCallLabel": "Deras anropssign.",
+      "ourSentLabel": "Skickat",
+      "theirSentLabel": "Mott.",
+      "stateLabel": "Stat",
+      "gridLabel": "Rutnät",
+      "timeLabel": "Tid",
+      "dateLabel": "Datum",
+      "timeControls-a11y": "Tidskontroller",
+      "powerLabel": "Effekt",
+      "powerControls-a11y": "Effektkontroller",
+      "modeLabel": "Läge",
+      "bandLabel": "Band",
+      "frequencyLabel": "Frekvens",
+      "bandMissing": "Band???",
+      "modeMissing": "Trafiksätt???",
+      "modeOutOfBand": "Utanför bandet",
+      "radioControls-a11y": "Radiokontroller {{parts}}",
+      "notesLabel": "Anteckningar",
+      "notesLabel-a11y": "Anteckningar",
+      "activeControlsLabel": "Aktiva kontroller",
+      "activeControlsLabel-a11y": "Aktiva kontroller",
+      "selectToRemoveActiveControls": "Välj för att ta bort dem",
+      "selectToRemoveActiveControls-a11y": "Välj för att ta bort dem",
+      "moreControlsLabel": "Fler kontroller",
+      "moreControlsLabel-a11y": "Fler kontroller",
+      "selectToAddMoreControls": "Välj för att lägga till dem",
+      "selectToAddMoreControls-a11y": "Välj för att lägga till dem",
+      "showSecondaryControlSettings-a11y": "Visa sekundära kontrollinställningar",
+      "hideMostSecondaryControls-a11y": "Dölj de flesta sekundära kontroller",
+      "showAllSecondaryControls-a11y": "Visa alla sekundära kontroller",
+      "spotting": {
+        "selfSpottingAt": "Självspotting på {{freq}}",
+        "stopAutoRespotting": "Stoppa automatisk återspotting",
+        "setFrequencyFirst": "Ställ först in en frekvens för att spotta.",
+        "reSpotEvery": "Återspotta var {{minutes}} min",
+        "reSpotAt": "Återspotta på {{freq}}",
+        "selfSpottedAt": "Självspotta på {{time}}",
+        "spotAt": "Spotta {{call}} på {{freq}}",
+        "tooLateToSpot": "För sent att spotta {{call}}",
+        "nothingToSpot": "Inget att spotta",
+        "selfSpottingLabel": "Självspotting",
+        "selfSpottingControls-a11y": "Självspotting-kontroller",
+        "spottingLabel": "Spotting",
+        "spottingControls-a11y": "Spotting-kontroller",
+        "autoRespottingLabel": "Automatisk återspotting",
+        "autoRespottingControls-a11y": "Automatisk återspotting-kontroller",
+        "commentsLabel": "Kommentarer"
+      }
+    },
+    "opMapTab": {
+      "noLocation": "Inga linjer?\nDu måste först ställa in din plats.\n\nTryck här för att göra det.",
+      "manyNoLocation": "Många av dessa QSO har ingen exakt plats.\n\nDu kan behöva ett betalt QRZ.com-konto för platsuppslagning."
+    },
+    "opSpotsTab": {
+      "noSpots": "Inga spots",
+      "spotsCount_zero": "Inga spots",
+      "spotsCount_one": "1 Spot",
+      "spotsCount_other": "{{fmtCount}} Spots",
+      "showingSpots": "Visar {{count}} av {{total}}",
+      "loadingSpots": "Laddar fläckar…",
+      "sections": {
+        "specialSpots": "Special Spots",
+        "newMultipliers": "Nya multiplikatorer",
+        "callsOfNote": "Viktiga anropssignaler",
+        "mostRecentSpots": "Senaste spots"
+      },
+      "allBands": "Alla band",
+      "auto": "Auto",
+      "allModes": "Alla lägen",
+      "filters": "Filter",
+      "filtersBand": "Band",
+      "filtersAllBands": "Alla band",
+      "filtersBandAutomatic": "Automatiskt (För närvarande {{band}})",
+      "filtersMode": "Läge",
+      "filtersAllModes": "Alla lägen",
+      "filtersModeAutomatic": "Automatiskt (För närvarande {{mode}})",
+      "filtersMaximumAge": "Maximal ålder",
+      "filtersAnyAge": "Vilken ålder som helst",
+      "filtersAge10Minutes": "10 minuter",
+      "filtersAge20Minutes": "20 minuter",
+      "filtersAge30Minutes": "30 minuter",
+      "filtersAge45Minutes": "45 minuter",
+      "filtersAge60Minutes": "60 minuter",
+      "filtersSorting": "Sortering",
+      "filtersSortByTime": "Efter spot-tid",
+      "filtersSortByFrequency": "Efter frekvens",
+      "filtersGroupSpecialSpots": "Gruppera spec.spots först",
+      "filtersGroupCallsWithNotes": "Gruppera anrop med anteckningar",
+      "filtersSpotSources": "Spottkällor",
+      "filtersFilterByContinent": "Filtrera efter kontinent",
+      "modeLabel": {
+        "CW": "CW",
+        "PHONE": "Telefon",
+        "DIGITAL": "Digital",
+        "DATA": "Digital",
+        "phoneOrCW": "Telefon eller CW"
+      }
+    },
+    "opSettingsTab": {
+      "invalidCallsign": "Ogiltig Anropssignal {{callsign}}",
+      "invalidCallsigns": "Ogiltiga Anropssignaler {{callsigns}}",
+      "stationCallAndOperator": "{{station}} (drivs av {{operator}})",
+      "noStationCallsignDefined": "INGEN STATIONSANROPSSIGNAL DEFINIERAD",
+      "showMoreTemplates": "Visa fler mallar",
+      "templatesAvailable_zero": "Inga mallar tillgängliga",
+      "templatesAvailable_one": "1 mall tillgänglig",
+      "templatesAvailable_other": "{{count}} mallar tillgängliga",
+      "stationAndOperatorTitle": "Station & Operatör",
+      "locationTitle": "Plats",
+      "gridDescription-md": "Rutnät `{{grid}}`",
+      "stateDescription-md": "Delstat: `{{state}}`",
+      "countyDescription-md": "Län: `{{county}}`",
+      "locationDescriptionNone-md": "Ingen plats inställd",
+      "operationDetailsTitle": "Drift Detaljer",
+      "operationDetailsDescription": "Lägg till anteckningar för denna drift",
+      "addTitleOrNotesForOperation": "Lägg till en titel eller anteckningar för denna drift",
+      "activitiesTitle": "Aktiviteter",
+      "addActivityTitle": "Lägg till aktivitet",
+      "addActivityDescription": "POTA, SOTA, Field Day och mer!",
+      "addActivityDescription-noFeatures": "Aktivera först några aktivitetsfunktioner på huvudinställningsskärmen",
+      "operationDataTitle": "Driftdata",
+      "manageOperationLogsTitle": "Hantera driftsloggar",
+      "manageOperationLogsDescription": "Exportera, importera och hantera data",
+      "useAsTemplateTitle": "Använd som mall",
+      "useAsTemplateDescription": "Starta en ny drift med liknande inställningar",
+      "dangerZoneTitle": "Farlig zon",
+      "undeleteOperationTitle": "Återställ drift",
+      "deleteOperationTitle": "Ta bort drift"
+    },
+    "opInfoPanel": {
+      "statsTitle": "Driftstatistik",
+      "operationTotalsTitle-md": "Sammanställ drift:",
+      "qsosInTime_zero": "Inga QSOs",
+      "qsosInTime_one": "1 QSO på {{time}}",
+      "qsosInTime_other": "{{fmtCount}} QSOs på {{time}}",
+      "qsoCount_zero": "Inga QSOs",
+      "qsoCount_one": "1 QSO",
+      "qsoCount_other": "{{fmtCount}} QSOs",
+      "timeSinceLast": "{{time}} sedan senaste QSO",
+      "last10QSOs": "{{rate}} Q/h under de senaste 10",
+      "last100QSOs": "{{rate}} Q/h under de senaste 100"
+    }
+  },
+  "other": {
+    "importQSON": {
+      "error": "Fel vid import av QSON",
+      "invalidName": "Ogiltigt namn",
+      "invalidNameDescription": "Filnamnet måste sluta med .qson eller .json",
+      "unknownError": "Okänt fel"
+    },
+    "importADIF": {
+      "error": "Fel vid importering av ADIF till operation",
+      "historicalImportError": "Fel vid import av historisk ADIF",
+      "unknownError": "Okänt fel"
+    }
+  }
+}

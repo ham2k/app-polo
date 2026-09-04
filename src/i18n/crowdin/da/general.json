@@ -1,0 +1,366 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Engelsk",
+        "ar": "Arabisk - العربية",
+        "ast": "Asturisk - Asturianu",
+        "bn": "Bengali - বাংলা",
+        "ca": "Catalansk - Català",
+        "cs": "Tjekkisk - Čeština",
+        "cy": "Walisisk - Cymraeg",
+        "da": "Dansk",
+        "de": "Tysk - Deutsch",
+        "en-PL": "Gris Latin",
+        "en-PT": "Pirat",
+        "eo": "Esperanto - Esperanto",
+        "es": "Spansk - Español",
+        "et": "Estisk - Eesti",
+        "eu": "Baskisk - Euskara",
+        "fi": "Finsk - Suomi",
+        "fr": "Fransk - Français",
+        "ga": "Irsk - Gaeilge",
+        "gl": "Galicisk - Galego",
+        "hi": "Hindi - हिंदी",
+        "id": "Indonesisk - Bahasa Indonesia",
+        "it": "Italiensk - Italiano",
+        "ja": "Japansk - 日本語",
+        "ko": "Koreansk - 한국어",
+        "lt": "Litauisk - Lietuvių",
+        "lv": "Lettisk - Latvijas",
+        "ms": "Malayisk - Bahasa Melayu",
+        "nb": "Norsk Bokmål - Norsk bokmål",
+        "nl": "Hollandsk - Nederlands",
+        "nn": "Norsk Nynorsk - Nynorsk",
+        "pl": "Polsk - Polski",
+        "pt-BR": "Portugisisk (Brasilien) - Português (Brasil)",
+        "pt-PT": "Portugisisk (Portugal) - Português (Portugal)",
+        "pt": "Portugisisk - Português",
+        "ro": "Rumænsk - Română",
+        "ru": "Russisk - Русский",
+        "sk": "Slovakisk - Slovenčina",
+        "sv": "Svensk - Svenska",
+        "th": "Thai - ภาษาไทย",
+        "tl": "Tagalog - Wikang Filipino",
+        "tlh": "Klingonsk - ᏣᎳᎩ",
+        "tr": "Tyrkisk - Türkçe",
+        "uk": "Ukrainsk - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Vietnamesisk - Tiếng Việt",
+        "zh": "Kinesisk - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q så",
+      "QSOs-a11y": "Q sås",
+      "Operation": "Operation",
+      "generalOperation": "Generel Betjening"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " og "
+      },
+      "time": {
+        "tomorrow": "I morgen",
+        "today": "I dag",
+        "yesterday": "I går",
+        "ago": "{{time}} siden",
+        "fromNow": "{{time}} fra nu",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}t",
+        "shortHoursAndMinutes": "{{h}}t {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}t",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Januar",
+        "2": "Februar",
+        "3": "Marts",
+        "4": "April",
+        "5": "Maj",
+        "6": "Juni",
+        "7": "Juli",
+        "8": "August",
+        "9": "September",
+        "10": "Oktober",
+        "11": "November",
+        "12": "December"
+      },
+      "monthAbbr": {
+        "1": "Jan",
+        "2": "Feb",
+        "3": "Mar",
+        "4": "Apr",
+        "5": "Maj",
+        "6": "Jun",
+        "7": "Jul",
+        "8": "Aug",
+        "9": "Sep",
+        "10": "Okt",
+        "11": "Nov",
+        "12": "Dec"
+      },
+      "weekday": {
+        "1": "Mandag",
+        "2": "Tirsdag",
+        "3": "Onsdag",
+        "4": "Torsdag",
+        "5": "Fredag",
+        "6": "Lørdag",
+        "7": "Søndag"
+      },
+      "weekdayAbbr": {
+        "1": "Man",
+        "2": "Tir",
+        "3": "Ons",
+        "4": "Tor",
+        "5": "Fre",
+        "6": "Lør",
+        "7": "Søn"
+      },
+      "ordinalDay": {
+        "1": "1.",
+        "2": "2.",
+        "3": "3.",
+        "4": "4.",
+        "5": "5.",
+        "6": "6.",
+        "7": "7.",
+        "8": "8.",
+        "9": "9.",
+        "10": "10.",
+        "11": "11.",
+        "12": "12.",
+        "13": "13.",
+        "14": "14.",
+        "15": "15.",
+        "16": "16.",
+        "17": "17.",
+        "18": "18.",
+        "19": "19.",
+        "20": "20.",
+        "21": "21.",
+        "22": "22.",
+        "23": "23.",
+        "24": "24.",
+        "25": "25.",
+        "26": "26.",
+        "27": "27.",
+        "28": "28.",
+        "29": "29.",
+        "30": "30.",
+        "31": "31."
+      },
+      "distance": {
+        "away": "{{distance}} væk"
+      }
+    },
+    "buttons": {
+      "cancel": "Annuller",
+      "ok": "Ok",
+      "close": "Luk",
+      "login": "Login",
+      "logout": "Logout",
+      "delete": "Slet",
+      "refresh": "Opdater",
+      "done": "Udført",
+      "accept": "Acceptér",
+      "accept-a11y": "Accepter Ændringer",
+      "revert": "Fortryd",
+      "revert-a11y": "Fortryd Ændringer",
+      "apply": "Anvend",
+      "connect": "Forbind",
+      "save": "Gem",
+      "export": "Eksportér"
+    },
+    "errors": {
+      "generic": "Noget gik galt. Prøv igen senere.",
+      "genericShort": "Noget gik galt."
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "patch {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Tjekker for opdateringer...",
+        "stable": "Tjekker for stabile opdateringer...",
+        "unstable": "Tjekker for ustabile opdateringer...",
+        "bleedingEdge": "Tjekker for blødende kantopdateringer..."
+      },
+      "tracksPlural": {
+        "stable": "Stabil",
+        "unstable": "Ustabil",
+        "bleedingEdge": "Blødende Kant",
+        "Production": "Stabil",
+        "Staging": "Ustabil",
+        "Development": "Blødende Kant"
+      },
+      "trackSingular": {
+        "stable": "Stabil",
+        "unstable": "Ustabil",
+        "bleedingEdge": "Blødende Kant",
+        "Production": "Stabil",
+        "Staging": "Ustabil",
+        "Development": "Blødende Kant"
+      },
+      "versionIsAvailable-md": "Opdatering til {{versionName}} er tilgængelig.",
+      "updateNow": "Opdater Nu",
+      "newVersionAvailable-md": "En ny version af PoLo er tilgængelig!"
+    },
+    "dataFiles": {
+      "loading": "Indlæser {{name}}",
+      "downloading": "Downloader {{name}}",
+      "dataHasToBeDownloaded-md": "Data for **{{name}}** skal downloades.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Data for **{{name}}** er ikke blevet opdateret i et stykke tid.",
+      "downloadNow": "Download Nu",
+      "refreshNow": "Opdater Nu"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ok!",
+        "__comment__": "Override specifikke notifikationshandlinger her"
+      },
+      "title": {
+        "__comment__": "Override specifikke notifikationstitler her"
+      },
+      "text": {
+        "__comment__": "Override specifikke notifikationstekster her"
+      },
+      "dialogTitle": {
+        "__comment__": "Override specifikke dialogtitler her"
+      },
+      "dialogText": {
+        "__comment__": "Override specifikke dialogtekster her"
+      },
+      "dataFiles": {
+        "fetching": "Henter {{title}}…",
+        "progress": "Henter {{title}}\n\n{{progress}}",
+        "done": "Færdig med at hente {{title}}",
+        "error": "Fejl ved hentning af {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Tekst",
+        "csv": "Komma-separeret værdi",
+        "tsv": "Tabulator-separeret værdi",
+        "other": "Data"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Kernefunktioner",
+        "locationBased": "Placering-baserede aktiviteter",
+        "contestsAndFieldOps": "Konkurrencer & Feltoperationer",
+        "lookup": "Dataopslag & Sporing",
+        "devmode": "Udviklertilstand",
+        "other": "Andre Funktioner"
+      }
+    },
+    "continents": {
+      "AF": "Afrika",
+      "AS": "Asien",
+      "EU": "Europa",
+      "NA": "Nordamerika",
+      "SA": "Sydamerika",
+      "OC": "Oceanien"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Single Sideband",
+        "USB": "USB",
+        "USB-a11y": "Øvre Sideband",
+        "LSB": "LSB",
+        "LSB-a11y": "Nedre Sideband",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Andet",
+        "other-a11y": "Anden Tilstand"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 Meter",
+        "80m-a11y": "80 Meter",
+        "60m-a11y": "60 Meter",
+        "40m-a11y": "40 Meter",
+        "30m-a11y": "30 Meter",
+        "20m-a11y": "20 Meter",
+        "17m-a11y": "17 Meter",
+        "15m-a11y": "15 Meter",
+        "12m-a11y": "12 Meter",
+        "11m-a11y": "11 Meter",
+        "10m-a11y": "10 Meter",
+        "6m-a11y": "6 Meter",
+        "2m-a11y": "2 Meter",
+        "70cm-a11y": "70 Centimeter",
+        "23cm-a11y": "23 Centimeter",
+        "13cm-a11y": "13 Centimeter",
+        "9cm-a11y": "9 Centimeter",
+        "6cm-a11y": "6 Centimeter",
+        "3cm-a11y": "3 Centimeter",
+        "1-25cm-a11y": "1,25 Centimeter",
+        "6mm-a11y": "6 Millimeter",
+        "4mm-a11y": "4 Millimeter",
+        "2-5mm-a11y": "2,5 Millimeter",
+        "2mm-a11y": "2 Millimeter",
+        "1mm-a11y": "1 Millimeter",
+        "submm-a11y": "Under-millimeter",
+        "other": "Andet",
+        "other-a11y": "Andet Bånd"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

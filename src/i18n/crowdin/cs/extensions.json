@@ -188,6 +188,8 @@
       "startConfirm": "Aktivita spuštěna!",
       "break": "Přidat přestávku?",
       "breakConfirm": "Přestávka aktivity přidána!",
+      "roverqth": "Přidat pauzu a nastavit novou polohu?",
+      "roverqthConfirm": "Pauza přidána, nyní nastavte svou novou polohu",
       "stop": "Zastavit operaci?",
       "stopConfirm": "Aktivita zastavena!"
     },

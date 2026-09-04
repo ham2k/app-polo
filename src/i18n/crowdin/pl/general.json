@@ -1,0 +1,366 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Angielski",
+        "ar": "Arabski - العربية",
+        "ast": "Asturyjski - Asturianu",
+        "bn": "Bengalski - বাংলা",
+        "ca": "Kataloński - Català",
+        "cs": "Czeski - Čeština",
+        "cy": "Walijski - Cymraeg",
+        "da": "Duński - Dansk",
+        "de": "Niemiecki - Deutsch",
+        "en-PL": "Świńska Łacina - Pig Latin",
+        "en-PT": "Piracki - Pirate",
+        "eo": "Esperanto - Esperanto",
+        "es": "Hiszpański - Español",
+        "et": "Estoński - Eesti",
+        "eu": "Baskijski - Euskara",
+        "fi": "Fiński - Suomi",
+        "fr": "Francuski - Français",
+        "ga": "Irlandzki - Gaeilge",
+        "gl": "Galicyjski - Galego",
+        "hi": "Hinduski - हिंदी",
+        "id": "Indonezyjski - Bahasa Indonesia",
+        "it": "Włoski - Italiano",
+        "ja": "Japoński - 日本語",
+        "ko": "Koreański - 한국어",
+        "lt": "Litewski - Lietuvių",
+        "lv": "Łotewski - Latvijas",
+        "ms": "Malajski - Bahasa Melayu",
+        "nb": "Norweski Bokmål - Norsk bokmål",
+        "nl": "Holenderski - Nederlands",
+        "nn": "Norweski Nynorsk - Nynorsk",
+        "pl": "Polski",
+        "pt-BR": "Portugalski (Brazylia) - Português (Brasil)",
+        "pt-PT": "Portugalski (Portugalia) - Português (Portugal)",
+        "pt": "Portugalski - Português",
+        "ro": "Rumuński - Română",
+        "ru": "Rosyjski - Русский",
+        "sk": "Słowacki - Slovenčina",
+        "sv": "Szwedzki - Svenska",
+        "th": "Tajski - ภาษาไทย",
+        "tl": "Tagalski - Wikang Filipino",
+        "tlh": "Klingoński - ᏣᎳᎩ",
+        "tr": "Turecki - Türkçe",
+        "uk": "Ukraiński - Українська",
+        "ur": "Urdu - اردو",
+        "vi": "Wietnamski - Tiếng Việt",
+        "zh": "Chiński - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "Operacja",
+      "generalOperation": "Ogólne działanie"
+    },
+    "formatting": {
+      "thousandsDelimiter": " ",
+      "decimalSeparator": ",",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " i "
+      },
+      "time": {
+        "tomorrow": "Jutro",
+        "today": "Dzisiaj",
+        "yesterday": "Wczoraj",
+        "ago": "{{time}} temu",
+        "fromNow": "{{time}} od teraz",
+        "shortSeconds": "{{s}}s",
+        "shortMinutes": "{{m}}m",
+        "shortMinutesAndSeconds": "{{m}}m {{s}}s",
+        "shortHours": "{{h}}h",
+        "shortHoursAndMinutes": "{{h}}h {{m}}m",
+        "shortDays": "{{d}}d",
+        "shortDaysAndHours": "{{d}}d {{h}}h",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Styczeń",
+        "2": "Luty",
+        "3": "Marzec",
+        "4": "Kwiecień",
+        "5": "Maj",
+        "6": "Czerwiec",
+        "7": "Lipiec",
+        "8": "Sierpień",
+        "9": "Wrzesień",
+        "10": "Październik",
+        "11": "Listopad",
+        "12": "Grudzień"
+      },
+      "monthAbbr": {
+        "1": "Sty",
+        "2": "Lut",
+        "3": "Mar",
+        "4": "Kwi",
+        "5": "Maj",
+        "6": "Cze",
+        "7": "Lip",
+        "8": "Sie",
+        "9": "Wrz",
+        "10": "Paź",
+        "11": "Lis",
+        "12": "Gru"
+      },
+      "weekday": {
+        "1": "Poniedziałek",
+        "2": "Wtorek",
+        "3": "Środa",
+        "4": "Czwartek",
+        "5": "Piątek",
+        "6": "Sobota",
+        "7": "Niedziela"
+      },
+      "weekdayAbbr": {
+        "1": "Pon",
+        "2": "Wto",
+        "3": "Śro",
+        "4": "Czw",
+        "5": "Pią",
+        "6": "Sob",
+        "7": "Nie"
+      },
+      "ordinalDay": {
+        "1": "1.",
+        "2": "2.",
+        "3": "3.",
+        "4": "4.",
+        "5": "5.",
+        "6": "6.",
+        "7": "7.",
+        "8": "8.",
+        "9": "9.",
+        "10": "10.",
+        "11": "11.",
+        "12": "12.",
+        "13": "13.",
+        "14": "14.",
+        "15": "15.",
+        "16": "16.",
+        "17": "17.",
+        "18": "18.",
+        "19": "19.",
+        "20": "20.",
+        "21": "21.",
+        "22": "22.",
+        "23": "23.",
+        "24": "24.",
+        "25": "25.",
+        "26": "26.",
+        "27": "27.",
+        "28": "28.",
+        "29": "29.",
+        "30": "30.",
+        "31": "31."
+      },
+      "distance": {
+        "away": "{{distance}} stąd"
+      }
+    },
+    "buttons": {
+      "cancel": "Anuluj",
+      "ok": "Ok",
+      "close": "Zamknij",
+      "login": "Zaloguj się",
+      "logout": "Wyloguj się",
+      "delete": "Usuń",
+      "refresh": "Odśwież",
+      "done": "Gotowe",
+      "accept": "Zaakceptuj",
+      "accept-a11y": "Zaakceptuj zmiany",
+      "revert": "Przywróć",
+      "revert-a11y": "Przywróć zmiany",
+      "apply": "Zastosuj",
+      "connect": "Połącz",
+      "save": "Zapisz",
+      "export": "Eksportuj"
+    },
+    "errors": {
+      "generic": "Coś poszło nie tak. Spróbuj ponownie później.",
+      "genericShort": "Coś poszło nie tak."
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "wersja {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Sprawdzanie aktualizacji…",
+        "stable": "Sprawdzanie stabilnych aktualizacji…",
+        "unstable": "Sprawdzanie niestabilnych aktualizacji…",
+        "bleedingEdge": "Sprawdzanie aktualizacji z testowych wersji…"
+      },
+      "tracksPlural": {
+        "stable": "Stabilne",
+        "unstable": "Niestabilne",
+        "bleedingEdge": "Eksperymentalne",
+        "Production": "Stabilne",
+        "Staging": "Niestabilne",
+        "Development": "Eksperymentalne"
+      },
+      "trackSingular": {
+        "stable": "Stabilne",
+        "unstable": "Niestabilne",
+        "bleedingEdge": "Eksperymentalne",
+        "Production": "Stabilne",
+        "Staging": "Niestabilne",
+        "Development": "Eksperymentalne"
+      },
+      "versionIsAvailable-md": "Aktualizacja do {{versionName}} jest dostępna.",
+      "updateNow": "Aktualizuj teraz",
+      "newVersionAvailable-md": "Nowa wersja PoLo jest dostępna!"
+    },
+    "dataFiles": {
+      "loading": "Ładowanie {{name}}",
+      "downloading": "Pobieranie {{name}}",
+      "dataHasToBeDownloaded-md": "Dane dla **{{name}}** muszą zostać pobrane.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Dane dla **{{name}}** nie były aktualizowane przez jakiś czas.",
+      "downloadNow": "Pobierz teraz",
+      "refreshNow": "Odśwież teraz"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ok!",
+        "__comment__": "Przesłaniaj tutaj konkretne akcje powiadomień"
+      },
+      "title": {
+        "__comment__": "Przesłaniaj tutaj konkretne tytuły powiadomień"
+      },
+      "text": {
+        "__comment__": "Przesłaniaj tutaj konkretne teksty powiadomień"
+      },
+      "dialogTitle": {
+        "__comment__": "Przesłaniaj tutaj konkretne tytuły dialogów"
+      },
+      "dialogText": {
+        "__comment__": "Przesłaniaj tutaj konkretne teksty dialogów"
+      },
+      "dataFiles": {
+        "fetching": "Pobieranie {{title}}…",
+        "progress": "Pobieranie {{title}}\n\n{{progress}}",
+        "done": "Zakończono pobieranie {{title}}",
+        "error": "Błąd pobierania {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Tekst",
+        "csv": "Rozdzielane przecinkami wartości",
+        "tsv": "Wartości rozdzielane tabulatorem",
+        "other": "Dane"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Podstawowe funkcje",
+        "locationBased": "Aktywności oparte na lokalizacji",
+        "contestsAndFieldOps": "Zawody i operacje terenowe",
+        "lookup": "Wyszukiwanie danych i spotowanie",
+        "devmode": "Tryb dewelopera",
+        "other": "Inne funkcje"
+      }
+    },
+    "continents": {
+      "AF": "Afryka",
+      "AS": "Azja",
+      "EU": "Europa",
+      "NA": "Ameryka Północna",
+      "SA": "Ameryka Południowa",
+      "OC": "Oceania"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Modulacja jednowstęgowa",
+        "USB": "USB",
+        "USB-a11y": "Górna wstęga boczna",
+        "LSB": "LSB",
+        "LSB-a11y": "Dolna wstęga boczna",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ritty",
+        "CW": "CW",
+        "CW-a11y": "C.W.",
+        "FM": "FM",
+        "FM-a11y": "F.M.",
+        "AM": "AM",
+        "AM-a11y": "A.M.",
+        "other": "Inne",
+        "other-a11y": "Inny tryb"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 metrów",
+        "80m-a11y": "80 metrów",
+        "60m-a11y": "60 metrów",
+        "40m-a11y": "40 metrów",
+        "30m-a11y": "30 metrów",
+        "20m-a11y": "20 metrów",
+        "17m-a11y": "17 metrów",
+        "15m-a11y": "15 metrów",
+        "12m-a11y": "12 metrów",
+        "11m-a11y": "11 metrów",
+        "10m-a11y": "10 metrów",
+        "6m-a11y": "6 metrów",
+        "2m-a11y": "2 metry",
+        "70cm-a11y": "70 centymetrów",
+        "23cm-a11y": "23 centymetry",
+        "13cm-a11y": "13 centymetrów",
+        "9cm-a11y": "9 centymetrów",
+        "6cm-a11y": "6 centymetrów",
+        "3cm-a11y": "3 centymetry",
+        "1-25cm-a11y": "1,25 centymetra",
+        "6mm-a11y": "6 milimetrów",
+        "4mm-a11y": "4 milimetry",
+        "2-5mm-a11y": "2,5 milimetra",
+        "2mm-a11y": "2 milimetry",
+        "1mm-a11y": "1 milimetr",
+        "submm-a11y": "Submilimetrowe",
+        "other": "Inne",
+        "other-a11y": "Inne pasmo"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

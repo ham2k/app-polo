@@ -118,7 +118,7 @@
       "errorSavingExport": "ファイルを保存できませんでした",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLoがファイルをHam2Kサーバーにアップロードし、どのブラウザからでもダウンロードできます。",
-      "logStashDialogTiers": "無料アカウントでは一度に1つのファイルのみ送信できます。サブスクライバーは必要な数だけ送信できます。",
+      "logStashDialogTiers": "無料アカウントでは一度に保持できるスタッシュは1つだけです。サブスクライバーは必要な数だけ保持できます。",
       "logStashDialogSubscribe": "登録する",
       "exportUpsellTitle": "この運用は当社のクラウド同期サービスにも保存されました",
       "exportUpsellBody": "このバックアップは無料ですが、サブスクリプションに加入すると、複数のデバイス間で同期し、フルスピードでアクセスできます。",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**エクスポート** はファイルをデバイス上の別のアプリ、つまりメール、メッセージング、クラウドストレージ、または別のログプログラムに渡します。",
       "exportOptionsInfoSave-md": "**保存** は、別のアプリを経由せずに、ファイルをデバイス上のフォルダーへ直接書き込みます。",
       "exportOptionsInfoSelection-md": "これらは下でチェックしたすべてのファイルに対して実行されます。個別のファイルをタップして、そのファイルだけを共有することもできます。",
-      "freeTierOneFileTitle": "無料アカウントでは一度に1つのファイルのみ送信できます",
-      "freeTierOneFileMessage": "\"{{fileName}}\"だけを送信しますか？",
-      "freeTierOneFileConfirm": "{{fileName}}を送信",
       "freeTierRecentUploadTitle": "最近のアップロードが置き換えられます",
-      "freeTierRecentUploadMessage": "6時間以内に\"{{fileName}}\"をアップロードしましたが、まだダウンロードされていません。このファイルを送信すると置き換えられます。代わりに待ちますか？",
+      "freeTierRecentUploadMessage": "6時間以内に「{{name}}」を送信しましたが、まだダウンロードされていません。今送信すると置き換えられます。代わりに待ちますか？",
       "freeTierRecentUploadConfirm": "それでも送信",
       "errorSendingToLogStash": "Ham2K File Stashに送信できませんでした",
       "sentToLogStash": "Ham2K File Stashに送信しました",
@@ -154,6 +151,8 @@
         "duplicate": "重複",
         "invalidBand": "無効なバンド",
         "ourGrid": "自局の位置情報がありません",
+        "theirGrid": "相手局のグリッドが未入力です",
+        "shortGrid": "グリッドが短すぎます",
         "newBand": "新しいバンド",
         "newMode": "新しいモード",
         "newRef": "新しいリファレンス",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "数字行を表示",
-        "descriptionOn": "数字のクイックボタン",
-        "descriptionOff": "数字行を表示しない"
+        "descriptionOn": "数字のクイックボタンを表示しています",
+        "descriptionOff": "数字行を表示していません"
       },
       "showExtraInNumbersRow": {
         "title": "数字行にピリオドを表示",
-        "descriptionOn": "ピリオド (とスラッシュ) を表示",
-        "descriptionOff": "数字のみを表示"
+        "descriptionOn": "ピリオドキーとスラッシュキーを含めています",
+        "descriptionOff": "数字のみを表示しています"
       },
       "showCommaInNumbersRow": {
         "title": "数字行にカンマを表示",
-        "descriptionOn": "コンマキーを表示",
+        "descriptionOn": "コンマキーを含めています",
         "descriptionOff": "コンマキーを表示しない"
       },
       "vibrateNumbersRow": {
         "title": "数字行でバイブレーションを使用",
-        "descriptionOn": "数字を押した時に振動させる",
-        "descriptionOff": "数字を押した時に振動させない"
+        "descriptionOn": "数字を押した時に振動させます",
+        "descriptionOff": "数字を押した時に振動させません"
       },
       "useMetricUnits": {
         "title": "メートル単位を使用",
-        "descriptionOn": "距離にマイルを使用",
-        "descriptionOff": "距離にキロメートルを使用"
+        "descriptionOn": "距離にマイルを使用しています",
+        "descriptionOff": "距離にキロメートルを使用しています"
       },
       "keepDeviceAwake": {
         "title": "端末のスリープを無効化",
-        "descriptionOn": "端末のロック画面の無効化",
-        "descriptionOff": "通常の画面ロックを許可"
+        "descriptionOn": "画面をスリープさせません",
+        "descriptionOff": "通常どおり画面ロックを許可します"
       },
       "useSplitViews": {
         "title": "分割表示を使用",
-        "descriptionOn": "画面が十分に大きい場合に分割表示を使用",
-        "descriptionOff": "分割表示を使用しない"
+        "descriptionOn": "画面が十分に大きい場合に分割表示を使用しています",
+        "descriptionOff": "分割表示を使用していません"
       },
       "useGrid8": {
         "title": "高精度の位置情報",
-        "descriptionOn": "8桁のグリッドを使用",
-        "descriptionOff": "6桁のグリッドを使用"
+        "descriptionOn": "8桁のグリッドを使用しています",
+        "descriptionOff": "6桁のグリッドを使用しています"
       },
       "smartKeyboard": {
         "title": "スマートキーボード機能",
-        "descriptionOn": "スマートキーボード機能を有効にする",
-        "descriptionOff": "一部のデバイスとの互換性のためにシンプルなキーボードを使用"
+        "descriptionOn": "スマートキーボード機能を使用しています",
+        "descriptionOff": "一部のデバイスとの互換性のために、シンプルなキーボードを使用しています"
       },
       "exportSettings": {
         "title": "エクスポート設定",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "アプリ使用データを共有",
-        "descriptionOn": "使用状況、クラッシュ、パフォーマンスデータを共有してアプリの改善にご協力ください",
-        "descriptionOff": "アプリの使用データを非公開にします。\nHam2Kチームはクラッシュやその他の問題を検出できません。"
+        "descriptionOn": "アプリの改善に役立てるため、使用状況、クラッシュ、パフォーマンスデータを共有しています",
+        "descriptionOff": "アプリの使用データを非公開にしています。\nHam2Kチームはクラッシュやその他の問題を検出できません。"
       },
       "shareOperationData": {
         "title": "オペレーションデータを共有",
-        "descriptionOn": "オペレーションデータを公開して他のユーザーと共有",
-        "descriptionOff": "オペレーションデータをプライベートに保ちます"
+        "descriptionOn": "一部のオペレーションデータを公開し、他のユーザーと共有しています",
+        "descriptionOff": "オペレーションデータをプライベートに保っています"
       },
       "privacyPolicy": {
         "title": "プライバシーポリシー",
@@ -423,19 +422,24 @@
       "title": "ロギング設定",
       "leftieMode": {
         "title": "左利きモード",
-        "descriptionOn": "左利きユーザー向けのレイアウトを使用",
-        "descriptionOff": "右利きユーザー向けのレイアウトを使用"
+        "descriptionOn": "左利き用レイアウトを使用しています",
+        "descriptionOff": "右利き用レイアウトを使用しています"
       },
       "countryFlags": {
         "title": "国旗",
-        "descriptionNone": "国旗を表示しない",
-        "descriptionAll": "すべてのコンタクトに国旗を表示",
-        "descriptionDefault": "DXコンタクトのみに国旗を表示"
+        "descriptionNone": "国旗を表示していません",
+        "descriptionAll": "すべてのコンタクトに国旗を表示しています",
+        "descriptionDefault": "DXコンタクトのみに国旗を表示しています"
       },
       "showBearing": {
         "title": "方位を表示",
-        "descriptionOn": "局への推定方位を表示",
-        "descriptionOff": "方位情報を表示しない"
+        "descriptionOn": "局への推定方位を表示しています",
+        "descriptionOff": "方位情報を表示していません"
+      },
+      "showReverseBearing": {
+        "title": "逆方位も表示",
+        "descriptionOn": "局からの方位も「45° / 225°」のように表示しています",
+        "descriptionOff": "局への方位のみを表示しています"
       },
       "switchSignalReportOrder": {
         "title": "シグナルレポートの順序を切り替える",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "RST入力時に次のフィールドにジャンプ",
-        "descriptionOn": "RST入力後にジャンプ",
-        "descriptionOff": "自動的にジャンプしない"
+        "descriptionOn": "RST後に次のフィールドへジャンプします",
+        "descriptionOff": "自動的にジャンプしません"
       },
       "suggestDefaultOperator": {
         "title": "デフォルトオペレーターを提案",
-        "descriptionOn": "ステーションコールが異なるオペレーションで{{operatorCall}}をオペレーターとして設定",
-        "descriptionOff": "使用する局コールに関係なくデフォルトオペレーターを提案しない"
+        "descriptionOn": "ステーションコールが異なるオペレーションで、{{operatorCall}}をオペレーターとして使用しています",
+        "descriptionOff": "使用するステーションコールに関係なく、デフォルトオペレーターを提案しません"
       },
       "suggestTemplates": {
         "title": "運用テンプレートを使用",
-        "descriptionOn": "新しい運用のためのテンプレートを提案",
-        "descriptionOff": "テンプレートを提案しない"
+        "descriptionOn": "新しいオペレーションのためのテンプレートを提案しています",
+        "descriptionOff": "テンプレートを提案していません"
       },
       "bandsModes": {
         "title": "バンドとモード",
@@ -750,8 +754,8 @@
       "exportTypes": "エクスポート種別",
       "customTemplates": "カスタムテンプレート",
       "defaultTemplates": "デフォルトテンプレート",
-      "customTemplatesDescription": "エクスポートにカスタムテンプレートを使用",
-      "defaultTemplatesDescription": "エクスポートにデフォルトテンプレートを使用",
+      "customTemplatesDescription": "このエクスポートにカスタムテンプレートを使用しています",
+      "defaultTemplatesDescription": "デフォルトテンプレートを使用しています",
       "includePrivateData": "プライベートデータを含める",
       "ignoreLookupData": "検索データを無視",
       "fileNameTemplate": "ファイル名テンプレート",
@@ -760,8 +764,10 @@
       "adifComments": "ADIF QSOコメント",
       "adifQslMessage": "ADIF QSLメッセージ",
       "templateHelpTitle": "テンプレートのヘルプ",
-      "includePrivateDataDescription": "名前、メモ、アドレスなど。",
-      "ignoreLookupDataDescription": "QRZ.com などの検索サービスからのデータを無視",
+      "includePrivateDataDescription": "名前、メモ、住所などを含みます。",
+      "excludePrivateDataDescription": "名前、メモ、住所などを除外します。",
+      "ignoreLookupDataDescription": "QRZ.comなどの検索サービスからのデータを無視しています",
+      "useLookupDataDescription": "QRZ.comなどの検索サービスからのデータを含めています",
       "templateHelp-md": "いくつかのサンプルテンプレート要素...\n\n### ログエクスポート\nエクスポートされるログの属性\n`{{log.station}}` → `{{call}}` このエクスポートの局\n`{{log.ref}}` → `XX-1234` このエクスポートの参照\n`{{log.refName}}` → `Example National Park` このエクスポートの参照名\n`{{log.refShortName}}` → `Example NP` このエクスポートの短い参照名\n`{{log.handlerType}}` → `pota` このエクスポートのハンドラータイプ\n`{{log.handlerName}}` → `Parks On The Air` このエクスポートのハンドラー名\n`{{log.handlerShortName}}` → `POTA` このエクスポートの短いハンドラー名\n\n### オペレーションコールサイン\n`{{op.station}}` → `{{call}}` オペレーションの最初の局\n`{{op.operator}}` → `{{call}}` オペレーションのオペレーター\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` オペレーションのすべての局\n`{{op.otherStations}}` → `{{otherCalls}}` オペレーションの他の局\n\n### オペレーション日付\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### その他のオペレーション詳細\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `My Special Operation`\n`{{op.userNotes}}` → `Went early in the morning…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` このオペレーションのグリッド\n\n### QSO情報\n`{{qso.notes}}` → `Terrible audio!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 彼らが送信した信号レポート\n`{{qso.our.sent}}` → `55` 私たちが送信した信号レポート\n`{{qso.their.grid}}` → `FF99` 彼らが報告したグリッド\n`{{qso.refs}}` → QSOのすべての参照のリスト（オペレーション参照とQSO専用参照の両方を含む）\n`{{first8 qso.uuid}}` → `123e4567`",
       "default": {
         "name": "既定値",
@@ -862,6 +868,7 @@
       "frequencyLabel": "周波数",
       "bandMissing": "バンド???",
       "modeMissing": "モード？？？",
+      "modeOutOfBand": "バンド外",
       "radioControls-a11y": "ラジオ操作 {{parts}}",
       "notesLabel": "メモ",
       "notesLabel-a11y": "メモ",

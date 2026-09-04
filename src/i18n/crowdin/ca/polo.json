@@ -118,7 +118,7 @@
       "errorSavingExport": "No s'ha pogut desar el fitxer",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLo penjarà els teus fitxers als servidors de Ham2K i podràs descarregar-los des de qualsevol navegador.",
-      "logStashDialogTiers": "Els comptes gratuïts només poden enviar un fitxer cada vegada. Els subscriptors en poden enviar tants com vulguin.",
+      "logStashDialogTiers": "Els comptes gratuïts només poden conservar un element al Stash alhora. Els subscriptors en poden conservar tants com vulguin.",
       "logStashDialogSubscribe": "Subscriu-te",
       "exportUpsellTitle": "Aquesta operació també s'ha desat al nostre servei de sincronització al núvol",
       "exportUpsellBody": "Aquesta còpia de seguretat és gratuïta, però si t'hi subscrius la podràs sincronitzar entre diversos dispositius i accedir-hi a tota velocitat.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**Exporta** passa els teus fitxers a una altra app del dispositiu: correu electrònic, missatgeria, emmagatzematge al núvol o un altre programa de registre.",
       "exportOptionsInfoSave-md": "**Desa** escriu els teus fitxers directament en una carpeta del dispositiu, sense passar per una altra app.",
       "exportOptionsInfoSelection-md": "Aquestes opcions s'apliquen a tots els fitxers que has marcat a sota. També pots tocar qualsevol fitxer individual per compartir només aquell.",
-      "freeTierOneFileTitle": "Els comptes gratuïts sols poden enviar un fitxer cada vegada",
-      "freeTierOneFileMessage": "Vols enviar només \"{{fileName}}\"?",
-      "freeTierOneFileConfirm": "Enviar {{fileName}}",
       "freeTierRecentUploadTitle": "La pujada recent se substituirà",
-      "freeTierRecentUploadMessage": "Has pujat \"{{fileName}}\" fa menys de 6 hores i encara no s'ha descarregat. Enviar aquest fitxer el substituirà. Vols esperar en comptes d'això?",
+      "freeTierRecentUploadMessage": "Vas enviar \"{{name}}\" fa menys de 6 hores i encara no s'ha descarregat. Si l'envies ara, se substituirà. Vols esperar?",
       "freeTierRecentUploadConfirm": "Enviar igualment",
       "errorSendingToLogStash": "No s'ha pogut enviar a Ham2K File Stash",
       "sentToLogStash": "S'ha enviat a Ham2K File Stash",
@@ -154,6 +151,8 @@
         "duplicate": "Duplicat",
         "invalidBand": "Banda Invàlida",
         "ourGrid": "Falta la nostra ubicació",
+        "theirGrid": "Falta la quadrícula de l'altra estació",
+        "shortGrid": "La quadrícula és massa curta",
         "newBand": "Banda Nova",
         "newMode": "Mode Nou",
         "newRef": "Referència Nova",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Mostra la fila de números",
-        "descriptionOn": "Botons ràpids per a números",
-        "descriptionOff": "No mostris la fila de números"
+        "descriptionOn": "Es mostren botons ràpids per als números",
+        "descriptionOff": "No es mostra la fila de números"
       },
       "showExtraInNumbersRow": {
         "title": "Punt a la filera de números",
-        "descriptionOn": "Inclou punt (i barra inclinada)",
-        "descriptionOff": "Només mostra els números"
+        "descriptionOn": "S'inclouen les tecles de punt i barra inclinada",
+        "descriptionOff": "Es mostren només els números"
       },
       "showCommaInNumbersRow": {
         "title": "Coma a la filera de números",
-        "descriptionOn": "Inclou una coma",
+        "descriptionOn": "S'inclou una tecla de coma",
         "descriptionOff": "Sense coma"
       },
       "vibrateNumbersRow": {
         "title": "Activa la vibració a la fila de números",
-        "descriptionOn": "Vibració en prémer els números",
-        "descriptionOff": "Sense vibració en prémer els números"
+        "descriptionOn": "Vibra en prémer els números",
+        "descriptionOff": "No vibra en prémer els números"
       },
       "useMetricUnits": {
         "title": "Utilitza unitats mètriques",
-        "descriptionOn": "Utilitza milles per a distàncies",
-        "descriptionOff": "Utilitza quilòmetres per a distàncies"
+        "descriptionOn": "S'utilitzen milles per a les distàncies",
+        "descriptionOff": "S'utilitzen quilòmetres per a les distàncies"
       },
       "keepDeviceAwake": {
         "title": "Mantenir el dispositiu despert",
-        "descriptionOn": "Evita que el dispositiu bloquegi la pantalla",
-        "descriptionOff": "Permet el bloqueig regular de pantalla"
+        "descriptionOn": "Es manté la pantalla encesa",
+        "descriptionOff": "Es deixa que la pantalla es bloquegi com sempre"
       },
       "useSplitViews": {
         "title": "Utilitza vistes dividides",
-        "descriptionOn": "Utilitza vistes dividides quan la pantalla és prou gran",
-        "descriptionOff": "No utilitzis vistes dividides"
+        "descriptionOn": "S'utilitzen vistes dividides quan la pantalla és prou gran",
+        "descriptionOff": "No s'utilitzen vistes dividides"
       },
       "useGrid8": {
         "title": "Ubicació d'alta precisió",
-        "descriptionOn": "Utilitza quadrícules de 8 dígits",
-        "descriptionOff": "Utilitza quadrícules de 6 dígits"
+        "descriptionOn": "S'utilitzen quadrícules de 8 dígits",
+        "descriptionOff": "S'utilitzen quadrícules de 6 dígits"
       },
       "smartKeyboard": {
         "title": "Característiques del teclat intel·ligent",
-        "descriptionOn": "Activa les característiques del teclat intel·ligent",
-        "descriptionOff": "Utilitza teclats més senzills per motius de compatibilitat amb alguns dispositius"
+        "descriptionOn": "S'utilitzen les funcions de teclat intel·ligent",
+        "descriptionOff": "S'utilitzen teclats més senzills, per compatibilitat amb alguns dispositius"
       },
       "exportSettings": {
         "title": "Exportar configuració",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Compartir dades d'ús de l'aplicació",
-        "descriptionOn": "Ajuda'ns a millorar l'aplicació compartint dades d'ús, errors i rendiment",
-        "descriptionOff": "Manté privades les dades d'ús de l'aplicació.\nL'equip de Ham2K no podrà detectar errors ni altres incidències."
+        "descriptionOn": "Es comparteixen dades d'ús, fallades i rendiment per ajudar-nos a millorar l'aplicació",
+        "descriptionOff": "Es mantenen privades les dades d'ús de l'aplicació.\nL'equip de Ham2K no podrà detectar fallades ni altres incidències."
       },
       "shareOperationData": {
         "title": "Comparteix dades d'operació",
-        "descriptionOn": "Comparteix algunes dades d'operació públicament i amb altres usuaris",
-        "descriptionOff": "Manté privades les dades d'operació"
+        "descriptionOn": "Es comparteixen algunes dades d'operació públicament i amb altres usuaris",
+        "descriptionOff": "Es mantenen privades les dades d'operació"
       },
       "privacyPolicy": {
         "title": "Política de privacitat",
@@ -423,19 +422,24 @@
       "title": "Configuració del registre",
       "leftieMode": {
         "title": "Mode esquerrà",
-        "descriptionOn": "Utilitza la disposició per a esquerrans",
-        "descriptionOff": "Utilitza la disposició per a dretans"
+        "descriptionOn": "S'utilitza la disposició per a esquerrans",
+        "descriptionOff": "S'utilitza la disposició per a dretans"
       },
       "countryFlags": {
         "title": "Banderes del país",
-        "descriptionNone": "No mostris cap bandera",
-        "descriptionAll": "Mostra les banderes per tots els contactes",
-        "descriptionDefault": "Mostra només per als contactes DX"
+        "descriptionNone": "No es mostra cap bandera",
+        "descriptionAll": "Es mostren banderes per a tots els contactes",
+        "descriptionDefault": "Es mostren banderes només per als contactes DX"
       },
       "showBearing": {
         "title": "Mostra el rumb",
-        "descriptionOn": "Mostra el rumb estimat a l'estació",
-        "descriptionOff": "No mostris informació de rumb"
+        "descriptionOn": "Es mostra el rumb estimat cap a l'estació",
+        "descriptionOff": "No es mostra informació de rumb"
+      },
+      "showReverseBearing": {
+        "title": "Mostra també el rumb invers",
+        "descriptionOn": "Es mostra també el rumb des de l'estació, com ara \"45° / 225°\"",
+        "descriptionOff": "Es mostra només el rumb cap a l'estació"
       },
       "switchSignalReportOrder": {
         "title": "Canvia l'ordre dels informes de senyal",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "Salta al camp següent en introduir RST",
-        "descriptionOn": "Salta després d'introduir RST",
-        "descriptionOff": "No saltis automàticament"
+        "descriptionOn": "Es passa al camp següent després de l'RST",
+        "descriptionOff": "No es passa automàticament al camp següent"
       },
       "suggestDefaultOperator": {
         "title": "Suggerir operador predeterminat",
-        "descriptionOn": "Estableix {{operatorCall}} com a operador en operacions on la crida de l'estació és diferent",
-        "descriptionOff": "No suggereixis operador predeterminat independentment de la crida de l'estació utilitzada"
+        "descriptionOn": "S'utilitza {{operatorCall}} com a operador en operacions en què l'indicatiu d'estació és diferent",
+        "descriptionOff": "No es suggereix cap operador predeterminat, independentment de l'indicatiu d'estació utilitzat"
       },
       "suggestTemplates": {
         "title": "Utilitza plantilles d'operació",
-        "descriptionOn": "Suggerir plantilles per a noves operacions",
-        "descriptionOff": "No suggeriu plantilles"
+        "descriptionOn": "Es suggereixen plantilles per a operacions noves",
+        "descriptionOff": "No es suggereixen plantilles"
       },
       "bandsModes": {
         "title": "Bandes i Modes",
@@ -750,8 +754,8 @@
       "exportTypes": "Tipus d'exportació",
       "customTemplates": "Plantilles personalitzades",
       "defaultTemplates": "Plantilles per defecte",
-      "customTemplatesDescription": "Utilitzar plantilles personalitzades per a l'exportació",
-      "defaultTemplatesDescription": "Utilitzar plantilles per defecte per a l'exportació",
+      "customTemplatesDescription": "S'utilitzen plantilles personalitzades per a aquesta exportació",
+      "defaultTemplatesDescription": "S'utilitzen les plantilles predeterminades",
       "includePrivateData": "Inclou dades privades",
       "ignoreLookupData": "Ignora les dades de cerca",
       "fileNameTemplate": "Plantilla de nom de fitxer",
@@ -760,8 +764,10 @@
       "adifComments": "Comentaris ADIF QSO",
       "adifQslMessage": "Missatge ADIF QSL",
       "templateHelpTitle": "Ajuda de plantilles",
-      "includePrivateDataDescription": "Noms, notes, adreces, etc.",
-      "ignoreLookupDataDescription": "Ignora les dades dels serveis de consulta com QRZ.com",
+      "includePrivateDataDescription": "S'inclouen noms, notes, adreces, etc.",
+      "excludePrivateDataDescription": "S'exclouen noms, notes, adreces, etc.",
+      "ignoreLookupDataDescription": "S'ignoren les dades dels serveis de consulta com QRZ.com",
+      "useLookupDataDescription": "S'inclouen les dades dels serveis de consulta com QRZ.com",
       "templateHelp-md": "Alguns elements de plantilla d'exemple…\n\n### Exportació del Registre\nAtributs pel registre que s'està exportant\n`{{log.station}}` → `{{call}}` Estació per aquesta exportació\n`{{log.ref}}` → `XX-1234` Referència per aquesta exportació\n`{{log.refName}}` → `Exemple Parc Nacional` Nom de la referència per aquesta exportació\n`{{log.refShortName}}` → `Exemple PN` Nom curt de la referència per aquesta exportació\n`{{log.handlerType}}` → `pota` Tipus de gestor per aquesta exportació\n`{{log.handlerName}}` → `Parcs Sobre l'Aire` Nom del gestor per aquesta exportació\n`{{log.handlerShortName}}` → `POTA` Nom curt del gestor per aquesta exportació\n\n### Indicatius d'Operació\n`{{op.station}}` → `{{call}}` Primera estació per l'operació\n`{{op.operator}}` → `{{call}}` Operador per l'operació\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Totes les estacions per l'operació\n`{{op.otherStations}}` → `{{otherCalls}}` Altres estacions per l'operació\n\n### Data d'Operació\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Altres Detalls d'Operació\n`{{op.title}}` → `a XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `La Meva Operació Especial`\n`{{op.userNotes}}` → `Vàrem sortir aviat al matí…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Quadre per aquesta operació\n\n### Informació QSO\n`{{qso.notes}}` → `Àudio terrible!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` L'informe de senyal que van enviar\n`{{qso.our.sent}}` → `55` L'informe de senyal que vam enviar\n`{{qso.their.grid}}` → `FF99` El quadre que van reportar\n`{{qso.refs}}` → Una llista de totes les referències per al QSO (inclou tant les referències d'Operació com les Referències únicament del QSO)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Valors per defecte",
@@ -862,6 +868,7 @@
       "frequencyLabel": "Freqüència",
       "bandMissing": "Banda???",
       "modeMissing": "Modalitat???",
+      "modeOutOfBand": "Fora de banda",
       "radioControls-a11y": "Controls de Ràdio {{parts}}",
       "notesLabel": "Apunts",
       "notesLabel-a11y": "Apunts",

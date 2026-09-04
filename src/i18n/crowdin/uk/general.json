@@ -1,0 +1,366 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Англійська - English",
+        "ar": "Арабська - العربية",
+        "ast": "Астурійська - Asturianu",
+        "bn": "Бенгальська - বাংলা",
+        "ca": "Каталонська - Català",
+        "cs": "Чеська - Čeština",
+        "cy": "Валлійська - Cymraeg",
+        "da": "Данська - Dansk",
+        "de": "Німецька - Deutsch",
+        "en-PL": "Свино латіна",
+        "en-PT": "Піратська",
+        "eo": "Есперанто - Esperanto",
+        "es": "Іспанська - Español",
+        "et": "Естонська - Eesti",
+        "eu": "Баскська - Euskara",
+        "fi": "Фінська - Suomi",
+        "fr": "Французька - Français",
+        "ga": "Ірландська - Gaeilge",
+        "gl": "Галісійська - Galego",
+        "hi": "Гінді - हिंदी",
+        "id": "Індонезійська - Bahasa Indonesia",
+        "it": "Італійська - Italiano",
+        "ja": "Японська - 日本語",
+        "ko": "Корейська - 한국어",
+        "lt": "Литовська - Lietuvių",
+        "lv": "Латвійська - Латвijas",
+        "ms": "Малайська - Bahasa Melayu",
+        "nb": "Норвезька Букмол - Norsk bokmål",
+        "nl": "Нідерландська - Nederlands",
+        "nn": "Норвезька Нюношк - Nynorsk",
+        "pl": "Польська - Polski",
+        "pt-BR": "Португальська (Бразилія) - Português (Brasil)",
+        "pt-PT": "Португальська (Португалія) - Português (Portugal)",
+        "pt": "Португальська - Português",
+        "ro": "Румунська - Română",
+        "ru": "Російська - Русский",
+        "sk": "Словацька - Slovenčina",
+        "sv": "Шведська - Svenska",
+        "th": "Тайська - ภาษาไทย",
+        "tl": "Тагалог - Wikang Filipino",
+        "tlh": "Клінгон - ᏣᎳᎩ",
+        "tr": "Турецька - Türkçe",
+        "uk": "Українська",
+        "ur": "Урду - اردو",
+        "vi": "В'єтнамська - Tiếng Việt",
+        "zh": "Китайська - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "Операція",
+      "generalOperation": "Загальна експлуатація"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " і "
+      },
+      "time": {
+        "tomorrow": "Завтра",
+        "today": "Сьогодні",
+        "yesterday": "Вчора",
+        "ago": "{{time}} тому",
+        "fromNow": "через {{time}}",
+        "shortSeconds": "{{s}}с",
+        "shortMinutes": "{{m}}м",
+        "shortMinutesAndSeconds": "{{m}}м {{s}}с",
+        "shortHours": "{{h}}год.",
+        "shortHoursAndMinutes": "{{h}}год. {{m}}м",
+        "shortDays": "{{d}}д",
+        "shortDaysAndHours": "{{d}}д {{h}}год.",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Січень",
+        "2": "Лютий",
+        "3": "Березень",
+        "4": "Квітень",
+        "5": "Травень",
+        "6": "Червень",
+        "7": "Липень",
+        "8": "Серпень",
+        "9": "Вересень",
+        "10": "Жовтень",
+        "11": "Листопад",
+        "12": "Грудень"
+      },
+      "monthAbbr": {
+        "1": "Січ",
+        "2": "Лют",
+        "3": "Бер",
+        "4": "Квіт",
+        "5": "Трав",
+        "6": "Чер",
+        "7": "Лип",
+        "8": "Серп",
+        "9": "Вер",
+        "10": "Жов",
+        "11": "Лист",
+        "12": "Гру"
+      },
+      "weekday": {
+        "1": "Понеділок",
+        "2": "Вівторок",
+        "3": "Середа",
+        "4": "Четвер",
+        "5": "П'ятниця",
+        "6": "Субота",
+        "7": "Неділя"
+      },
+      "weekdayAbbr": {
+        "1": "Пн",
+        "2": "Вт",
+        "3": "Ср",
+        "4": "Чт",
+        "5": "Пт",
+        "6": "Сб",
+        "7": "Нд"
+      },
+      "ordinalDay": {
+        "1": "1-й",
+        "2": "2-й",
+        "3": "3-й",
+        "4": "4-й",
+        "5": "5-й",
+        "6": "6-й",
+        "7": "7-й",
+        "8": "8-й",
+        "9": "9-й",
+        "10": "10-й",
+        "11": "11-й",
+        "12": "12-й",
+        "13": "13-й",
+        "14": "14-й",
+        "15": "15-й",
+        "16": "16-й",
+        "17": "17-й",
+        "18": "18-й",
+        "19": "19-й",
+        "20": "20-й",
+        "21": "21-й",
+        "22": "22-й",
+        "23": "23-й",
+        "24": "24-й",
+        "25": "25-й",
+        "26": "26-й",
+        "27": "27-й",
+        "28": "28-й",
+        "29": "29-й",
+        "30": "30-й",
+        "31": "31-й"
+      },
+      "distance": {
+        "away": "{{distance}} звідси"
+      }
+    },
+    "buttons": {
+      "cancel": "Скасувати",
+      "ok": "ОК",
+      "close": "Закрити",
+      "login": "Увійти",
+      "logout": "Вийти",
+      "delete": "Видалити",
+      "refresh": "Оновити",
+      "done": "Готово",
+      "accept": "Прийняти",
+      "accept-a11y": "Прийняти зміни",
+      "revert": "Відновити",
+      "revert-a11y": "Змінити зміни",
+      "apply": "Застосувати",
+      "connect": "Підключити",
+      "save": "Зберегти",
+      "export": "Експортувати"
+    },
+    "errors": {
+      "generic": "Сталася помилка. Будь ласка, спробуйте пізніше.",
+      "genericShort": "Сталася помилка."
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "пакет {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Перевірка оновлень…",
+        "stable": "Перевірка стабільних оновлень…",
+        "unstable": "Перевірка нестабільних оновлень…",
+        "bleedingEdge": "Перевірка на крайні оновлення…"
+      },
+      "tracksPlural": {
+        "stable": "Стабільний",
+        "unstable": "Нестабільний",
+        "bleedingEdge": "Передова кромка",
+        "Production": "Стабільний",
+        "Staging": "Нестабільний",
+        "Development": "Передова кромка"
+      },
+      "trackSingular": {
+        "stable": "Стабільний",
+        "unstable": "Нестабільний",
+        "bleedingEdge": "Передова кромка",
+        "Production": "Стабільний",
+        "Staging": "Нестабільний",
+        "Development": "Передова кромка"
+      },
+      "versionIsAvailable-md": "Доступне оновлення до {{versionName}}.",
+      "updateNow": "Оновити зараз",
+      "newVersionAvailable-md": "Доступна нова версія PoLo!"
+    },
+    "dataFiles": {
+      "loading": "Завантаження {{name}}",
+      "downloading": "Завантаження {{name}}",
+      "dataHasToBeDownloaded-md": "Дані для **{{name}}** має бути завантажені.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Дані для **{{name}}** не були оновлені деякий час.",
+      "downloadNow": "Завантажити зараз",
+      "refreshNow": "Оновити зараз"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ок!",
+        "__comment__": "Перекрити спеціальні дії повідомлень тут"
+      },
+      "title": {
+        "__comment__": "Перекрити спеціальні заголовки повідомлень тут"
+      },
+      "text": {
+        "__comment__": "Перекрити спеціальні тексти повідомлень тут"
+      },
+      "dialogTitle": {
+        "__comment__": "Перекрити спеціальні заголовки діалогів тут"
+      },
+      "dialogText": {
+        "__comment__": "Перекрити спеціальні тексти діалогів тут"
+      },
+      "dataFiles": {
+        "fetching": "Отримання {{title}}...",
+        "progress": "Отримання {{title}}\n\n{{progress}}",
+        "done": "Завершено отримання {{title}}",
+        "error": "Помилка отримання {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Кабрільо",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Текст",
+        "csv": "Значення, відокремлені комами",
+        "tsv": "Значення, розділені табуляцією",
+        "other": "Дані"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Основні функції",
+        "locationBased": "Діяльність на основі розташування",
+        "contestsAndFieldOps": "Конкурси та польові операції",
+        "lookup": "Перевірка даних та спотинг",
+        "devmode": "Режим розробника",
+        "other": "Інші функції"
+      }
+    },
+    "continents": {
+      "AF": "Африка",
+      "AS": "Азія",
+      "EU": "Європа",
+      "NA": "Північна Америка",
+      "SA": "Південна Америка",
+      "OC": "Океанія"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Одно боку діапазон",
+        "USB": "USB",
+        "USB-a11y": "Верхній боку діапазон",
+        "LSB": "LSB",
+        "LSB-a11y": "Нижній боку діапазон",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Рітті",
+        "CW": "CW",
+        "CW-a11y": "З.П.",
+        "FM": "FM",
+        "FM-a11y": "Ф.М.",
+        "AM": "AM",
+        "AM-a11y": "А.М.",
+        "other": "Інше",
+        "other-a11y": "Інший режим"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 метрів",
+        "80m-a11y": "80 метрів",
+        "60m-a11y": "60 метрів",
+        "40m-a11y": "40 метрів",
+        "30m-a11y": "30 метрів",
+        "20m-a11y": "20 метрів",
+        "17m-a11y": "17 метрів",
+        "15m-a11y": "15 метрів",
+        "12m-a11y": "12 метрів",
+        "11m-a11y": "11 метрів",
+        "10m-a11y": "10 метрів",
+        "6m-a11y": "6 метрів",
+        "2m-a11y": "2 метрів",
+        "70cm-a11y": "70 сантиметрів",
+        "23cm-a11y": "23 сантиметри",
+        "13cm-a11y": "13 сантиметрів",
+        "9cm-a11y": "9 сантиметрів",
+        "6cm-a11y": "6 сантиметрів",
+        "3cm-a11y": "3 сантиметри",
+        "1-25cm-a11y": "1.25 сантиметра",
+        "6mm-a11y": "6 міліметрів",
+        "4mm-a11y": "4 міліметри",
+        "2-5mm-a11y": "2.5 міліметра",
+        "2mm-a11y": "2 міліметри",
+        "1mm-a11y": "1 міліметр",
+        "submm-a11y": "Субміліметр",
+        "other": "Інше",
+        "other-a11y": "Інший діапазон"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

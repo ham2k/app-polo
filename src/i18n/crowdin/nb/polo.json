@@ -118,7 +118,7 @@
       "errorSavingExport": "Kunne ikke lagre fil",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLo laster opp filene dine til Ham2K-serverne, og du kan laste dem ned fra en hvilken som helst nettleser.",
-      "logStashDialogTiers": "Gratiskontoer kan bare sende én fil om gangen. Abonnenter kan sende så mange de vil.",
+      "logStashDialogTiers": "Gratiskontoer kan bare beholde én stash om gangen. Abonnenter kan beholde så mange de vil.",
       "logStashDialogSubscribe": "Abonner",
       "exportUpsellTitle": "Denne operasjonen er også lagret i vår skysynkroniseringstjeneste",
       "exportUpsellBody": "Denne sikkerhetskopien er gratis, men hvis du abonnerer, kan du synkronisere den på tvers av flere enheter og få tilgang til den i full hastighet.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**Eksporter** overleverer filene dine til en annen app på enheten din — e-post, meldinger, skylagring eller et annet loggprogram.",
       "exportOptionsInfoSave-md": "**Lagre** skriver filene dine rett til en mappe på enheten din, uten å gå via en annen app.",
       "exportOptionsInfoSelection-md": "Disse gjelder for alle filene du har merket av nedenfor. Du kan også trykke på en enkelt fil for å dele bare den.",
-      "freeTierOneFileTitle": "Gratiskontoer kan bare sende én fil om gangen",
-      "freeTierOneFileMessage": "Vil du sende bare \"{{fileName}}\"?",
-      "freeTierOneFileConfirm": "Send {{fileName}}",
       "freeTierRecentUploadTitle": "Nylig opplasting blir erstattet",
-      "freeTierRecentUploadMessage": "Du lastet opp \"{{fileName}}\" for mindre enn 6 timer siden, og den er ikke lastet ned ennå. Hvis du sender denne filen, erstattes den. Vil du vente i stedet?",
+      "freeTierRecentUploadMessage": "Du sendte \"{{name}}\" for mindre enn 6 timer siden, og den er ikke lastet ned ennå. Hvis du sender nå, blir den erstattet. Vil du vente i stedet?",
       "freeTierRecentUploadConfirm": "Send likevel",
       "errorSendingToLogStash": "Kunne ikke sende til Ham2K File Stash",
       "sentToLogStash": "Sendt til Ham2K File Stash",
@@ -154,6 +151,8 @@
         "duplicate": "Duplikat",
         "invalidBand": "Ugyldig bånd",
         "ourGrid": "Mangler vår posisjon",
+        "theirGrid": "Mangler deres grid",
+        "shortGrid": "Grid for kort",
         "newBand": "Nytt bånd",
         "newMode": "Ny modus",
         "newRef": "Ny referanse",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Vis tallrad",
-        "descriptionOn": "Hurtigknapper for tall",
-        "descriptionOff": "Ikke vis tallrad"
+        "descriptionOn": "Viser hurtigknapper for tall",
+        "descriptionOff": "Viser ikke tallraden"
       },
       "showExtraInNumbersRow": {
         "title": "Punktum i tallrad",
-        "descriptionOn": "Inkluder punktum (og skråstrek)",
-        "descriptionOff": "Bare vis tallene"
+        "descriptionOn": "Inkluderer punktum- og skråstrekknapper",
+        "descriptionOff": "Viser bare tallene"
       },
       "showCommaInNumbersRow": {
         "title": "Komma i tallrad",
-        "descriptionOn": "Inkluder en kommaknapp",
+        "descriptionOn": "Inkluderer en kommaknapp",
         "descriptionOff": "Ingen kommaknapp"
       },
       "vibrateNumbersRow": {
         "title": "Bruk vibrasjon i tallrad",
-        "descriptionOn": "Vibrer når du trykker på tall",
-        "descriptionOff": "Ikke vibrer når du trykker på tall"
+        "descriptionOn": "Vibrerer når du trykker på tall",
+        "descriptionOff": "Vibrerer ikke når du trykker på tall"
       },
       "useMetricUnits": {
         "title": "Bruk metriske enheter",
-        "descriptionOn": "Bruk miles for avstander",
-        "descriptionOff": "Bruk kilometer for avstander"
+        "descriptionOn": "Bruker miles for avstander",
+        "descriptionOff": "Bruker kilometer for avstander"
       },
       "keepDeviceAwake": {
         "title": "Hold enheten våken",
-        "descriptionOn": "Forhindre at enheten låser skjermen",
-        "descriptionOff": "Tillat vanlig skjermlåsing"
+        "descriptionOn": "Holder skjermen våken",
+        "descriptionOff": "Lar skjermen låse seg som vanlig"
       },
       "useSplitViews": {
         "title": "Bruk delte visninger",
-        "descriptionOn": "Bruk delte visninger når skjermen er stor nok",
-        "descriptionOff": "Ikke bruk delte visninger"
+        "descriptionOn": "Bruker delte visninger når skjermen er stor nok",
+        "descriptionOff": "Bruker ikke delte visninger"
       },
       "useGrid8": {
         "title": "Posisjon med høy nøyaktighet",
-        "descriptionOn": "Bruk 8-sifrede grids",
-        "descriptionOff": "Bruk 6-sifrede grids"
+        "descriptionOn": "Bruker 8-sifrede grids",
+        "descriptionOff": "Bruker 6-sifrede grids"
       },
       "smartKeyboard": {
         "title": "Smarte tastaturfunksjoner",
-        "descriptionOn": "Aktiver smarte tastaturfunksjoner",
-        "descriptionOff": "Bruk enklere tastaturer av kompatibilitetshensyn med noen enheter"
+        "descriptionOn": "Bruker smarte tastaturfunksjoner",
+        "descriptionOff": "Bruker enklere tastaturer, for kompatibilitet med noen enheter"
       },
       "exportSettings": {
         "title": "Eksportinnstillinger",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Del data om bruken din",
-        "descriptionOn": "Hjelp oss med å forbedre appen ved å dele bruks-, krasj- og ytelsesdata",
-        "descriptionOff": "Hold appbruksdata private.\nHam2K-teamet vil ikke kunne oppdage krasj eller andre problemer."
+        "descriptionOn": "Deler bruks-, krasj- og ytelsesdata for å hjelpe oss med å forbedre appen",
+        "descriptionOff": "Holder appbruksdata private.\nHam2K-teamet vil ikke kunne oppdage krasj eller andre problemer."
       },
       "shareOperationData": {
         "title": "Del operasjonsdata",
-        "descriptionOn": "Del noen operasjonsdata offentlig og med andre brukere",
-        "descriptionOff": "Hold operasjonsdata private"
+        "descriptionOn": "Deler noen operasjonsdata offentlig og med andre brukere",
+        "descriptionOff": "Holder operasjonsdata private"
       },
       "privacyPolicy": {
         "title": "Personvernpolicy",
@@ -423,19 +422,24 @@
       "title": "Loggingsinnstillinger",
       "leftieMode": {
         "title": "Venstrehåndsmodus",
-        "descriptionOn": "Bruk oppsett for venstrehendte brukere",
-        "descriptionOff": "Bruk oppsett for høyrehendte brukere"
+        "descriptionOn": "Bruker venstrehendt oppsett",
+        "descriptionOff": "Bruker høyrehendt oppsett"
       },
       "countryFlags": {
         "title": "Vis flagg",
-        "descriptionNone": "Ikke vis noen flagg",
-        "descriptionAll": "Vis flagg for alle kontakter",
-        "descriptionDefault": "Vis bare for andre land"
+        "descriptionNone": "Viser ingen flagg",
+        "descriptionAll": "Viser flagg for alle kontakter",
+        "descriptionDefault": "Viser flagg bare for DX-kontakter"
       },
       "showBearing": {
         "title": "Vis retning",
-        "descriptionOn": "Vis estimert retning til stasjon",
-        "descriptionOff": "Ikke vis retningsinformasjon"
+        "descriptionOn": "Viser estimert retning til stasjon",
+        "descriptionOff": "Viser ikke retningsinformasjon"
+      },
+      "showReverseBearing": {
+        "title": "Vis også motsatt retning",
+        "descriptionOn": "Viser også retning fra stasjon, som \"45° / 225°\"",
+        "descriptionOff": "Viser bare retning til stasjon"
       },
       "switchSignalReportOrder": {
         "title": "Bytt rekkefølge for signalrapport",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "Hopp til neste felt ved RST-oppføring",
-        "descriptionOn": "Hopp etter at RST er oppført",
-        "descriptionOff": "Ikke hopp automatisk"
+        "descriptionOn": "Hopper til neste felt etter RST",
+        "descriptionOff": "Hopper ikke automatisk"
       },
       "suggestDefaultOperator": {
         "title": "Foreslå standardoperatør",
-        "descriptionOn": "Sett {{operatorCall}} som operatør i operasjoner der stasjonskall er forskjellig",
-        "descriptionOff": "Ikke foreslå standardoperatør uavhengig av stasjonskall som brukes"
+        "descriptionOn": "Bruker {{operatorCall}} som operatør i operasjoner der stasjonskallet er annerledes",
+        "descriptionOff": "Foreslår ikke en standardoperatør, uansett hvilket stasjonskall som brukes"
       },
       "suggestTemplates": {
         "title": "Bruk operasjonsmaler",
-        "descriptionOn": "Foreslå maler for nye operasjoner",
-        "descriptionOff": "Ikke foreslå maler"
+        "descriptionOn": "Foreslår maler for nye operasjoner",
+        "descriptionOff": "Foreslår ikke maler"
       },
       "bandsModes": {
         "title": "Bånd og moduser",
@@ -750,8 +754,8 @@
       "exportTypes": "Eksporttyper",
       "customTemplates": "Egendefinerte maler",
       "defaultTemplates": "Standardmaler",
-      "customTemplatesDescription": "Bruk tilpassede maler for eksporten",
-      "defaultTemplatesDescription": "Bruk standardmaler for eksporten",
+      "customTemplatesDescription": "Bruker tilpassede maler for denne eksporten",
+      "defaultTemplatesDescription": "Bruker standardmalene",
       "includePrivateData": "Inkluder private data",
       "ignoreLookupData": "Ignorer oppslagsdata",
       "fileNameTemplate": "Filnavnsmal",
@@ -760,8 +764,10 @@
       "adifComments": "ADIF QSO-kommentarer",
       "adifQslMessage": "ADIF QSL-melding",
       "templateHelpTitle": "Malhjelp",
-      "includePrivateDataDescription": "Navn, notater, adresser, osv.",
-      "ignoreLookupDataDescription": "Ignorer data fra oppslagstjenester som QRZ.com",
+      "includePrivateDataDescription": "Inkluderer navn, notater, adresser, osv.",
+      "excludePrivateDataDescription": "Ekskluderer navn, notater, adresser, osv.",
+      "ignoreLookupDataDescription": "Ignorerer data fra oppslagstjenester som QRZ.com",
+      "useLookupDataDescription": "Inkluderer data fra oppslagstjenester som QRZ.com",
       "templateHelp-md": "Noen eksempelmalelementer...\n\n### Loggeksport\nAttributter for loggen som eksporteres\n`{{log.station}}` → `{{call}}` Stasjon for denne eksporten\n`{{log.ref}}` → `XX-1234` Referanse for denne eksporten\n`{{log.refName}}` → `Example National Park` Referansenavn for denne eksporten\n`{{log.refShortName}}` → `Example NP` Kort referansenavn for denne eksporten\n`{{log.handlerType}}` → `pota` Håndterertype for denne eksporten\n`{{log.handlerName}}` → `Parks On The Air` Håndterernavn for denne eksporten\n`{{log.handlerShortName}}` → `POTA` Kort håndterernavn for denne eksporten\n\n### Operasjonskallesignaler\n`{{op.station}}` → `{{call}}` Første stasjon for operasjonen\n`{{op.operator}}` → `{{call}}` Operatør for operasjonen\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Alle stasjoner for operasjonen\n`{{op.otherStations}}` → `{{otherCalls}}` Andre stasjoner for operasjonen\n\n### Operasjonsdato\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Andre operasjonsdetaljer\n`{{op.title}}` → `på XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Min spesielle operasjon`\n`{{op.userNotes}}` → `Gikk tidlig om morgenen…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Rutenett for denne operasjonen\n\n### QSO-informasjon\n`{{qso.notes}}` → `Forferdelig lyd!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Signalrapporten de sendte\n`{{qso.our.sent}}` → `55` Signalrapporten vi sendte\n`{{qso.their.grid}}` → `FF99` Rutenettet de rapporterte\n`{{qso.refs}}` → En liste over alle referansene for QSOen (inkluderer både operasjonsreferanser og QSO-spesifikke referanser)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Standardinnstillinger",
@@ -862,6 +868,7 @@
       "frequencyLabel": "Frekvens",
       "bandMissing": "Bånd???",
       "modeMissing": "Modus???",
+      "modeOutOfBand": "Utenfor bånd",
       "radioControls-a11y": "Radikontroller {{parts}}",
       "notesLabel": "Notater",
       "notesLabel-a11y": "Notater",

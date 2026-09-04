@@ -188,6 +188,8 @@
       "startConfirm": "İşlem başlatıldı!",
       "break": "Bir ara eklemek istiyor musunuz?",
       "breakConfirm": "İşlem molası eklendi!",
+      "roverqth": "Bir ara ekleyip yeni konum ayarlansın mı?",
+      "roverqthConfirm": "Ara eklendi, şimdi yeni konumunuzu ayarlayın",
       "stop": "İşlemi durdurmak istiyor musunuz?",
       "stopConfirm": "İşlem durduruldu!"
     },

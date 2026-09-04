@@ -48,15 +48,15 @@ export function FlagsDialog ({ visible, settings, styles, onDialogDone }) {
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="dx" />
-            <Text onPress={() => setValue('dx')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionDefault', 'Show only for DX contacts')}</Text>
+            <Text onPress={() => setValue('dx')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionDefault', 'Showing flags only for DX contacts')}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="all" />
-            <Text onPress={() => setValue('all')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionAll', 'Show flags for all contacts')}</Text>
+            <Text onPress={() => setValue('all')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionAll', 'Showing flags for all contacts')}</Text>
           </View>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <RadioButton value="none" />
-            <Text onPress={() => setValue('none')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionNone', "Don't show any flags")}</Text>
+            <Text onPress={() => setValue('none')} style={styles.rowText}>{t('screens.loggingSettings.countryFlags.descriptionNone', "Not showing any flags")}</Text>
           </View>
         </RadioButton.Group>
       </H2kDialogContent>

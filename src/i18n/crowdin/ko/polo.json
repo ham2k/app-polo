@@ -118,7 +118,7 @@
       "errorSavingExport": "파일을 저장할 수 없습니다",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLo가 파일을 Ham2K 서버에 업로드하며, 아무 브라우저에서나 다운로드할 수 있습니다.",
-      "logStashDialogTiers": "무료 계정은 한 번에 파일 하나만 보낼 수 있습니다. 유료 구독자는 원하는 만큼 보낼 수 있습니다.",
+      "logStashDialogTiers": "무료 계정은 한 번에 스태시 하나만 보관할 수 있습니다. 구독자는 원하는 만큼 보관할 수 있습니다.",
       "logStashDialogSubscribe": "구독하기",
       "exportUpsellTitle": "해당 운용이 클라우드 동기화 서비스에 저장되었습니다",
       "exportUpsellBody": "백업은 무료로 제공되지만, 구독 시 추가로 여러 기기에서 빠른 속도로 동기화 및 접속이 가능합니다.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**내보내기**는 파일을 기기의 다른 앱으로 전달합니다  (이메일, 문자, 클라우드 저장소, 다른 로깅 프로그램 등)",
       "exportOptionsInfoSave-md": "**저장**은 다른 앱을 거치지 않고 파일을 기기의 폴더에 바로 저장합니다.",
       "exportOptionsInfoSelection-md": "이 옵션들은 선택한 모든 파일에 적용됩니다. 파일 하나만 탭하여 해당 파일만 공유할 수도 있습니다.",
-      "freeTierOneFileTitle": "무료 계정은 한 번에 파일 하나만 보낼 수 있습니다",
-      "freeTierOneFileMessage": "\"{{fileName}}\"만 보내시겠습니까?",
-      "freeTierOneFileConfirm": "{{fileName}} 보내기",
       "freeTierRecentUploadTitle": "최근 업로드 항목이 대체됩니다",
-      "freeTierRecentUploadMessage": "\"{{fileName}}\" 파일을 6시간 이내에 업로드했으며 아직 다운로드되지 않았습니다. 이 파일을 보내면 기존 파일이 대체됩니다. 대신에 기다리시겠습니까?",
+      "freeTierRecentUploadMessage": "\"{{name}}\"을(를) 보낸 지 6시간이 지나지 않았고 아직 다운로드되지 않았습니다. 지금 보내면 기존 파일이 대체됩니다. 대신 기다리시겠습니까?",
       "freeTierRecentUploadConfirm": "어쨌든 보내기",
       "errorSendingToLogStash": "Ham2K File Stash로 보낼 수 없습니다",
       "sentToLogStash": "Ham2K File Stash로 보냈습니다",
@@ -154,6 +151,8 @@
         "duplicate": "중복",
         "invalidBand": "잘못된 밴드",
         "ourGrid": "내 위치 누락",
+        "theirGrid": "상대국 그리드 누락",
+        "shortGrid": "그리드가 너무 짧음",
         "newBand": "새로운 밴드",
         "newMode": "새로운 모드",
         "newRef": "새로운 레퍼런스",
@@ -350,33 +349,33 @@
       },
       "showNumbersRow": {
         "title": "숫자 입력 키보드 사용",
-        "descriptionOn": "숫자 입력 퀵 버튼",
-        "descriptionOff": "숫자 키보드 사용하지 않기"
+        "descriptionOn": "숫자 퀵 버튼 표시",
+        "descriptionOff": "숫자 행 표시하지 않음"
       },
       "showExtraInNumbersRow": {
         "title": "마침표와 슬래시 사용하기",
-        "descriptionOn": "\".\" 와 \"/\" 표시",
+        "descriptionOn": "마침표와 슬래시 키 포함",
         "descriptionOff": "숫자만 표시"
       },
       "showCommaInNumbersRow": {
         "title": "쉼표 사용하기",
-        "descriptionOn": "쉼표 키 표시",
+        "descriptionOn": "쉼표 키 포함",
         "descriptionOff": "쉼표 키 없음"
       },
       "vibrateNumbersRow": {
         "title": "숫자 입력 시 진동",
-        "descriptionOn": "진동 사용하기",
-        "descriptionOff": "진동 사용하지 않음"
+        "descriptionOn": "숫자 누를 때 진동",
+        "descriptionOff": "숫자 누를 때 진동 안 함"
       },
       "useMetricUnits": {
         "title": "미터법 사용",
-        "descriptionOn": "거리 측정에 마일 사용",
-        "descriptionOff": "거리 측정에 킬로미터 사용"
+        "descriptionOn": "거리 단위로 마일 사용",
+        "descriptionOff": "거리 단위로 킬로미터 사용"
       },
       "keepDeviceAwake": {
         "title": "기기 화면 켜짐 유지하기",
-        "descriptionOn": "기기 화면 잠금 방지, 켜짐 유지",
-        "descriptionOff": "시간 지나면 화면 잠금 허용"
+        "descriptionOn": "화면 켜짐 유지",
+        "descriptionOff": "평소처럼 화면 잠금 허용"
       },
       "useSplitViews": {
         "title": "분할 보기 사용",
@@ -390,8 +389,8 @@
       },
       "smartKeyboard": {
         "title": "스마트 키보드 기능",
-        "descriptionOn": "스마트 키보드 기능 활성화",
-        "descriptionOff": "키보드 호환성 문제가 있다면 시도 - 간단한 키보드 사용"
+        "descriptionOn": "스마트 키보드 기능 사용",
+        "descriptionOff": "일부 기기와 호환되도록 더 간단한 키보드 사용"
       },
       "exportSettings": {
         "title": "내보내기 설정",
@@ -402,12 +401,12 @@
       },
       "shareAppUsageData": {
         "title": "앱 사용 데이터 공유",
-        "descriptionOn": "앱 개선을 위해 사용, 앱 충돌 및 성능 데이터를 공유해주세요.",
-        "descriptionOff": "앱 사용 데이터를 비공개로 유지합니다.\nHam2K 팀은 앱 충돌 또는 기타 문제를 조회할 수 없습니다."
+        "descriptionOn": "앱 개선을 위해 사용량, 충돌 및 성능 데이터 공유",
+        "descriptionOff": "앱 사용 데이터를 비공개로 유지합니다.\nHam2K 팀은 앱 충돌 또는 기타 문제를 감지할 수 없습니다."
       },
       "shareOperationData": {
         "title": "운용 데이터 공유",
-        "descriptionOn": "일부 운용 데이터를 공개적으로 및 다른 사용자와 공유",
+        "descriptionOn": "일부 운용 데이터를 공개 및 다른 사용자와 공유",
         "descriptionOff": "운용 데이터 비공개 유지"
       },
       "privacyPolicy": {
@@ -423,19 +422,24 @@
       "title": "로깅 설정",
       "leftieMode": {
         "title": "왼손잡이 모드",
-        "descriptionOn": "왼손잡이 레이아웃 사용",
-        "descriptionOff": "오른손잡이 레이아웃 사용"
+        "descriptionOn": "왼손잡이용 레이아웃 사용",
+        "descriptionOff": "오른손잡이용 레이아웃 사용"
       },
       "countryFlags": {
         "title": "국가 깃발 표시",
         "descriptionNone": "깃발 표시하지 않음",
-        "descriptionAll": "모든 QSO에 깃발 표시",
-        "descriptionDefault": "DX QSO에만 표시"
+        "descriptionAll": "모든 QSO에 깃발 표시 중",
+        "descriptionDefault": "DX QSO에만 깃발 표시"
       },
       "showBearing": {
         "title": "방위각 표시",
-        "descriptionOn": "예측 방위각 표시",
+        "descriptionOn": "스테이션까지의 예상 방위각 표시",
         "descriptionOff": "방위각 정보 표시하지 않음"
+      },
+      "showReverseBearing": {
+        "title": "역방위각도 표시",
+        "descriptionOn": "스테이션 기준 방위각도 \"45° / 225°\"처럼 표시",
+        "descriptionOff": "스테이션까지의 방위각만 표시"
       },
       "switchSignalReportOrder": {
         "title": "시그널 리포트 순서 변경",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "RST 입력 후 다음 필드로 자동 점프",
-        "descriptionOn": "RST 입력 후 자동 이동",
-        "descriptionOff": "자동으로 이동 안함"
+        "descriptionOn": "RST 후 다음 필드로 이동",
+        "descriptionOff": "자동으로 이동하지 않음"
       },
       "suggestDefaultOperator": {
         "title": "운용 시작 시 오퍼레이터 미리입력 제안",
-        "descriptionOn": "다른 콜사인으로 운용 시 {{operatorCall}}를 오퍼레이터로 설정",
-        "descriptionOff": "사용된 콜사인에 상관없이 오퍼레이터를 제안하지 않음"
+        "descriptionOn": "스테이션 콜사인이 다른 운용에서 {{operatorCall}}를 오퍼레이터로 사용",
+        "descriptionOff": "사용한 스테이션 콜사인과 관계없이 기본 오퍼레이터를 제안하지 않음"
       },
       "suggestTemplates": {
         "title": "운용 템플릿 사용",
-        "descriptionOn": "새로운 운용을 위한 템플릿 제안",
-        "descriptionOff": "템플릿 제안하지 않기"
+        "descriptionOn": "새 운용에 템플릿 제안",
+        "descriptionOff": "템플릿 제안하지 않음"
       },
       "bandsModes": {
         "title": "밴드 및 모드",
@@ -750,8 +754,8 @@
       "exportTypes": "내보내기 유형",
       "customTemplates": "맞춤 템플릿",
       "defaultTemplates": "기본 템플릿",
-      "customTemplatesDescription": "내보내기에 맞춤 템플릿 사용",
-      "defaultTemplatesDescription": "내보내기에 기본 템플릿 사용",
+      "customTemplatesDescription": "이 내보내기에 맞춤 템플릿 사용",
+      "defaultTemplatesDescription": "기본 템플릿 사용",
       "includePrivateData": "비공개 데이터 포함",
       "ignoreLookupData": "조회 데이터 무시",
       "fileNameTemplate": "파일 이름 템플릿",
@@ -760,8 +764,10 @@
       "adifComments": "ADIF QSO 코멘트",
       "adifQslMessage": "ADIF QSL 메시지",
       "templateHelpTitle": "템플릿 도움말",
-      "includePrivateDataDescription": "이름, 노트, 주소 등",
-      "ignoreLookupDataDescription": "QRZ.com 같은 조회 서비스의 데이터 무시하기",
+      "includePrivateDataDescription": "이름, 노트, 주소 등을 포함합니다.",
+      "excludePrivateDataDescription": "이름, 노트, 주소 등을 제외합니다.",
+      "ignoreLookupDataDescription": "QRZ.com 같은 조회 서비스의 데이터 무시",
+      "useLookupDataDescription": "QRZ.com 같은 조회 서비스의 데이터 포함",
       "templateHelp-md": "예제 템플릿 요소...\n\n### 로그 내보내기\n내보내려는 로그에 대한 속성\n`{{log.station}}` → `{{call}}` 내보내기에 사용되는 무선국\n`{{log.ref}}` → `XX-1234` 내보내기에 사용되는 레퍼런스\n`{{log.refName}}` → `국립공원 예시` 레퍼런스 이름\n`{{log.refShortName}}` → `NP 예시` 짧은 레퍼런스 이름\n`{{log.handlerType}}` → `pota` 내보내기에 사용되는 핸들러 유형\n`{{log.handlerName}}` → `Parks On The Air` 내보내기에 사용되는 핸들러 이름\n`{{log.handlerShortName}}` → `POTA` 짧은 핸들러 이름\n\n### 작업 호출코드\n`{{op.station}}` → `{{call}}` 첫 운용 무선국\n`{{op.operator}}` → `{{call}}` 오퍼레이터\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` 모든 운용 무선국\n`{{op.otherStations}}` → `{{otherCalls}}` 기타 운용 무선국\n\n### 작업 날짜\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### 기타 작업 세부사항\n`{{op.title}}` → `XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `X월 특별 운용`\n`{{op.userNotes}}` → `이른 아침에 도착했는데…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` 운용에 해당하는 그리드\n\n### QSO 정보\n`{{qso.notes}}` → `보이스가 뭉개져서 안 들렸다`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 상대가 보낸 시그널 리포트\n`{{qso.our.sent}}` → `55` 우리가 보낸 시그널 리포트\n`{{qso.their.grid}}` → `FF99` 상대의 그리드\n`{{qso.refs}}` → 해당 QSO에 대한 모든 레퍼런스 목록(운용 레퍼런스 및 QSO 전용 레퍼런스 포함)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "기본값",
@@ -862,6 +868,7 @@
       "frequencyLabel": "주파수",
       "bandMissing": "밴드???",
       "modeMissing": "모드???",
+      "modeOutOfBand": "대역 외",
       "radioControls-a11y": "무전기 제어 {{parts}}",
       "notesLabel": "메모",
       "notesLabel-a11y": "메모",

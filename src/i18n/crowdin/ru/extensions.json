@@ -1,0 +1,996 @@
+{
+  "extensions": {
+    "bandsAndModes": {
+      "bandsCount_zero": "Нет полос",
+      "bandsCount_one": "1 полоса",
+      "bandsCount_other": "{{count}} полосы",
+      "modesCount_zero": "Нет режимов",
+      "modesCount_one": "1 режим",
+      "modesCount_other": "{{count}} режима",
+      "total": "Всего {{count}}"
+    },
+    "bca": {
+      "name": "BCA: Замки и Крепости Бельгии",
+      "shortName": "BCA",
+      "exportName": "Активация BCA",
+      "activityOptions": {
+        "title_zero": "Замки для активации не выбраны",
+        "title_one": "Активация 1 замка",
+        "title_other": "Активация {{count}} замков",
+        "noCastlesFound": "Замков не найдено",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingCastles_zero": "Совпадений замков не найдено",
+        "matchingCastles_one": "1 совпадающий замок",
+        "matchingCastles_other": "{{count}} совпадающих замков",
+        "searchForCastles": "Ищите замки для активации!",
+        "noCastlesNearby": "Замков поблизости нет",
+        "nearbyCastles": "Ближайшие замки",
+        "searchPlaceholder": "Имя или ссылка…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Нет охотничьих замков",
+        "huntedRefsCount_one": "1 охотничий замок",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих замков",
+        "activatorQSOsCount_zero": "Нет активаторских QSOs",
+        "activatorQSOsCount_one": "1 активаторский QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторских QSOs",
+        "huntedQSOsCount_zero": "Нет охотничьих QSOs",
+        "huntedQSOsCount_one": "1 охотничий QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охотничьих QSOs",
+        "operationTotals": "Итоги операций",
+        "referencesActivatedCount_zero": "Не активировано ни одного замка",
+        "referencesActivatedCount_one": "1 активированный замок",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных замков",
+        "referencesMissedCount_zero": "Нет незавершенных замков",
+        "referencesMissedCount_one": "1 незавершенный замок",
+        "referencesMissedCount_other": "{{fmtCount}} незавершенных замков",
+        "referencesHuntedCount_zero": "Нет охотничьих замков",
+        "referencesHuntedCount_one": "1 охотничий замок",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих замков"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их BCA"
+      }
+    },
+    "blha": {
+      "name": "BLHA: Маяки и световые суда Бельгии",
+      "shortName": "BLHA",
+      "exportName": "Активация BLHA",
+      "activityOptions": {
+        "title_zero": "Маяки для активации не выбраны",
+        "title_one": "Активация 1 маяка",
+        "title_other": "Активация {{count}} маяков",
+        "noLighthousesFound": "Маяков не найдено",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingLighthouses_zero": "Совпадений маяков не найдено",
+        "matchingLighthouses_one": "1 совпадающий маяк",
+        "matchingLighthouses_other": "{{count}} совпадающих маяков",
+        "searchForLighthouses": "Ищите маяки для активации!",
+        "noLighthousesNearby": "Маяков поблизости нет",
+        "nearbyLighthouses": "Ближайшие маяки",
+        "searchPlaceholder": "Имя или ссылка…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Нет охотничьих маяков",
+        "huntedRefsCount_one": "1 охотничий маяк",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих маяков",
+        "activatorQSOsCount_zero": "Нет активаторских QSOs",
+        "activatorQSOsCount_one": "1 активаторский QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторских QSOs",
+        "huntedQSOsCount_zero": "Нет охотничьих QSOs",
+        "huntedQSOsCount_one": "1 охотничий QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охотничьих QSOs",
+        "operationTotals": "Итоги операций",
+        "referencesActivatedCount_zero": "Нет активированных маяков",
+        "referencesActivatedCount_one": "1 активированный маяк",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных маяков",
+        "referencesMissedCount_zero": "Нет незавершенных маяков",
+        "referencesMissedCount_one": "1 незавершенный маяк",
+        "referencesMissedCount_other": "{{fmtCount}} незавершенных маяков",
+        "referencesHuntedCount_zero": "Нет охотничьих маяков",
+        "referencesHuntedCount_one": "1 охотничий маяк",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих маяков"
+      }
+    },
+    "call-history": {
+      "name": "История вызовов",
+      "description": "Загрузите исторические ADIF и используйте для оффлайн поиска"
+    },
+    "call-notes": {
+      "name": "Заметки позывных",
+      "description": "Сохраняйте заметки позывных в файл и используйте для автономного поиска",
+      "description-md_zero": "Заметки не загружены.",
+      "description-md_one": "{{fmtCount}} {{type}} загружены.",
+      "description-md_other": "{{fmtCount}} {{type}} загружены.",
+      "builtIn": "Встроенные заметки",
+      "userDefined": "Пользовательские заметки",
+      "failedToLoad": "Не удалось загрузить!",
+      "notesFile": "Файл заметок позывного",
+      "nameLabel": "Имя",
+      "namePlaceholder": "Имя для вашего файла заметок позывного",
+      "locationLabel": "Местоположение",
+      "locationPlaceholder": "https://example.com/dir/notes.txt",
+      "builtinTitle": "Встроенный",
+      "customTitle": "Пользовательский",
+      "addFile": "Добавить новый файл",
+      "aboutTitle": "О заметках позывных",
+      "names": {
+        "ham2k-hams-of-note": "Радиолюбители Ham2K"
+      },
+      "descriptions": {
+        "ham2k-hams-of-note": "Образец того, кто есть кто и кто нет в мире радио"
+      },
+      "help-md": "Заметки позывных хранятся в простых текстовых файлах, один вызов на строку, за которым следует информация, которую вы хотите отразить на экране записи. Вы можете использовать встроенные файлы или добавить свои.\n\nПредоставьте прямую ссылку на простой текстовый файл или \"общую ссылку\" от сервиса, такого как:\n* [Google Docs](https://docs.google.com/)\n* [Google Drive](https://drive.google.com/)\n* [GitHub Gists](https://gist.github.com/)\n* [Dropbox](https://www.dropbox.com/)\n* [Apple iCloud Drive](https://www.icloud.com/)\n\nСтроки в этом файле должны выглядеть следующим образом и могут поддерживать базовое форматирование markdown:\n\n```nK2HRC 🎉 Ham2K Radio Club!!!\nKE8PZN 👑 Джеймс POTA Король\nWD4DAN Дэн POTA _Королевская высота_\nDAN WD4DAN, WD4JMM\n```\n\nЕсли запись начинается с эмодзи, она будет использоваться вместо стандартной ⭐.\n\nЗаписи можно использовать для \"расширения позывного\", если вы сначала наберете `..` или `//` в поле позывного, например, `//DAN` в приведенном выше примере."
+    },
+    "canadianProvinces": {
+      "provincesCount_zero": "Нет канадских провинций",
+      "provincesCount_one": "1 канадская провинция",
+      "provincesCount_other": "{{count}} канадские провинции"
+    },
+    "colonies": {
+      "activityOptions": {
+        "settings": "Настройки",
+        "year": "Год",
+        "testMode-md": "Поскольку событие на этот год еще не началось, вы можете протестировать свою операцию по работе с QSO за последние семь дней.",
+        "note-md": "ПРИМЕЧАНИЕ: PoLo будет сообщать ваши результаты с использованием всех QSO в диапазоне дат, включая все другие операции, присутствующие на этом устройстве.",
+        "info-md": "Специальное событие 13 Колоний проходит ежегодно с 9 утра по восточному времени 1 июля до полуночи 7 июля."
+      }
+    },
+    "commands-annotation": {
+      "fetchingCurrentWeather": "Получение текущей погоды…",
+      "errorFetchingWeather": "Ошибка при получении погоды",
+      "fetchingSolarWeather": "Получение солнечной природы…",
+      "errorFetchingSolarWeather": "Ошибка получения солнечной погоды",
+      "addNote": "Добавить заметку: ‘{{note}}’…",
+      "addNotePrompt": "Добавить заметку? продолжайте печатать…",
+      "addNoteConfirm": "Заметка добавлена!",
+      "addTodo": "Добавить дело: ‘{{note}}’…",
+      "addTodoPrompt": "Добавить пункт задачи? продолжайте печатать…",
+      "addTodoConfirm": "Дело добавлено!",
+      "sendChat": "Отправить сообщение: ‘{{note}}’…",
+      "sendChatPrompt": "Отправить сообщение? продолжайте печатать…",
+      "sendChatConfirm": "Сообщение отправлено!"
+    },
+    "commands-debug": {
+      "syncall": "Удалить все операции и сбросить статус синхронизации?",
+      "syncallConfirm": "Очистка данных и повторная синхронизация всех…",
+      "syncup": "Повторно отправить локальные данные для синхронизации?",
+      "syncupConfirm": "Повторная отправка…",
+      "wipedb": "Удалить всю базу данных (кроме настроек)?",
+      "wipedbConfirm": "Очистка базы данных…",
+      "factory": "Удалить все данные и настройки?",
+      "factoryConfirm": "Сброс до заводских настроек в процессе…",
+      "switchLanguage": "Переключить язык на `{{lang}}` {{name}}?",
+      "switchLanguagePrompt": "Язык `{{lang}}` {{name}}",
+      "switchLanguageConfirm": "Переключаем на `{{lang}}` {{name}}…"
+    },
+    "commands-devmode": {
+      "activate": "Активировать режим разработчика?",
+      "activateConfirm": "Режим разработчика активирован!",
+      "deactivate": "Отключить режим разработчика?",
+      "deactivateConfirm": "Режим разработчика отключён!",
+      "on": "Режим разработчика: ВКЛ!!!",
+      "off": "Режим разработчика: ВЫКЛ"
+    },
+    "commands-misc": {
+      "rtfm": "Прочитать инструкцию?",
+      "rtfmConfirm": "Открываю инструкцию",
+      "spot": {
+        "cannotSelfSpotWithoutFrequency": "Нельзя установить себя без частоты",
+        "selfSpotWithComments": "Установить себя с ‘{{comments}}’?",
+        "selfSpotPrompt": "Установить себя?",
+        "selfSpottingWithComments": "Самостоятельная установка {{freq}} с ‘{{comments}}’",
+        "selfSpotting": "Самостоятельная установка {{freq}}"
+      }
+    },
+    "commands-operation": {
+      "start": "Начать операцию?",
+      "startConfirm": "Операция началась!",
+      "break": "Добавить перерыв?",
+      "breakConfirm": "Перерыв в операции добавлен!",
+      "roverqth": "Добавить перерыв и установить новое местоположение?",
+      "roverqthConfirm": "Перерыв добавлен, теперь укажите новое местоположение",
+      "stop": "Остановить операцию?",
+      "stopConfirm": "Операция остановлена!"
+    },
+    "commands-operator": {
+      "change": "Сменить оператора на {{operator}}?",
+      "changeConfirm": "Оператор установлен на {{operator}}"
+    },
+    "commands-radio": {
+      "band": "Сменить полосу на {{band}}?",
+      "bandConfirm": "Полоса установлена на {{band}}",
+      "frequency": "Изменить частоту на {{freq}} МГц?",
+      "frequencyConfirm": "Частота установлена на {{freq}} МГц",
+      "frequencyAndMode": "Изменить частоту на {{freq}} МГц ({{mode}})?",
+      "frequencyAndModeConfirm": "Частота установлена на {{freq}} МГц ({{mode}})",
+      "power": "Сменить мощность на {{power}} Вт?",
+      "powerConfirm": "Мощность установлена на {{power}} Вт",
+      "mode": "Сменить режим на {{mode}}?",
+      "modeConfirm": "Режим установлен на {{mode}}"
+    },
+    "commands-settings": {
+      "set": "Настройка {{name}}?",
+      "setChange": "Изменить {{label}} на {{value}}?",
+      "setCurrent": "{{label}}: {{value}}",
+      "setConfirm": "{{label}} установлено на {{value}}",
+      "setNotChanged": "Не изменено"
+    },
+    "commands-time": {
+      "setTime": "Установить время на {{time}}?",
+      "setDate": "Установить дату на {{date}}?",
+      "timeSet": "Время установлено на {{time}}",
+      "dateSet": "Дата установлена на {{date}}",
+      "changeTimeByHours": "Изменить время на {{delta}} часов?",
+      "changeTimeByMinutes": "Изменить время на {{delta}} минут?",
+      "changeTimeBySeconds": "Изменить время на {{delta}} секунд?",
+      "changeTimeByDays": "Изменить время на {{delta}} дней?",
+      "changeTimeByWeeks": "Изменить время на {{delta}} недель?",
+      "changeTimeToNow": "Изменить время на сейчас?",
+      "changeTimeToToday": "Изменить время на сегодня?",
+      "changeTimeToYesterday": "Изменить время на вчерашний день?",
+      "timeSetToNow": "Время установлено на сейчас",
+      "timeSetToToday": "Время установлено на сегодня",
+      "timeSetToYesterday": "Время установлено на вчерашний день"
+    },
+    "custom": {
+      "activityOptions": {
+        "title_zero": "Ссылки для активации не выбраны",
+        "title_one": "Активация 1 ссылки",
+        "title_other": "Активация {{count}} ссылок",
+        "addMoreReferences": "Добавьте больше ссылок",
+        "addReference": "Добавить ссылку",
+        "activityLabel": "Активность - MY_SIG в ADIF (необязательно)",
+        "activityPlaceholder": "например, COTA…",
+        "referenceLabel": "Ссылка - MY_SIG_INFO в ADIF",
+        "referencePlaceholder": "например, XY-1234…",
+        "nameLabel": "Имя (необязательно)",
+        "namePlaceholder": "например, Замок XYZ…",
+        "addButton": "Добавить {{mySig}} {{mySigInfo}}"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их ссылка"
+      }
+    },
+    "dataFiles": {
+      "title": {
+        "__comment__": "Здесь измените названия файлов данных",
+        "pota-all-parks": "POTA: Все парки",
+        "sota-all-summits": "SOTA: Все вершины"
+      },
+      "loading": {
+        "progress": "Загружено `{{processedLines}}` ссылок.\n\n`{{percent}}` • {{secondsLeft}} секунд осталось.",
+        "downloadingRawData": "Загружается необработанные данные…"
+      }
+    },
+    "dxcc": {
+      "entitiesCount_zero": "Нет объектов DXCC",
+      "entitiesCount_one": "1 объект DXCC",
+      "entitiesCount_other": "{{count}} объекта DXCC"
+    },
+    "eca": {
+      "name": "ECA: Награды Английские Замки",
+      "shortName": "ECA",
+      "exportName": "Активация ECA",
+      "activityOptions": {
+        "title_zero": "Замки для активации не выбраны",
+        "title_one": "Активация 1 замка",
+        "title_other": "Активация {{count}} замков",
+        "noCastlesFound": "Замков не найдено",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingCastles_zero": "Совпадений замков не найдено",
+        "matchingCastles_one": "1 совпадающий замок",
+        "matchingCastles_other": "{{count}} совпадающих замков",
+        "searchForCastles": "Ищите замки для активации!",
+        "noCastlesNearby": "Замков поблизости нет",
+        "nearbyCastles": "Ближайшие замки",
+        "searchPlaceholder": "Имя или ссылка…"
+      }
+    },
+    "ela": {
+      "name": "ELA: Награды Английские Маяки",
+      "shortName": "ELA",
+      "exportName": "Активация ELA",
+      "activityOptions": {
+        "title_zero": "Маяки для активации не выбраны",
+        "title_one": "Активация 1 маяка",
+        "title_other": "Активация {{count}} маяков",
+        "noLighthousesFound": "Маяков не найдено",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingLighthouses_zero": "Совпадений маяков не найдено",
+        "matchingLighthouses_one": "1 совпадающий маяк",
+        "matchingLighthouses_other": "{{count}} совпадающих маяков",
+        "searchForLighthouses": "Ищите маяки для активации!",
+        "noLighthousesNearby": "Маяков поблизости нет",
+        "nearbyLighthouses": "Ближайшие маяки",
+        "searchPlaceholder": "Имя или ссылка…"
+      }
+    },
+    "fd": {
+      "activityOptions": {
+        "exchangeInformation": "Информация об обмене",
+        "classLabel": "Класс",
+        "locationLabel": "Местоположение",
+        "additionalInformation": "Дополнительная информация",
+        "highestTransmitterPowerLabel": "Максимальная мощность передатчика",
+        "highestTransmitterPowerPlaceholder": "100 Вт",
+        "qrpOption": "QRP: 5 Вт или меньше",
+        "qroOption": "QRO: 100 Вт или меньше",
+        "moreThan100WOption": "Более 100 Вт",
+        "powerSourceLabel": "Источник питания",
+        "powerSourcePlaceholder": "Выберите источник питания",
+        "batteriesOption": "Батареи, Солнечная энергия, Ветер",
+        "commercialPowerOption": "Коммерческая энергия, Генератор",
+        "bonusesTitle": "Бонусные баллы: заявлено {{count}}, {{points}} балл.",
+        "bonusesDescription": "Не забудьте также указать эти бонусные очки при отправке своего лога!",
+        "bonusTitle": "{{title}} ({{points}} очк.)",
+        "information-md": "Класс для ARRL Field Day, например, `2A`:\n\n  - `1`, `2`, `3`… для количества передатчиков.\n  - `A` для группы (3 или более) портативной станции\n  - `B` для одного или двух человек портативной станции\n  - `C` для мобильной станции\n  - `D` для домашней станции\n  - `E` для домашней станции на аварийном питании\n  - `F` для центра экстренных операций\n\nМестоположение — это секция ARRL, секция RAC, `MX` для Мексики или `DX` для любого другого места.\n\nБольше информации в **[официальных правилах](https://www.arrl.org/field-day-rules)**."
+      },
+      "bonusName": {
+        "transmitters": "Передатчики",
+        "emergencyPower": "100% аварийное питание",
+        "mediaPublicity": "Освещение в СМИ",
+        "publicLocation": "Общественное место",
+        "informationTable": "Информационный стол для публики",
+        "messageToSM": "Сообщение ARRL SM/SEC",
+        "ntsMessages": "Обработка сообщений",
+        "ntsMessagesCount": "Количество обработанных сообщений",
+        "satelliteQSO": "Спутниковое QSO",
+        "alternatePowerQSOs": "QSO на альтернативном питании",
+        "w1awMessage": "Сообщение W1AW Field Day",
+        "electedOfficialVisit": "Визит выборного должностного лица",
+        "agencyOfficialVisit": "Визит должностного лица обслуживаемой организации",
+        "educationalActivity": "Образовательное мероприятие",
+        "youthElement": "Молодежное участие",
+        "safetyOfficer": "Ответственный за безопасность",
+        "siteResponsibilities": "Обязанности на площадке",
+        "socialMedia": "Социальные сети",
+        "gotaQSOs": "QSO станции GOTA",
+        "gotaQSOsCount": "Количество GOTA QSO",
+        "gotaCoach": "Наставник GOTA",
+        "webSubmission": "Отправка через веб"
+      },
+      "bonusDescription": {
+        "transmitters": "100 очков за каждый передатчик (макс. 20), не считая GOTA или VHF.",
+        "emergencyPower": "100 очков за каждый передатчик (макс. 20), если все связи используют аварийное питание.",
+        "mediaPublicity": "Добейтесь освещения в местных СМИ. Приложите копию к своей заявке.",
+        "publicLocation": "Разместите операцию в общественном месте, например в парке, школе или торговом центре (только классы A, B или F).",
+        "informationTable": "Организуйте информационный стол для публики на площадке Field Day (только классы A, B или F).",
+        "messageToSM": "Составьте официальное сообщение своему менеджеру секции ARRL или координатору по чрезвычайным ситуациям секции.",
+        "ntsMessages": "10 очков за каждое сообщение NTS или ICS-213 (макс. 10), обработанное в период работы в эфире.",
+        "satelliteQSO": "Проведите как минимум одно QSO через любительский радиоспутник (только классы A, B или F).",
+        "alternatePowerQSOs": "Проведите как минимум одно QSO с использованием альтернативной генерации энергии, например солнечной, ветровой или водной (только классы A, B, E или F).",
+        "w1awMessage": "Точно примите специальный бюллетень Field Day, передаваемый W1AW или K6KPH.",
+        "electedOfficialVisit": "Организуйте визит приглашенного выборного представителя государственной власти.",
+        "agencyOfficialVisit": "Организуйте визит приглашенного должностного лица обслуживаемой организации.",
+        "educationalActivity": "Проведите официальное образовательное мероприятие с письменным планом занятия.",
+        "youthElement": "Включите в операцию молодежных участников.",
+        "safetyOfficer": "Обеспечьте присутствие назначенного ответственного за безопасность на площадке (только класс A).",
+        "siteResponsibilities": "Выполните требования по обязанностям на площадке (классы B, C, D, E и F).",
+        "socialMedia": "Продвигайте свою операцию Field Day в социальных сетях.",
+        "gotaQSOs": "5 очков за каждое QSO, проведенное на станции GOTA.",
+        "gotaCoach": "Имеется наставник GOTA для помощи в работе станции GOTA.",
+        "webSubmission": "Отправьте свою заявку с помощью веб-приложения на field-day.arrl.org."
+      }
+    },
+    "gma": {
+      "name": "GMA: Глобальная Активность на Горах",
+      "shortName": "GMA",
+      "exportName": "Активация GMA",
+      "activityOptions": {
+        "title_zero": "Вершины для активации не выбраны",
+        "title_one": "Активация 1 вершины",
+        "title_other": "Активация {{count}} вершин",
+        "noSummitsFound": "Вершины не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingSummits_zero": "Совпадений вершин не найдено",
+        "matchingSummits_one": "1 совпадающая вершина",
+        "matchingSummits_other": "{{count}} совпадающих вершин",
+        "searchForSummits": "Ищите вершины для активации!",
+        "noSummitsNearby": "Вершины поблизости не найдены",
+        "nearbySummits": "Ближайшие вершины",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownSummit": "Неизвестная вершина"
+      }
+    },
+    "ham2k-lookup": {
+      "name": "Сервис поиска Ham2K",
+      "description": "Бесплатный сервис, но охватывает только позывные США, Канады и Германии"
+    },
+    "hamqth": {
+      "name": "HamQTH.com Поиски позывных",
+      "description": "Требуется бесплатный аккаунт для поисков"
+    },
+    "llota": {
+      "name": "LLOTA: Озёра и лагуны в эфире",
+      "shortName": "LLOTA",
+      "exportName": "Активация LLOTA",
+      "activityOptions": {
+        "title_zero": "Озёра для активации не выбраны",
+        "title_one": "Активируется 1 озеро",
+        "title_other": "Активируется {{count}} озёр",
+        "noLakesFound": "Озёра не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingRefs_zero": "Нет соответствующих озёр",
+        "matchingRefs_one": "1 соответствующее озеро",
+        "matchingRefs_other": "{{count}} соответствующих озёр",
+        "searchForRefs": "Найдите озёра для активации!",
+        "noRefsNearby": "Нет озёр поблизости",
+        "nearbyRefs": "Озёра поблизости",
+        "searchPlaceholder": "Имя или ссылка…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Нет L2Ls",
+        "ref2refCount_one": "1 L2L",
+        "ref2refCount_other": "{{fmtCount}} L2Ls",
+        "huntedRefsCount_zero": "Нет охотничьих озёр",
+        "huntedRefsCount_one": "1 охотничье озеро",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих озёр",
+        "activatorQSOsCount_zero": "Нет активных QSO",
+        "activatorQSOsCount_one": "1 активный QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активных QSO",
+        "ref2refQSOsCount_zero": "Нет L2L QSO",
+        "ref2refQSOsCount_one": "1 L2L QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} L2L QSO",
+        "huntedQSOsCount_zero": "Нет охотничьих QSO",
+        "huntedQSOsCount_one": "1 охотничий QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охотничьих QSO",
+        "operationTotals": "Итоги операции",
+        "referencesActivatedCount_zero": "Нет активированных озёр",
+        "referencesActivatedCount_one": "1 активированное озеро",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных озёр",
+        "referencesMissedCount_zero": "Нет незавершённых озёр",
+        "referencesMissedCount_one": "1 незавершённое озеро",
+        "referencesMissedCount_other": "{{fmtCount}} незавершённых озёр",
+        "referencesHuntedCount_zero": "Нет охотничьих озёр",
+        "referencesHuntedCount_one": "1 охотничье озеро",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих озёр"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их LLOTA"
+      },
+      "postSpotAPI": {
+        "error": "Ошибка при отправке LLOTA спота",
+        "serverResponse": "Сервер ответил с ошибкой {{status}}: {{body}}"
+      },
+      "exampleRefName": "Пример озера",
+      "unknownRefName": "Неизвестное озеро",
+      "noRefsNearby": "Нет озёр поблизости!"
+    },
+    "mota": {
+      "name": "MOTA: Мельницы в Эфире",
+      "shortName": "MOTA",
+      "exportName": "Активация MOTA",
+      "activityOptions": {
+        "title_zero": "Мельниц для активации не выбрано",
+        "title_one": "Активация 1 мельницы",
+        "title_other": "Активация {{count}} мельниц",
+        "noMillsFound": "Мельниц не найдено",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingMills_zero": "Совпадений мельниц не найдено",
+        "matchingMills_one": "1 совпадающая мельница",
+        "matchingMills_other": "{{count}} совпадающих мельниц",
+        "searchForMills": "Ищите мельницы для активации!",
+        "noMillsNearby": "Мельниц поблизости не найдено",
+        "nearbyMills": "Ближайшие мельницы",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownMill": "Неизвестная мельница"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их мельница"
+      }
+    },
+    "parksnpeaks": {
+      "name": "ПаркснПикс Споттинг",
+      "description": "Чаще всего используется в VK и ZL",
+      "shortName": "ПнП",
+      "account": {
+        "title": "ParksnPeaks (VK/ZL споттинг)",
+        "dialogTitle": "Аккаунт ParksnPeaks",
+        "description": "Аккаунт: {{username}}",
+        "noAccount": "Нет аккаунта",
+        "pleaseEnterDetails": "Пожалуйста, введите данные своего аккаунта ParksnPeaks:"
+      },
+      "usernameLabel": "Имя пользователя (не позывной)",
+      "usernamePlaceholder": "имя пользователя вашего аккаунта",
+      "apiKeyLabel": "Ключ API (не пароль)",
+      "apiKeyPlaceholder": "ваш ключ API"
+    },
+    "pga": {
+      "name": "Награда за польскую гмину",
+      "shortName": "PGA",
+      "exportName": "Активация PGA",
+      "activityOptions": {
+        "title_zero": "Гмин для активации не выбрано",
+        "title_one": "Активация 1 гмины",
+        "title_other": "Активация {{count}} гмин",
+        "noGminasFound": "Гмины не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingGminas_zero": "Совпадений гмин не найдено",
+        "matchingGminas_one": "1 совпадающая гмина",
+        "matchingGminas_other": "{{count}} совпадающих гмин",
+        "searchForGminas": "Ищите гмины для активации!",
+        "noGminasNearby": "Гмин поблизости не найдено",
+        "nearbyGminas": "Ближайшие гмины",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownGmina": "Неизвестная гмина"
+      }
+    },
+    "pota": {
+      "name": "POTA: Парки на воздухе",
+      "shortName": "POTA",
+      "exportName": "Активация POTA",
+      "activityOptions": {
+        "title_zero": "Парков для активации не выбрано",
+        "title_one": "Активация 1 парка",
+        "title_other": "Активировано {{count}} парков",
+        "noParksFound": "Парки не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingParks_zero": "Нет соответствующих парков",
+        "matchingParks_one": "1 соответствующий парк",
+        "matchingParks_other": "{{count}} соответствующих парка",
+        "searchForParks": "Найдите парки для активации!",
+        "noParksNearby": "Парков поблизости нет",
+        "nearbyParks": "Парки поблизости",
+        "searchPlaceholder": "Имя или ссылка…"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Нет P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Нет охотничьих парков",
+        "huntedRefsCount_one": "1 охотничий парк",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих парков",
+        "activatorQSOsCount_zero": "Нет активаторских QSOs",
+        "activatorQSOsCount_one": "1 активаторский QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторских QSOs",
+        "ref2refQSOsCount_zero": "Нет P2P QSOs",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Нет охотничьих QSOs",
+        "huntedQSOsCount_one": "1 охотничий QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охотничьих QSOs",
+        "operationTotals": "Итоги операций",
+        "referencesActivatedCount_zero": "Не активировано ни одного парка",
+        "referencesActivatedCount_one": "1 активированный парк",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных парков",
+        "referencesMissedCount_zero": "Нет незавершенных парков",
+        "referencesMissedCount_one": "1 незавершенный парк",
+        "referencesMissedCount_other": "{{fmtCount}} незавершенных парков",
+        "referencesHuntedCount_zero": "Нет охотничьих парков",
+        "referencesHuntedCount_one": "1 охотничий парк",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих парков"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их POTA"
+      },
+      "postSpotAPI": {
+        "error": "Ошибка при публикации POTA точки",
+        "serverResponse": "Сервер ответил ошибкой {{status}}: {{body}}"
+      },
+      "exampleRefName": "Пример национального парка",
+      "unknownRefName": "Неизвестный парк",
+      "noRefsNearby": "Рядом нет парков!"
+    },
+    "qrz": {
+      "name": "QRZ.com Поиски позывных",
+      "description": "Требуется бесплатный аккаунт для имен и платный — для местоположений"
+    },
+    "sats": {
+      "name": "Спутниковые операции"
+    },
+    "siota": {
+      "name": "SiOTA: Силосы в Эфире",
+      "shortName": "SIOTA",
+      "exportName": "Активация SIOTA",
+      "account": {
+        "title": "ParksnPeaks (наблюдение SiOTA)",
+        "dialogTitle": "Аккаунт ParksnPeaks",
+        "description": "Аккаунт: {{username}}",
+        "noAccount": "Нет аккаунта",
+        "pleaseEnterDetails": "Пожалуйста, введите данные вашего аккаунта ParksnPeaks:",
+        "usernameLabel": "Имя пользователя (не позывной)",
+        "usernamePlaceholder": "ваше имя пользователя",
+        "apiKeyLabel": "API-ключ (не пароль)",
+        "apiKeyPlaceholder": "ваш API-ключ"
+      },
+      "activityOptions": {
+        "title_zero": "Объекты не выбраны для активации",
+        "title_one": "Активация 1 объекта",
+        "title_other": "Активировано {{count}} объектов",
+        "noSilosFound": "Объекты не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingSilos_zero": "Нет объектов, соответствующих",
+        "matchingSilos_one": "1 соответствующий объект",
+        "matchingSilos_other": "{{count}} объектов, соответствующих",
+        "searchForSilos": "Найдите объекты для активации!",
+        "noSilosNearby": "Объектов поблизости нет",
+        "nearbySilos": "Объекты поблизости",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownSilo": "Неизвестный объект"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их силос"
+      },
+      "postSpotAPI": {
+        "error": "Ошибка при публикации SiOTA точки",
+        "serverResponse": "Сервер ответил ошибкой {{status}}: {{body}}"
+      }
+    },
+    "sota": {
+      "name": "SOTA: Вершины в Эфире",
+      "account": {
+        "title": "SOTA (для самонаблюдения SOTAWatch)",
+        "dialogTitle": "Аккаунт SOTA",
+        "description": "Аккаунт: {{callsign}}",
+        "noAccount": "Нет аккаунта",
+        "error": "Ошибка получения данных аккаунта",
+        "connect": "Подключить ваш аккаунт SOTA"
+      },
+      "notLoggedInAlertTitle": "Предупреждение",
+      "notLoggedInAlertText": "Не вошли в SOTAWatch для самостоятельного просмотра. Пожалуйста, перейдите в настройки PoLo",
+      "activityOptions": {
+        "title_zero": "Вершины для активации не выбраны",
+        "title_one": "Активация 1 вершины",
+        "title_other": "Активировано {{count}} вершин",
+        "noSummitsFound": "Вершины не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingSummits_zero": "Нет соответствующих вершин",
+        "matchingSummits_one": "1 соответствующая вершина",
+        "matchingSummits_other": "{{count}} соответствующих вершины",
+        "searchForSummits": "Найдите вершины для активации!",
+        "noSummitsNearby": "Вершин поблизости нет",
+        "nearbySummits": "Вершины поблизости",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownSummit": "Неизвестная вершина"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Нет S2S",
+        "ref2refCount_one": "1 S2S",
+        "ref2refCount_other": "{{fmtCount}} S2S",
+        "huntedRefsCount_zero": "Нет охотничьих вершин",
+        "huntedRefsCount_one": "1 охотничая вершина",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих вершин",
+        "activatorQSOsCount_zero": "Нет активаторских QSOs",
+        "activatorQSOsCount_one": "1 активаторский QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторских QSOs",
+        "ref2refQSOsCount_zero": "Нет S2S QSOs",
+        "ref2refQSOsCount_one": "1 S2S QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} S2S QSOs",
+        "huntedQSOsCount_zero": "Нет охотничьих QSOs",
+        "huntedQSOsCount_one": "1 охотничий QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охотничьих QSOs",
+        "operationTotals": "Итоги операций",
+        "referencesActivatedCount_zero": "Не активировано ни одной вершины",
+        "referencesActivatedCount_one": "1 активированная вершина",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных вершин",
+        "referencesMissedCount_zero": "Нет незавершенных вершин",
+        "referencesMissedCount_one": "1 незавершенная вершина",
+        "referencesMissedCount_other": "{{fmtCount}} незавершенных вершин",
+        "referencesHuntedCount_zero": "Нет охотничьих вершин",
+        "referencesHuntedCount_one": "1 охотничая вершина",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих вершин"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их SOTA"
+      },
+      "postSpotAPI": {
+        "error": "Ошибка при публикации SOTA точки",
+        "serverResponse": "Сервер ответил с кодом {{status}} {{message}}",
+        "sotaAccountLoggedOut": "Аккаунт SOTA вышел из системы. Пожалуйста, войдите снова в настройках PoLo"
+      },
+      "exampleRefName": "Пример вершины",
+      "unknownRefName": "Неизвестная вершина",
+      "noRefsNearby": "Рядом нет вершин!"
+    },
+    "tota": {
+      "name": "TOTA: Башни в Эфире",
+      "activityOptions": {
+        "title_zero": "Не выбрано активируемых башен",
+        "title_one": "Активируется 1 башня",
+        "title_other": "Активируется {{count}} башен",
+        "noTowersFound": "Башни не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingTowers_zero": "Нет совпадающих башен",
+        "matchingTowers_one": "1 совпадающая башня",
+        "matchingTowers_other": "{{count}} совпадающих башен",
+        "searchForTowers": "Поиск башен для активации!",
+        "noTowersNearby": "Нет близлежащих башен",
+        "nearbyTowers": "Ближайшие башни",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownTower": "Неизвестная башня"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Нет R2R",
+        "ref2refCount_one": "1 R2R",
+        "ref2refCount_other": "{{fmtCount}} R2R",
+        "huntedRefsCount_zero": "Нет охотничьих башен",
+        "huntedRefsCount_one": "1 охотничья башня",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих башен",
+        "activatorQSOsCount_zero": "Нет активаторов QSO",
+        "activatorQSOsCount_one": "1 активатор QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активаторов QSOs",
+        "ref2refQSOsCount_zero": "Нет R2R QSOs",
+        "ref2refQSOsCount_one": "1 R2R QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} R2R QSOs",
+        "huntedQSOsCount_zero": "Нет связанных QSO",
+        "huntedQSOsCount_one": "1 связанный QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} связанных QSO",
+        "operationTotals": "Итоги операции",
+        "referencesActivatedCount_zero": "Не активировано башен",
+        "referencesActivatedCount_one": "1 активированная башня",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных башен",
+        "referencesMissedCount_zero": "Нет незавершенных башен",
+        "referencesMissedCount_one": "1 незавершенная башня",
+        "referencesMissedCount_other": "{{fmtCount}} незавершенных башен",
+        "referencesHuntedCount_zero": "Охотничьи башни отсутствуют",
+        "referencesHuntedCount_one": "1 охотничья башня",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих башен"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их Башня"
+      },
+      "exampleRefName": "Пример Башни",
+      "unknownRefName": "Неизвестная Башня",
+      "noRefsNearby": "Рядом нет башен!",
+      "postSpotAPI": {
+        "error": "Ошибка при отправке TOTA спот",
+        "serverResponse": "Сервер ответил статусом {{status}} {{message}}"
+      }
+    },
+    "usStates": {
+      "statesCount_zero": "Нет штатов США",
+      "statesCount_one": "1 штат США",
+      "statesCount_other": "{{count}} штата США"
+    },
+    "wab": {
+      "name": "Worked All Britain/Ireland",
+      "description": "Добавить квадрат WAB/WAI для операции",
+      "workedAllBritainSquare": "Квадрат Worked All Britain",
+      "workedAllIrelandSquare": "Квадрат Worked All Ireland",
+      "enterSquare": "Ввести квадрат",
+      "placeholderBritain": "например, SU14",
+      "placeholderIreland": "например, N93",
+      "currentSquare": "Текущий квадрат:",
+      "noSquareSet": "Квадрат не установлен"
+    },
+    "wca": {
+      "name": "WCA: Награды Всемирные Замки",
+      "shortName": "ВЦА",
+      "exportName": "Активизация ВЦА",
+      "activityOptions": {
+        "title_zero": "Список замков для активизации пуст",
+        "title_one": "Активизация 1 замка",
+        "title_other": "Активизация {{count}} замков",
+        "noCastlesFound": "Замки не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} матчей",
+        "matchingCastles_zero": "Совпадения замков не найдены",
+        "matchingCastles_one": "1 совпадающий замок",
+        "matchingCastles_other": "{{count}} совпадающих замков",
+        "searchForCastles": "Найдите замки для активизации!",
+        "noCastlesNearby": "Замков поблизости нет",
+        "nearbyCastles": "Ближайшие замки",
+        "searchPlaceholder": "Имя или ссылка…"
+      },
+      "scoring": {
+        "huntedRefsCount_zero": "Замки не охвачены",
+        "huntedRefsCount_one": "1 замок охвачен",
+        "huntedRefsCount_other": "{{fmtCount}} замков охвачены",
+        "activatorQSOsCount_zero": "Активатор QSOs отсутствуют",
+        "activatorQSOsCount_one": "1 активатор QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} QSOs активаторов",
+        "huntedQSOsCount_zero": "Отсутствуют охваченные QSOs",
+        "huntedQSOsCount_one": "1 охваченный QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охваченных QSOs",
+        "operationTotals": "Общая статистика операции",
+        "referencesActivatedCount_zero": "Замки не активированы",
+        "referencesActivatedCount_one": "1 замок активирован",
+        "referencesActivatedCount_other": "{{fmtCount}} замков активированы",
+        "referencesMissedCount_zero": "Неполных замков нет",
+        "referencesMissedCount_one": "1 неполный замок",
+        "referencesMissedCount_other": "{{fmtCount}} неполных замков",
+        "referencesHuntedCount_zero": "Замки не охвачены",
+        "referencesHuntedCount_one": "1 замок охвачен",
+        "referencesHuntedCount_other": "{{fmtCount}} замков охвачены"
+      },
+      "exampleRefName": "Пример замка",
+      "unknownRefName": "Неизвестный замок",
+      "noRefsNearby": "Рядом замков нет!"
+    },
+    "wfd": {
+      "name": "Winter Field Day",
+      "shortName": "WFD",
+      "exportName": "Активация WFD",
+      "activityOptions": {
+        "exchangeInformation": "Обмен информацией",
+        "classLabel": "Класс",
+        "locationLabel": "Местоположение",
+        "objectives_zero": "Цели не достигнуты",
+        "objectives_one": "1 цель достигнута, OM ×{{multiplier}}",
+        "objectives_other": "{{count}} цели достигнуты, OM ×{{multiplier}}",
+        "objectivesTitle": "Цели: {{count}} достигнуты, OM ×{{multiplier}}",
+        "objectivesDescription": "Не забудьте также представить эти цели при отправке отчета!",
+        "objectiveTitle": "{{title}} (OM ×{{multiplier}})"
+      },
+      "objectiveName": {
+        "altPower": "Альтернативная энергия",
+        "awayFromHome": "Работать вдали от дома",
+        "fmSatelliteContact": "Контакт FM спутника",
+        "ssbSatelliteContact": "Контакт SSB или CW спутника",
+        "winlinkEmails": "Электронные письма Winlink",
+        "specialBulletin": "Специальный бюллетень",
+        "sixBands": "Шесть диапазонов",
+        "twelveBands": "Двенадцать диапазонов",
+        "multipleModes": "Несколько режимов",
+        "qrpOperation": "Операция QRP",
+        "sixContinuousHours": "Шесть непрерывных часов"
+      },
+      "objectiveDescription": {
+        "altPower": "Работа на 100% на альтернативном источнике питания, таком как батареи, солнечная энергия, ветер и т.д.",
+        "awayFromHome": "Разверните вашу полевую станцию на расстоянии не менее ½ мили от дома.",
+        "fmSatelliteContact": "Совершите хотя бы один FM спутниковый контакт в течение активного периода.",
+        "ssbSatelliteContact": "Совершите хотя бы один контакт с использованием SSB или CW.",
+        "winlinkEmails": "Отправьте и получите хотя бы одно письмо с использованием Winlink по радиочастоте.",
+        "specialBulletin": "Точно скопируйте сообщение специального бюллетеня WFD и представьте вашу копию вместе с вашим отчетом.",
+        "sixBands": "Совершите как минимум три контакта на каждом из как минимум шести различных диапазонов.",
+        "twelveBands": "Совершите как минимум три контакта на каждом из как минимум двенадцати различных диапазонов.",
+        "multipleModes": "Используйте несколько режимов в течение активного периода.",
+        "qrpOperation": "Работайте на уровнях QRP (10В или менее на телефоне, 5В или менее на CW или цифровом).",
+        "sixContinuousHours": "Работайте как минимум шесть непрерывных часов в течение активного периода."
+      },
+      "information-md": "Класс для Winter Field Day, например, `2M`:\n\n  - `1`, `2`, `3`… для количества передатчиков.\n  - `H` для домашней станции\n  - `I` для помещений\n  - `O` для открытых пространств\n  - `M` для мобильной или стационарной мобильной станции\n\nМестоположение — это секция ARRL, секция RAC, `MX` для Мексики или `DX` для любого другого места.\n\nБольше информации в **[официальных правилах](https://www.winterfieldday.com/sop.php)**."
+    },
+    "wwbota": {
+      "name": "WWBOTA: Мировые награды за убежища",
+      "shortName": "WWBOTA",
+      "exportName": "Активация WWBOTA",
+      "activityOptions": {
+        "title_zero": "Убежища не выбраны для активации",
+        "title_one": "Активация 1 убежища",
+        "title_other": "Активировано {{count}} убежищ",
+        "noBunkersFound": "Убежища не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingBunkers_zero": "Нет соответствующих убежищ",
+        "matchingBunkers_one": "1 соответствующее убежище",
+        "matchingBunkers_other": "{{count}} соответствующих убежища",
+        "searchForBunkers": "Найдите убежища для активации!",
+        "noBunkersNearby": "Убежищ поблизости нет",
+        "nearbyBunkers": "Убежища поблизости",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownBunker": "Неизвестное убежище"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их бункер"
+      },
+      "postSpotAPI": {
+        "error": "Ошибка при публикации WWBOTA точки",
+        "serverResponse": "Сервер ответил с кодом {{status}} {{message}}"
+      }
+    },
+    "wwff": {
+      "name": "WWFF: Всемирная флора и фауна",
+      "shortName": "WWFF",
+      "exportName": "Активация WWFF",
+      "activityOptions": {
+        "title_zero": "Парки не выбраны для активации",
+        "title_one": "Активация 1 парка",
+        "title_other": "Активировано {{count}} парков",
+        "noParksFound": "Парки не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingParks_zero": "Нет соответствующих парков",
+        "matchingParks_one": "1 соответствующий парк",
+        "matchingParks_other": "{{count}} соответствующих парка",
+        "searchForParks": "Найдите парки для активации!",
+        "noParksNearby": "Парков поблизости нет",
+        "nearbyParks": "Парки поблизости",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownPark": "Неизвестный парк"
+      },
+      "scoring": {
+        "ref2refCount_zero": "Нет P2P",
+        "ref2refCount_one": "1 P2P",
+        "ref2refCount_other": "{{fmtCount}} P2P",
+        "huntedRefsCount_zero": "Нет охотничьих парков",
+        "huntedRefsCount_one": "1 охотничий парк",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих парков",
+        "activatorQSOsCount_zero": "Нет активаторских QSOs",
+        "activatorQSOsCount_one": "1 активаторский QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активатор QSOs",
+        "ref2refQSOsCount_zero": "Нет P2P QSOs",
+        "ref2refQSOsCount_one": "1 P2P QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} P2P QSOs",
+        "huntedQSOsCount_zero": "Нет охотничьих QSOs",
+        "huntedQSOsCount_one": "1 охотничий QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охотничьих QSOs",
+        "operationTotals": "Итоги операции",
+        "referencesActivatedCount_zero": "Нет активированных парков",
+        "referencesActivatedCount_one": "1 активированный парк",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных парков",
+        "referencesMissedCount_zero": "Нет незавершённых парков",
+        "referencesMissedCount_one": "1 незавершённый парк",
+        "referencesMissedCount_other": "{{fmtCount}} незавершённых парков",
+        "referencesHuntedCount_zero": "Нет охотничьих парков",
+        "referencesHuntedCount_one": "1 охотничий парк",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих парков"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их WWFF"
+      },
+      "exampleRefName": "Пример парка",
+      "unknownRefName": "Неизвестный парк",
+      "noRefsNearby": "Рядом нет парков!",
+      "postSpotAPI": {
+        "error": "Ошибка при публикации WWFF точки",
+        "serverResponse": "Сервер ответил с кодом {{status}} {{message}}"
+      }
+    },
+    "zlota": {
+      "name": "ZLOTA: ZL в Эфире",
+      "account": {
+        "title": "ZLOTA (наблюдение ZLOTA)",
+        "dialogTitle": "Аккаунт ZLOTA",
+        "description": "Аккаунт: {{callsign}}",
+        "noAccount": "Нет аккаунта",
+        "pleaseEnterDetails": "Пожалуйста, введите данные вашего аккаунта ZLOTA:",
+        "callsignLabel": "Позывной",
+        "callsignPlaceholder": "ваш позывной аккаунта",
+        "pinLabel": "ПИН-код (не пароль)",
+        "pinPlaceholder": "ваш ПИН-код"
+      },
+      "activityOptions": {
+        "title_zero": "Ссылки не выбраны для активации",
+        "title_one": "Активация 1 ссылки",
+        "title_other": "Активировано {{count}} ссылок",
+        "noReferencesFound": "Ссылки не найдены",
+        "nearestMatches": "Ближайшие {{limit}} из {{count}} совпадений",
+        "matchingReferences_zero": "Нет соответствующих ссылок",
+        "matchingReferences_one": "1 соответствующая ссылка",
+        "matchingReferences_other": "{{count}} соответствующих ссылки",
+        "searchForReferences": "Найдите ссылки для активации!",
+        "noReferencesNearby": "Ссылок поблизости нет",
+        "nearbyReferences": "Ссылки поблизости",
+        "searchPlaceholder": "Имя или ссылка…",
+        "unknownReference": "Неизвестная ссылка"
+      },
+      "loggingControl": {
+        "theirRefLabel": "Их ссылка"
+      },
+      "postSpotAPI": {
+        "error": "Ошибка при публикации ZLOTA точки",
+        "serverResponse": "Сервер ответил с кодом {{status}} {{message}}"
+      }
+    },
+    "shared": {
+      "scoring": {
+        "dupesCount_zero": "Нет дубликатов",
+        "dupesCount_one": "1 копия",
+        "dupesCount_other": "{{fmtCount}} дубликата",
+        "ref2refCount_zero": "Нет Ref2Refs",
+        "ref2refCount_one": "1 Ref2Ref",
+        "ref2refCount_other": "{{fmtCount}} Ref2Refs",
+        "huntedRefsCount_zero": "Нет охотничьих ссылок",
+        "huntedRefsCount_one": "1 охотничья ссылка",
+        "huntedRefsCount_other": "{{fmtCount}} охотничьих ссылок",
+        "activatorQSOsCount_zero": "Нет активатор QSOs",
+        "activatorQSOsCount_one": "1 активатор QSO",
+        "activatorQSOsCount_other": "{{fmtCount}} активатор QSOs",
+        "ref2refQSOsCount_zero": "Нет Ref2Ref QSOs",
+        "ref2refQSOsCount_one": "1 Ref2Ref QSO",
+        "ref2refQSOsCount_other": "{{fmtCount}} Ref2Ref QSOs",
+        "huntedQSOsCount_zero": "Нет охотничьих QSOs",
+        "huntedQSOsCount_one": "1 охотничий QSO",
+        "huntedQSOsCount_other": "{{fmtCount}} охотничьих QSOs",
+        "operationTotals": "Итоги операции",
+        "referencesActivatedCount_zero": "Нет активированных ссылок",
+        "referencesActivatedCount_one": "1 активированная ссылка",
+        "referencesActivatedCount_other": "{{fmtCount}} активированных ссылок",
+        "referencesMissedCount_zero": "Нет незавершённых ссылок",
+        "referencesMissedCount_one": "1 незавершённая ссылка",
+        "referencesMissedCount_other": "{{fmtCount}} незавершённых ссылок",
+        "referencesHuntedCount_zero": "Нет охотничьих ссылок",
+        "referencesHuntedCount_one": "1 охотничья ссылка",
+        "referencesHuntedCount_other": "{{fmtCount}} охотничьих ссылок"
+      }
+    }
+  }
+}

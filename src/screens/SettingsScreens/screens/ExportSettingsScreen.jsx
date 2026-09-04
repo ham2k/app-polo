@@ -339,14 +339,14 @@ Attributes for the log being exported
                   <>
                     <H2kListItem
                       title={t('screens.exportSettings.ignoreLookupData', 'Ignore Lookup data')}
-                      description={t('screens.exportSettings.ignoreLookupDataDescription', 'Ignore data from lookup services like QRZ.com')}
+                      description={(exportType.settings?.ignoreLookupData ?? exportType.hook?.ignoreLookupDataDefault) ? t('screens.exportSettings.ignoreLookupDataDescription', 'Ignoring data from lookup services like QRZ.com') : t('screens.exportSettings.useLookupDataDescription', 'Including data from lookup services like QRZ.com')}
                       rightSwitchValue={exportType.settings?.ignoreLookupData ?? exportType.hook?.ignoreLookupDataDefault}
                       rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, ignoreLookupData: value }))}
                       onPress={() => dispatch(setExportSettings({ key: exportType.key, ignoreLookupData: !exportType.settings?.ignoreLookupData }))}
                     />
                     <H2kListItem
                       title={t('screens.exportSettings.includePrivateData', 'Include Private data')}
-                      description={t('screens.exportSettings.includePrivateDataDescription', 'Names, notes, addresses, etc.')}
+                      description={(exportType.settings?.privateData ?? exportType.hook?.privateDataDefault) ? t('screens.exportSettings.includePrivateDataDescription', 'Including names, notes, addresses, etc.') : t('screens.exportSettings.excludePrivateDataDescription', 'Excluding names, notes, addresses, etc.')}
                       rightSwitchValue={exportType.settings?.privateData ?? exportType.hook?.privateDataDefault}
                       rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, privateData: value }))}
                       onPress={() => dispatch(setExportSettings({ key: exportType.key, privateData: !exportType.settings?.privateData }))}
@@ -356,7 +356,7 @@ Attributes for the log being exported
                 {exportType.key !== 'default' && (
                   <H2kListItem
                     title={t('screens.exportSettings.customTemplates', 'Custom templates')}
-                    description={exportType.settings?.customTemplates ? t('screens.exportSettings.customTemplatesDescription', 'Use custom templates for the export') : t('screens.exportSettings.defaultTemplatesDescription', 'Use default templates for the export')}
+                    description={exportType.settings?.customTemplates ? t('screens.exportSettings.customTemplatesDescription', 'Using custom templates for this export') : t('screens.exportSettings.defaultTemplatesDescription', 'Using the default templates')}
                     rightSwitchValue={!!exportType.settings?.customTemplates}
                     rightSwitchOnValueChange={(value) => dispatch(setExportSettings({ key: exportType.key, customTemplates: value }))}
                     onPress={() => dispatch(setExportSettings({ key: exportType.key, customTemplates: !exportType.settings?.customTemplates }))}

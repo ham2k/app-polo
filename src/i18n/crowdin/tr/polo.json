@@ -118,7 +118,7 @@
       "errorSavingExport": "Dosya kaydedilemedi",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLo dosyalarınızı Ham2K sunucularına yükleyecek ve herhangi bir tarayıcıdan indirebileceksiniz.",
-      "logStashDialogTiers": "Ücretsiz hesaplar tek seferde yalnızca bir dosya gönderebilir. Aboneler istedikleri kadar gönderebilir.",
+      "logStashDialogTiers": "Ücretsiz hesaplar aynı anda yalnızca bir stash tutabilir. Aboneler istedikleri kadar tutabilir.",
       "logStashDialogSubscribe": "Abone ol",
       "exportUpsellTitle": "Bu operasyon ayrıca Bulut Eşitleme Hizmetimize kaydedildi",
       "exportUpsellBody": "Bu yedekleme ücretsizdir, ancak abone olursanız onu birden fazla cihaz arasında eşitleyebilir ve tam hızda erişebilirsiniz.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**Dışa aktar**, dosyalarınızı cihazınızdaki başka bir uygulamaya — e-posta, mesajlaşma, bulut depolama veya başka bir kayıt programına — aktarır.",
       "exportOptionsInfoSave-md": "**Kaydet**, dosyalarınızı başka bir uygulamadan geçmeden doğrudan cihazınızdaki bir klasöre yazar.",
       "exportOptionsInfoSelection-md": "Bunlar aşağıda işaretlediğiniz tüm dosyalara uygulanır. Tek bir dosyaya dokunarak yalnızca onu da paylaşabilirsiniz.",
-      "freeTierOneFileTitle": "Ücretsiz hesaplar tek seferde yalnızca bir dosya gönderebilir",
-      "freeTierOneFileMessage": "Yalnızca \"{{fileName}}\" dosyasını göndermek istiyor musunuz?",
-      "freeTierOneFileConfirm": "{{fileName}} dosyasını gönder",
       "freeTierRecentUploadTitle": "Son yükleme değiştirilecek",
-      "freeTierRecentUploadMessage": "\"{{fileName}}\" dosyasını 6 saatten daha kısa süre önce yüklediniz ve henüz indirilmedi. Bu dosyayı göndermek onun yerine geçecek. Bunun yerine beklemek ister misiniz?",
+      "freeTierRecentUploadMessage": "\"{{name}}\" öğesini 6 saatten kısa bir süre önce gönderdiniz ve henüz indirilmedi. Şimdi gönderirseniz onun yerini alacak. Bunun yerine beklemek ister misiniz?",
       "freeTierRecentUploadConfirm": "Yine de gönder",
       "errorSendingToLogStash": "Ham2K File Stash'e gönderilemedi",
       "sentToLogStash": "Ham2K File Stash'e gönderildi",
@@ -154,6 +151,8 @@
         "duplicate": "Çift",
         "invalidBand": "Geçersiz Bant",
         "ourGrid": "Konumumuz eksik",
+        "theirGrid": "Karşı tarafın grid'i eksik",
+        "shortGrid": "Grid çok kısa",
         "newBand": "Yeni Bant",
         "newMode": "Yeni Mod",
         "newRef": "Yeni Referans",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Sayı Satırını Göster",
-        "descriptionOn": "Sayılar için hızlı düğmeler",
-        "descriptionOff": "Sayılar satırını gösterme"
+        "descriptionOn": "Sayılar için hızlı düğmeler gösteriliyor",
+        "descriptionOff": "Sayılar satırı gösterilmiyor"
       },
       "showExtraInNumbersRow": {
         "title": "Sayı satırında nokta",
-        "descriptionOn": "Nokta (ve eğik çizgi) ekleyin",
-        "descriptionOff": "Sadece sayıları göster"
+        "descriptionOn": "Nokta ve eğik çizgi tuşları ekleniyor",
+        "descriptionOff": "Yalnızca sayılar gösteriliyor"
       },
       "showCommaInNumbersRow": {
         "title": "Sayı satırında virgül",
-        "descriptionOn": "Virgül tuşu ekleyin",
+        "descriptionOn": "Virgül tuşu ekleniyor",
         "descriptionOff": "Virgül tuşu yok"
       },
       "vibrateNumbersRow": {
         "title": "Sayı satırında titreşim kullan",
-        "descriptionOn": "Sayılara basarken titre",
-        "descriptionOff": "Sayılara basarken titreşme"
+        "descriptionOn": "Sayılara basarken titreşim kullanılıyor",
+        "descriptionOff": "Sayılara basarken titreşim kullanılmıyor"
       },
       "useMetricUnits": {
         "title": "Metre Birimleri Kullanın",
-        "descriptionOn": "Mesafeleri Mil olarak kullan",
-        "descriptionOff": "Mesafeleri Kilometre olarak kullan"
+        "descriptionOn": "Mesafeler için mil kullanılıyor",
+        "descriptionOff": "Mesafeler için kilometre kullanılıyor"
       },
       "keepDeviceAwake": {
         "title": "Cihazı Uyanık Tut",
-        "descriptionOn": "Cihazın ekran kilidini kapatmasını engelleyin",
-        "descriptionOff": "Düzenli ekran kilitlemeye izin ver"
+        "descriptionOn": "Ekran açık tutuluyor",
+        "descriptionOff": "Ekranın her zamanki gibi kilitlenmesine izin veriliyor"
       },
       "useSplitViews": {
         "title": "Bölünmüş Görünümleri Kullan",
-        "descriptionOn": "Ekran yeterince büyükse Bölünmüş Görünümleri kullan",
-        "descriptionOff": "Bölünmüş görünümleri kullanma"
+        "descriptionOn": "Ekran yeterince büyük olduğunda bölünmüş görünümler kullanılıyor",
+        "descriptionOff": "Bölünmüş görünümler kullanılmıyor"
       },
       "useGrid8": {
         "title": "Yüksek Hassasiyetli Konum",
-        "descriptionOn": "8 haneli ızgaraları kullanın",
-        "descriptionOff": "6 haneli ızgaraları kullanın"
+        "descriptionOn": "8 haneli grid'ler kullanılıyor",
+        "descriptionOff": "6 haneli grid'ler kullanılıyor"
       },
       "smartKeyboard": {
         "title": "Akıllı Klavye Özellikleri",
-        "descriptionOn": "Akıllı klavye özelliklerini etkinleştir.",
-        "descriptionOff": "Bazı cihazlarla uyumlu olması için daha basit klavyeler kullanın"
+        "descriptionOn": "Akıllı klavye özellikleri kullanılıyor",
+        "descriptionOff": "Bazı cihazlarla uyumluluk için daha basit klavyeler kullanılıyor"
       },
       "exportSettings": {
         "title": "Dışa Aktarma Ayarları",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Uygulama kullanım verilerini paylaşın",
-        "descriptionOn": "Uygulamanın geliştirilmesine katkı sağlamak için kullanım, çökme ve performans verilerini paylaşın",
-        "descriptionOff": "Uygulama kullanım verilerini gizli tutun.\nHam2K ekibi çökme ya da diğer sorunları tespit edemez."
+        "descriptionOn": "Uygulamayı geliştirmemize yardımcı olmak için kullanım, çökme ve performans verileri paylaşılıyor",
+        "descriptionOff": "Uygulama kullanım verileri gizli tutuluyor.\nHam2K ekibi çökme ya da diğer sorunları tespit edemez."
       },
       "shareOperationData": {
         "title": "Operasyon verilerini paylaşın",
-        "descriptionOn": "Bazı işlem verilerini herkese açık ve diğer kullanıcılarla paylaşın",
-        "descriptionOff": "İşlem verilerini özel tut"
+        "descriptionOn": "Bazı operasyon verileri herkese açık olarak ve diğer kullanıcılarla paylaşılıyor",
+        "descriptionOff": "Operasyon verileri gizli tutuluyor"
       },
       "privacyPolicy": {
         "title": "Gizlilik Politikası",
@@ -423,19 +422,24 @@
       "title": "Günlük Ayarları",
       "leftieMode": {
         "title": "Sol El Modu",
-        "descriptionOn": "Solak kullanıcılar için düzeni kullan",
-        "descriptionOff": "Sağ elini kullanan kullanıcılar için düzeni kullan"
+        "descriptionOn": "Sol elle kullanım düzeni kullanılıyor",
+        "descriptionOff": "Sağ elle kullanım düzeni kullanılıyor"
       },
       "countryFlags": {
         "title": "Ülke Bayrakları",
-        "descriptionNone": "Herhangi bir bayrak göstermeyin",
-        "descriptionAll": "Tüm kişiler için bayrakları göster",
-        "descriptionDefault": "Sadece DX kişileri için göster"
+        "descriptionNone": "Hiçbir bayrak gösterilmiyor",
+        "descriptionAll": "Tüm kişiler için bayraklar gösteriliyor.",
+        "descriptionDefault": "Yalnızca DX QSO'ları için bayraklar gösteriliyor"
       },
       "showBearing": {
         "title": "Yönü Göster",
-        "descriptionOn": "İstasyona tahmini yönü göster",
-        "descriptionOff": "Yön bilgilerini göstermeyin"
+        "descriptionOn": "İstasyona tahmini yön gösteriliyor",
+        "descriptionOff": "Yön bilgisi gösterilmiyor"
+      },
+      "showReverseBearing": {
+        "title": "Ters yönü de göster",
+        "descriptionOn": "İstasyondan yön de \"45° / 225°\" şeklinde gösteriliyor",
+        "descriptionOff": "Yalnızca istasyona yön gösteriliyor"
       },
       "switchSignalReportOrder": {
         "title": "Sinyal rapor sırasını değiştir",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "RST girişinde bir sonraki alana geç",
-        "descriptionOn": "RST girildikten sonra atla",
-        "descriptionOff": "Otomatik atlama yapma"
+        "descriptionOn": "RST'den sonra sonraki alana geçiliyor",
+        "descriptionOff": "Otomatik geçiş yapılmıyor"
       },
       "suggestDefaultOperator": {
         "title": "Varsayılan operatörü öner",
-        "descriptionOn": "{{operatorCall}}' istasyon çağrısının farklı olduğu işlemlerde operatör olarak ayarla",
-        "descriptionOff": "İstasyon çağrısına bakılmaksızın varsayılan operatörü önermeyin."
+        "descriptionOn": "İstasyon çağrısının farklı olduğu operasyonlarda operatör olarak {{operatorCall}} kullanılıyor",
+        "descriptionOff": "Kullanılan istasyon çağrısına bakılmaksızın varsayılan operatör önerilmiyor"
       },
       "suggestTemplates": {
         "title": "Operasyon şablonlarını kullanın",
-        "descriptionOn": "Yeni operasyonlar için şablon öner",
-        "descriptionOff": "Şablon önermeyin."
+        "descriptionOn": "Yeni operasyonlar için şablonlar öneriliyor",
+        "descriptionOff": "Şablon önerilmiyor"
       },
       "bandsModes": {
         "title": "Bantlar & Modlar",
@@ -750,8 +754,8 @@
       "exportTypes": "Dışa Aktarma Türleri",
       "customTemplates": "Özel şablonlar",
       "defaultTemplates": "Varsayılan şablonlar",
-      "customTemplatesDescription": "Dışa aktarım için özel şablonlar kullan",
-      "defaultTemplatesDescription": "Dışa aktarım için varsayılan şablonlar kullan",
+      "customTemplatesDescription": "Bu dışa aktarım için özel şablonlar kullanılıyor",
+      "defaultTemplatesDescription": "Varsayılan şablonlar kullanılıyor",
       "includePrivateData": "Özel verileri dahil et",
       "ignoreLookupData": "Sorgulama verilerini yok say",
       "fileNameTemplate": "Dosya adı şablonu",
@@ -760,8 +764,10 @@
       "adifComments": "ADIF QSO Yorumları",
       "adifQslMessage": "ADIF QSL Mesajı",
       "templateHelpTitle": "Şablon Yardımı",
-      "includePrivateDataDescription": "İsimler, notlar, adresler, vb.",
-      "ignoreLookupDataDescription": "QRZ.com gibi sorgulama hizmetlerinden gelen verileri yok say",
+      "includePrivateDataDescription": "İsimler, notlar, adresler vb. dahil ediliyor.",
+      "excludePrivateDataDescription": "İsimler, notlar, adresler vb. hariç tutuluyor.",
+      "ignoreLookupDataDescription": "QRZ.com gibi arama servislerinden gelen veriler yok sayılıyor",
+      "useLookupDataDescription": "QRZ.com gibi arama servislerinden gelen veriler dahil ediliyor",
       "templateHelp-md": "Bazı örnek şablon öğeleri…\n\n### Günlük Dışa Aktar\nDışa aktarılan günlüğün öznitelikleri\n`{{log.station}}` → `{{call}}` Bu dışa aktarma için istasyon\n`{{log.ref}}` → `XX-1234` Bu dışa aktarma için referans\n`{{log.refName}}` → `Örnek Ulusal Park` Bu dışa aktarma için referans adı\n`{{log.refShortName}}` → `Örnek UP` Bu dışa aktarma için kısa referans adı\n`{{log.handlerType}}` → `pota` Bu dışa aktarma için işleyici türü\n`{{log.handlerName}}` → `Parks On The Air` Bu dışa aktarma için işleyici adı\n`{{log.handlerShortName}}` → `POTA` Bu dışa aktarma için kısa işleyici adı\n\n### Operasyon Çağrı Kodları\n`{{op.station}}` → `{{call}}` Operasyon için ilk istasyon\n`{{op.operator}}` → `{{call}}` Operasyon için operatör\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Operasyon için tüm istasyonlar\n`{{op.otherStations}}` → `{{otherCalls}}` Operasyon için diğer istasyonlar\n\n### Operasyon Tarihi\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Diğer Operasyon Ayrıntıları\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Benim Özel Operasyonum`\n`{{op.userNotes}}` → `Sabah erken gittim…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Bu operasyon için grid\n\n### QSO Bilgileri\n`{{qso.notes}}` → `Korkunç ses!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Gönderdikleri sinyal raporu\n`{{qso.our.sent}}` → `55` Gönderdiğimiz sinyal raporu\n`{{qso.their.grid}}` → `FF99` Bildirdikleri grid\n`{{qso.refs}}` → QSO için tüm referansların bir listesi (hem Operasyon referanslarını hem de yalnızca QSO referanslarını içerir)\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "Varsayılanlar",
@@ -862,6 +868,7 @@
       "frequencyLabel": "Frekans",
       "bandMissing": "Bant???",
       "modeMissing": "Mod???",
+      "modeOutOfBand": "Bant dışı",
       "radioControls-a11y": "Radyo Kontroller {{parts}}",
       "notesLabel": "Notlar",
       "notesLabel-a11y": "Notlar",

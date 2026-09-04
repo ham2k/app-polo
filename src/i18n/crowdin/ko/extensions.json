@@ -188,6 +188,8 @@
       "startConfirm": "운용 시작!",
       "break": "휴식 시간을 추가할까요?",
       "breakConfirm": "운용 휴식 추가됨!",
+      "roverqth": "휴식을 추가하고 새 위치를 설정하시겠습니까?",
+      "roverqthConfirm": "휴식을 추가했습니다. 이제 새 위치를 설정하세요",
       "stop": "운용을 중지할까요?",
       "stopConfirm": "운용 중지됨!"
     },

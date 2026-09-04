@@ -1,0 +1,366 @@
+{
+  "general": {
+    "languages": {
+      "names": {
+        "en": "Английский - English",
+        "ar": "Арабский - العربية",
+        "ast": "Астурийский - Asturianu",
+        "bn": "Бенгальский - বাংলা",
+        "ca": "Каталанский - Català",
+        "cs": "Чешский - Čeština",
+        "cy": "Валлийский - Cymraeg",
+        "da": "Датский - Dansk",
+        "de": "Немецкий - Deutsch",
+        "en-PL": "Pig Latin",
+        "en-PT": "Pirate",
+        "eo": "Эсперанто - Esperanto",
+        "es": "Испанский - Español",
+        "et": "Эстонский - Eesti",
+        "eu": "Баскский - Euskara",
+        "fi": "Финский - Suomi",
+        "fr": "Французский - Français",
+        "ga": "Ирландский - Gaeilge",
+        "gl": "Галисийский - Galego",
+        "hi": "Хинди - हिंदी",
+        "id": "Индонезийский - Bahasa Indonesia",
+        "it": "Итальянский - Italiano",
+        "ja": "Японский - 日本語",
+        "ko": "Корейский - 한국어",
+        "lt": "Литовский - Lietuvių",
+        "lv": "Латышский - Latvijas",
+        "ms": "Малайский - Bahasa Melayu",
+        "nb": "Норвежский Букмол - Norsk bokmål",
+        "nl": "Нидерландский - Nederlands",
+        "nn": "Норвежский Нюнорск - Nynorsk",
+        "pl": "Польский - Polski",
+        "pt-BR": "Португальский (Бразилия) - Português (Brasil)",
+        "pt-PT": "Португальский (Португалия) - Português (Portugal)",
+        "pt": "Португальский - Português",
+        "ro": "Румынский - Română",
+        "ru": "Русский",
+        "sk": "Словацкий - Slovenčina",
+        "sv": "Шведский - Svenska",
+        "th": "Тайский - ภาษาไทย",
+        "tl": "Тагальский - Wikang Filipino",
+        "tlh": "Клингонский - ᏣᎳᎩ",
+        "tr": "Турецкий - Türkçe",
+        "uk": "Украинский - Українська",
+        "ur": "Урду - اردو",
+        "vi": "Вьетнамский - Tiếng Việt",
+        "zh": "Китайский - 中文"
+      }
+    },
+    "terms": {
+      "QSO": "QSO",
+      "QSO-a11y": "Q so",
+      "QSOs-a11y": "Q sos",
+      "Operation": "Операция",
+      "generalOperation": "Общая операция"
+    },
+    "formatting": {
+      "thousandsDelimiter": ",",
+      "decimalSeparator": ".",
+      "frequencySeparator": ",",
+      "list": {
+        "separator": ", ",
+        "conjunction": " и "
+      },
+      "time": {
+        "tomorrow": "Завтра",
+        "today": "Сегодня",
+        "yesterday": "Вчера",
+        "ago": "{{time}} назад",
+        "fromNow": "{{time}} спустя",
+        "shortSeconds": "{{s}}с",
+        "shortMinutes": "{{m}}м",
+        "shortMinutesAndSeconds": "{{m}}м {{s}}с",
+        "shortHours": "{{h}}ч",
+        "shortHoursAndMinutes": "{{h}}ч {{m}}м",
+        "shortDays": "{{d}}д",
+        "shortDaysAndHours": "{{d}}д {{h}}ч",
+        "short": "{{hoursZero}}:{{minutesZero}}{{lowerZulu}}"
+      },
+      "date": {
+        "varUnder1Day": "{{weekday}} {{dayOrd}}",
+        "varUnder7Days": "{{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{monthName}} {{year}}",
+        "varShortUnder7Days": "{{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{monthAbbr}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}}",
+        "nice": "{{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}"
+      },
+      "dateTime": {
+        "varUnder1Day": "{{time}}",
+        "varUnder7Days": "{{time}} {{weekday}} {{dayOrd}}",
+        "varUnder9Months": "{{time}} {{monthName}} {{dayOrd}}",
+        "varOver9Months": "{{time}} {{monthName}} {{dayOrd}} {{year}}",
+        "varShortUnder1Day": "{{time}}",
+        "varShortUnder7Days": "{{time}} {{weekdayAbbr}} {{day}}",
+        "varShortUnder9Months": "{{time}} {{monthAbbr}} {{day}}",
+        "varShortOver9Months": "{{time}} {{monthAbbr}} {{day}} {{year}}",
+        "ymd": "{{year}}-{{month}}-{{day}} {{time}}",
+        "nice": "{{time}} {{monthName}} {{dayOrd}}, {{year}}",
+        "full": "{{time}} {{weekday}} {{monthName}} {{dayOrd}}, {{year}}",
+        "fullShort": "{{time}} {{weekdayAbbr}} {{monthAbbr}} {{day}}, {{year}}",
+        "niceRange": "{{niceTime1}} - {{niceTime2}}"
+      },
+      "month": {
+        "1": "Январь",
+        "2": "Февраль",
+        "3": "Март",
+        "4": "Апрель",
+        "5": "Май",
+        "6": "Июнь",
+        "7": "Июль",
+        "8": "Август",
+        "9": "Сентябрь",
+        "10": "Октябрь",
+        "11": "Ноябрь",
+        "12": "Декабрь"
+      },
+      "monthAbbr": {
+        "1": "Янв",
+        "2": "Фев",
+        "3": "Мар",
+        "4": "Апр",
+        "5": "Май",
+        "6": "Июн",
+        "7": "Июл",
+        "8": "Авг",
+        "9": "Сен",
+        "10": "Окт",
+        "11": "Ноя",
+        "12": "Дек"
+      },
+      "weekday": {
+        "1": "Понедельник",
+        "2": "Вторник",
+        "3": "Среда",
+        "4": "Четверг",
+        "5": "Пятница",
+        "6": "Суббота",
+        "7": "Воскресенье"
+      },
+      "weekdayAbbr": {
+        "1": "Пн",
+        "2": "Вт",
+        "3": "Ср",
+        "4": "Чт",
+        "5": "Пт",
+        "6": "Сб",
+        "7": "Вс"
+      },
+      "ordinalDay": {
+        "1": "1-е",
+        "2": "2-е",
+        "3": "3-е",
+        "4": "4-е",
+        "5": "5-е",
+        "6": "6-е",
+        "7": "7-е",
+        "8": "8-е",
+        "9": "9-е",
+        "10": "10-е",
+        "11": "11-е",
+        "12": "12-е",
+        "13": "13-е",
+        "14": "14-е",
+        "15": "15-е",
+        "16": "16-е",
+        "17": "17-е",
+        "18": "18-е",
+        "19": "19-е",
+        "20": "20-е",
+        "21": "21-е",
+        "22": "22-е",
+        "23": "23-е",
+        "24": "24-е",
+        "25": "25-е",
+        "26": "26-е",
+        "27": "27-е",
+        "28": "28-е",
+        "29": "29-е",
+        "30": "30-е",
+        "31": "31-е"
+      },
+      "distance": {
+        "away": "{{distance}} отсюда"
+      }
+    },
+    "buttons": {
+      "cancel": "Отмена",
+      "ok": "Ок",
+      "close": "Закрыть",
+      "login": "Вход",
+      "logout": "Выход",
+      "delete": "Удалить",
+      "refresh": "Обновить",
+      "done": "Готово",
+      "accept": "Принять",
+      "accept-a11y": "Принять изменения",
+      "revert": "Вернуться",
+      "revert-a11y": "Отменить изменения",
+      "apply": "Применить",
+      "connect": "Подключить",
+      "save": "Сохранить",
+      "export": "Экспорт"
+    },
+    "errors": {
+      "generic": "Что-то пошло не так. Пожалуйста, попробуйте позже.",
+      "genericShort": "Что-то пошло не так."
+    },
+    "version": {
+      "general": "{{month}} '{{year}}",
+      "patch": "патч {{patch}}",
+      "specific": "{{month}} '{{year}} {{patch}}"
+    },
+    "updates": {
+      "checkingFor": {
+        "generic": "Проверка обновлений…",
+        "stable": "Проверка стабильных обновлений…",
+        "unstable": "Проверка нестабильных обновлений…",
+        "bleedingEdge": "Проверка передовых обновлений…"
+      },
+      "tracksPlural": {
+        "stable": "Стабильный",
+        "unstable": "Нестабильный",
+        "bleedingEdge": "Новейший",
+        "Production": "Стабильный",
+        "Staging": "Нестабильный",
+        "Development": "Новейший"
+      },
+      "trackSingular": {
+        "stable": "Стабильный",
+        "unstable": "Нестабильный",
+        "bleedingEdge": "Новейший",
+        "Production": "Стабильный",
+        "Staging": "Нестабильный",
+        "Development": "Новейший"
+      },
+      "versionIsAvailable-md": "Доступно обновление до {{versionName}}.",
+      "updateNow": "Обновить сейчас",
+      "newVersionAvailable-md": "Доступна новая версия PoLo!"
+    },
+    "dataFiles": {
+      "loading": "Загрузка {{name}}",
+      "downloading": "Скачивание {{name}}",
+      "dataHasToBeDownloaded-md": "Данные для **{{name}}** должны быть загружены.",
+      "dataHasNotBeenUpdatedInAWhile-md": "Данные для **{{name}}** давно не обновлялись.",
+      "downloadNow": "Скачать сейчас",
+      "refreshNow": "Обновить сейчас"
+    },
+    "notices": {
+      "action": {
+        "ok": "Ок!",
+        "__comment__": "Замените конкретные действия уведомления здесь"
+      },
+      "title": {
+        "__comment__": "Замените конкретные заголовки уведомления здесь"
+      },
+      "text": {
+        "__comment__": "Замените конкретные тексты уведомления здесь"
+      },
+      "dialogTitle": {
+        "__comment__": "Замените определенные заголовки диалогов здесь"
+      },
+      "dialogText": {
+        "__comment__": "Замените определенные тексты диалогов здесь"
+      },
+      "dataFiles": {
+        "fetching": "Получение {{title}}…",
+        "progress": "Получение {{title}}\n\n{{progress}}",
+        "done": "Готово, получено {{title}}",
+        "error": "Ошибка при получении {{title}}"
+      }
+    },
+    "dataFormats": {
+      "descriptions": {
+        "adif": "ADIF",
+        "cabrillo": "Cabrillo",
+        "qson": "QSON",
+        "json": "JSON",
+        "txt": "Текст",
+        "csv": "Значения, разделенные запятой",
+        "tsv": "Значения, разделенные табуляцией",
+        "other": "Данные"
+      }
+    },
+    "extensions": {
+      "categories": {
+        "core": "Основные функции",
+        "locationBased": "Мероприятия на основе местоположения",
+        "contestsAndFieldOps": "Конкурсы и полевые задания",
+        "lookup": "Поиск данных и наблюдение",
+        "devmode": "Режим разработчика",
+        "other": "Другие функции"
+      }
+    },
+    "continents": {
+      "AF": "Африка",
+      "AS": "Азия",
+      "EU": "Европа",
+      "NA": "Северная Америка",
+      "SA": "Южная Америка",
+      "OC": "Океания"
+    },
+    "modes": {
+      "names": {
+        "SSB": "SSB",
+        "SSB-a11y": "Однополосная",
+        "USB": "USB",
+        "USB-a11y": "Верхняя боковая полоса",
+        "LSB": "LSB",
+        "LSB-a11y": "Нижняя боковая полоса",
+        "RTTY": "RTTY",
+        "RTTY-a11y": "Ритти",
+        "CW": "CW",
+        "CW-a11y": "Тлф.",
+        "FM": "FM",
+        "FM-a11y": "ЧМ",
+        "AM": "AM",
+        "AM-a11y": "АМ",
+        "other": "Другое",
+        "other-a11y": "Другой режим"
+      }
+    },
+    "bands": {
+      "names": {
+        "160m-a11y": "160 метров",
+        "80m-a11y": "80 метров",
+        "60m-a11y": "60 метров",
+        "40m-a11y": "40 метров",
+        "30m-a11y": "30 метров",
+        "20m-a11y": "20 метров",
+        "17m-a11y": "17 метров",
+        "15m-a11y": "15 метров",
+        "12m-a11y": "12 метров",
+        "11m-a11y": "11 метров",
+        "10m-a11y": "10 метров",
+        "6m-a11y": "6 метров",
+        "2m-a11y": "2 метра",
+        "70cm-a11y": "70 сантиметров",
+        "23cm-a11y": "23 сантиметра",
+        "13cm-a11y": "13 сантиметров",
+        "9cm-a11y": "9 сантиметров",
+        "6cm-a11y": "6 сантиметров",
+        "3cm-a11y": "3 сантиметра",
+        "1-25cm-a11y": "1,25 сантиметра",
+        "6mm-a11y": "6 миллиметров",
+        "4mm-a11y": "4 миллиметра",
+        "2-5mm-a11y": "2,5 миллиметра",
+        "2mm-a11y": "2 миллиметра",
+        "1mm-a11y": "1 миллиметр",
+        "submm-a11y": "Субмиллиметровый",
+        "other": "Другое",
+        "other-a11y": "Другой диапазон"
+      }
+    },
+    "misc": {
+      "placeholderCallsign": "N0CALL"
+    }
+  }
+}

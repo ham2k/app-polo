@@ -118,7 +118,7 @@
       "errorSavingExport": "无法保存文件",
       "logStashDialogTitle": "Ham2K File Stash",
       "logStashDialogIntro": "PoLo 会将您的文件上传到 Ham2K 服务器，您可以从任何浏览器下载。",
-      "logStashDialogTiers": "免费账户一次只能发送一个文件。订阅用户可以发送任意数量的文件。",
+      "logStashDialogTiers": "免费帐户一次只能保留一个暂存文件。订阅者可以按需保留任意数量。",
       "logStashDialogSubscribe": "订阅",
       "exportUpsellTitle": "此次操作也已保存到我们的云同步服务",
       "exportUpsellBody": "此备份是免费的，但如果你订阅，就可以在多台设备之间同步它，并以全速访问。",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**导出** 会将你的文件交给设备上的另一个应用——电子邮件、消息、云存储或其他日志程序。",
       "exportOptionsInfoSave-md": "**保存** 会将你的文件直接写入设备上的文件夹，而无需通过其他应用。",
       "exportOptionsInfoSelection-md": "这些操作会作用于你在下方勾选的所有文件。你也可以点按任意单个文件，仅分享该文件。",
-      "freeTierOneFileTitle": "免费账户一次只能发送一个文件",
-      "freeTierOneFileMessage": "您想只发送“{{fileName}}”吗？",
-      "freeTierOneFileConfirm": "发送 {{fileName}}",
       "freeTierRecentUploadTitle": "最近上传的文件将被替换",
-      "freeTierRecentUploadMessage": "您在不到 6 小时前上传了“{{fileName}}”，且尚未下载。发送此文件将替换它。您想改为等待吗？",
+      "freeTierRecentUploadMessage": "你在不到 6 小时前发送了“{{name}}”，且它尚未被下载。现在发送会替换它。你想改为等待吗？",
       "freeTierRecentUploadConfirm": "仍然发送",
       "errorSendingToLogStash": "无法发送到 Ham2K File Stash",
       "sentToLogStash": "已发送到 Ham2K File Stash",
@@ -154,6 +151,8 @@
         "duplicate": "重复",
         "invalidBand": "无效频段",
         "ourGrid": "缺少我方位置",
+        "theirGrid": "缺少对方网格",
+        "shortGrid": "网格太短",
         "newBand": "新频段",
         "newMode": "新模式",
         "newRef": "新参考",
@@ -350,17 +349,17 @@
       },
       "showNumbersRow": {
         "title": "显示数字行",
-        "descriptionOn": "数字的快捷按钮",
+        "descriptionOn": "显示数字快捷按钮",
         "descriptionOff": "不显示数字行"
       },
       "showExtraInNumbersRow": {
         "title": "数字行中的句号",
-        "descriptionOn": "包含句号（和斜线）",
+        "descriptionOn": "包含句号和斜杠键",
         "descriptionOff": "仅显示数字"
       },
       "showCommaInNumbersRow": {
         "title": "数字行中的逗号",
-        "descriptionOn": "包括逗号键",
+        "descriptionOn": "包含逗号键",
         "descriptionOff": "没有逗号键"
       },
       "vibrateNumbersRow": {
@@ -370,13 +369,13 @@
       },
       "useMetricUnits": {
         "title": "使用公制单位",
-        "descriptionOn": "使用英里作为距离单位",
-        "descriptionOff": "使用公里作为距离单位"
+        "descriptionOn": "距离使用英里",
+        "descriptionOff": "距离使用公里"
       },
       "keepDeviceAwake": {
         "title": "保持设备唤醒",
-        "descriptionOn": "防止设备锁屏",
-        "descriptionOff": "允许正常锁屏"
+        "descriptionOn": "保持屏幕常亮",
+        "descriptionOff": "让屏幕照常锁定"
       },
       "useSplitViews": {
         "title": "使用分屏视图",
@@ -390,8 +389,8 @@
       },
       "smartKeyboard": {
         "title": "智能键盘功能",
-        "descriptionOn": "启用智能键盘功能",
-        "descriptionOff": "为了兼容某些设备，使用简单的键盘"
+        "descriptionOn": "使用智能键盘功能",
+        "descriptionOff": "使用更简单的键盘，以兼容某些设备"
       },
       "exportSettings": {
         "title": "导出设置",
@@ -402,12 +401,12 @@
       },
       "shareAppUsageData": {
         "title": "分享应用使用数据",
-        "descriptionOn": "帮助我们改善应用，通过分享使用、崩溃及性能数据",
-        "descriptionOff": "保持应用数据私密。\nHam2K团队将无法检测崩溃或其他问题。"
+        "descriptionOn": "共享使用情况、崩溃和性能数据，帮助我们改进应用",
+        "descriptionOff": "保持应用使用数据私密。\nHam2K 团队将无法检测崩溃或其他问题。"
       },
       "shareOperationData": {
         "title": "共享操作数据",
-        "descriptionOn": "公开与其他用户共享部分操作数据",
+        "descriptionOn": "公开并与其他用户共享部分操作数据",
         "descriptionOff": "保持操作数据私密"
       },
       "privacyPolicy": {
@@ -423,19 +422,24 @@
       "title": "日志设置",
       "leftieMode": {
         "title": "左撇子模式",
-        "descriptionOn": "为左撇子用户使用布局",
-        "descriptionOff": "为右撇子用户使用布局"
+        "descriptionOn": "使用左手布局",
+        "descriptionOff": "使用右手布局"
       },
       "countryFlags": {
         "title": "国家旗帜",
         "descriptionNone": "不显示任何旗帜",
-        "descriptionAll": "为所有联系人显示旗帜",
-        "descriptionDefault": "仅对DX联系人显示"
+        "descriptionAll": "为所有通联显示旗帜",
+        "descriptionDefault": "仅为 DX 通联显示旗帜"
       },
       "showBearing": {
         "title": "显示方位",
         "descriptionOn": "显示到台站的预计方位",
         "descriptionOff": "不显示方位信息"
+      },
+      "showReverseBearing": {
+        "title": "同时显示反向方位",
+        "descriptionOn": "还显示从台站出发的方位，如“45° / 225°”",
+        "descriptionOff": "仅显示到台站的方位"
       },
       "switchSignalReportOrder": {
         "title": "切换信号报告顺序",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "在填入RST后跳转下一个字段",
-        "descriptionOn": "在RST输入后跳转",
+        "descriptionOn": "RST 后跳转到下一个字段",
         "descriptionOff": "不自动跳转"
       },
       "suggestDefaultOperator": {
         "title": "建议默认操作员",
-        "descriptionOn": "在站呼不同的操作中，将 {{operatorCall}} 设置为操作员。",
-        "descriptionOff": "无论使用何种站呼，都不要建议默认操作员。"
+        "descriptionOn": "在台站呼号不同时，使用 {{operatorCall}} 作为操作员",
+        "descriptionOff": "无论使用何种台站呼号，都不建议默认操作员"
       },
       "suggestTemplates": {
         "title": "使用操作模板",
         "descriptionOn": "为新操作建议模板",
-        "descriptionOff": "不要建议模板"
+        "descriptionOff": "不建议模板"
       },
       "bandsModes": {
         "title": "频带与模式",
@@ -750,8 +754,8 @@
       "exportTypes": "导出类型",
       "customTemplates": "自定义模版",
       "defaultTemplates": "默认模版",
-      "customTemplatesDescription": "导出使用自定义模版",
-      "defaultTemplatesDescription": "导出使用默认模版",
+      "customTemplatesDescription": "本次导出使用自定义模板",
+      "defaultTemplatesDescription": "使用默认模板",
       "includePrivateData": "包含私密数据",
       "ignoreLookupData": "忽略查询数据",
       "fileNameTemplate": "文件名模版",
@@ -760,8 +764,10 @@
       "adifComments": "ADIF QSO 评论",
       "adifQslMessage": "ADIF QSL 消息",
       "templateHelpTitle": "模版帮助",
-      "includePrivateDataDescription": "姓名、备注、地址等。",
+      "includePrivateDataDescription": "包括姓名、备注、地址等。",
+      "excludePrivateDataDescription": "不包括姓名、备注、地址等。",
       "ignoreLookupDataDescription": "忽略来自 QRZ.com 等查询服务的数据",
+      "useLookupDataDescription": "包含来自 QRZ.com 等查询服务的数据",
       "templateHelp-md": "一些示例模板元素…\n\n### 日志导出\n导出日志的属性\n`{{log.station}}` → `{{call}}` 此导出的站点\n`{{log.ref}}` → `XX-1234` 此导出的参考\n`{{log.refName}}` → `示例国家公园` 此导出的参考名称\n`{{log.refShortName}}` → `示例 NP` 此导出的参考简称\n`{{log.handlerType}}` → `pota` 此导出的处理程序类型\n`{{log.handlerName}}` → `空中公园` 此导出的处理程序名称\n`{{log.handlerShortName}}` → `POTA` 此导出的处理程序简称\n\n### 操作呼号\n`{{op.station}}` → `{{call}}` 操作的首个站点\n`{{op.operator}}` → `{{call}}` 操作的操作者\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` 操作的所有站点\n`{{op.otherStations}}` → `{{otherCalls}}` 操作的其他站点\n\n### 操作日期\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### 其他操作详情\n`{{op.title}}` → `在 XX-1234，XXFF-0001`\n`{{op.userTitle}}` → `我的特别活动`\n`{{op.userNotes}}` → `早上早来…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` 此操作的网格\n\n### QSO 信息\n`{{qso.notes}}` → `糟糕的音频！`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` 他们发送的信号报告\n`{{qso.our.sent}}` → `55` 我们发送的信号报告\n`{{qso.their.grid}}` → `FF99` 他们报告的网格\n`{{qso.refs}}` → 所有 QSO 的参考列表（包括操作参考和仅 QSO 参考）\n`{{first8 qso.uuid}}` → `123e4567`\n",
       "default": {
         "name": "默认",
@@ -862,6 +868,7 @@
       "frequencyLabel": "频率",
       "bandMissing": "频段？？？",
       "modeMissing": "模式？？？",
+      "modeOutOfBand": "越界",
       "radioControls-a11y": "无线电控制 {{parts}}",
       "notesLabel": "备注",
       "notesLabel-a11y": "备注",

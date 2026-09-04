@@ -118,7 +118,7 @@
       "errorSavingExport": "Nepodarilo sa uložiť súbor",
       "logStashDialogTitle": "Ham2K úschovňa súborov",
       "logStashDialogIntro": "PoLo nahrá vaše súbory na servery Ham2K a môžete si ich stiahnuť z ľubovoľného prehliadača.",
-      "logStashDialogTiers": "Bezplatné účty môžu odoslať naraz iba jeden súbor. Predplatitelia môžu odoslať toľko, koľko chcú.",
+      "logStashDialogTiers": "Bezplatné účty môžu mať naraz uloženú iba jednu úschovu. Predplatitelia ich môžu mať toľko, koľko chcú.",
       "logStashDialogSubscribe": "Predplatiť",
       "exportUpsellTitle": "Táto operácia bola uložená aj do našej cloudovej synchronizačnej služby",
       "exportUpsellBody": "Táto záloha je zadarmo, ale ak si zakúpite predplatné, môžete ju synchronizovať medzi viacerými zariadeniami a pristupovať k nej plnou rýchlosťou.",
@@ -132,11 +132,8 @@
       "exportOptionsInfoExport-md": "**Exportovať** odovzdá vaše súbory inej aplikácii vo vašom zariadení — e-mailu, správam, cloudovému úložisku alebo inému logovaciemu programu.",
       "exportOptionsInfoSave-md": "**Uložiť** zapíše vaše súbory priamo do priečinka vo vašom zariadení, bez použitia inej aplikácie.",
       "exportOptionsInfoSelection-md": "Tieto možnosti sa použijú na všetky súbory, ktoré ste nižšie označili. Môžete tiež klepnúť na ľubovoľný jednotlivý súbor a zdieľať iba ten.",
-      "freeTierOneFileTitle": "Bezplatné účty môžu odoslať naraz iba jeden súbor",
-      "freeTierOneFileMessage": "Chcete odoslať iba „{{fileName}}“?",
-      "freeTierOneFileConfirm": "Odoslať {{fileName}}",
       "freeTierRecentUploadTitle": "Nedávne nahratie bude nahradené",
-      "freeTierRecentUploadMessage": "Nahrali ste „{{fileName}}“ pred menej ako 6 hodinami a ešte nebol stiahnutý. Odoslaním tohto súboru ho nahradíte. Chcete radšej počkať?",
+      "freeTierRecentUploadMessage": "Odoslali ste „{{name}}“ pred menej ako 6 hodinami a ešte nebol stiahnutý. Ak ho odošlete teraz, nahradí sa. Chcete radšej počkať?",
       "freeTierRecentUploadConfirm": "Napriek tomu odoslať",
       "errorSendingToLogStash": "Nepodarilo sa odoslať do Ham2K úschovne súborov",
       "sentToLogStash": "Odoslané do Ham2K File Stash",
@@ -154,6 +151,8 @@
         "duplicate": "Duplikát",
         "invalidBand": "Neplatné pásmo",
         "ourGrid": "Chýba naša poloha",
+        "theirGrid": "Chýba lokátor protistanice",
+        "shortGrid": "Lokátor je príliš krátky",
         "newBand": "Nová pásmo",
         "newMode": "Nový mód",
         "newRef": "Nová referencia",
@@ -350,48 +349,48 @@
       },
       "showNumbersRow": {
         "title": "Zobraziť riadok s číslami",
-        "descriptionOn": "Rýchle tlačidlá na čísla",
-        "descriptionOff": "Nezobrazovať riadok s číslami"
+        "descriptionOn": "Zobrazujú sa rýchle tlačidlá pre čísla",
+        "descriptionOff": "Riadok s číslami sa nezobrazuje"
       },
       "showExtraInNumbersRow": {
         "title": "Bodka v riadku s číslami",
-        "descriptionOn": "Zahrňte bodku (a lomítko)",
-        "descriptionOff": "Len zobrazovať čísla"
+        "descriptionOn": "Zahŕňa klávesy bodky a lomky",
+        "descriptionOff": "Zobrazujú sa iba čísla"
       },
       "showCommaInNumbersRow": {
         "title": "Čiarka v riadku s číslami",
-        "descriptionOn": "Zahrňte klávesu s čiarkou",
+        "descriptionOn": "Zahŕňa kláves čiarky",
         "descriptionOff": "Bez klávesy s čiarkou"
       },
       "vibrateNumbersRow": {
         "title": "Použiť vibrovanie v riadku s číslami",
-        "descriptionOn": "Vibrovať pri stlačení čísel",
-        "descriptionOff": "Nevibrovať pri stlačení čísel"
+        "descriptionOn": "Vibruje pri stlačení čísel",
+        "descriptionOff": "Nevibruje pri stlačení čísel"
       },
       "useMetricUnits": {
         "title": "Používať metrické jednotky",
-        "descriptionOn": "Používať míle pre vzdialenosti",
-        "descriptionOff": "Používať kilometre pre vzdialenosti"
+        "descriptionOn": "Používajú sa míle pre vzdialenosti",
+        "descriptionOff": "Používajú sa kilometre pre vzdialenosti"
       },
       "keepDeviceAwake": {
         "title": "Udržiavať zariadenie aktívne",
-        "descriptionOn": "Zabrániť zariadeniu uzamknúť obrazovku",
-        "descriptionOff": "Povoliť bežné uzamknutie obrazovky"
+        "descriptionOn": "Obrazovka zostáva zapnutá",
+        "descriptionOff": "Obrazovka sa zamyká ako zvyčajne"
       },
       "useSplitViews": {
         "title": "Použiť rozdelené zobrazenia",
-        "descriptionOn": "Použiť rozdelené zobrazenia, keď je obrazovka dostatočne veľká",
-        "descriptionOff": "Nepoužívať rozdelené zobrazenia"
+        "descriptionOn": "Používajú sa rozdelené zobrazenia, keď je obrazovka dostatočne veľká",
+        "descriptionOff": "Rozdelené zobrazenia sa nepoužívajú"
       },
       "useGrid8": {
         "title": "Lokalizácia s vysokou presnosťou",
-        "descriptionOn": "Použiť 8-miestne lokátorové štvorce",
-        "descriptionOff": "Použiť 6-miestne lokátorové štvorce"
+        "descriptionOn": "Používajú sa 8-miestne lokátory",
+        "descriptionOff": "Používajú sa 6-miestne lokátory"
       },
       "smartKeyboard": {
         "title": "Funkcie inteligentnej klávesnice",
-        "descriptionOn": "Povoliť funkcie inteligentnej klávesnice",
-        "descriptionOff": "Použiť jednoduchšie klávesnice pre dôvody kompatibility s niektorými zariadeniami"
+        "descriptionOn": "Používajú sa funkcie inteligentnej klávesnice",
+        "descriptionOff": "Používajú sa jednoduchšie klávesnice kvôli kompatibilite s niektorými zariadeniami"
       },
       "exportSettings": {
         "title": "Nastavenia exportu",
@@ -402,13 +401,13 @@
       },
       "shareAppUsageData": {
         "title": "Zdieľať údaje o používaní aplikácie",
-        "descriptionOn": "Pomôžte nám zlepšiť aplikáciu zdieľaním údajov o používaní, výpadkoch a výkone aplikácie",
-        "descriptionOff": "Udržujte súkromie údajov o používaní aplikácie.\nTím Ham2K nebude schopný zistiť chyby alebo iné problémy."
+        "descriptionOn": "Zdieľajú sa údaje o používaní, zlyhaniach a výkone, aby sme mohli aplikáciu zlepšovať",
+        "descriptionOff": "Údaje o používaní aplikácie zostávajú súkromné.\nTím Ham2K nebude môcť zistiť zlyhania ani iné problémy."
       },
       "shareOperationData": {
         "title": "Zdieľať údaje o prevádzke",
-        "descriptionOn": "Zdieľať niektoré údaje o prevádzke verejne a s inými používateľmi",
-        "descriptionOff": "Udržiavať údaje o prevádzke súkromné"
+        "descriptionOn": "Niektoré údaje o prevádzke sa zdieľajú verejne a s inými používateľmi",
+        "descriptionOff": "Údaje o prevádzke zostávajú súkromné"
       },
       "privacyPolicy": {
         "title": "Zásady ochrany osobných údajov",
@@ -423,19 +422,24 @@
       "title": "Nastavenia prihlásenia",
       "leftieMode": {
         "title": "Mód pre ľavákov",
-        "descriptionOn": "Použiť rozloženie pre ľavákov",
-        "descriptionOff": "Použiť rozloženie pre pravákov"
+        "descriptionOn": "Používa sa rozloženie pre ľavákov",
+        "descriptionOff": "Používa sa rozloženie pre pravákov"
       },
       "countryFlags": {
         "title": "Vlajky krajín",
-        "descriptionNone": "Nezobrazovať žiadne vlajky",
-        "descriptionAll": "Zobraziť vlajky pre všetky spojenia",
-        "descriptionDefault": "Zobraziť iba pre DX spojenia"
+        "descriptionNone": "Nezobrazujú sa žiadne vlajky",
+        "descriptionAll": "Zobrazujú sa vlajky pre všetky spojenia",
+        "descriptionDefault": "Zobrazujú sa vlajky iba pre DX spojenia"
       },
       "showBearing": {
         "title": "Zobrazovať azimut",
-        "descriptionOn": "Zobrazovať odhadovaný azimut ku stanici",
-        "descriptionOff": "Nezobrazovať informácie o azimute"
+        "descriptionOn": "Zobrazuje sa odhadovaný azimut k stanici",
+        "descriptionOff": "Informácie o azimute sa nezobrazujú"
+      },
+      "showReverseBearing": {
+        "title": "Zobraziť aj spätný azimut",
+        "descriptionOn": "Zobrazuje sa aj azimut od stanice, napríklad „45° / 225°“",
+        "descriptionOff": "Zobrazuje sa iba azimut k stanici"
       },
       "switchSignalReportOrder": {
         "title": "Prepnite poradie hlásení signálu",
@@ -444,18 +448,18 @@
       },
       "jumpAfterRST": {
         "title": "Prejsť na ďalšie pole po zadaní RST",
-        "descriptionOn": "Prejsť po zadaní RST",
-        "descriptionOff": "Neprejsť automaticky"
+        "descriptionOn": "Po RST sa prechádza na ďalšie pole",
+        "descriptionOff": "Automaticky sa neprechádza ďalej"
       },
       "suggestDefaultOperator": {
         "title": "Nastaviť predvoleného operátora",
-        "descriptionOn": "Nastaviť {{operatorCall}} ako operátora v prevádzkach, kde sú rôzne volacie znaky stanice",
-        "descriptionOff": "Nenasadzujte predvoleného operátora bez ohľadu na použitý volací znak"
+        "descriptionOn": "{{operatorCall}} sa používa ako operátor v prevádzkach, kde je volací znak stanice iný",
+        "descriptionOff": "Nenavrhuje sa predvolený operátor bez ohľadu na použitý volací znak stanice"
       },
       "suggestTemplates": {
         "title": "Použiť šablóny operácií",
-        "descriptionOn": "Navrhnúť šablóny pre nové operácie",
-        "descriptionOff": "Nenavrhuje šablóny"
+        "descriptionOn": "Navrhujú sa šablóny pre nové prevádzky",
+        "descriptionOff": "Šablóny sa nenavrhujú"
       },
       "bandsModes": {
         "title": "Pásma a módy",
@@ -750,8 +754,8 @@
       "exportTypes": "Typy exportu",
       "customTemplates": "Vlastné šablóny",
       "defaultTemplates": "Predvolené šablóny",
-      "customTemplatesDescription": "Použiť vlastné šablóny pre export",
-      "defaultTemplatesDescription": "Použiť predvolené šablóny pre export",
+      "customTemplatesDescription": "Pre tento export sa používajú vlastné šablóny",
+      "defaultTemplatesDescription": "Používajú sa predvolené šablóny",
       "includePrivateData": "Zahrnúť súkromné údaje",
       "ignoreLookupData": "Ignorovať údaje z vyhľadávania",
       "fileNameTemplate": "Šablóna názvu súboru",
@@ -760,8 +764,10 @@
       "adifComments": "ADIF QSO komentáre",
       "adifQslMessage": "ADIF QSL správa",
       "templateHelpTitle": "Nápoveda k šablóne",
-      "includePrivateDataDescription": "Mená, poznámky, adresy, atď.",
-      "ignoreLookupDataDescription": "Ignorovať údaje zo služieb vyhľadávania, ako je QRZ.com",
+      "includePrivateDataDescription": "Zahŕňa mená, poznámky, adresy atď.",
+      "excludePrivateDataDescription": "Vynecháva mená, poznámky, adresy atď.",
+      "ignoreLookupDataDescription": "Ignorujú sa údaje zo služieb vyhľadávania, ako je QRZ.com",
+      "useLookupDataDescription": "Zahŕňajú sa údaje zo služieb vyhľadávania, ako je QRZ.com",
       "templateHelp-md": "Niektoré príklady prvkov šablóny…\n\n### Export denníku\nAtribúty exportovaného denníku\n`{{log.station}}` → `{{call}}` Stanica pre tento export\n`{{log.ref}}` → `XX-1234` Referencia pre tento export\n`{{log.refName}}` → `Príklad národného parku` Referenčné meno pre tento export\n`{{log.refShortName}}` → `Príklad NP` Krátky referenčný názov pre tento export\n`{{log.handlerType}}` → `pota` Typ obsluhy pre tento export\n`{{log.handlerName}}` → `Parks On The Air` Názov obsluhy pre tento export\n`{{log.handlerShortName}}` → `POTA` Krátky názov obsluhy pre tento export\n\n### Volacie znaky prevádzky\n`{{op.station}}` → `{{call}}` Prvá stanica pre prevádzku\n`{{op.operator}}` → `{{call}}` Operátor pre prevádzku\n`{{op.allStations}}` → `{{call}}, {{otherCalls}}` Všetky stanice pre prevádzku\n`{{op.otherStations}}` → `{{otherCalls}}` Ostatné stanice pre prevádzku\n\n### Dátum prevádzky\n`{{op.date}}` → `{{date}}`\n`{{compact op.date}}` → `{{compactDate}}`\n\n### Ďalšie podrobnosti prevádzky\n`{{op.title}}` → `at XX-1234, XXFF-0001`\n`{{op.userTitle}}` → `Moja špeciálna prevádzka`\n`{{op.userNotes}}` → `Vyrazil som skoro ráno…`\n`{{op.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{first8 op.uuid}}` → `123e4567`\n`{{op.grid}}` → `AA00` Lokátor pre túto prevádzku\n\n### Informácie o QSO\n`{{qso.notes}}` → `Hrozný zvuk!`\n`{{qso.uuid}}` → `123e4567-e89b-12d3-a456-426614174000`\n`{{qso.their.sent}}` → `59` Report signálu, ktorý poslali oni\n`{{qso.our.sent}}` → `55` Správa o signále, ktorý sme poslali my\n`{{qso.their.grid}}` → `FF99` Lokátor, ktorý nahlásili oni\n`{{qso.refs}}` → Zoznam všetkých referencií pre QSO (zahŕňa referencie prevádzky aj referencie iba pre QSO)\n`{{first8 qso.uuid}}` → `123e4567`",
       "default": {
         "name": "Predvolené",
@@ -862,6 +868,7 @@
       "frequencyLabel": "Frekvencia",
       "bandMissing": "Pásmo???",
       "modeMissing": "Režim???",
+      "modeOutOfBand": "Mimo pásma",
       "radioControls-a11y": "Ovládanie stanice {{parts}}",
       "notesLabel": "Poznámky",
       "notesLabel-a11y": "Poznámky",

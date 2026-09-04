@@ -188,6 +188,8 @@
       "startConfirm": "Opération commencée !",
       "break": "Ajouter une pause ?",
       "breakConfirm": "Pause d'opération ajoutée !",
+      "roverqth": "Ajouter une pause et définir un nouvel emplacement ?",
+      "roverqthConfirm": "Pause ajoutée, définissez maintenant votre nouvel emplacement",
       "stop": "Arrêter l'opération ?",
       "stopConfirm": "Opération arrêtée !"
     },

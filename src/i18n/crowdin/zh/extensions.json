@@ -188,6 +188,8 @@
       "startConfirm": "操作已开始！",
       "break": "添加休息？",
       "breakConfirm": "已添加操作休息！",
+      "roverqth": "添加休息并设置新位置？",
+      "roverqthConfirm": "已添加休息，现在设置您的新位置",
       "stop": "停止操作？",
       "stopConfirm": "操作已停止！"
     },
