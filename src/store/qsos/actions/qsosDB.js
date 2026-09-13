@@ -108,6 +108,19 @@ export const addQSOs = ({ uuid, qsos, operation, synced = false }) => async (dis
       qso.updatedAtMillis = now
       qso.updatedOnDeviceId = GLOBAL.deviceId.slice(0, 8)
 
+      // HALO-609. A synced event marker from HaLo arrives as `{band: 'event', event: {...}}`
+      // with no `our`/`their`, and `qsoKey` destructures `our.call` and `their.call`. The throw
+      // escaped `mergeSyncQSOs` and discarded the whole sync round — every contact on the page,
+      // the watermark, the cursor — and the next round asked for the same page, forever. A marker
+      // gets the shape `newEventQSO` gives our own; anything else gets empty objects, because
+      // scoring and every contest's `nearDupes` read `q.their.call` on each stored QSO too, and
+      // a record that cannot be keyed here would throw there instead, on the logging tab.
+      if (qso.band === 'event') {
+        qso.our = qso.our ?? { call: 'EVENT' }
+        qso.their = qso.their ?? { call: qso.event?.event?.toUpperCase() ?? 'EVENT' }
+      }
+      qso.our = qso.our ?? {}
+      qso.their = qso.their ?? {}
       qso.key = qsoKey(qso)
 
       const qsoClone = { ...qso }

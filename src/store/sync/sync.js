@@ -15,7 +15,7 @@ import { markQSOsAsSynced, mergeSyncQSOs, queryQSOs } from '../qsos'
 import { selectFiveSecondsTick, startTickTock, stopTickTock } from '../time'
 import { selectLocalData, selectLocalExtensionData, setLocalData, setLocalExtensionData } from '../local'
 import { logTimer } from '../../tools/perfTools'
-import { syncMetaForDistribution } from '../../distro'
+import { reportError, syncMetaForDistribution } from '../../distro'
 import { selectSettings } from '../settings'
 
 const SYNC_LOOP_DEBOUNCE_DELAY = 1000 * 0.5 // 500ms, minimum time to wait for more changes before starting a new sync loop
@@ -464,7 +464,11 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
       }
     }
   } catch (error) {
-    console.log('Error syncing', error)
+    // HALO-609. A throw here discards the round and retries it after a backoff, which is right for
+    // a transient store failure and wrong for a deterministic one: the same page comes back, the
+    // same record throws, and the device sits at the backoff ceiling one page short of everything
+    // behind it - for weeks, with this console line as the only trace. Reported, so it is seen.
+    reportError('Error syncing', error)
 
     _releaseSyncLoop()
 
