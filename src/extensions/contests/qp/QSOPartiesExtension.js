@@ -388,7 +388,8 @@ export const ReferenceHandler = {
             if (qp.options.dxEntityIsMultiplier) {
               const dxcc = qso?.their?.entityPrefix || qso?.their?.guess?.entityPrefix
               loc = dxcc
-              if (!qp.options.dxEntityMultiplierMax || scoring.entities?.length < qp.options.dxEntityMultiplierMax) {
+              const entityCount = Object.keys(score?.entities ?? {}).length
+              if (!qp.options.dxEntityMultiplierMax || score?.entities?.[dxcc] || entityCount < qp.options.dxEntityMultiplierMax) {
                 mult = multPrefix + 'DX' + loc
                 scoring.entity = loc
               } else {

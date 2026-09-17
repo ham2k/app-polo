@@ -5,24 +5,26 @@
   "url": "https://w1wqm.org/nh-qso-party/",
   "start": "2026-9-19 16:00Z",
   "end": "2026-9-20 04:00Z",
+  "secondStart": "2026-9-20 12:00Z",
+  "secondEnd": "2026-9-20 22:00Z",
   "cabrilloName": "NH-QSO-PARTY",
-  "status": "Verified for 2025",
-  "lastUpdated": "2025-09-04 12:00Z",
+  "status": "Verified for 2026 against w1wqm.org",
+  "lastUpdated": "2026-09-16 12:00Z",
   "options": {
     "selfSpotting": true,
     "dcCountsAsMaryland": true,
     "dxLocationIsPrefix": false,
-    "dxIsMultiplier": true,
+    "dxIsMultiplier": false,
     "dxEntityMultiplierMax": 10,
     "multsPerBandMode": false,
     "outOfStateMultsPerBand": true,
     "stateCountsForInState": false,
-    "countyLine": false
+    "countyLine": false,
+    "dxEntityIsMultiplier": true
   },
   "points": {
     "PHONE": 1,
-    "CW": 2,
-    "DIGI": 2
+    "CW": 2
   },
   "counties": {
     "BEL": "Belknap",

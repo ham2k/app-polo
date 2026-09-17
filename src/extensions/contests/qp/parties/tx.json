@@ -1,11 +1,39 @@
 {
   "key": "TX",
   "name": "Texas QSO Party",
+  "short": "TXQP",
+  "url": "https://www.txqp.net/",
   "start": "2026-9-19 14:00Z",
   "end": "2026-9-20 02:00Z",
   "secondStart": "2026-9-20 14:00Z",
   "secondEnd": "2026-9-20 20:00Z",
-  "status": "Pending",
+  "cabrilloName": "TXQP",
+  "notes": "",
+  "internalNotes": "Not supported: 500 point bonus for working the same TX mobile in 5 different counties.",
+  "lastUpdated": "2026-09-16 12:00Z",
+  "status": "Verified for 2026 against txqp.net",
+  "bonusStations": {},
+  "bonus": {
+    "perActivatedCounty": 1000,
+    "perActivatedCountyMinimumCount": 5,
+    "perActivatedCountyRoverOnly": true
+  },
+  "points": {
+    "PHONE": 2,
+    "CW": 3,
+    "DATA": 3
+  },
+  "options": {
+    "dcCountsAsMaryland": true,
+    "countyLine": true,
+    "selfSpotting": true,
+    "dxLocationIsPrefix": true,
+    "stateCountsForInState": false,
+    "multsPerBandMode": false,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
+    "bonusPostMultiplier": true
+  },
   "counties": {
     "ANDE": "Anderson",
     "ANDR": "Andrews",
@@ -190,7 +218,7 @@
     "ORAN": "Orange",
     "PPIN": "Palo Pinto",
     "PANO": "Panola",
-    "PARK": "Park",
+    "PARK": "Parker",
     "PARM": "Parmer",
     "PECO": "Pecos",
     "POLK": "Polk",

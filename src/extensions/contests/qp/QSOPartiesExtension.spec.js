@@ -10,7 +10,7 @@ import { QSO_PARTY_DATA, ReferenceHandler } from './QSOPartiesExtension'
 
 const CO_REF = { type: 'qp', ref: 'CO', location: 'ADA', mobile: true }
 
-function simulateOperation ({ ref, qsoCount, theirLocations = ['NY'], theirCalls }) {
+function simulateOperation ({ ref, qsoCount, theirLocations = ['NY'], theirCalls, theirEntities }) {
   const operation = {}
   const qsos = []
   let score
@@ -22,7 +22,7 @@ function simulateOperation ({ ref, qsoCount, theirLocations = ['NY'], theirCalls
       key: `qso-${i}`,
       band: '20m',
       mode: 'CW',
-      their: { call: theirCall, baseCall: theirCall, exchange: theirLocation },
+      their: { call: theirCall, baseCall: theirCall, exchange: theirLocation, entityPrefix: theirEntities?.[i % theirEntities.length] },
       refs: [{ type: 'qp', location: theirLocation }]
     }
     const qsoScore = ReferenceHandler.scoringForQSO({ qso, qsos, operation, ref, score })
@@ -181,5 +181,26 @@ describe('Multi-state QSO Parties', () => {
     })
     expect(Object.keys(score.mults).some(mult => mult.endsWith('CPQP'))).toEqual(false)
     expect(Object.keys(score.mults).some(mult => mult.endsWith('AB'))).toEqual(true)
+  })
+})
+
+describe('QSO Party DX entity multiplier cap', () => {
+  // New Hampshire lets in-state stations count up to 10 DXCC entities as
+  // multipliers. Entities beyond the cap still earn QSO points, but a repeat
+  // QSO with an entity already counted must not be blocked by the cap.
+  const NH_REF = { type: 'qp', ref: 'NH', location: 'MER' }
+  const entities = ['DL', 'F', 'G', 'I', 'EA', 'OK', 'SM', 'LA', 'OZ', 'PA', 'HB', 'OE']
+
+  it('counts DX entities as multipliers up to the cap', () => {
+    const score = simulateOperation({ ref: NH_REF, qsoCount: 12, theirLocations: ['DX'], theirEntities: entities })
+    expect(Object.keys(score.entities)).toHaveLength(10)
+    expect(score.mult).toEqual(10)
+    expect(score.qsoPoints).toEqual(24)
+  })
+
+  it('does not let the cap block an entity that already counted', () => {
+    const score = simulateOperation({ ref: NH_REF, qsoCount: 11, theirLocations: ['DX'], theirEntities: entities.slice(0, 10) })
+    expect(score.mult).toEqual(10)
+    expect(score.entities.DL).toEqual(2)
   })
 })
