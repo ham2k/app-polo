@@ -1,8 +1,9 @@
 {
   "key": "NV",
   "name": "Nevada QSO Party",
-  "start": "2025-10-11 03:00Z",
-  "end": "2025-10-12 21:00Z",
+  "start": "2026-10-10 03:00Z",
+  "end": "2026-10-11 21:00Z",
+  "internalNotes": "Left unselectable: multipliers are ARRL/RAC sections per band, which is not supported. 2026 rules were not posted as of 2026-09-17, dates follow the second-weekend rule.",
   "status": "Pending",
   "counties": {
     "NVCAR": "Carson City",

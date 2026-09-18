@@ -172,7 +172,7 @@ export const ReferenceHandler = {
 
     if (hasNumbers) {
       const stxIndex = fields.findIndex(field => field.STX_STRING)
-      fields[stxIndex] = { STX_STRING: `${qsoRef.ourNumber} ${fields[stxIndex]?.STX_STRING}`.trim() }
+      fields[stxIndex] = { STX_STRING: `${qsoRef.ourNumber ?? ''} ${fields[stxIndex]?.STX_STRING}`.trim() }
       fields.push({ STX: qsoRef.ourNumber })
     }
 
@@ -194,7 +194,7 @@ export const ReferenceHandler = {
 
     if (hasNumbers) {
       const srxIndex = fields.findIndex(field => field.SRX_STRING)
-      fields[srxIndex] = { SRX_STRING: `${qsoRef.theirNumber} ${fields[srxIndex]?.SRX_STRING}`.trim() }
+      fields[srxIndex] = { SRX_STRING: `${qsoRef.theirNumber ?? ''} ${fields[srxIndex]?.SRX_STRING}`.trim() }
       fields.push({ SRX: qsoRef.theirNumber })
     }
 
@@ -232,7 +232,7 @@ export const ReferenceHandler = {
     const ourLocations = qpSplitLocation(ref?.location)
     const weAreInState = ourLocations.find(loc => qpIsInState({ qp, location: loc }))
 
-    const qsoRef = findRef(qso, Info.key)
+    const qsoRef = findRef(qso, Info.key) || {}
 
     let theirLocations = qpSplitLocation(qsoRef?.location)
     let theyAreInState = theirLocations.find(c => qp.counties[c])
@@ -242,7 +242,7 @@ export const ReferenceHandler = {
       if (entity === 'K' || entity === 'VE') {
         theirLocations = [qso?.their?.state ?? qso?.their?.guess?.state]
       } else {
-        theirLocations = 'DX'
+        theirLocations = ['DX']
       }
       theyAreInState = false
     }
@@ -308,7 +308,7 @@ export const ReferenceHandler = {
 
     const superMode = superModeForMode(mode)
 
-    const nearDupes = _nearDupesFor({ qp, qso, qsos, operation, ourLocations, theirLocations, weAreInState, theyAreInState })
+    const nearDupes = _nearDupesFor({ qp, qso, qsos, operation, ourLocations, theirLocations, weAreInState })
 
     const locationMultiplier = ourLocations.length * theirLocations.length // For county line operations
 
@@ -369,6 +369,9 @@ export const ReferenceHandler = {
           scoring.counties.push(loc)
           if (qp.options.countiesAreMultForInState === false) {
             mult = loc.substring(0, 2)
+          } else if (qp.options.countiesCountForInState === false && weAreInState) {
+            // In-state stations count our own state instead of its counties (AZ)
+            mult = multPrefix + _stateForCounty({ qp, county: loc })
           } else if (qp.options.stateCountsForInState && weAreInState) {
             // In-state stations count our own state as a multiplier, on top of the county it came from (CO)
             const state = _stateForCounty({ qp, county: loc })
@@ -451,7 +454,8 @@ export const ReferenceHandler = {
 
       const sameLocation = nearDupes.filter(q => {
         const dupeRef = findRef(q, Info.key)
-        const dupeLocations = qpParseLocations({ qp, qso, location: dupeRef?.location, weAreInState, theyAreInState })
+        // Parsed like `theirLocations` above, so that counties compare as counties
+        const dupeLocations = qpParseLocations({ qp, qso, location: dupeRef?.location, weAreInState })
 
         return theirLocations.some(location => dupeLocations?.some(dupeLocation => dupeLocation.location === location.location))
       }).length !== 0
@@ -935,12 +939,13 @@ function _defaultLocationFor({ qso, qp, qsos, operation }) {
   }
 }
 
-function _nearDupesFor({ qp, qso, qsos, operation, ourLocations, theirLocations, weAreInState, theyAreInState }) {
-  let ourRollingLocations = qpParseLocations({ qp, qso, location: findRef(operation, Info.key)?.location, weAreInState, theyAreInState })
+function _nearDupesFor({ qp, qso, qsos, operation, ourLocations, theirLocations, weAreInState }) {
+  // Parsed like `ourLocations` in `scoringForQSO`, so that counties compare as counties
+  let ourRollingLocations = qpParseLocations({ qp, qso, location: findRef(operation, Info.key)?.location, weAreInState })
 
   const nearDupes = qsos.filter(q => {
     if (!q.deleted && (q.event?.event === 'break' || q.event?.event === 'start')) {
-      ourRollingLocations = qpParseLocations({ qp, qso, location: findRef(q.event.operation, Info.key)?.location, weAreInState, theyAreInState })
+      ourRollingLocations = qpParseLocations({ qp, qso, location: findRef(q.event.operation, Info.key)?.location, weAreInState })
     }
 
     if (q.event || q.deleted || q.their?.call !== qso.their?.call || q.uuid === qso?.uuid) {

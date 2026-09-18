@@ -1,10 +1,33 @@
 {
   "key": "SD",
   "name": "South Dakota QSO Party",
+  "short": "SDQP",
+  "url": "https://pdarc.org/sd-qso-party",
   "start": "2026-10-10 18:00Z",
   "end": "2026-10-11 18:00Z",
+  "cabrilloName": "SD-QSO-PARTY",
   "notes": "Contributed by W1GRL & W1BOY",
-  "status": "Updated for 2025, but not verified",
+  "internalNotes": "The rules do not name a Cabrillo contest, SD-QSO-PARTY is assumed. They also do not say whether SD itself is a multiplier for SD stations, so it is not counted.",
+  "lastUpdated": "2026-09-17 12:00Z",
+  "status": "Verified for 2026 against pdarc.org/sd-qso-party",
+  "bonusStations": {
+    "W0OJY": 100
+  },
+  "options": {
+    "dcCountsAsMaryland": true,
+    "countyLine": true,
+    "selfSpotting": true,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
+    "dxLocationIsPrefix": false,
+    "stateCountsForInState": false,
+    "multsPerBandMode": false,
+    "bonusPostMultiplier": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
   "counties": {
     "AURO": "Aurora",
     "BEAD": "Beadle",

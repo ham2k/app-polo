@@ -10,8 +10,8 @@ import { QSO_PARTY_DATA, ReferenceHandler } from './QSOPartiesExtension'
 
 const CO_REF = { type: 'qp', ref: 'CO', location: 'ADA', mobile: true }
 
-function simulateOperation ({ ref, qsoCount, theirLocations = ['NY'], theirCalls, theirEntities }) {
-  const operation = {}
+function simulateOperation ({ ref, qsoCount, theirLocations = ['NY'], theirCalls, theirEntities, bands = ['20m'], modes = ['CW'] }) {
+  const operation = { refs: [ref] }
   const qsos = []
   let score
 
@@ -20,8 +20,9 @@ function simulateOperation ({ ref, qsoCount, theirLocations = ['NY'], theirCalls
     const theirCall = theirCalls?.[i] ?? `K1AA${i}`
     const qso = {
       key: `qso-${i}`,
-      band: '20m',
-      mode: 'CW',
+      uuid: `uuid-${i}`,
+      band: bands[i % bands.length],
+      mode: modes[i % modes.length],
       their: { call: theirCall, baseCall: theirCall, exchange: theirLocation, entityPrefix: theirEntities?.[i % theirEntities.length] },
       refs: [{ type: 'qp', location: theirLocation }]
     }
@@ -202,5 +203,157 @@ describe('QSO Party DX entity multiplier cap', () => {
     const score = simulateOperation({ ref: NH_REF, qsoCount: 11, theirLocations: ['DX'], theirEntities: entities.slice(0, 10) })
     expect(score.mult).toEqual(10)
     expect(score.entities.DL).toEqual(2)
+  })
+})
+
+describe('Arizona QSO Party multipliers', () => {
+  // Arizona counts multipliers differently on each side of the state line.
+  // Out-of-state stations count the 15 counties again on every band and mode.
+  it('counts a county again on each band and mode for non-Arizona stations', () => {
+    const score = simulateOperation({
+      ref: { type: 'qp', ref: 'AZ', location: 'NY' }, qsoCount: 3, theirLocations: ['MCP'], bands: ['20m', '40m', '40m'], modes: ['CW', 'CW', 'SSB']
+    })
+    expect(score.mult).toEqual(3)
+  })
+
+  // Arizona stations count states, provinces and DXCC entities once per mode,
+  // and never counties: two Arizona counties on CW are one multiplier, Arizona.
+  it('counts states per mode and not counties for Arizona stations', () => {
+    const score = simulateOperation({
+      ref: { type: 'qp', ref: 'AZ', location: 'PMA' }, qsoCount: 4, theirLocations: ['MCP', 'YMA', 'NY', 'NY'], bands: ['20m', '20m', '20m', '40m']
+    })
+    expect(Object.keys(score.mults).sort()).toEqual(['CW:AZ', 'CW:NY'])
+  })
+
+  // A DX station logged without a location must count as its DXCC entity. Its
+  // prefix is never used as the location, because prefixes like PA, CT or OH
+  // would be read as the US state of the same name.
+  it('counts a DX station as its entity, not as a state that shares its prefix', () => {
+    const score = simulateOperation({
+      ref: { type: 'qp', ref: 'AZ', location: 'PMA' }, qsoCount: 1, theirLocations: [undefined], theirCalls: ['PA3XYZ'], theirEntities: ['PA']
+    })
+    expect(Object.keys(score.mults)).toEqual(['CW:DXPA'])
+    expect(score.states).toEqual({})
+  })
+
+  // Total Score = (QSO points x multipliers) + bonus, with K7A worth 100 once.
+  it('adds the one-time K7A bonus after the multiplier', () => {
+    const score = simulateOperation({
+      ref: { type: 'qp', ref: 'AZ', location: 'NY' }, qsoCount: 2, theirLocations: ['MCP'], theirCalls: ['K7A', 'K7A'], bands: ['20m', '40m']
+    })
+    expect(score.bonusTotal).toEqual(100)
+    expect(score.total).toEqual((4 * 2) + 100)
+  })
+})
+
+describe('Pennsylvania QSO Party scoring', () => {
+  const PA_REF = { type: 'qp', ref: 'PA', location: 'ELK' }
+
+  // Pennsylvania allows in-state stations exactly one DX multiplier, however
+  // many DXCC entities they work.
+  it('counts all DX as a single multiplier', () => {
+    const score = simulateOperation({ ref: PA_REF, qsoCount: 3, theirLocations: ['DX'], theirEntities: ['DL', 'F', 'G'] })
+    expect(score.mult).toEqual(1)
+  })
+
+  // Each valid QSO with the bonus station is worth 200 points, so working it
+  // on a second band earns the bonus again, all added after the multiplier.
+  it('awards the K3ZMC bonus per band, after the multiplier', () => {
+    const score = simulateOperation({
+      ref: PA_REF, qsoCount: 2, theirLocations: ['MGY'], theirCalls: ['K3ZMC', 'K3ZMC'], bands: ['20m', '40m']
+    })
+    expect(score.bonusTotal).toEqual(400)
+    expect(score.total).toEqual((score.qsoPoints * score.mult) + 400)
+  })
+
+  // A QSO logged before the party was added to the operation has no serial
+  // numbers. Its exports must leave them out, not print "undefined".
+  it('exports a QSO without serial numbers cleanly', () => {
+    const operation = { refs: [PA_REF], stationCall: 'K3AAA' }
+    const qso = { band: '20m', mode: 'CW', their: { call: 'K3BBB', entityPrefix: 'K', guess: { entityCode: 'K', state: 'MD' } }, refs: [] }
+
+    const adif = Object.assign({}, ...ReferenceHandler.adifFieldsForOneQSO({ qso, operation }))
+    expect(adif.STX_STRING).toEqual('ELK')
+    expect(adif.SRX_STRING).toEqual('MD')
+
+    const rows = ReferenceHandler.qsoToCabrilloParts({ qso, ref: PA_REF, operation, settings: {} })
+    expect(rows).toHaveLength(1)
+    expect(rows[0].join('')).not.toContain('undefined')
+  })
+
+  // A DX QSO with no location exports as one row for "DX", not a row per letter.
+  it('exports a DX QSO without a location as a single row', () => {
+    const operation = { refs: [PA_REF], stationCall: 'K3AAA' }
+    const qso = { band: '20m', mode: 'CW', their: { call: 'DL1ABC', entityPrefix: 'DL' }, refs: [] }
+    const rows = ReferenceHandler.qsoToCabrilloParts({ qso, ref: PA_REF, operation, settings: {} })
+    expect(rows).toHaveLength(1)
+    expect(rows[0][rows[0].length - 1].trim()).toEqual('DX')
+  })
+
+  // Serial numbers are part of the exchange, so the number fields must show.
+  it('exchanges serial numbers', () => {
+    expect(QSO_PARTY_DATA.PA.exchange).toContain('Number')
+  })
+})
+
+describe('South Dakota QSO Party scoring', () => {
+  // QSO Points x Multipliers = Total + Bonus: the W0OJY club station is worth
+  // 100 points once, outside the multiplier.
+  it('adds the W0OJY bonus once, after the multiplier', () => {
+    const score = simulateOperation({
+      ref: { type: 'qp', ref: 'SD', location: 'NY' }, qsoCount: 2, theirLocations: ['MINN'], theirCalls: ['W0OJY', 'W0OJY'], bands: ['20m', '40m']
+    })
+    expect(score.bonusTotal).toEqual(100)
+    expect(score.total).toEqual((4 * 1) + 100)
+  })
+})
+
+describe('California QSO Party scoring', () => {
+  // New in 2026: phone QSOs are worth 3 points, the same as CW.
+  it('scores phone and CW QSOs at 3 points each', () => {
+    const score = simulateOperation({
+      ref: { type: 'qp', ref: 'CA', location: 'NY' }, qsoCount: 2, theirLocations: ['ALAM', 'MARN'], modes: ['SSB', 'CW']
+    })
+    expect(score.qsoPoints).toEqual(6)
+  })
+})
+
+describe('QSO Parties where in-state stations do not count counties', () => {
+  // Arizona and Delaware stations count their own state once, never its
+  // counties, so working every county must not inflate the multiplier.
+  it('counts the state instead of each county', () => {
+    const score = simulateOperation({ ref: { type: 'qp', ref: 'DE', location: 'NDE' }, qsoCount: 3, theirLocations: ['KDE', 'SDE', 'NY'] })
+    expect(Object.keys(score.mults).sort()).toEqual(['DE', 'NY'])
+  })
+
+  // The Prairies and Atlantic Canada parties span several provinces: in-region
+  // stations count each province once per band, however many of its districts
+  // or counties they work. Those only count for stations outside the region.
+  it('counts the province once for in-region stations of a multi-province party', () => {
+    const cpqp = simulateOperation({ ref: { type: 'qp', ref: 'CPQP', location: 'AIR' }, qsoCount: 2, theirLocations: ['AIR', 'BRC'] })
+    expect(Object.keys(cpqp.mults)).toEqual(['20m:AB'])
+
+    const acqp = simulateOperation({ ref: { type: 'qp', ref: 'ACQP', location: 'NLASJ' }, qsoCount: 2, theirLocations: ['NLBMT', 'NLASJ'] })
+    expect(Object.keys(acqp.mults)).toEqual(['20m:NL'])
+  })
+
+  it('still counts each district for stations outside the region', () => {
+    const score = simulateOperation({ ref: { type: 'qp', ref: 'CPQP', location: 'NY' }, qsoCount: 2, theirLocations: ['AIR', 'BRC'] })
+    expect(Object.keys(score.mults).sort()).toEqual(['20m:AIR', '20m:BRC'])
+  })
+
+  // The counties still identify the station for dupe checking: the same
+  // station in the same county is a dupe, but a mobile that moved to a new
+  // county is a fresh QSO worth points.
+  it('still flags a repeat QSO from the same county as a dupe', () => {
+    const score = simulateOperation({ ref: { type: 'qp', ref: 'AZ', location: 'PMA' }, qsoCount: 2, theirLocations: ['MCP'], theirCalls: ['K7XX', 'K7XX'] })
+    expect(score.dupeCount).toEqual(1)
+    expect(score.qsoPoints).toEqual(2)
+  })
+
+  it('scores a mobile again once it changes county', () => {
+    const score = simulateOperation({ ref: { type: 'qp', ref: 'AZ', location: 'PMA' }, qsoCount: 2, theirLocations: ['MCP', 'YMA'], theirCalls: ['K7XX', 'K7XX'] })
+    expect(score.dupeCount).toEqual(0)
+    expect(score.qsoPoints).toEqual(4)
   })
 })

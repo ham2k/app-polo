@@ -7,9 +7,9 @@
   "end": "2026-10-4 21:59Z",
   "cabrilloName": "CA-QSO-PARTY",
   "notes": "Contributed by W1GRL & W1BOY",
-  "internalNotes": "",
-  "lastUpdated": "2025-09-08 12:00Z",
-  "status": "Updated for 2025, but not verified",
+  "internalNotes": "Not supported: CA stations are capped at 58 scored multipliers out of 63 possible.",
+  "lastUpdated": "2026-09-17 12:00Z",
+  "status": "Verified for 2026 against cqp.org",
   "exchange": [
     "Number",
     "Location"
@@ -20,11 +20,11 @@
     "dcCountsAsMaryland": true,
     "dxLocationIsPrefix": false,
     "dxIsMultiplier": false,
-    "selfSpotting": true,
+    "selfSpotting": false,
     "multsPerBandMode": false
   },
   "points": {
-    "PHONE": 2,
+    "PHONE": 3,
     "CW": 3
   },
   "counties": {

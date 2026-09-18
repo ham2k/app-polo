@@ -8,8 +8,8 @@
   "cabrilloName": "IL-QSO-PARTY",
   "notes": "",
   "internalNotes": "Allows up to 4 counties in county line operations",
-  "lastUpdated": "2025-10-12 12:00Z",
-  "status": "Updated for 2025, but not verified",
+  "lastUpdated": "2026-09-17 12:00Z",
+  "status": "Date confirmed for 2026, rules and bonus stations not verified",
   "options": {
     "countyLine": true,
     "dxIsMultiplier": false,

@@ -2,7 +2,49 @@
   "key": "AZ",
   "name": "Arizona QSO Party",
   "short": "AZQP",
+  "url": "https://www.azqp.org/",
   "start": "2026-10-10 15:00Z",
   "end": "2026-10-11 05:00Z",
-  "status": "Pending"
+  "cabrilloName": "AZ-QSO-PARTY",
+  "notes": "",
+  "internalNotes": "The rules do not name a Cabrillo contest, AZ-QSO-PARTY is assumed.",
+  "lastUpdated": "2026-09-17 12:00Z",
+  "status": "Verified for 2026 against azqp.org",
+  "bonusStations": {
+    "K7A": 100
+  },
+  "options": {
+    "dcCountsAsMaryland": true,
+    "countyLine": true,
+    "selfSpotting": true,
+    "dxIsMultiplier": false,
+    "dxEntityIsMultiplier": true,
+    "dxLocationIsPrefix": false,
+    "stateCountsForInState": true,
+    "countiesCountForInState": false,
+    "multsPerMode": true,
+    "outOfStateMultsPerBand": true,
+    "bonusPostMultiplier": true
+  },
+  "points": {
+    "PHONE": 1,
+    "CW": 2
+  },
+  "counties": {
+    "APH": "Apache",
+    "CHS": "Cochise",
+    "CNO": "Coconino",
+    "GLA": "Gila",
+    "GHM": "Graham",
+    "GLE": "Greenlee",
+    "LPZ": "La Paz",
+    "MCP": "Maricopa",
+    "MHV": "Mohave",
+    "NVO": "Navajo",
+    "PMA": "Pima",
+    "PNL": "Pinal",
+    "SCZ": "Santa Cruz",
+    "YVP": "Yavapai",
+    "YMA": "Yuma"
+  }
 }

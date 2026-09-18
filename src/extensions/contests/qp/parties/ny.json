@@ -7,9 +7,9 @@
   "end": "2026-10-18 01:59Z",
   "cabrilloName": "NY-QSO-PARTY",
   "notes": "",
-  "internalNotes": "",
-  "lastUpdated": "2025-02-20 00:00Z",
-  "status": "Updated for 2025, but not verified",
+  "internalNotes": "Self-spotting is only allowed for Mobile and Portable classes. County lines are limited to two counties.",
+  "lastUpdated": "2026-09-17 12:00Z",
+  "status": "Matches the 2025 rules, 2026 rules not yet published",
   "options": {
     "dcCountsAsMaryland": true,
     "countyLine": true,

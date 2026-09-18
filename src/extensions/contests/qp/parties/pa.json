@@ -8,18 +8,33 @@
   "secondStart": "2026-10-11 13:00Z",
   "secondEnd": "2026-10-11 22:00Z",
   "cabrilloName": "PA-QSO-PARTY",
-  "notes": "Data not mentioned, serial numbers required",
-  "internalNotes": "Bonus Station not yet released at time of updating",
-  "lastUpdated": "2025-03-9 00:00Z",
-  "status": "Counties Updated for 2025, rules but not verified",
+  "notes": "",
+  "internalNotes": "Not supported: QRP x2 multiplier, and ARRL/RAC sections as in-state multipliers (states and provinces are counted instead, so EPA and WPA are missed).",
+  "lastUpdated": "2026-09-17 12:00Z",
+  "status": "Verified for 2026 against paqso.org (rules rev 08/25/26)",
   "uniqueness": "perBandAndMode",
-  "bonusStations": {},
+  "exchange": [
+    "Number",
+    "Location"
+  ],
+  "bonusStations": {
+    "K3ZMC": 200
+  },
+  "bonus": {
+    "perActivatedCounty": 500,
+    "perActivatedCountyMinimumCount": 10,
+    "perActivatedCountyRoverOnly": true
+  },
   "options": {
     "dcCountsAsMaryland": true,
     "countyLine": true,
     "selfSpotting": true,
-    "dxEntityIsMultiplier": true,
-    "dxLocationIsPrefix": true
+    "dxIsMultiplier": true,
+    "dxEntityIsMultiplier": false,
+    "dxLocationIsPrefix": false,
+    "multsPerBandMode": false,
+    "bonusPerBandMode": true,
+    "bonusPostMultiplier": true
   },
   "points": {
     "PHONE": 1,
