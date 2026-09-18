@@ -5,9 +5,9 @@
   "url": "https://pdarc.org/sd-qso-party",
   "start": "2026-10-10 18:00Z",
   "end": "2026-10-11 18:00Z",
-  "cabrilloName": "SD-QSO-PARTY",
+  "cabrilloName": "SDQSOP",
   "notes": "Contributed by W1GRL & W1BOY",
-  "internalNotes": "The rules do not name a Cabrillo contest, SD-QSO-PARTY is assumed. They also do not say whether SD itself is a multiplier for SD stations, so it is not counted.",
+  "internalNotes": "The rules do not name a Cabrillo contest; SDQSOP is the name registered at contestcalendar.com/cabnames.php. They also do not say whether SD itself is a multiplier for SD stations, so it is not counted.",
   "lastUpdated": "2026-09-17 12:00Z",
   "status": "Verified for 2026 against pdarc.org/sd-qso-party",
   "bonusStations": {
