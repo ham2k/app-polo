@@ -79,8 +79,13 @@ const SyncHook = {
     GLOBAL.syncLoFiToken = undefined
   },
 
+  // `send_email: false` because the server mails a confirmation for every pending permission
+  // unless the request opts out. This call shows the challenge code on screen instead, so without
+  // the opt-out the user gets a mail nobody asked for, a second one the moment they press "send
+  // a confirmation email instead", and another every time an expiring code renews itself here.
+  // linkClientWithEmail is the only call that mails.
   linkClient: (email) => async (dispatch, getState) => {
-    const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/permissions', method: 'POST', body: JSON.stringify({ email }) })
+    const response = await requestWithAuth({ dispatch, getState, url: 'v1/client/permissions', method: 'POST', body: JSON.stringify({ email, send_email: false }) })
     return response
   },
 
