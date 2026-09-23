@@ -6,6 +6,9 @@ jest.mock('../../../store/operations', () => ({ setOperationData: jest.fn() }))
 jest.mock('./QSOPartiesActivityOptions', () => ({ ActivityOptions: () => null }))
 jest.mock('./QSOPartiesSpotting', () => ({ QSOPartiesPostSelfSpot: jest.fn(), SpotsHook: jest.fn() }))
 
+import RAW_US_STATES from '../../../data/usStates.json'
+import RAW_CANADIAN_PROVINCES from '../../../data/canadianProvinces.json'
+
 import { QSO_PARTY_DATA, ReferenceHandler } from './QSOPartiesExtension'
 
 const CO_REF = { type: 'qp', ref: 'CO', location: 'ADA', mobile: true }
@@ -355,5 +358,60 @@ describe('QSO Parties where in-state stations do not count counties', () => {
     const score = simulateOperation({ ref: { type: 'qp', ref: 'AZ', location: 'PMA' }, qsoCount: 2, theirLocations: ['MCP', 'YMA'], theirCalls: ['K7XX', 'K7XX'] })
     expect(score.dupeCount).toEqual(0)
     expect(score.qsoPoints).toEqual(4)
+  })
+})
+
+describe('California QSO Party', () => {
+  const CA_IN = { type: 'qp', ref: 'CA', location: 'ALAM' }
+
+  // CQP's in-state entrants chase states and provinces: a California county is
+  // worth the CA multiplier and nothing more.
+  it('counts an in-state contact as California, never as its county', () => {
+    const score = simulateOperation({ ref: CA_IN, qsoCount: 2, theirLocations: ['LASS', 'SCRU'] })
+    expect(Object.keys(score.mults)).toEqual(['CA'])
+  })
+
+  it('counts counties for out-of-state stations', () => {
+    const score = simulateOperation({ ref: { type: 'qp', ref: 'CA', location: 'NY' }, qsoCount: 2, theirLocations: ['LASS', 'SCRU'] })
+    expect(Object.keys(score.mults).sort()).toEqual(['LASS', 'SCRU'])
+  })
+
+  // 63 are workable from inside California and the sponsor counts 58. Capping
+  // what is RECORDED instead would show worked ones as still needed.
+  it('counts at most 58 multipliers for an in-state station, and keeps every one worked', () => {
+    const codes = [...Object.keys(RAW_US_STATES), ...Object.keys(RAW_CANADIAN_PROVINCES)].map(code => code.toUpperCase()).filter(code => code !== 'DC')
+    expect(codes).toHaveLength(63)
+    const theirLocations = codes.map(code => code === 'CA' ? 'LASS' : code)
+    const theirEntities = codes.map(code => RAW_CANADIAN_PROVINCES[code.toLowerCase()] ? 'VE' : 'K')
+    const score = simulateOperation({ ref: CA_IN, qsoCount: 63, theirLocations, theirEntities })
+    expect(Object.keys(score.mults)).toHaveLength(63)
+    expect(score.mult).toEqual(58)
+  })
+
+  it('scores phone at 3 points, the same as CW', () => {
+    const score = simulateOperation({ ref: { type: 'qp', ref: 'CA', location: 'NY' }, qsoCount: 1, theirLocations: ['LASS'], modes: ['SSB'] })
+    expect(score.qsoPoints).toEqual(3)
+  })
+
+  // The serial is exchanged INSTEAD of a report, so there is no RST column: a
+  // checker reading one column late takes the 599 for the serial.
+  it('exports the serial and no RST', () => {
+    const operation = { refs: [CA_IN], stationCall: 'N6DE' }
+    const qso = { band: '15m', mode: 'CW', their: { call: 'KW8N', entityPrefix: 'K' }, refs: [{ type: 'qp', location: 'OH', ourNumber: '1', theirNumber: '142' }] }
+    const rows = ReferenceHandler.qsoToCabrilloParts({ qso, ref: CA_IN, operation, settings: {} })
+    expect(rows.map(row => row.map(cell => cell.trim()))).toEqual([['N6DE', '1', 'ALAM', 'KW8N', '142', 'OH']])
+  })
+
+  it('names Santa Cruz correctly', () => {
+    expect(QSO_PARTY_DATA.CA.counties.SCRU).toEqual('Santa Cruz')
+  })
+})
+
+describe('County lines', () => {
+  // Three-way county corners exist and CQP says to send them all: each of our
+  // counties pairs with each of theirs.
+  it('scores every pairing when a line runs through three counties', () => {
+    const score = simulateOperation({ ref: { type: 'qp', ref: 'CA', location: 'ALAM/CCOS/SCLA' }, qsoCount: 1, theirLocations: ['NY/NJ'] })
+    expect(score.qsoPoints).toEqual(3 * 2 * 3)
   })
 })

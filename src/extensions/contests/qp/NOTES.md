@@ -80,6 +80,7 @@ Relevant `"options"`:
 - `dxIsMultiplier`: If true (default), DX stations count as a single multiplier "DX". (Many)
 - `dxEntityIsMultiplier`: If true, each DX Entity Prefix is awarded as a multiplier. (Many)
 - `dxEntityMultiplierMax`: If set, limits the number of DX Entity Prefixes that can be awarded as multipliers. (7QP)
+- `inStateMultiplierMax`: If set, limits the number of multipliers an in-state station's score counts. Every one worked is still listed. (CA: 58)
 - `specialCallIsMultiplier`: If true, special calls are awarded as multipliers. (VT)
 
 ### Bonuses

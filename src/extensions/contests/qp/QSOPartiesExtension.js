@@ -253,18 +253,23 @@ export const ReferenceHandler = {
 
     const ourCall = operation.stationCall || settings.operatorCall
 
+    // A party that numbers its contacts exchanges the number INSTEAD of a
+    // report, and its template has no RST column — a checker reading one
+    // column late takes the 599 for the serial.
+    const report = hasNumbers ? [] : [(qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' ')]
+
     const rows = []
     for (const ourLocation of ourLocations) {
       for (const theirLocation of theirLocations) {
         const row = []
         row.push((ourCall ?? '-').padEnd(13, ' '))
-        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
-        if (hasNumbers) row.push((qsoRef.ourNumber ?? '0').padEnd(6, ' '))
+        row.push(...report)
+        if (hasNumbers) row.push(`${qsoRef.ourNumber ?? '0'}`.padEnd(4, ' '))
         if (hasNames) row.push((ref.ourName ?? '-').padEnd(10, ' '))
         row.push((ourLocation ?? '-').padEnd(6, ' '))
         row.push((qso?.their?.call ?? '-').padEnd(13, ' '))
-        row.push((qso?.mode === 'CW' || qso?.mode === 'RTTY' ? settings?.defaultReportCW || '599' : settings?.defaultReport || '59').padEnd(3, ' '))
-        if (hasNumbers) row.push((qsoRef.theirNumber ?? '-').padEnd(6, ' '))
+        row.push(...report)
+        if (hasNumbers) row.push(`${qsoRef.theirNumber ?? '-'}`.padEnd(4, ' '))
         if (hasNames) row.push((qsoRef.theirName ?? '-').padEnd(10, ' '))
         row.push((theirLocation ?? '-').padEnd(6, ' '))
         rows.push(row)
@@ -583,7 +588,11 @@ export const ReferenceHandler = {
       })
     }
 
-    score.mult = Object.keys(score.mults).length
+    // Every multiplier worked stays in `score.mults`, so the summary still
+    // strikes it; only the count the score multiplies by is capped.
+    const workedMults = Object.keys(score.mults).length
+    const maxMults = score.weAreInState ? qp.options.inStateMultiplierMax : undefined
+    score.mult = maxMults ? Math.min(workedMults, maxMults) : workedMults
 
     score.bonusTotal = score.bonus + oneTimeBonuses
 

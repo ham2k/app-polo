@@ -8,7 +8,6 @@
   "end": "2026-10-4 21:59Z",
   "cabrilloName": "CA-QSO-PARTY",
   "notes": "Contributed by W1GRL & W1BOY",
-  "internalNotes": "Not supported: CA stations are capped at 58 scored multipliers out of 63 possible.",
   "lastUpdated": "2026-09-17 12:00Z",
   "status": "Verified for 2026 against cqp.org",
   "exchange": [
@@ -18,6 +17,8 @@
   "options": {
     "countyLine": true,
     "stateCountsForInState": true,
+    "countiesCountForInState": false,
+    "inStateMultiplierMax": 58,
     "dcCountsAsMaryland": true,
     "dxLocationIsPrefix": false,
     "dxIsMultiplier": false,
@@ -72,7 +73,7 @@
     "SMAT": "San Mateo",
     "SBAR": "Santa Barbara",
     "SCLA": "Santa Clara",
-    "SCRU": "Santa Crux",
+    "SCRU": "Santa Cruz",
     "SHAS": "Shasta",
     "SIER": "Sierra",
     "SISK": "Siskiyou",
