@@ -269,6 +269,54 @@ describe('Pennsylvania QSO Party scoring', () => {
     expect(score.total).toEqual((score.qsoPoints * score.mult) + 400)
   })
 
+  // K3ZMC pays again on every band and mode, so a callsign struck after the
+  // first contact reads as "done" while most of its bonuses are still open.
+  it('lists the band/mode slots each bonus station has paid in', () => {
+    const score = simulateOperation({
+      ref: PA_REF, qsoCount: 2, theirLocations: ['MGY'], theirCalls: ['K3ZMC', 'K3ZMC'], bands: ['40m', '80m'], modes: ['SSB', 'CW']
+    })
+    ReferenceHandler.summarizeScore({ score, operation: {}, ref: PA_REF })
+    expect(score.longSummary).toContain('**~~K3ZMC~~** (80m CW, 40m PHONE)')
+  })
+
+  // Rule 12.d: the sponsor adds EPA and WPA when rescoring, so leaving them out
+  // under-reports every in-state score by up to two multipliers.
+  it('gives an in-state station each county\'s section, EPA or WPA, as well as the county', () => {
+    const score = simulateOperation({ ref: PA_REF, qsoCount: 3, theirLocations: ['MGY', 'BUX', 'ALL'] })
+    expect(Object.keys(score.mults).sort()).toEqual(['ALL', 'BUX', 'EPA', 'MGY', 'WPA'])
+    ReferenceHandler.summarizeScore({ score, operation: {}, ref: PA_REF })
+    expect(score.longSummary).toContain('### 2 ARRL Sections')
+    expect(score.longSummary).toContain('**~~EPA~~**')
+  })
+
+  // Out of state the multipliers are the 67 counties alone (rule 10.b).
+  it('does not give an out-of-state station the section', () => {
+    const score = simulateOperation({ ref: { ...PA_REF, location: 'NY' }, qsoCount: 1, theirLocations: ['MGY'] })
+    expect(Object.keys(score.mults)).toEqual(['MGY'])
+  })
+
+  // Our own county earns nothing without working anyone: ELK sits in WPA, and
+  // a log that only worked EPA must not claim it.
+  it('does not give an in-state station its own section', () => {
+    const score = simulateOperation({ ref: PA_REF, qsoCount: 1, theirLocations: ['MGY'] })
+    expect(Object.keys(score.mults).sort()).toEqual(['EPA', 'MGY'])
+  })
+
+  // A county line on the far side is two counties, and one section when both
+  // lie in it.
+  it('counts one section for a county line inside it', () => {
+    const score = simulateOperation({ ref: PA_REF, qsoCount: 1, theirLocations: ['CAR/LEH'] })
+    expect(Object.keys(score.mults).sort()).toEqual(['CAR', 'EPA', 'LEH'])
+  })
+
+  // Each county earns its section and nothing else says so: a county left out
+  // of the table, or placed twice, silently costs a multiplier.
+  it('places every county in exactly one section', () => {
+    const { counties, countySections } = QSO_PARTY_DATA.PA
+    const placed = Object.values(countySections).flat()
+    expect(placed.sort()).toEqual(Object.keys(counties).sort())
+  })
+
   // A QSO logged before the party was added to the operation has no serial
   // numbers. Its exports must leave them out, not print "undefined".
   it('exports a QSO without serial numbers cleanly', () => {

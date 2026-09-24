@@ -4,7 +4,7 @@
 import React from 'react'
 
 import { fmtNumber } from '@ham2k/lib-format-tools'
-import { superModeForMode } from '@ham2k/lib-operation-data'
+import { BANDS, superModeForMode } from '@ham2k/lib-operation-data'
 import { DXCC_BY_PREFIX } from '@ham2k/lib-dxcc-data'
 import { findRef, replaceRef } from '@ham2k/lib-qson-tools'
 
@@ -385,6 +385,15 @@ export const ReferenceHandler = {
               if (!scoring.mults.includes(stateMult)) scoring.mults.push(stateMult)
             }
           }
+          // In-state stations also earn the county's ARRL section, where the sponsor adds one (PA's EPA/WPA,
+          // rule 12.d). Out-of-state stations multiply by the counties alone (PA rule 10.b).
+          const section = weAreInState && _sectionForCounty({ qp, county: loc })
+          if (section) {
+            const sectionMult = multPrefix + section
+            if (!scoring.mults.includes(sectionMult)) scoring.mults.push(sectionMult)
+            scoring.sections = scoring.sections ?? []
+            if (!scoring.sections.includes(section)) scoring.sections.push(section)
+          }
         } else if (US_STATES[loc] || loc === 'DC') {
           mult = multPrefix + loc
           scoring.state = loc
@@ -505,6 +514,7 @@ export const ReferenceHandler = {
       counties: {},
       entities: {},
       bonusStations: {},
+      sections: {},
       rareCounties: {},
       activatedCounties: {}
     }
@@ -549,6 +559,10 @@ export const ReferenceHandler = {
     } else if (qsoScore?.entity) {
       score.entities[qsoScore.entity] = (score.entities[qsoScore.entity] || 0) + 1
     }
+
+    qsoScore?.sections?.forEach(section => {
+      score.sections[section] = (score.sections[section] || 0) + 1
+    })
 
     qsoScore?.mults?.forEach(mult => {
       score.mults[mult] = (score.mults[mult] || 0) + 1
@@ -713,6 +727,19 @@ export const ReferenceHandler = {
       })
       parts.push(line)
 
+      if (qp.countySections) {
+        parts.push(`### ${Object.keys(score?.sections ?? {}).length} ARRL Sections`)
+        line = '> '
+        Object.keys(qp.countySections).forEach(section => {
+          if (score.sections?.[section]) {
+            line += `**~~${section}~~** `
+          } else {
+            line += `${section} `
+          }
+        })
+        parts.push(line)
+      }
+
       if (qp.options.dxEntityIsMultiplier) {
         const count = Object.keys(score?.entities ?? {}).length
         if (count === 1) {
@@ -749,6 +776,7 @@ export const ReferenceHandler = {
         station = station.toUpperCase()
         if (score.bonusStations[station]) {
           line += `**~~${station}~~**${station.length < longestBonus ? ' '.repeat(longestBonus - station.length) : ''} `
+          line += _bonusSlotsFor({ score, station })
         } else {
           line += `${station}${station.length < longestBonus ? ' '.repeat(longestBonus - station.length) : ''} `
         }
@@ -1058,6 +1086,21 @@ export function qpNormalizeLocation({ qp, qso, location, weAreInState, theyAreIn
     }
   }
   return ''
+}
+
+function _sectionForCounty({ qp, county }) {
+  return Object.keys(qp.countySections ?? {}).find(section => qp.countySections[section].includes(county))
+}
+
+// The band/mode slots a bonus station has paid in, where a party pays it per slot, so an operator can see
+// which are still open; a struck callsign alone reads as done after the first one. Empty where it pays once.
+function _bonusSlotsFor({ score, station }) {
+  const slots = Object.keys(score.bonuses ?? {})
+    .filter(key => key.endsWith(`:${station}`))
+    .map(key => key.slice(0, -station.length - 1).split(':'))
+    .sort(([a], [b]) => BANDS.indexOf(a) - BANDS.indexOf(b))
+    .map(parts => parts.join(' '))
+  return slots.length > 0 ? `(${slots.join(', ')}) ` : ''
 }
 
 // Multi-state events map each county to its state; otherwise this assumes that QPs with
