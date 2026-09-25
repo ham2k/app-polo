@@ -74,10 +74,16 @@ function showSOTANotLoggedInAlert (navigation) {
 const ActivityHook = {
   ...Info,
 
-  standardExchangeFields: ({ vfo }) => ({
+  standardExchangeFields: ({ qso, operation, vfo }) => {
     // Enable grid for the 2026 SOTA Challenge (https://reflector.sota.org.uk/t/2026-sota-challenge-part-1/39799)
-    grid: (vfo?.band === '2m' || vfo?.band === '70cm') && (vfo?.mode === 'CW' || vfo?.mode === 'SSB' || vfo?.mode === 'USB')
-  }),
+    const band = qso?.band ?? vfo?.band
+    const mode = qso?.mode ?? vfo?.mode
+    if (!(band === '2m' || band === '70cm') || !(mode === 'CW' || mode === 'SSB' || mode === 'USB')) return { grid: false }
+
+    // Forced on (overriding the Grid Field setting) only when logging SOTA
+    const isSOTA = findRef(operation, Info.activationType)?.ref || findRef(qso, Info.huntingType)?.ref
+    return { grid: isSOTA ? 'always' : true }
+  },
 
   loggingControls: ({ operation, settings }) => {
     if (findRef(operation, Info.activationType)?.ref) {
