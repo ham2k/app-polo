@@ -19,6 +19,7 @@ import { selectSectionedQSOs } from '../../../store/qsos'
 import { findBestHook, findHooks } from '../../../extensions/registry'
 import { defaultReferenceHandlerFor } from '../../../extensions/core/references'
 import { useSelectorConditionally } from '../../components/useConditionally'
+import { TapToDismissKeyboardContext } from '../../../ui'
 
 import QSOList from './components/QSOList'
 import LoggingPanel from './components/LoggingPanel'
@@ -125,18 +126,20 @@ export default function OpLoggingTab({ navigation, route, splitView }) {
         onSelectQSO={handleSelectQSO}
       />
 
-      <LoggingPanel
-        style={[flexZero, { minHeight: 200 }]}
-        operation={operation}
-        qsos={qsos}
-        sections={sections}
-        activeQSOs={activeQSOs}
-        vfo={vfo}
-        settings={settings}
-        ourInfo={ourInfo}
-        online={online}
-        splitView={splitView}
-      />
+      <TapToDismissKeyboardContext.Provider value={true}>
+        <LoggingPanel
+          style={[flexZero, { minHeight: 200 }]}
+          operation={operation}
+          qsos={qsos}
+          sections={sections}
+          activeQSOs={activeQSOs}
+          vfo={vfo}
+          settings={settings}
+          ourInfo={ourInfo}
+          online={online}
+          splitView={splitView}
+        />
+      </TapToDismissKeyboardContext.Provider>
     </View>
   )
 }

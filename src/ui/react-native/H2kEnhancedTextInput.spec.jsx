@@ -7,6 +7,7 @@ import TestRenderer, { act } from 'react-test-renderer'
 // Stand in for the native control: record the callbacks so the test can drive change/focus/blur
 // the way the native side would, and render nothing.
 const nativeProps = {}
+const mockPressable = {}
 jest.mock('@ham2k/h2k-native-text-input', () => ({
   H2kNativeTextInput: (props) => {
     Object.assign(nativeProps, props)
@@ -27,16 +28,23 @@ jest.mock('@ham2k/h2k-native-text-input', () => ({
 
 jest.mock('react-native', () => ({
   findNodeHandle: () => 1,
+  Keyboard: {
+    isVisible: () => mockKeyboard.height > 0,
+    metrics: () => ({ height: mockKeyboard.height })
+  },
   Platform: { OS: 'android', select: (o) => o.android },
-  Pressable: ({ children }) => children,
+  Pressable: ({ children, onPress }) => {
+    mockPressable.onPress = onPress
+    return children
+  },
   View: ({ children }) => children
 }))
 jest.mock('react-native-paper', () => ({ Text: () => null }))
 jest.mock('../../styles/tools/useThemedStyles', () => ({ useThemedStyles: () => ({ theme: { colors: {} } }) }))
-jest.mock('../../screens/components/useKeyboardVisible', () => ({ useKeyboardVisible: () => ({ isKeyboardVisible: false }) }))
+const mockKeyboard = { height: 0 }
 jest.mock('./H2kSimpleTextInput', () => ({ prepareStyles: () => ({ theme: { colors: {} } }) }))
 
-const { H2kEnhancedTextInput } = require('./H2kEnhancedTextInput')
+const { H2kEnhancedTextInput, TapToDismissKeyboardContext } = require('./H2kEnhancedTextInput')
 
 describe('H2kEnhancedTextInput', () => {
   let onBlur, renderer
@@ -112,5 +120,72 @@ describe('H2kEnhancedTextInput', () => {
     rst.blur()
 
     expect(rst.blurredWith()).toBe('4')
+  })
+})
+
+describe('H2kEnhancedTextInput tapping a focused, empty field with the soft keyboard up', () => {
+  let node, renderer
+
+  const renderField = ({ onLoggingScreen }) => {
+    const input = <H2kEnhancedTextInput value="" />
+    act(() => {
+      renderer = TestRenderer.create(onLoggingScreen
+        ? <TapToDismissKeyboardContext.Provider value={true}>{input}</TapToDismissKeyboardContext.Provider>
+        : input)
+    })
+    node = { isFocused: () => true, focus: jest.fn(), blur: jest.fn() }
+    nativeProps.innerRef(node)
+  }
+  // iOS delivers the tap to the field's Pressable; Android's EditText swallows it and reports it
+  // as the native input's onPress instead.
+  const tapChrome = () => act(() => mockPressable.onPress())
+  const tapText = () => act(() => nativeProps.onPress())
+
+  beforeEach(() => { mockKeyboard.height = 300 })
+  afterEach(() => {
+    act(() => renderer.unmount())
+    mockKeyboard.height = 0
+    for (const key of Object.keys(nativeProps)) delete nativeProps[key]
+    delete mockPressable.onPress
+  })
+
+  // On the logging screen, tapping an empty field is the quick way to get the keyboard out of
+  // the way and see the rest of the screen.
+  it('dismisses the keyboard on the logging screen', () => {
+    renderField({ onLoggingScreen: true })
+    tapChrome()
+
+    expect(node.blur).toHaveBeenCalled()
+    expect(node.focus).not.toHaveBeenCalled()
+  })
+
+  // On Android most taps land on the text itself, so this path is the one users actually hit.
+  it('dismisses the keyboard on the logging screen when the tap lands on the text', () => {
+    renderField({ onLoggingScreen: true })
+    tapText()
+
+    expect(node.blur).toHaveBeenCalled()
+  })
+
+  // Everywhere else it must not: users lost the keyboard mid-entry on forms like the QRZ
+  // credentials dialog, where tapping an empty field just means "I want to type here".
+  it('keeps the keyboard up everywhere else', () => {
+    renderField({ onLoggingScreen: false })
+    tapChrome()
+    tapText()
+
+    expect(node.blur).not.toHaveBeenCalled()
+    expect(node.focus).toHaveBeenCalledTimes(2)
+  })
+
+  // An iPad with a hardware keyboard still reports a short keyboard bar. There's no soft
+  // keyboard to dismiss, so a tap should keep focus instead of dropping it.
+  it('keeps focus when only the hardware keyboard bar is showing', () => {
+    mockKeyboard.height = 55
+    renderField({ onLoggingScreen: true })
+    tapChrome()
+
+    expect(node.blur).not.toHaveBeenCalled()
+    expect(node.focus).toHaveBeenCalled()
   })
 })

@@ -1,8 +1,8 @@
 // Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { findNodeHandle, Platform, Pressable, View } from 'react-native'
+import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { findNodeHandle, Keyboard, Platform, Pressable, View } from 'react-native'
 import { Text } from 'react-native-paper'
 
 import {
@@ -21,7 +21,6 @@ import {
 } from '@ham2k/h2k-native-text-input'
 
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
-import { useKeyboardVisible } from '../../screens/components/useKeyboardVisible'
 import { prepareStyles } from './H2kSimpleTextInput'
 
 // Field chrome (label, border, focus styling) wrapped around the native
@@ -63,6 +62,12 @@ const cursorAware = (fn) => (t) => {
 }
 
 const KEYBOARD_PROFILES = { numbers: 'numbers', dumb: 'dumb', code: 'code', email: 'email' }
+
+// Fields rendered inside a provider with `true` hide the soft keyboard when their already-focused,
+// empty field is tapped again. Only the logging screen provides it: anywhere else, a tap on an empty
+// field (say, a password box that hasn't been typed into yet) should just keep the keyboard up.
+// Dialogs mount through a Portal, which doesn't carry context, so they never inherit it.
+export const TapToDismissKeyboardContext = createContext(false)
 
 export function H2kEnhancedTextInput(props) {
   const {
@@ -120,7 +125,7 @@ export function H2kEnhancedTextInput(props) {
   })
 
   const [isFocused, setIsFocused] = useState(false)
-  const { isKeyboardVisible } = useKeyboardVisible()
+  const tapToDismissKeyboard = useContext(TapToDismissKeyboardContext)
 
   const onValueFormatting = useMemo(() => {
     const fns = []
@@ -211,17 +216,20 @@ export function H2kEnhancedTextInput(props) {
   const keyboardProfile = KEYBOARD_PROFILES[keyboard] || 'default'
   const keyboardAppearance = (styles.isDarkMode && Platform.OS === 'ios' && !Platform.isPad) ? 'dark' : 'light'
 
-  // Tapping the field focuses it; tapping an already-focused, empty field while the
-  // soft keyboard is up dismisses it (legacy H2kSimpleTextInput behavior). With an
-  // external keyboard attached the soft keyboard isn't visible, so this is a no-op.
+  // Tapping the field focuses it. Under TapToDismissKeyboardContext, tapping an already-focused,
+  // empty field while the soft keyboard is up dismisses it instead. With an external keyboard
+  // attached, iPads still report a short (<100pt) keyboard bar, which doesn't count as visible.
+  // Android reports taps inside the text as the native input's onPress, since the EditText
+  // swallows the touch before the Pressable sees it; iOS delivers them to the Pressable.
   const handleOuterPress = useCallback(() => {
     const node = nodeRef.current
-    if (node?.isFocused?.() && !stringValue && isKeyboardVisible) {
+    const isKeyboardVisible = Keyboard.isVisible() && (Keyboard.metrics()?.height || 0) > 100
+    if (tapToDismissKeyboard && node?.isFocused?.() && !stringValue && isKeyboardVisible) {
       node.blur?.()
     } else {
       node?.focus?.()
     }
-  }, [stringValue, isKeyboardVisible])
+  }, [tapToDismissKeyboard, stringValue])
 
   return (
     <Pressable style={isFocused ? styles.focusedRoot : styles.root} onPress={handleOuterPress}>
@@ -249,6 +257,7 @@ export function H2kEnhancedTextInput(props) {
           onSubmit={handleSubmit}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          onPress={handleOuterPress}
           accessibilityLabel={accessibiltyLabel ?? label}
         />
 
