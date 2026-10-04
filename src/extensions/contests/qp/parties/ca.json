@@ -2,6 +2,7 @@
   "key": "CA",
   "name": "California QSO Party",
   "short": "CQP",
+  "qsoPartyHubTableName": "caqp",
   "url": "https://www.cqp.org/",
   "start": "2026-10-3 16:00Z",
   "end": "2026-10-4 21:59Z",

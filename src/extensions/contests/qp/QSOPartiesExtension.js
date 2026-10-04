@@ -116,7 +116,7 @@ export const ReferenceHandler = {
     return {
       ...ref,
       label: `${qp.name}: ${ref?.location}`,
-      shortLabel: `${_qpShortForQP(qp)}: ${ref?.location}`
+      shortLabel: `${qpShortForQP(qp)}: ${ref?.location}`
     }
   },
 
@@ -128,7 +128,7 @@ export const ReferenceHandler = {
   suggestOperationTitle: ({ ref }) => {
     if (ref?.ref) {
       const qp = qpData({ ref })
-      return { for: _qpShortForQP(qp), subtitle: ref?.location, description: `${_qpShortForQP(qp)}: ${ref?.location}` }
+      return { for: qpShortForQP(qp), subtitle: ref?.location, description: `${qpShortForQP(qp)}: ${ref?.location}` }
     } else {
       return { for: Info.shortName }
     }
@@ -141,7 +141,7 @@ export const ReferenceHandler = {
         format: 'adif',
         exportType: 'qp-adif',
         exportName: `${qp.name ?? 'QSO Party'}`,
-        templateData: { handlerShortName: _qpShortForQP(qp), handlerName: qp.name },
+        templateData: { handlerShortName: qpShortForQP(qp), handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       },
@@ -150,7 +150,7 @@ export const ReferenceHandler = {
         exportType: 'qp-cabrillo',
         exportName: `${qp.name ?? 'QSO Party'}`,
         refKey: qp.short,
-        templateData: { handlerShortName: _qpShortForQP(qp), handlerName: qp.name },
+        templateData: { handlerShortName: qpShortForQP(qp), handlerName: qp.name },
         nameTemplate: '{{>OtherActivityName}}',
         titleTemplate: '{{>OtherActivityTitle}}'
       }]
@@ -638,7 +638,7 @@ export const ReferenceHandler = {
     if (qp.options.countiesCountForInState !== false || !weAreInState) {
       const longestCounty = Math.max(...Object.keys(qp.counties ?? {}).map(c => c.length))
 
-      parts.push(`### ${Object.keys(score?.counties ?? {}).length} ${_qpShortForQP(qp)} ${qp.options?.labelForCounties ?? 'Counties'}`)
+      parts.push(`### ${Object.keys(score?.counties ?? {}).length} ${qpShortForQP(qp)} ${qp.options?.labelForCounties ?? 'Counties'}`)
       line = '> '
       Object.keys(qp.counties).forEach(county => {
         county = county.toUpperCase()
@@ -1130,7 +1130,7 @@ export function qpLabelForLocation({ qp, location }) {
   }
 }
 
-function _qpShortForQP(qp) {
+export function qpShortForQP(qp) {
   if (qp.short) return qp.short
   if (qp.key.endsWith('QP')) return qp.key
   else return `${qp.key}QP`

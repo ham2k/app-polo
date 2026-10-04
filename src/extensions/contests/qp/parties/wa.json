@@ -2,6 +2,8 @@
   "key": "WA",
   "name": "Washington Salmon Run",
   "short": "WAQP",
+  "qsoPartyHubName": "wasr",
+  "qsoPartyHubTableName": "waqp",
   "url": "https://salmonrun.wwdxc.org/",
   "start": "2026-9-19 16:00Z",
   "end": "2026-9-20 06:59Z",

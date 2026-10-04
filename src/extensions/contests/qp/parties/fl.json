@@ -2,6 +2,8 @@
   "key": "FL",
   "name": "Florida QSO Party",
   "short": "FLQP",
+  "qsoPartyHubName": "fqp",
+  "qsoPartyHubTableName": "flqp",
   "url": "https://www.floridaqsoparty.org/",
   "start": "2026-4-25 16:00Z",
   "end": "2026-4-26 01:59Z",

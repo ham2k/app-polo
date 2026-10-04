@@ -12,7 +12,7 @@ import GLOBAL from '../../../GLOBAL'
 import packageJson from '../../../../package.json'
 import { fetchWithTimeout } from '../../../tools/fetchWithTimeout'
 
-import { qpData, qpParseLocations } from './QSOPartiesExtension'
+import { qpData, qpParseLocations, qpShortForQP } from './QSOPartiesExtension'
 import { Info } from './QSOPartiesInfo'
 
 const DEBUG = false
@@ -22,6 +22,15 @@ const MOBILE_TRACKER_SERVER = 'https://mobiletracker.stateqso.com'
 
 // const PARTY_HUB_SERVER = 'http://qsopartyhub.com'
 const PARTY_HUB_SERVER = 'https://test.lofi.ham2k.net/ham2k-proxy/qsopartyhub'
+
+// The QSO Party Hub names a party's pages after its short unless the party says otherwise
+// (`qsoPartyHubName`), and does not always name both pages alike: California's spots are
+// posted to `cqp-spots.php` and listed on `caqp-table.php` (`qsoPartyHubTableName`).
+export function qpHubPages (qp) {
+  const spots = (qp?.qsoPartyHubName ?? qpShortForQP(qp)).toLowerCase()
+  const table = (qp?.qsoPartyHubTableName ?? spots).toLowerCase()
+  return { spots, table }
+}
 
 export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) => async (_dispatch, getState) => {
   const opRef = findRef(operation, Info.key)
@@ -39,8 +48,7 @@ export const QSOPartiesPostSelfSpot = ({ operation, vfo, settings, comments }) =
 
     // console.log('-- spot to QP Hub')
 
-    const page = `${(qp?.qsoPartyHubName ?? qp?.short).toLowerCase()}-spots.php`
-    const url = `${PARTY_HUB_SERVER}/${page}`
+    const url = `${PARTY_HUB_SERVER}/${qpHubPages(qp).spots}-spots.php`
 
     const form = new FormData()
     form.append('station', call ?? '?')
@@ -197,7 +205,7 @@ export const SpotsHook = {
     }
 
     if (online && GLOBAL?.flags?.services?.qphub !== false) {
-      const url = `${PARTY_HUB_SERVER}/${(qp?.qsoPartyHubName ?? qp?.short).toLowerCase()}-table.php`
+      const url = `${PARTY_HUB_SERVER}/${qpHubPages(qp).table}-table.php`
 
       try {
         if (DEBUG) console.log('Fetching QP Hub Spots', url)

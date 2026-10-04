@@ -3,6 +3,7 @@
   "name": "NSARA Contest (QSO Party)",
   "disabled": true,
   "short": "NSARA",
+  "qsoPartyHubName": "nsqp",
   "url": "http://nsara.ca/",
   "start": "2025-3-2 12:00Z",
   "end": "2025-3-2 15:59Z",

@@ -1,6 +1,8 @@
 {
   "key": "HI",
   "name": "Hawaii QSO Party",
+  "qsoPartyHubName": "hqp",
+  "qsoPartyHubTableName": "hiqp",
   "start": "2026-8-22 16:00Z",
   "end": "2026-8-23 01:59Z",
   "url": "https://www.hawaiiqsoparty.org/",
