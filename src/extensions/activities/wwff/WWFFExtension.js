@@ -148,7 +148,7 @@ const ActivatorLoggingControl = {
   optionType: 'mandatory'
 }
 
-const ReferenceHandler = {
+export const ReferenceHandler = {
   ...Info,
 
   shortDescription: (operation) => refsToString(operation, Info.activationType),
@@ -227,7 +227,7 @@ const ReferenceHandler = {
     }
   },
 
-  adifFieldsForOneQSO: ({ qso, operation, exportType }) => {
+  adifFieldsForOneQSO: ({ qso, operation, common, exportType }) => {
     const huntingRef = findRef(qso, Info.huntingType)
     const rawActivationRef = findRef(operation, Info.activationType)
     const activationRef = rawActivationRef?.ref ? rawActivationRef : undefined
@@ -239,6 +239,10 @@ const ReferenceHandler = {
       // Delete POTA references, since some WWFF admins will reject logs that include them.
       fields.push({ POTA_REF: false }, { MY_POTA_REF: false })
       if (!huntingRef) fields.push({ SIG: false }, { SIG_INFO: false })
+      // WWFF logs need an OPERATOR on every QSO, so when none was entered, use the station call without prefixes or suffixes
+      if (!qso.our?.operatorCall && !common?.operatorCall) {
+        fields.push({ OPERATOR: parseCallsign(qso.our?.call || common?.stationCall || '').baseCall })
+      }
     }
     return fields
   },
