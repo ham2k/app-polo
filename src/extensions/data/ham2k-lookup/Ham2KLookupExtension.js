@@ -65,13 +65,32 @@ const LookupHook = {
   }
 }
 
-function formatName (name) {
+// The service files a suffix after a second comma ("CURTIS, OSCAR A, JR",
+// "SMITH, JOHN, MD"), so it comes off before "Last, First" is flipped and goes
+// back on the end. Only a known suffix: other names with two commas (clubs,
+// "ACME RADIO CLUB, INC., THE") keep their order, as before.
+const GENERATIONAL_SUFFIXES = {
+  JR: 'Jr', SR: 'Sr', II: 'II', III: 'III', IV: 'IV', V: 'V', VI: 'VI', VII: 'VII', VIII: 'VIII', IX: 'IX'
+}
+const CREDENTIAL_SUFFIXES = {
+  MD: 'MD', DO: 'DO', PHD: 'PhD', EDD: 'EdD', DDS: 'DDS', DMD: 'DMD', DVM: 'DVM', DC: 'DC', OD: 'OD', DPM: 'DPM', ND: 'ND',
+  PE: 'PE', ESQ: 'Esq.', JD: 'JD', CPA: 'CPA', RN: 'RN', LPN: 'LPN', LVN: 'LVN', PA: 'PA', MBA: 'MBA', MPH: 'MPH', MSW: 'MSW'
+}
+
+export function formatName (name) {
   if (!name) return ''
 
-  const parts = name.split(',')
-  const reordered = parts.length === 2 ? `${parts[1].trim()} ${parts[0].trim()}` : name
+  let parts = name.split(',').map(part => part.trim())
+  let suffix = ''
+  if (parts.length === 3) {
+    const key = parts[2].toUpperCase().replace(/[.\s]/g, '')
+    if (GENERATIONAL_SUFFIXES[key]) suffix = ` ${GENERATIONAL_SUFFIXES[key]}`
+    else if (CREDENTIAL_SUFFIXES[key]) suffix = `, ${CREDENTIAL_SUFFIXES[key]}`
+    if (suffix) parts = parts.slice(0, 2)
+  }
+  const reordered = parts.length === 2 ? `${parts[1]} ${parts[0]}` : name
 
-  return capitalizeString(reordered, { content: 'name', force: false })
+  return capitalizeString(reordered, { content: 'name', force: false }) + suffix
 }
 
 function castString (value) {
