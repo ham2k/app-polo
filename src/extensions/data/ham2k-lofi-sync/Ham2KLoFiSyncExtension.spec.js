@@ -23,8 +23,8 @@ describe('_captureableFailure', () => {
   it('passes through the reason the request layer labelled the failure with', () => {
     expect(_captureableFailure({ ok: false, status: 0, failure: { reason: 'network', status: 0 } }))
       .toEqual({ reason: 'network', status: 0 })
-    expect(_captureableFailure({ ok: false, status: 504, failure: { reason: 'timeout', status: 504 } }))
-      .toEqual({ reason: 'timeout', status: 504 })
+    expect(_captureableFailure({ ok: false, status: 504, failure: { reason: 'timeout', status: 0 } }))
+      .toEqual({ reason: 'timeout', status: 0 })
   })
 
   it('treats an unlabelled server error as LoFi answering badly', () => {

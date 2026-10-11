@@ -393,11 +393,13 @@ async function requestWithAuth ({ dispatch, getState, url, method, body, params 
   } catch (e) {
     if (DEBUG) console.log('Error in requestWithAuth', e)
     // A `failure` label here is the only place a timed-out request stays
-    // distinguishable from a gateway's own 504 further down the line.
+    // distinguishable from a gateway's own 504 further down the line. Its
+    // `status` is what the backup service stores as the HTTP status we saw, so
+    // a request we aborted ourselves says 0: nothing answered (HALO-780).
     if (e.message === 'Network request failed') {
       return { ok: false, status: 0, json: { error: 'Network request failed' }, failure: { reason: 'network', status: 0 } }
     } else if (e.name === 'FetchTimeoutError') {
-      return { ok: false, status: 504, json: { error: 'Request timed out' }, failure: { reason: 'timeout', status: 504 } }
+      return { ok: false, status: 504, json: { error: 'Request timed out' }, failure: { reason: 'timeout', status: 0 } }
     } else {
       throw e
     }
