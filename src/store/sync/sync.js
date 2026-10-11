@@ -151,7 +151,10 @@ function _scheduleNextSyncLoop({ dispatch, delay }, loop) {
   if (VERBOSE >= 1) console.log(' -- scheduling next sync loop', delay, nextSyncLoopInterval)
 
   if (!nextSyncLoopInterval) {
-    nextSyncLoopInterval = setTimeout(() => _doOneRoundOfSyncing({ dispatch }), delay)
+    nextSyncLoopInterval = setTimeout(() => {
+      _clearFiredSyncLoopTimer()
+      _doOneRoundOfSyncing({ dispatch })
+    }, delay)
   }
 }
 
@@ -207,7 +210,10 @@ async function _doOneRoundOfSyncing({ dispatch, settings, oneSmallBatchOnly = fa
     const localData = dispatch((_dispatch, getState) => selectLocalData(getState()))
 
     const syncHook = findHooks('sync')[0] // only one sync source
-    if (!syncHook) return
+    if (!syncHook) {
+      _releaseSyncLoop()
+      return
+    }
 
     if (VERBOSE > 0) console.log(' -- syncing', syncHook.key, `qsoBatchSize: ${qsoBatchSize}, operationBatchSize: ${operationBatchSize}`, oneSmallBatchOnly, localData?.sync)
 
@@ -543,7 +549,7 @@ function _delayAfterSyncErrors (count) {
 }
 
 // Exported for tests; not part of this module's interface.
-export { _delayAfterSyncErrors, _nextSyncCursor, _backfillFallbackMillis, _cursorWasRefused }
+export { _delayAfterSyncErrors, _nextSyncCursor, _backfillFallbackMillis, _cursorWasRefused, _scheduleNextSyncLoop }
 
 let nextSyncLoopInterval = 0
 let lastDebouncedSync = 0
@@ -566,6 +572,14 @@ function _releaseSyncLoop() {
   }
 }
 
+// A fired timer's id must not stay in `nextSyncLoopInterval`: while it is there nothing schedules
+// another loop - not the tick, not turning sync back on - so any round that then returned without
+// taking over and releasing the loop left it dead until a restart. Turning the Sync switch off did
+// exactly that: it schedules a round, which finds sync disabled and returns.
+function _clearFiredSyncLoopTimer() {
+  if (nextSyncLoopInterval !== true) nextSyncLoopInterval = false
+}
+
 function _scheduleDebouncedFunctionForSyncLoop(fn) {
   if (VERBOSE >= 1) console.log('_scheduleDebouncedFunctionForSyncLoop')
   if (nextSyncLoopInterval !== true) {
@@ -581,7 +595,10 @@ function _scheduleDebouncedFunctionForSyncLoop(fn) {
       })
     } else {
       if (VERBOSE >= 1) console.log('-- scheduling in ', SYNC_LOOP_DEBOUNCE_DELAY)
-      nextSyncLoopInterval = setTimeout(fn, SYNC_LOOP_DEBOUNCE_DELAY)
+      nextSyncLoopInterval = setTimeout(() => {
+        _clearFiredSyncLoopTimer()
+        fn()
+      }, SYNC_LOOP_DEBOUNCE_DELAY)
       lastDebouncedSync = Date.now()
     }
   } else {
