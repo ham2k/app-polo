@@ -16,8 +16,11 @@ import { selectRuntimeMessages } from '../../store/runtime'
 import { earlyStartupSequence, startupSequence } from '../../store/runtime/actions/startupSequence'
 import { selectSystemFlag, setSystemFlag } from '../../store/system'
 import { selectSettings } from '../../store/settings'
+import { selectLocalExtensionData } from '../../store/local'
 import { useThemedStyles } from '../../styles/tools/useThemedStyles'
 import { OnboardingManager } from './onboarding/OnboardingManager'
+import { SyncAccountDialog } from './onboarding/SyncAccountDialog'
+import { cloudSyncPromptDue } from './onboarding/cloudSyncPrompt'
 import { H2kMarkdown } from '../../ui'
 import { translatedVersionName } from '../../tools/i18nUtils'
 
@@ -35,6 +38,10 @@ export default function StartScreen ({ setAppState }) {
   const settings = useSelector(selectSettings)
   const onboardedOnSelector = useCallback((state) => selectSystemFlag(state, 'onboardedOn'), [])
   const onboardedOn = useSelector(onboardedOnSelector)
+  const askedCloudSyncOnSelector = useCallback((state) => selectSystemFlag(state, 'askedCloudSyncOn'), [])
+  const askedCloudSyncOn = useSelector(askedCloudSyncOnSelector)
+  const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
+  const lofiData = useSelector(lofiDataSelector)
   const dispatch = useDispatch()
   const messages = useSelector(selectRuntimeMessages)
 
@@ -58,6 +65,7 @@ export default function StartScreen ({ setAppState }) {
      *  - 'earlyStart' : Perform early startup and then proceed to 'hold'
      *  - 'hold'       : Hold for a sec and continue to either 'onboarding' or 'start'
      *  - 'onboarding' : Show onboarding dialogs until ready
+     *  - 'syncPrompt' : Ask an onboarded install the Cloud Sync question, once, then 'start'
      *  - 'start'      : Trigger startup sequence, which will start the main app when ready
      *  - 'starting'   : startup sequence is in process
      */
@@ -69,6 +77,8 @@ export default function StartScreen ({ setAppState }) {
       // Hold for a second and decide if we need to show onboarding or not
       if (!onboardedOn || !settings?.operatorCall) {
         setTimeout(() => setStartupPhase('onboarding'), 1000) // Let the splash screen show for a moment
+      } else if (cloudSyncPromptDue({ lofiData, settings, askedCloudSyncOn })) {
+        setTimeout(() => setStartupPhase('syncPrompt'), 1000)
       } else {
         // If startup interruption is enabled, give the user some milliseconds to trigger it
         if (enableStartupInterruptionDialogForDistribution({ settings })) {
@@ -87,10 +97,16 @@ export default function StartScreen ({ setAppState }) {
       setStartupPhase('starting')
       dispatch(startupSequence(() => setAppState('ready')))
     }
-  }, [startupPhase, onboardedOn, settings, dispatch, setAppState])
+  }, [startupPhase, onboardedOn, settings, dispatch, setAppState, lofiData, askedCloudSyncOn])
 
   const handleOnboardingDone = useCallback(() => {
     dispatch(setSystemFlag('onboardedOn', Date.now()))
+    setStartupPhase('start')
+  }, [dispatch, setStartupPhase])
+
+  // Any answer, Not now included, is final: the question is asked once.
+  const handleSyncPromptDone = useCallback(() => {
+    dispatch(setSystemFlag('askedCloudSyncOn', Date.now()))
     setStartupPhase('start')
   }, [dispatch, setStartupPhase])
 
@@ -134,6 +150,15 @@ export default function StartScreen ({ setAppState }) {
             settings={settings}
             styles={styles}
             onOnboardingDone={handleOnboardingDone}
+          />
+        )}
+        {startupPhase === 'syncPrompt' && (
+          <SyncAccountDialog
+            settings={settings}
+            styles={styles}
+            onDialogNext={handleSyncPromptDone}
+            onDialogPrevious={handleSyncPromptDone}
+            previousLabel={t('screens.startScreen.onboarding.notNow', 'Not now')}
           />
         )}
       </GestureHandlerRootView>

@@ -1,7 +1,7 @@
-// Copyright ©️ 2024-2025 Sebastian Delmont <sd@ham2k.com>
+// Copyright ©️ 2024-2026 Sebastian Delmont <sd@ham2k.com>
 // SPDX-License-Identifier: MPL-2.0
 
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Switch, Text } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +10,11 @@ import { selectLocalExtensionData, setLocalExtensionData } from '../../../store/
 import { View } from 'react-native'
 import { H2kButton, H2kDialog, H2kDialogActions, H2kDialogContent, H2kDialogTitle } from '../../../ui'
 
+/*
+ * The answer is written on Next only. Back (or Not now, when StartScreen asks this on its
+ * own) leaves the `ham2k-lofi` flag as it was: an unset flag is what tells an install that
+ * never chose apart from one that did (see cloudSyncPrompt.js).
+ */
 export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, onDialogPrevious, nextLabel, previousLabel }) {
   const { t } = useTranslation()
 
@@ -18,16 +23,13 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
   const lofiDataSelector = useCallback((state) => selectLocalExtensionData(state, 'ham2k-lofi'), [])
   const lofiData = useSelector(lofiDataSelector)
 
-  useEffect(() => {
-    if (lofiData?.enabled === undefined) {
-      // Default to enabled, if there are no previous settings
-      dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: true }))
-    }
-  }, [dispatch, lofiData?.enabled])
+  // Unset starts on, as it always has for a new install.
+  const [enabled, setEnabled] = useState(lofiData?.enabled ?? true)
 
   const handleNext = useCallback(async () => {
+    dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled }))
     onDialogNext && onDialogNext()
-  }, [onDialogNext])
+  }, [dispatch, enabled, onDialogNext])
 
   const handlePrevious = useCallback(() => {
     onDialogPrevious && onDialogPrevious()
@@ -35,28 +37,30 @@ export function SyncAccountDialog ({ inputMode, settings, styles, onDialogNext, 
 
   return (
     <H2kDialog visible={true} dismissable={false}>
-      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.ham2kLogFiler', 'Ham2K Log Filer')}</H2kDialogTitle>
+      <H2kDialogTitle style={{ textAlign: 'center' }}>{t('screens.startScreen.onboarding.cloudSync', 'Cloud Sync')}</H2kDialogTitle>
       <H2kDialogContent>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center', marginBottom: styles.oneSpace * 2 }}>
-          {t('screens.startScreen.onboarding.logFilerDescription', 'We provide a basic sync and backup service for free, and more for a fee.')}
+          {t('screens.startScreen.onboarding.cloudSyncDescription', 'Ham2K Log Filer keeps a backup of your logs in the cloud, and syncs them across all the devices where you use Ham2K apps.')}
         </Text>
         <Text style={{ fontSize: styles.normalFontSize, textAlign: 'center', marginBottom: styles.oneSpace * 2 }}>
-          {t('screens.startScreen.onboarding.findMoreDetailsInSettings', 'Find more details in the Settings.')}
+          {t('screens.startScreen.onboarding.cloudSyncPricing', 'It\'s free! But a paid subscription will make it faster.')}
         </Text>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: styles.oneSpace }}>
-          <Switch value={!!lofiData?.enabled} onValueChange={(v) => {
+          <Switch value={enabled} onValueChange={(v) => {
             // Workaround for Switch component not updating immediately inside Portal.
             // See https://github.com/callstack/react-native-paper/issues/4789
-            setTimeout(() => {
-              dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: v }))
-            }, 10)
-          }
-          }
+            setTimeout(() => setEnabled(v), 10)
+          }}
           />
-          <Text style={{ fontSize: styles.normalFontSize }} onPress={() => dispatch(setLocalExtensionData({ key: 'ham2k-lofi', enabled: !lofiData?.enabled }))}>
-            {t('screens.startScreen.onboarding.enableCloudSyncAndBackups', 'Enable Cloud Sync and Backups')}
+          <Text style={{ fontSize: styles.normalFontSize }} onPress={() => setEnabled(!enabled)}>
+            {t('screens.startScreen.onboarding.enableCloudSync', 'Enable Cloud Sync')}
           </Text>
         </View>
+        {!enabled && (
+          <Text style={{ fontSize: styles.normalFontSize, fontWeight: 'bold', color: styles.theme.colors.error, textAlign: 'center', marginTop: styles.oneSpace }}>
+            {t('screens.startScreen.onboarding.cloudSyncOffWarning', 'WARNING: this increases your chances of losing operation data, for example if your device crashes or is lost.')}
+          </Text>
+        )}
       </H2kDialogContent>
       <H2kDialogActions style={{ justifyContent: 'space-between' }}>
         <H2kButton onPress={handlePrevious}>{previousLabel ?? t('general.buttons.back', 'Back')}</H2kButton>
