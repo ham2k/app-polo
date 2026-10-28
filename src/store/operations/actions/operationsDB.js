@@ -287,6 +287,30 @@ export async function getSyncCounts () {
   return counts
 }
 
+// What the operator would call their log, for display beside the server's `operations.active`
+// and `qsos.contacts`: the same rule LoFi and HaLo apply, so all three show the same numbers.
+// Deleted QSOs, QSOs in deleted operations and event markers are not contacts. Not for sync
+// decisions: `getSyncCounts` counts every row, because deletions still have to be uploaded.
+export async function getContactCounts () {
+  const opCounts = await dbSelectAll('SELECT COUNT(*) as count, synced FROM operations WHERE (deleted = 0 OR deleted IS NULL) GROUP BY synced')
+  const qsoCounts = await dbSelectAll(`
+    SELECT COUNT(*) as count, qsos.synced as synced
+    FROM qsos LEFT JOIN operations ON operations.uuid = qsos.operation
+    WHERE qsos.operation != 'historical'
+      AND (qsos.deleted = 0 OR qsos.deleted IS NULL)
+      AND (qsos.band IS NULL OR qsos.band != 'event')
+      AND (operations.deleted = 0 OR operations.deleted IS NULL)
+    GROUP BY qsos.synced
+  `)
+
+  const bySynced = (rows) => rows.reduce((acc, row) => {
+    acc[row.synced ? 'synced' : 'pending'] += row.count
+    return acc
+  }, { synced: 0, pending: 0 })
+
+  return { operations: bySynced(opCounts), qsos: bySynced(qsoCounts) }
+}
+
 export const addNewOperation = (operation) => async (dispatch, getState) => {
   const settings = selectSettings(getState())
 

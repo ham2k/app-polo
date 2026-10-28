@@ -22,7 +22,7 @@ import { selectLocalExtensionData, setLocalExtensionData, selectLocalData } from
 import { selectSettings } from '../../../store/settings'
 import { clearMatchingNotices } from '../../../store/system'
 import { selectFiveSecondsTick, startTickTock, stopTickTock } from '../../../store/time'
-import { getSyncCounts, resetSyncedStatus } from '../../../store/operations'
+import { getContactCounts, getSyncCounts, resetSyncedStatus } from '../../../store/operations'
 import { prepareSyncToReplaceLocalData, prepareSyncToCombineLocalData } from '../../../store/sync'
 
 import { SyncSettingsForDistribution } from '../../../distro'
@@ -76,7 +76,7 @@ export default function SyncSettingsScreen({ navigation, splitView, route }) {
         if (syncEnabled) {
           dispatch(syncHook.getAccountData())
         }
-        setCounts(await getSyncCounts())
+        setCounts(await _loadCounts())
       })
     }
   }, [currentDialog, dispatch, fiveSecondTick, syncHook, t, syncEnabled])
@@ -172,7 +172,7 @@ If you have unsynced data, IT WILL BE LOST.`),
   // TODO: Make this reset trigger a full sync, not just upload
   const handleResetSyncStatus = useCallback(async () => {
     await dispatch(resetSyncedStatus())
-    setCounts(await getSyncCounts())
+    setCounts(await _loadCounts())
   }, [dispatch])
 
   const handleCombineLocalData = useCallback(async () => {
@@ -233,7 +233,7 @@ Please try again later.`, { error: linkResult.json.error })
     setCurrentDialog('')
     setLinkInfo(null)
     setImmediate(async () => {
-      setCounts(await getSyncCounts())
+      setCounts(await _loadCounts())
       if (syncHook && syncEnabled) {
         dispatch(syncHook.getAccountData())
       }
@@ -361,11 +361,11 @@ Please try again later.`, { error: linkResult.json.error })
               [
                 t(
                   'screens.syncSettings.syncCountDescription.operations', 'Operations: {{synced}} synced, {{pending}} pending',
-                  { synced: fmtNumber(counts?.operations?.synced || 0), pending: fmtNumber(counts?.operations?.pending || 0) }
+                  { synced: fmtNumber(counts?.contacts?.operations?.synced || 0), pending: fmtNumber(counts?.contacts?.operations?.pending || 0) }
                 ),
                 t(
                   'screens.syncSettings.syncCountDescription.qsos', 'QSOs: {{synced}} synced, {{pending}} pending',
-                  { synced: fmtNumber(counts?.qsos?.synced || 0), pending: fmtNumber(counts?.qsos?.pending || 0) }
+                  { synced: fmtNumber(counts?.contacts?.qsos?.synced || 0), pending: fmtNumber(counts?.contacts?.qsos?.pending || 0) }
                 )
               ].join('\n')
             }
@@ -442,14 +442,22 @@ Please try again later.`, { error: linkResult.json.error })
   )
 }
 
+// `getSyncCounts` drives the merge-or-replace prompt, which must see every row; `contacts` is
+// what the "This Device" line shows, on the same rule as the server's live counts.
+async function _loadCounts () {
+  return { ...(await getSyncCounts()), contacts: await getContactCounts() }
+}
+
+// `total` includes deleted operations and QSOs, so it never matches what the operator sees in
+// their log or in HaLo. `active` and `contacts` do; servers that predate them only send `total`.
 function _cloudCountDescription({ operations, qsos, t }) {
   if (!operations || !qsos || (operations?.total === 0 && qsos?.total === 0)) {
     return t('screens.syncSettings.noDataStored', 'No data stored')
   }
 
   const parts = []
-  parts.push(t('screens.syncSettings.cloudCountDescription.operations', 'Operations: {{total}} total', { total: fmtNumber(operations?.total || 0) }))
-  parts.push(t('screens.syncSettings.cloudCountDescription.qsos', 'QSOs: {{total}} stored', { total: fmtNumber(qsos?.total || 0) }))
+  parts.push(t('screens.syncSettings.cloudCountDescription.operations', 'Operations: {{total}} total', { total: fmtNumber(operations?.active ?? operations?.total ?? 0) }))
+  parts.push(t('screens.syncSettings.cloudCountDescription.qsos', 'QSOs: {{total}} stored', { total: fmtNumber(qsos?.contacts ?? qsos?.total ?? 0) }))
 
   return parts.join('\n')
 }
