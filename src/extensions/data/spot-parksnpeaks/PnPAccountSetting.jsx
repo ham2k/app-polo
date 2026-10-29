@@ -81,20 +81,20 @@ function AccountsPnPDialog({ visible, settings, styles, onDialogDone }) {
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={userId}
           keyboard="email"
-          label={t('extensions.spots.parksnpeaks.account.usernameLabel', 'Username (not callsign)')}
-          placeholder={t('extensions.spots.parksnpeaks.account.usernamePlaceholder', 'your account username')}
+          label={t('extensions.spots.parksnpeaks.account.usernameLabel', 'Callsign')}
+          placeholder={t('extensions.spots.parksnpeaks.account.usernamePlaceholder', 'your callsign')}
           onChangeText={onChangeUserId}
         />
         <H2kEnhancedTextInput
           style={[styles.input, { marginTop: styles.oneSpace }]}
           value={apiKey}
-          label={t('extensions.spots.parksnpeaks.account.apiKeyLabel', 'API Key (not password)')}
+          label={t('extensions.spots.parksnpeaks.account.apiKeyLabel', 'API Key or PIN (not password)')}
           autoComplete="current-password"
           keyboardType="default"
           textContentType="password"
           secureTextEntry={true}
           autoCapitalize={'none'}
-          placeholder={t('extensions.spots.parksnpeaks.account.apiKeyPlaceholder', 'your API Key')}
+          placeholder={t('extensions.spots.parksnpeaks.account.apiKeyPlaceholder', 'your API Key, or the PIN from your ParksnPeaks profile')}
           onChangeText={onChangeAPIKey}
         />
       </H2kDialogContent>

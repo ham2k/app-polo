@@ -491,10 +491,10 @@
         "noAccount": "NO ACCOUNT",
         "pleaseEnterDetails": "PLEASE ENTER THE DETAILS FOR YOUR PARKSNPEAKS ACCOUNT:"
       },
-      "usernameLabel": "USERNAME (NOT CALLSIGN)",
-      "usernamePlaceholder": "YOUR ACCOUNT USERNAME",
-      "apiKeyLabel": "API KEY (NOT PASSWORD)",
-      "apiKeyPlaceholder": "YOUR API KEY"
+      "usernameLabel": "CALLSIGN",
+      "usernamePlaceholder": "YOUR CALLSIGN",
+      "apiKeyLabel": "API KEY OR PIN (NOT PASSWORD)",
+      "apiKeyPlaceholder": "YOUR API KEY, OR THE PIN FROM YOUR PARKSNPEAKS PROFILE"
     },
     "pga": {
       "name": "POLISH GMINA AWARD",
@@ -589,10 +589,10 @@
         "description": "ACCOUNT: {{username}}",
         "noAccount": "NO ACCOUNT",
         "pleaseEnterDetails": "PLEASE ENTER THE DETAILS FOR YOUR PARKSNPEAKS ACCOUNT:",
-        "usernameLabel": "USERNAME (NOT CALLSIGN)",
-        "usernamePlaceholder": "YOUR ACCOUNT USERNAME",
-        "apiKeyLabel": "API KEY (NOT PASSWORD)",
-        "apiKeyPlaceholder": "YOUR API KEY"
+        "usernameLabel": "CALLSIGN",
+        "usernamePlaceholder": "YOUR CALLSIGN",
+        "apiKeyLabel": "API KEY OR PIN (NOT PASSWORD)",
+        "apiKeyPlaceholder": "YOUR API KEY, OR THE PIN FROM YOUR PARKSNPEAKS PROFILE"
       },
       "activityOptions": {
         "title_zero": "NO SILOS SELECTED FOR ACTIVATION",

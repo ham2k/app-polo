@@ -491,10 +491,10 @@
         "noAccount": "no account",
         "pleaseEnterDetails": "please enter the details for your parksnpeaks account:"
       },
-      "usernameLabel": "username (not callsign)",
-      "usernamePlaceholder": "your account username",
-      "apiKeyLabel": "api key (not password)",
-      "apiKeyPlaceholder": "your api key"
+      "usernameLabel": "callsign",
+      "usernamePlaceholder": "your callsign",
+      "apiKeyLabel": "api key or pin (not password)",
+      "apiKeyPlaceholder": "your api key, or the pin from your parksnpeaks profile"
     },
     "pga": {
       "name": "polish gmina award",
@@ -589,10 +589,10 @@
         "description": "account: {{username}}",
         "noAccount": "no account",
         "pleaseEnterDetails": "please enter the details for your parksnpeaks account:",
-        "usernameLabel": "username (not callsign)",
-        "usernamePlaceholder": "your account username",
-        "apiKeyLabel": "api key (not password)",
-        "apiKeyPlaceholder": "your api key"
+        "usernameLabel": "callsign",
+        "usernamePlaceholder": "your callsign",
+        "apiKeyLabel": "api key or pin (not password)",
+        "apiKeyPlaceholder": "your api key, or the pin from your parksnpeaks profile"
       },
       "activityOptions": {
         "title_zero": "no silos selected for activation",
